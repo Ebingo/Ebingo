@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="font_black_18">
+        <item name="android:textSize">@dimen/font_18</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="font_white_18">
+        <item name="android:textSize">@dimen/font_18</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="font_gray_18">
+        <item name="android:textSize">@dimen/font_18</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="font_orange_18">
+        <item name="android:textSize">@dimen/font_18</item>
+        <item name="android:textColor">@color/orange</item>
+    </style>
+
+    <style name="font_gray_14">
+        <item name="android:textSize">@dimen/font_14</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="font_black_15">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="font_white_15">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="font_gray_15">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="font_orange_15">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/orange</item>
+    </style>
+
+    <style name="font_black_20">
+        <item name="android:textSize">@dimen/font_20</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="font_gray_20">
+        <item name="android:textSize">@dimen/font_20</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="font_white_20">
+        <item name="android:textSize">@dimen/font_20</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>
