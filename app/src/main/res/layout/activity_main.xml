@@ -2,15 +2,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
+    <RadioGroup
+        android:id="@+id/main_rg"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:paddingTop="3dp"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/main_rb"
+            style="@style/tab_btn"
+            android:checked="true"
+            android:text="@string/tab_main"
+            android:drawableTop="@drawable/main_tab" />
+
+        <RadioButton
+            android:id="@+id/find_rb"
+            style="@style/tab_btn"
+            android:text="@string/tab_find"
+            android:drawableTop="@drawable/find_tab" />
+
+        <RadioButton
+            android:id="@+id/publish_rb"
+            style="@style/tab_btn"
+            android:text="@string/tab_publish"
+            android:drawableTop="@drawable/publish_tab" />
+
+        <RadioButton
+            android:id="@+id/center_rb"
+            style="@style/tab_btn"
+            android:text="@string/tab_center"
+            android:drawableTop="@drawable/center_tab" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:id="@+id/main_content_fl"
+        android:layout_above="@id/main_rg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
