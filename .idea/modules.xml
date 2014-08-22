@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Ebingo.iml" filepath="$PROJECT_DIR$/Ebingo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UtilLib/UtilLib.iml" filepath="$PROJECT_DIR$/UtilLib/UtilLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

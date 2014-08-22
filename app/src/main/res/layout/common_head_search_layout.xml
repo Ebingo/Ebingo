@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/search"
             android:paddingLeft="10dp"
-            style="@style/font_white_18"
+            style="@style/font_white_15"
             android:background="@drawable/search_bar"
             android:textColorHint="@color/white"
             android:gravity="center_vertical" />

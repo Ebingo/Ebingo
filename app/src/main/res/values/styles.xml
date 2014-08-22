@@ -5,14 +5,34 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="tab_btn" parent="font_gray_14">
-
+    <style name="tab_btn" parent="font_gray_11">
+        <item name="android:background">@color/white</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:ellipsize">marquee</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:button">@null</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="tv_singl_base_style">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="gray_14_tv" parent="font_gray_14">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="gray_11_tv" parent="font_gray_11">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="orange_15_tv" parent="font_orange_15">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
 
 </resources>

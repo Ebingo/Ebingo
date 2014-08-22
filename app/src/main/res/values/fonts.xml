@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="font_14">13sp</dimen>
+    <dimen name="font_10">10sp</dimen>
+    <dimen name="font_11">11sp</dimen>
+    <dimen name="font_12">12sp</dimen>
+    <dimen name="font_13">13sp</dimen>
+    <dimen name="font_14">14sp</dimen>
     <dimen name="font_15">15sp</dimen>
     <dimen name="font_18">18sp</dimen>
     <dimen name="font_20">20sp</dimen>
+
 </resources>
