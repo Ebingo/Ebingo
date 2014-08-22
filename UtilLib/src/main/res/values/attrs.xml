@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="pagerindicator">
+        <attr name="nomal_icon" format = "color|reference"></attr>
+        <attr name="cur_icon" format="color|reference"></attr>
+        <attr name="imgBackground" format="color|reference"></attr>
+    </declare-styleable>
+
+</resources>

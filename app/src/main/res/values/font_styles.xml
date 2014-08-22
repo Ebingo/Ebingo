@@ -20,6 +20,10 @@
         <item name="android:textSize">@dimen/font_18</item>
         <item name="android:textColor">@color/orange</item>
     </style>
+    <style name="font_gray_11">
+        <item name="android:textSize">@dimen/font_11</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
 
     <style name="font_gray_14">
         <item name="android:textSize">@dimen/font_14</item>
