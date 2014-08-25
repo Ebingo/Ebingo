@@ -45,6 +45,11 @@
         <item name="android:textColor">@color/gray</item>
     </style>
 
+    <style name="font_blue_15">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/title_bule</item>
+    </style>
+
     <style name="font_orange_15">
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@color/orange</item>
