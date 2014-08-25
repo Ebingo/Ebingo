@@ -35,4 +35,13 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="back_arro_style">
+        <item name="android:src">@drawable/back_arro</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+    </style>
+
 </resources>

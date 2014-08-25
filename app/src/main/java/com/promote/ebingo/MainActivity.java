@@ -1,4 +1,4 @@
-package com.promote.ebingo.main;
+package com.promote.ebingo;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,9 +10,9 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.promote.ebingo.R;
 import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
+import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
 
 
@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     private RadioButton centerrb;
     private RadioGroup mainrg;
 
-    private MainFragment mMainFramgent = null;
+    private HomeFragment mMainFramgent = null;
 
     private FindFragment mFindFrament = null;
     private PublishFragment mPublishFragment = null;
@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
         mainrg.setOnCheckedChangeListener(this);
         //启动程序是默认加载第一个tab.
-        mMainFramgent = MainFragment.newInstance(null, null);
+        mMainFramgent = HomeFragment.newInstance(null, null);
         mFM = getSupportFragmentManager();
         FragmentTransaction ft = mFM.beginTransaction();
         ft.add(R.id.main_content_fl, mMainFramgent, "main");
@@ -100,7 +100,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
             case R.id.main_rb: {
 
                 if (mMainFramgent == null) {
-                    mMainFramgent = MainFragment.newInstance(null, null);
+                    mMainFramgent = HomeFragment.newInstance(null, null);
                 }
                 changeFrag(mMainFramgent, mCurFragment);
 

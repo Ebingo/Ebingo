@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
     android:clickable="true"
-    tools:context="com.promote.ebingo.main.MainFragment">
+    tools:context="com.promote.ebingo.home.HomeFragment">
 
     <include layout="@layout/common_head_search_layout" />
 
@@ -26,16 +27,18 @@
                 <android.support.v4.view.ViewPager
                     android:id="@+id/main_frag_vp"
                     android:layout_width="match_parent"
+                    android:layout_height="200dp"
                     android:background="@color/orange"
-                    android:layout_height="wrap_content" />
+                    />
 
                 <com.jch.lib.view.PagerIndicator
                     android:id="@+id/main_frag_pi"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    app:nomal_icon="@drawable/indicator_nomal"
+                    app:cur_icon="@drawable/indicator_cur"
+                    android:layout_height="20dp"
                     android:layout_gravity="bottom|center_horizontal"
-                    style="@style/font_black_20"
-                    android:text="test" />
+                    />
             </FrameLayout>
 
             <LinearLayout
@@ -255,7 +258,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/main_hote_spt_img"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/test_main_2"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -454,7 +457,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/main_hote_get_img"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/test_main_2"/>
                 <RelativeLayout
                     android:layout_width="match_parent"

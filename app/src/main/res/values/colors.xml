@@ -6,4 +6,6 @@
     <color name="orange">#FE9004</color>
     <color name="gray_bg">#e8e8e8</color>
     <color name="right_bule">#079dd3</color>
+    <color name="title_bule">#089ed4</color>
+    <color name="divide_gray">#747474</color>
 </resources>
