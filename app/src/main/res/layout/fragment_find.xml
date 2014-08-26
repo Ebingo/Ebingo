@@ -5,4 +5,12 @@
     tools:context="com.promote.ebingo.find.FindFragment">
 
 
+
+
+    <GridView
+        android:id="@+id/frag_find_gv"
+        android:listSelector="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></GridView>
+
 </RelativeLayout>

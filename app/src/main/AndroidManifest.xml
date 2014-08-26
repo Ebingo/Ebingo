@@ -26,6 +26,14 @@
             android:name=".search.SearchActivity"
             android:label="@string/title_activity_search" >
         </activity>
+        <activity
+            android:name=".category.CategoryActivity"
+            android:label="@string/title_activity_category" >
+        </activity>
+        <activity
+            android:name=".InformationActivity.ProductInfoActivity"
+            android:label="@string/title_activity_product_info" >
+        </activity>
     </application>
 
 </manifest>

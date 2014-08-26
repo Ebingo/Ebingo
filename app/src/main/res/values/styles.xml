@@ -35,13 +35,41 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="gray_15_tv" parent="font_gray_15">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
     <style name="back_arro_style">
         <item name="android:src">@drawable/back_arro</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">15dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+
+
+    <style name="category_tv_style">
+        <item name="android:padding">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@drawable/gray_white_selector</item>
+        <item name="android:background">@drawable/blue_selector</item>
+    </style>
+
+    <style name="list_item_style">
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="listview_style">
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:divider">@color/divide_gray</item>
     </style>
 
 </resources>

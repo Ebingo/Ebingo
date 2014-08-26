@@ -30,6 +30,10 @@
         <item name="android:textColor">@color/gray</item>
     </style>
 
+    <style name="font_black_14">
+        <item name="android:textSize">@dimen/font_14</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
     <style name="font_black_15">
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@color/black</item>
@@ -39,6 +43,10 @@
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@color/white</item>
     </style>
+    <style name="font_red_15">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
 
     <style name="font_gray_15">
         <item name="android:textSize">@dimen/font_15</item>
@@ -47,6 +55,11 @@
 
     <style name="font_blue_15">
         <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/title_bule</item>
+    </style>
+
+    <style name="font_blue_14">
+        <item name="android:textSize">@dimen/font_14</item>
         <item name="android:textColor">@color/title_bule</item>
     </style>
 
