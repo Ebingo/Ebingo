@@ -18,7 +18,7 @@
 
     <style name="font_orange_18">
         <item name="android:textSize">@dimen/font_18</item>
-        <item name="android:textColor">@color/orange</item>
+        <item name="android:textColor">@color/orange_my</item>
     </style>
     <style name="font_gray_11">
         <item name="android:textSize">@dimen/font_11</item>
@@ -33,6 +33,10 @@
     <style name="font_black_14">
         <item name="android:textSize">@dimen/font_14</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="font_orange_14">
+        <item name="android:textColor">@color/orange_my</item>
+        <item name="android:textSize">@dimen/font_14</item>
     </style>
     <style name="font_black_15">
         <item name="android:textSize">@dimen/font_15</item>
@@ -65,7 +69,7 @@
 
     <style name="font_orange_15">
         <item name="android:textSize">@dimen/font_15</item>
-        <item name="android:textColor">@color/orange</item>
+        <item name="android:textColor">@color/orange_my</item>
     </style>
 
     <style name="font_black_20">

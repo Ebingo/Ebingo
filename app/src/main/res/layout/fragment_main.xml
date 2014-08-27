@@ -12,6 +12,7 @@
 
     <com.jch.lib.view.PagerScrollView
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:background="@color/gray_bg"
         android:layout_height="match_parent">
 
@@ -28,7 +29,7 @@
                     android:id="@+id/main_frag_vp"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@color/orange"
+                    android:background="@color/orange_my"
                     />
 
                 <com.jch.lib.view.PagerIndicator

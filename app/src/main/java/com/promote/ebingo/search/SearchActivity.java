@@ -10,7 +10,6 @@ public class SearchActivity extends ActionBarActivity {
 
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -34,6 +34,10 @@
             android:name=".InformationActivity.ProductInfoActivity"
             android:label="@string/title_activity_product_info" >
         </activity>
+        <activity
+            android:name=".InformationActivity.BuyInfoActivity"
+            android:label="@string/title_activity_buy_info" >
+        </activity>
     </application>
 
 </manifest>

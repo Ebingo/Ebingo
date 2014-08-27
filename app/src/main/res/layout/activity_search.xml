@@ -69,6 +69,30 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/search_result_key_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="@style/info_content_pad"
+        >
+        <TextView
+            style="@style/gray_15_tv"
+            android:text="@string/serch_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/search_key_tv"
+            style="@style/gray_15_tv"
+            android:layout_marginLeft="5dp"
+            android:text="小公司"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
     <ListView
         android:id="@+id/search_lv"
         android:dividerHeight="1dp"

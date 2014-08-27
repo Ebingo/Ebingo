@@ -25,6 +25,7 @@
         <item name="android:singleLine">true</item>
     </style>
 
+
     <style name="gray_11_tv" parent="font_gray_11">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
@@ -34,8 +35,28 @@
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
     </style>
+    <style name="light_gray_15_tv" parent="tv_singl_base_style">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/info_name_gray</item>
+    </style>
+
+
+    <style name="orange_14_tv" parent="font_orange_14">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
 
     <style name="gray_15_tv" parent="font_gray_15">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="blue_15_tv" parent="tv_singl_base_style">
+        <item name="android:textColor">@color/title_bule</item>
+        <item name="android:textSize">@dimen/font_15</item>
+    </style>
+
+    <style name="black_15_tv" parent="font_black_15">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
     </style>
@@ -70,6 +91,14 @@
     <style name="listview_style">
         <item name="android:dividerHeight">1dp</item>
         <item name="android:divider">@color/divide_gray</item>
+    </style>
+
+
+    <style name="info_content_pad">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
     </style>
 
 </resources>
