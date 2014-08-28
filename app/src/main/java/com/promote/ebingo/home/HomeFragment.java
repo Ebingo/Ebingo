@@ -1,5 +1,6 @@
 package com.promote.ebingo.home;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,12 +14,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
+import com.jch.lib.util.HttpUtil;
 import com.jch.lib.view.PagerIndicator;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.bean.Adv;
+import com.promote.ebingo.bean.GetIndexBeanTools;
+import com.promote.ebingo.bean.GetIndexBeanTools.GetIndexBean;
+import com.promote.ebingo.bean.HotBean;
+import com.promote.ebingo.bean.HotCategory;
+import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.HttpConstant;
 import com.promote.ebingo.util.LogCat;
 
-import org.w3c.dom.Text;
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -74,6 +86,16 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private ImageView mainhot2getimg;
     /** banner條滾動schedule. **/
     private ScheduledExecutorService scheduledExecutorService;
+
+    private GetIndexBean mIndexBean = null;
+    /** 热门市场. **/
+    private ArrayList<HotCategory> hot_category = new ArrayList<HotCategory>();
+    /** 熱門供應. **/
+    private ArrayList<HotBean> hot_supply = new ArrayList<HotBean>();
+    /** 热门需求. **/
+    private ArrayList<HotBean> hot_demand = new ArrayList<HotBean>();
+    /** 公告条. **/
+    ArrayList<Adv> mAds = new ArrayList<Adv>();
 
     //test data.
     private int imgsRes[] = {R.drawable.test_main_2,R.drawable.test_main_1,R.drawable.test_main_2,R.drawable.test_main_1};
@@ -182,14 +204,15 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         mainhot2getimg = (ImageView)  view.findViewById(R.id.main_hot_2get_img);
 
 
-        mBannerPagerAdapter = new BannerVagerAdapter(imgsRes, getActivity().getApplicationContext());
-        mainfragpi.setTotalPage(imgsRes.length);
-        mainfragpi.setCurrentPage(0);
-        mainfragvp.setAdapter(mBannerPagerAdapter);
-        mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
-        mainfragvp.setOnPageChangeListener(this);
+        //TODO 數據加載前初始化ViewPager.
+//        mainfragpi.setTotalPage(imgsRes.length);
+//        mainfragpi.setCurrentPage(0);
+
         DisplayUtil.reSizeViewByScreenWidth(mainfragvp, mBannerBaseWidth, mBannerBaseHeight, getActivity());
+
         loopPager();
+
+        getIndex();
     }
 
 
@@ -288,42 +311,32 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         /** 循环滚动的基本起始项。 **/
         private static final int STARTPOIONT = 300;
 
-        private ArrayList<String> imgsUrls = new ArrayList<String>();
+//        private ArrayList<String> imgsUrls = new ArrayList<String>();
         private Context mContext = null;
         private ArrayList<ImageView> imgs = new ArrayList<ImageView>();
-        private int imgsRes[] ;
 
-        public BannerVagerAdapter(ArrayList<String> imgsUrls, Context context){
-            this.imgsUrls = imgsUrls;
+        public BannerVagerAdapter(Context context){
             this.mContext = context;
 
-            ImageView imgView = new ImageView(context);
-            for (int i = 0; i < imgsUrls.size(); i++){
-                imgView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//                imgView.setBackgroundResource(imgsRes[i]);
-                //TODO
-
+            for (int i = 0; i < mAds.size(); i++){
+                ImageView imgView = new ImageView(context);
+                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imgView.setBackgroundResource(imgsRes[i]);
                 imgs.add(imgView);
             }
 
         }
 
         /**
-         * @param imgsRes
-         * @param context
+         * 给每一个imageView添加点击事件。
+         * @param imgView
+         * @param AdvType   点击事件类别。
          */
-        public BannerVagerAdapter(int[] imgsRes, Context context){
-            this.mContext = context;
-            this.imgsRes = imgsRes;
-
-            for (int i = 0; i < imgsRes.length; i++){
-                ImageView imgView = new ImageView(context);
-                imgView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                imgView.setBackgroundResource(imgsRes[i]);
-                imgs.add(imgView);
-            }
+        private void setImageViewListner(ImageView imgView, int AdvType){
 
         }
+
+
 
         @Override
         public int getCount() {
@@ -335,7 +348,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         @Override
         public boolean isViewFromObject(View view, Object o) {
-            return view == o;
+            return view == o;       //如果当前显示的View跟你传进来的是同一个View,说明就是要显示的 view
         }
 
         // 代表的是当前传进来的对象，是不是要在我当前页面显示的
@@ -352,7 +365,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             }
             container.addView(imgView);
 
-            return imgView;// 如果当前显示的View跟你传进来的是同一个View,说明就是要显示的 view
+            return imgView;
         }
 
 
@@ -369,7 +382,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
          * @return
          */
          public int getCurPosition(int position){
-             int loopPosition = position % imgsRes.length;
+             int loopPosition = position % imgs.size();
              return loopPosition;
          }
 
@@ -381,8 +394,82 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
              return STARTPOIONT;
          }
 
+    }
+
+    /**
+     * 從服務器獲取首頁信息。
+     */
+    private void getIndex(){
+
+        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+        EbingoRequestParmater parma = new EbingoRequestParmater(getActivity().getApplicationContext());
+        parma.put("company_id", 0);
+
+        HttpUtil.post(HttpConstant.getIndex, parma, new JsonHttpResponseHandler("utf-8"){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                GetIndexBean indexBean=  GetIndexBeanTools.getIndexBeanJson(response.toString());
+                ArrayList<Adv> advs = indexBean.getAds();
+                if (advs != null){
+                    mAds.addAll(advs);
+                }
+
+                ArrayList<HotCategory> hotCategories = indexBean.getHot_category();
+                if(hotCategories != null){
+                    hot_category.addAll(hotCategories);
+                }
+
+                ArrayList<HotBean> hotDemands = indexBean.getHot_demand();
+                if (hotDemands != null){
+                    hot_demand.addAll(hotDemands);
+                }
+
+                ArrayList<HotBean> hotSupplys = indexBean.getHot_supply();
+               if (hotSupplys != null){
+                   hot_supply.addAll(hotSupplys);
+               }
+
+                mIndexBean = indexBean;
+
+                setAdvPager();
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                dialog.dismiss();
+            }
+        });
 
     }
+
+    /**
+     * 设置滚动广告图片.
+     */
+    private void setAdvPager(){
+        mainfragvp.removeAllViews();
+        mBannerPagerAdapter = new BannerVagerAdapter(getActivity().getApplicationContext());
+        mainfragvp.setAdapter(mBannerPagerAdapter);
+        mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
+        mainfragpi.setTotalPage(mAds.size());
+        mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
+        mainfragvp.setOnPageChangeListener(this);
+    }
+
+
 
 
 }

@@ -8,6 +8,7 @@
     <style name="tab_btn" parent="font_gray_11">
         <item name="android:background">@color/white</item>
         <item name="android:layout_width">0dp</item>
+        <item name="android:drawablePadding">-1dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:gravity">center_horizontal</item>
