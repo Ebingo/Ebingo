@@ -7,15 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.promote.ebingo.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CenterFragment.OnFragmentInteractionListener} interface
+ * {@link com.promote.ebingo.center.CenterFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CenterFragment#newInstance} factory method to
+ * Use the {@link com.promote.ebingo.center.CenterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class CenterFragment extends Fragment {
@@ -29,6 +32,21 @@ public class CenterFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private ImageView centerheadiv;
+    private TextView centerloginbtn;
+    private LinearLayout centtopimgll;
+    private TextView centersupplynumtv;
+    private TextView centerdemandnumtv;
+    private TextView centercollectnumtv;
+    private TextView centermsgnumtv;
+    private TextView centsupplytv;
+    private TextView centdemandtv;
+    private TextView centcollettv;
+    private TextView centbooktv;
+    private TextView centprivilegetv;
+    private TextView centtellhistorytv;
+    private TextView centsettingtv;
+    private TextView centprofiletv;
 
     /**
      * Use this factory method to create a new instance of
@@ -65,7 +83,11 @@ public class CenterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_center, container, false);
+        View view = inflater.inflate(R.layout.fragment_center, container, false);
+
+        initialize(view);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,6 +112,25 @@ public class CenterFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void initialize(View view) {
+
+        centerheadiv = (ImageView) view.findViewById(R.id.center_head_iv);
+        centerloginbtn = (TextView) view.findViewById(R.id.center_login_btn);
+        centtopimgll = (LinearLayout) view.findViewById(R.id.cent_top_img_ll);
+        centersupplynumtv = (TextView) view.findViewById(R.id.center_supply_num_tv);
+        centerdemandnumtv = (TextView) view.findViewById(R.id.center_demand_num_tv);
+        centercollectnumtv = (TextView) view.findViewById(R.id.center_collect_num_tv);
+        centermsgnumtv = (TextView) view.findViewById(R.id.center_msg_num_tv);
+        centsupplytv = (TextView) view.findViewById(R.id.cent_supply_tv);
+        centdemandtv = (TextView) view.findViewById(R.id.cent_demand_tv);
+        centcollettv = (TextView) view.findViewById(R.id.cent_collet_tv);
+        centbooktv = (TextView) view.findViewById(R.id.cent_book_tv);
+        centprivilegetv = (TextView) view.findViewById(R.id.cent_privilege_tv);
+        centtellhistorytv = (TextView) view.findViewById(R.id.cent_tell_history_tv);
+        centsettingtv = (TextView) view.findViewById(R.id.cent_setting_tv);
+        centprofiletv = (TextView) view.findViewById(R.id.cent_profile_tv);
     }
 
     /**

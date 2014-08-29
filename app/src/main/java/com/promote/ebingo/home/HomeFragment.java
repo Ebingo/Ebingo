@@ -2,6 +2,9 @@ package com.promote.ebingo.home;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,20 +14,28 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.ImageManager;
 import com.jch.lib.view.PagerIndicator;
+import com.jch.lib.view.PagerScrollView;
+import com.jch.lib.view.ScrollListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.Adv;
 import com.promote.ebingo.bean.GetIndexBeanTools;
 import com.promote.ebingo.bean.GetIndexBeanTools.GetIndexBean;
 import com.promote.ebingo.bean.HotBean;
 import com.promote.ebingo.bean.HotCategory;
+import com.promote.ebingo.bean.TodayNum;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.HttpConstant;
 import com.promote.ebingo.util.LogCat;
@@ -56,34 +67,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private TextView maingetnum;
     private TextView mainsptnumtv;
     private TextView mainpricenumtv;
-    private TextView mainhote1sttv;
-    private TextView mainhote2sttv;
-    private TextView mainhote3sttv;
-    private TextView mainhote4sttv;
-    private TextView mainhote5sttv;
-    private TextView mainhote6sttv;
-    private ImageView mainhotesptimg;
-    private TextView mainhote1spttiteltv;
-    private TextView mainhote1spttitlenumtv;
-    private TextView mainhote1subtitletv;
-    private TextView mainhotespt1subtitlenumtv;
-    private ImageView mainhot1sptimg;
-    private TextView mainhote2spttiteltv;
-    private TextView mainhote2spttitlenumtv;
-    private TextView mainhote2subtitletv;
-    private TextView mainhotespt2subtitlenumtv;
-    private ImageView mainhot2sptimg;
-    private ImageView mainhotegetimg;
-    private TextView mainhote1gettiteltv;
-    private TextView mainhote1gettitlenumtv;
-    private TextView mainhoteget1subtitletv;
-    private TextView mainhoteget1subtitlenumtv;
-    private ImageView mainhot1getimg;
-    private TextView mainhote2gettiteltv;
-    private TextView mainhote2gettitlenumtv;
-    private TextView mainhoteget2subtitletv;
-    private TextView mainhoteget2subtitlenumtv;
-    private ImageView mainhot2getimg;
+    private GridView mHotMarketGv;
+    private HotMarketAdapter hotMarketAdapter;
     /** banner條滾動schedule. **/
     private ScheduledExecutorService scheduledExecutorService;
 
@@ -94,14 +79,30 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private ArrayList<HotBean> hot_supply = new ArrayList<HotBean>();
     /** 热门需求. **/
     private ArrayList<HotBean> hot_demand = new ArrayList<HotBean>();
+
+    /** 廣告大圖的緩存機制. **/
+    private DisplayImageOptions mOptions;
+    /** 圓形小圖片的緩存機制。 **/
+    private DisplayImageOptions mCircleImageOptions;
     /** 公告条. **/
     ArrayList<Adv> mAds = new ArrayList<Adv>();
-
+    /** 热门求购 **/
+    private HoteBeanAdapter mHotBuyAdapter = null;
+    /** 热门供应 **/
+    private HoteBeanAdapter mHotSupplyAdapter = null;
     //test data.
-    private int imgsRes[] = {R.drawable.test_main_2,R.drawable.test_main_1,R.drawable.test_main_2,R.drawable.test_main_1};
+    private int imgsRes[] = {R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2,R.drawable.test_main_1, R.drawable.test_main_2};
 
-    private int mBannerBaseWidth = 720;
-    private int mBannerBaseHeight = 287;
+//    private int mBannerBaseWidth = 720;
+//    private int mBannerBaseHeight = 287;
+    private Point imageSize = new Point(720, 287);
+    private TextView mainhote8sttv;
+    private TextView mainhote7sttv;
+
+    private ScrollListView mHotBuyLv = null;
+    private ScrollListView mSupplyLv = null;
+    private PagerScrollView homesv;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -174,45 +175,56 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         maingetnum = (TextView)  view.findViewById(R.id.main_get_num);
         mainsptnumtv = (TextView)  view.findViewById(R.id.main_spt_num_tv);
         mainpricenumtv = (TextView)  view.findViewById(R.id.main_price_num_tv);
-        mainhote1sttv = (TextView)  view.findViewById(R.id.main_hote_1st_tv);
-        mainhote2sttv = (TextView)  view.findViewById(R.id.main_hote_2st_tv);
-        mainhote3sttv = (TextView)  view.findViewById(R.id.main_hote_3st_tv);
-        mainhote4sttv = (TextView)  view.findViewById(R.id.main_hote_4st_tv);
-        mainhote5sttv = (TextView)  view.findViewById(R.id.main_hote_5st_tv);
-        mainhote6sttv = (TextView)  view.findViewById(R.id.main_hote_6st_tv);
-        mainhotesptimg = (ImageView)  view.findViewById(R.id.main_hote_spt_img);
-        mainhote1spttiteltv = (TextView)  view.findViewById(R.id.main_hote_1spt_titel_tv);
-        mainhote1spttitlenumtv = (TextView)  view.findViewById(R.id.main_hote_1spt__title_num_tv);
-        mainhote1subtitletv = (TextView)  view.findViewById(R.id.main_hote_1subtitle_tv);
-        mainhotespt1subtitlenumtv = (TextView)  view.findViewById(R.id.main_hote_spt__1subtitle_num_tv);
-        mainhot1sptimg = (ImageView)  view.findViewById(R.id.main_hot_1spt_img);
-        mainhote2spttiteltv = (TextView)  view.findViewById(R.id.main_hote_2spt_titel_tv);
-        mainhote2spttitlenumtv = (TextView)  view.findViewById(R.id.main_hote_2spt__title_num_tv);
-        mainhote2subtitletv = (TextView)  view.findViewById(R.id.main_hote_2subtitle_tv);
-        mainhotespt2subtitlenumtv = (TextView)  view.findViewById(R.id.main_hote_spt__2subtitle_num_tv);
-        mainhot2sptimg = (ImageView)  view.findViewById(R.id.main_hot_2spt_img);
-        mainhotegetimg = (ImageView)  view.findViewById(R.id.main_hote_get_img);
-        mainhote1gettiteltv = (TextView)  view.findViewById(R.id.main_hote_1get_titel_tv);
-        mainhote1gettitlenumtv = (TextView)  view.findViewById(R.id.main_hote_1get__title_num_tv);
-        mainhoteget1subtitletv = (TextView)  view.findViewById(R.id.main_hote_get_1subtitle_tv);
-        mainhoteget1subtitlenumtv = (TextView) view.findViewById(R.id.main_hote_get__1subtitle_num_tv);
-        mainhot1getimg = (ImageView)  view.findViewById(R.id.main_hot_1get_img);
-        mainhote2gettiteltv = (TextView)  view.findViewById(R.id.main_hote_2get_titel_tv);
-        mainhote2gettitlenumtv = (TextView)  view.findViewById(R.id.main_hote_2get__title_num_tv);
-        mainhoteget2subtitletv = (TextView)  view.findViewById(R.id.main_hote_get_2subtitle_tv);
-        mainhoteget2subtitlenumtv = (TextView)  view.findViewById(R.id.main_hote_get__2subtitle_num_tv);
-        mainhot2getimg = (ImageView)  view.findViewById(R.id.main_hot_2get_img);
+        homesv = (PagerScrollView) view.findViewById(R.id.home_sv);
+        mHotMarketGv = (GridView) view.findViewById(R.id.main_hotmarket_gv);
 
+        mHotBuyLv = (ScrollListView) view.findViewById(R.id.home_hot_buy_lv);
+        mHotBuyLv.setParentScrollView(homesv);
+        mSupplyLv = (ScrollListView) view.findViewById(R.id.home_hotsupply_lv);
+        mSupplyLv.setParentScrollView(homesv);
 
-        //TODO 數據加載前初始化ViewPager.
-//        mainfragpi.setTotalPage(imgsRes.length);
-//        mainfragpi.setCurrentPage(0);
+        mBannerPagerAdapter = new BannerVagerAdapter(getActivity().getApplicationContext());
+        mainfragvp.setAdapter(mBannerPagerAdapter);
+        mainfragvp.setOnPageChangeListener(this);
+        mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
+        DisplayUtil.reSizeViewByScreenWidth(mainfragvp, imageSize.x, imageSize.y, getActivity());
 
-        DisplayUtil.reSizeViewByScreenWidth(mainfragvp, mBannerBaseWidth, mBannerBaseHeight, getActivity());
+        hotMarketAdapter = new HotMarketAdapter(getActivity().getApplicationContext(), hot_category, mOptions);
+        mHotMarketGv.setSelector(new BitmapDrawable());
+        mHotMarketGv.setOnItemClickListener(new HotMarketOCL());
+        mHotMarketGv.setAdapter(hotMarketAdapter);
+
+        mHotBuyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_demand, imageSize);
+        mHotBuyLv.setAdapter(mHotBuyAdapter);
+        mHotBuyLv.setOnItemClickListener(new HotBuyOCL());
+        mHotSupplyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_supply, imageSize);
+        mSupplyLv.setAdapter(mHotSupplyAdapter);
+        mSupplyLv.setOnItemClickListener(new HotSupplyOCL());
 
         loopPager();
-
         getIndex();
+        initImgOperation();
+    }
+
+    /**
+     * 配置圖片緩存。
+     */
+    private void initImgOperation(){
+
+        // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
+        mOptions = new DisplayImageOptions.Builder()
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .showImageForEmptyUri(R.drawable.loading)
+                .showImageOnLoading(R.drawable.loading)
+                .showImageOnFail(R.drawable.loading)
+                .cacheInMemory(true).cacheOnDisc(true).build();
+
+        mCircleImageOptions = new DisplayImageOptions.Builder()
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .showImageForEmptyUri(R.drawable.circle_img)
+                .showImageOnLoading(R.drawable.circle_img)
+                .showImageOnFail(R.drawable.circle_img)
+                .cacheInMemory(true).cacheOnDisc(true).build();
     }
 
 
@@ -295,7 +307,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     public void onPageSelected(int i) {
         mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(i));
         LogCat.d("org Position--:"+ i+"--- loop position--:"+mBannerPagerAdapter.getCurPosition(i));
-
     }
 
     @Override
@@ -318,13 +329,25 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         public BannerVagerAdapter(Context context){
             this.mContext = context;
 
-            for (int i = 0; i < mAds.size(); i++){
                 ImageView imgView = new ImageView(context);
-                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imgView.setBackgroundResource(imgsRes[i]);
+                imgView.setScaleType(ImageView.ScaleType.CENTER);
+                imgView.setBackgroundResource(R.drawable.loading);
                 imgs.add(imgView);
             }
 
+
+        @Override
+        public void notifyDataSetChanged() {
+            imgs.clear();
+            for (int i = 0; i < mAds.size(); i++) {
+                ImageView imgView = new ImageView(mContext);
+                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                imgView.setBackgroundResource(imgsRes[i]);
+                ImageManager.load(mAds.get(i).getSrc(), imgView, mOptions);
+                setImageViewListner(imgView, mAds.get(i).getType());
+                imgs.add(imgView);
+                super.notifyDataSetChanged();
+            }
         }
 
         /**
@@ -333,6 +356,21 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
          * @param AdvType   点击事件类别。
          */
         private void setImageViewListner(ImageView imgView, int AdvType){
+            final Intent intent = new Intent();
+            switch (AdvType){
+//               intent.setClass()
+            }
+
+            imgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+//                    startActivity(intent);
+                }
+            });
+
+
+
 
         }
 
@@ -358,12 +396,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
             int loopPosition = getCurPosition(position);
             ImageView imgView = imgs.get(loopPosition);
-
-            ViewGroup parentView = (ViewGroup) imgView.getParent();
-            if (parentView != null){
-                parentView.removeView(imgView);
+            ViewGroup parent = (ViewGroup)imgView.getParent();
+            if (parent != null){
+                parent.removeView(imgView);
             }
-            container.addView(imgView);
+
+            container.addView(imgView, 0);
+
 
             return imgView;
         }
@@ -372,7 +411,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
 
-            container.removeView((View)object);
+//            container.removeView((View)object);
 //            super.destroyItem(container, position, object);
         }
 
@@ -425,16 +464,19 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 ArrayList<HotBean> hotDemands = indexBean.getHot_demand();
                 if (hotDemands != null){
                     hot_demand.addAll(hotDemands);
+                    mHotBuyAdapter.notifyDataSetChanged();
                 }
 
                 ArrayList<HotBean> hotSupplys = indexBean.getHot_supply();
                if (hotSupplys != null){
                    hot_supply.addAll(hotSupplys);
+                   mHotSupplyAdapter.notifyDataSetChanged();
                }
 
                 mIndexBean = indexBean;
-
+                initTodayData();
                 setAdvPager();
+                initHotMarket();
 
                 dialog.dismiss();
             }
@@ -461,14 +503,66 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
      */
     private void setAdvPager(){
         mainfragvp.removeAllViews();
-        mBannerPagerAdapter = new BannerVagerAdapter(getActivity().getApplicationContext());
-        mainfragvp.setAdapter(mBannerPagerAdapter);
-        mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
+        mBannerPagerAdapter.notifyDataSetChanged();
         mainfragpi.setTotalPage(mAds.size());
         mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
         mainfragvp.setOnPageChangeListener(this);
+        mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
     }
 
+    /**
+     * 初始化今日数据。
+     */
+    private void initTodayData(){
+        TodayNum todayNum = mIndexBean.getToday_num();
+        maingetnum.setText(String.valueOf(todayNum.getDemand_num()));
+        mainsptnumtv.setText(String.valueOf(todayNum.getSupply_num()));
+        mainpricenumtv.setText(String.valueOf(todayNum.getCall_num()));
+    }
+
+    /**
+     * 初始化热门市场。
+     */
+    private void initHotMarket(){
+
+        hotMarketAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 這門市場監聽。
+     */
+    public class HotMarketOCL implements AdapterView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //TODO
+            HotCategory category = hot_category.get(position);
+
+        }
+    }
+
+    /**
+     * 熱門需求監聽。
+     */
+    public class HotBuyOCL implements AdapterView.OnItemClickListener{
+
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        }
+    }
+
+    /**
+     * 热门供应监听
+     */
+    public class HotSupplyOCL implements AdapterView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        }
+    }
 
 
 

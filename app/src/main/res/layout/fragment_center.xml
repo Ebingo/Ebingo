@@ -25,15 +25,236 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:background="@color/gray_bg"
             android:layout_width="match_parent"
+            android:orientation="vertical"
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:gravity="center_horizontal"
+                android:background="@drawable/center_top_bg"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="200dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/cent_top_img_ll"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/center_head_iv"
+                        android:layout_width="wrap_content"
+                        android:src="@drawable/center_head"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/center_login_btn"
+                        android:text="@string/login"
+                        android:padding="5dp"
+                        android:background="@drawable/login_btn_shape"
+                        android:layout_marginTop="10dp"
+                        style="@style/font_white_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:weightSum="4"
+                    android:layout_below="@id/cent_top_img_ll"
+                    android:background="@color/trans_black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/center_supply_num_tv"
+                            android:layout_width="wrap_content"
+                            style="@style/font_white_15"
+                            android:text="23"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/font_white_15"
+                            android:text="@string/supply"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/center_demand_num_tv"
+                            android:layout_width="wrap_content"
+                            style="@style/font_white_15"
+                            android:text="3"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            style="@style/font_white_15"
+                            android:layout_width="wrap_content"
+                            android:text="@string/buy"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/center_collect_num_tv"
+                            android:layout_width="wrap_content"
+                            style="@style/font_white_15"
+                            android:text="56"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/font_white_15"
+                            android:text="@string/collect"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/center_msg_num_tv"
+                            android:layout_width="wrap_content"
+                            style="@style/font_white_15"
+                            android:text="18"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/font_white_15"
+                            android:text="@string/message"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+            <TextView
+                android:id="@+id/cent_supply_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/cente_supply"
+                android:text="@string/my_supply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/cent_demand_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/center_demand"
+                android:text="@string/my_demand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/cent_collet_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/center_collect"
+                android:text="@string/my_supply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/cent_book_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/center_book"
+                android:text="@string/my_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/cent_privilege_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/center_privilege"
+                android:text="@string/my_privilege"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/cent_tell_history_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/center_tell"
+                android:text="@string/my_tell_hostory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/cent_setting_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/center_setting"
+                android:text="@string/my_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/cent_profile_tv"
+                style="@style/cent_item"
+                android:drawableLeft="@drawable/center_profile"
+                android:text="@string/my_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
         </LinearLayout>
 
     </ScrollView>

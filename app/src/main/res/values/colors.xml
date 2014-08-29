@@ -11,4 +11,5 @@
     <color name="light_blue">#94d9f3</color>
     <color name="divide_gray">#747474</color>
     <color name="red">#fc020e</color>
+    <color name="trans_black">#33000000</color>
 </resources>

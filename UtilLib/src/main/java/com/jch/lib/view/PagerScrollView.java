@@ -18,15 +18,18 @@ public class PagerScrollView extends ScrollView {
 
     public PagerScrollView(Context context) {
         super(context);
+        init();
     }
 
 
     public PagerScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public PagerScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
     }
 
 
