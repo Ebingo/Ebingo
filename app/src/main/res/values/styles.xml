@@ -36,6 +36,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
     </style>
+
     <style name="light_gray_15_tv" parent="tv_singl_base_style">
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@color/info_name_gray</item>
@@ -71,7 +72,6 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentLeft">true</item>
     </style>
-
 
 
     <style name="category_tv_style">
