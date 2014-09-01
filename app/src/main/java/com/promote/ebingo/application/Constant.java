@@ -7,6 +7,7 @@ import android.os.Environment;
  */
 public class Constant {
 
+
     /** 设置是否为debug模式。 **/
     public static boolean mReleaseAble = false;
 
