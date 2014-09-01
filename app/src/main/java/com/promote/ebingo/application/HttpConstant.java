@@ -1,6 +1,4 @@
-package com.promote.ebingo.util;
-
-import com.promote.ebingo.application.Constant;
+package com.promote.ebingo.application;
 
 /**
  * Created by jch on 2014/8/28.
@@ -21,29 +19,30 @@ public class HttpConstant {
 
     public static String LOCAL_URL = "/ebingoo/index.php?s=/Home/Api/";
 
-    public static String getHost(){
+    public static String getHost() {
 
-        if (Constant.isReleaseAble()){
+        if (Constant.isReleaseAble()) {
             return HOST + PORT;
-        }else{
+        } else {
             return TEST_HOST + PORT;
         }
     }
 
-    private static String getRootUrl(){
+    private static String getRootUrl() {
 
-        if (LOCALHOST){
+        if (LOCALHOST) {
             return TEST_HOST + LOCAL_URL;
-        }else{
+        } else {
             return TEST_RHOST + ROOT_URL;
         }
     }
 
     public static final String KEY = "hdy782634j23487sdfkjw3486";
 
-    /**首页显示接口.**/
+    /**
+     * 首页显示接口.*
+     */
     public static final String getIndex = getRootUrl() + "getIndex";
-
 
 
 }

@@ -112,6 +112,7 @@ public class CenterFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
     }
 
     private void initialize(View view) {

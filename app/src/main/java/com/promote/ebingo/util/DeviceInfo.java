@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 
 import com.jch.lib.util.MD5;
 import com.jch.lib.util.SharedPreferenceUtil;
+import com.promote.ebingo.application.HttpConstant;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
