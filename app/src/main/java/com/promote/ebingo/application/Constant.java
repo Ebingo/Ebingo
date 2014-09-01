@@ -1,6 +1,6 @@
 package com.promote.ebingo.application;
 
-import android.os.Environment;
+        import android.os.Environment;
 
 /**
  * Created by ACER on 2014/8/25.

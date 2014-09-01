@@ -118,4 +118,12 @@
         <item name="android:drawablePadding">15dp</item>
     </style>
 
+    <style name="publish_item">
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:paddingTop">17dp</item>
+        <item name="android:paddingBottom">17dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>

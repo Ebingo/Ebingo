@@ -24,6 +24,7 @@ import java.util.Random;
 
 public class DeviceInfo {
 
+
 	private static String mCurTime = null;
 
     public static final String MIEI = "miei";
