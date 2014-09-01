@@ -12,4 +12,6 @@
     <color name="divide_gray">#747474</color>
     <color name="red">#fc020e</color>
     <color name="trans_black">#33000000</color>
+    <color name="publish_btn_yellow">#F99A02</color>
+    <color name="publish_btn_green">#5FA103</color>
 </resources>
