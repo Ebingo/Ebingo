@@ -1,12 +1,12 @@
 package com.promote.ebingo.application;
 
-import android.os.Environment;
+        import android.os.Environment;
 
 /**
  * Created by ACER on 2014/8/25.
  */
 public class Constant {
-    //fdsfds
+
     /** 设置是否为debug模式。 **/
     public static boolean mReleaseAble = false;
 
