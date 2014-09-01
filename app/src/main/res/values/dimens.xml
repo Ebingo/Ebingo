@@ -10,4 +10,8 @@
     <dimen name="main_item_pad_t_b">10dp</dimen>
     <dimen name="main_item_pad_l_r">20dp</dimen>
 
+    <dimen name="sliding_tab_height">40dp</dimen>
+    
+    <dimen name="section_divide_height">20dp</dimen>
+
 </resources>
