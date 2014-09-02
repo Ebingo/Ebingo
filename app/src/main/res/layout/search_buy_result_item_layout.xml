@@ -27,20 +27,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/font_gray_11"
+                style="@style/font_gray_12"
                 android:text="@string/search_look" />
 
             <TextView
                 android:id="@+id/search_result_item_look_num_tvs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/font_gray_11"
+                style="@style/font_gray_12"
                 android:text="2000" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/font_gray_11"
+                style="@style/font_gray_12"
                 android:text="@string/search_time" />
         </LinearLayout>
 
@@ -70,7 +70,7 @@
 
     <TextView
         android:id="@+id/search_result_describe_tv"
-        style="@style/font_gray_11"
+        style="@style/font_gray_12"
         android:layout_width="match_parent"
         android:text="發范德薩范德薩佛你。呢哦iohoinioj是"
         android:layout_height="wrap_content" />

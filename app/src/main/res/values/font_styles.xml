@@ -25,6 +25,11 @@
         <item name="android:textColor">@color/gray</item>
     </style>
 
+    <style name="font_gray_12">
+        <item name="android:textSize">@dimen/font_12</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
     <style name="font_gray_14">
         <item name="android:textSize">@dimen/font_14</item>
         <item name="android:textColor">@color/gray</item>

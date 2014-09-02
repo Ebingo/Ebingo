@@ -69,6 +69,7 @@
     <string name="interprise_range">【主营范围】</string>
     <string name="interprise_abstrace">【公司简介】</string>
     <string name="interprise_sup_dem">【近期供求】</string>
+    <string name="no_history">沒有搜索记录</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>

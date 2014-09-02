@@ -6,10 +6,9 @@
     android:background="@color/white"
     tools:context="com.promote.ebingo.search.SearchActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:layout_height="@dimen/title_height"
         android:background="@color/title_bule">
 
@@ -25,18 +24,56 @@
              />
 
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/search_cancel_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent"
+            style="@style/font_white_18"
+            android:text="@string/cancel" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@id/search_back_btn"
+            android:layout_toLeftOf="@id/search_cancel_btn"
             android:id="@+id/search_head_center_ll"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/search_btn"
+                android:gravity="center"
+                android:background="@drawable/search_bar_right_shape"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:paddingRight="10dp"
+                android:layout_height="30dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/white_search_btn" />
+              </LinearLayout>
+
+
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
+                android:layout_toLeftOf="@id/search_btn"
                 android:gravity="center_vertical"
-                android:background="@drawable/white_search_bar1"
-                android:layout_height="wrap_content">
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:background="@drawable/search_bar_shape"
+                android:layout_height="30dp">
 
                 <CheckBox
                     android:id="@+id/search_categry_cb"
@@ -49,7 +86,7 @@
                     android:background="@null"
                     android:drawableRight="@drawable/blue_arro_check"
                     android:text="@string/interprise"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
 
                 <EditText
                     android:id="@+id/search_bar_et"
@@ -64,31 +101,18 @@
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/search_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/white_search_btn" />
-        </LinearLayout>
 
-        <TextView
-            android:id="@+id/search_cancel_btn"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/search_head_center_ll"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:layout_alignParentRight="true"
-            android:layout_height="match_parent"
-            style="@style/font_white_15"
-            android:text="@string/cancel" />
+        </RelativeLayout>
 
-    </LinearLayout>
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/search_result_key_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="horizontal"
         style="@style/info_content_pad">
 
@@ -108,21 +132,46 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/search_lv"
-        android:dividerHeight="1dp"
-        android:divider="@color/divide_gray"
+    <LinearLayout
+        android:id="@+id/search_content_ll"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
-    <Button
-        android:id="@+id/search_clear_btn"
-        android:padding="3dp"
-        android:background="@color/gray_bg"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/clear_history"
-        android:layout_width="wrap_content"
+        <com.jch.lib.view.PullToRefreshView
+            android:id="@+id/search_freshview"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/search_lv"
+            android:dividerHeight="1dp"
+            android:divider="@color/divide_gray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        </com.jch.lib.view.PullToRefreshView>
+        <Button
+            android:id="@+id/search_clear_btn"
+            android:padding="3dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/gray_bg"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/clear_history"
+            android:layout_width="wrap_content"
+            style="@style/font_gray_18"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/search_no_history_tv"
+        android:layout_width="match_parent"
+        android:gravity="center"
         style="@style/font_gray_18"
-        android:layout_height="wrap_content" />
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:text="@string/no_history"/>
+
+
 
 </LinearLayout>
