@@ -37,7 +37,8 @@ import com.promote.ebingo.bean.HotBean;
 import com.promote.ebingo.bean.HotCategory;
 import com.promote.ebingo.bean.TodayNum;
 import com.promote.ebingo.impl.EbingoRequestParmater;
-import com.promote.ebingo.util.HttpConstant;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.search.SearchActivity;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -201,6 +202,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         mSupplyLv.setAdapter(mHotSupplyAdapter);
         mSupplyLv.setOnItemClickListener(new HotSupplyOCL());
 
+        mainSearchBarTv.setOnClickListener(this);
+
         loopPager();
         getIndex();
         initImgOperation();
@@ -246,6 +249,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         switch (id){
             case R.id.search_bar_tv:{
 
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
 
                 break;
             }
@@ -449,6 +454,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+
+                LogCat.d("home data -- : " + response.toString());
 
                 GetIndexBean indexBean=  GetIndexBeanTools.getIndexBeanJson(response.toString());
                 ArrayList<Adv> advs = indexBean.getAds();

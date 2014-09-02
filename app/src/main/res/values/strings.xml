@@ -57,6 +57,18 @@
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
     <string name="my_profile">企业资料</string>
+    <string-array name="interprise_info_tab">
+        <item>公司首页</item>
+        <item>企业动态</item>
+        <item>供求信息</item>
+    </string-array>
+    <string name="address">地址：</string>
+    <string name="http_addr">网址：</string>
+    <string name="tell">电话：</string>
+    <string name="contect">联系人</string>
+    <string name="interprise_range">【主营范围】</string>
+    <string name="interprise_abstrace">【公司简介】</string>
+    <string name="interprise_sup_dem">【近期供求】</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -87,5 +99,7 @@
         <item>零售</item>
         <item>包裝</item>
     </string-array>
+
+    <string name="title_activity_interprise_info">Ebingo</string>
 
 </resources>
