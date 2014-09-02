@@ -2,102 +2,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
+    android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <include layout="@layout/common_head_search_layout" />
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context="com.promote.ebingo.publish.PublishFragment">
-
-    <TableLayout
+        android:layout_height="@dimen/title_height"
+        android:gravity="center"
+        style="@style/font_white_20"
+        android:background="@color/title_bule"
+        android:text="@string/tab_publish"
+       />
+    <RadioGroup
+        android:id="@+id/publish_type"
         android:layout_width="match_parent"
-        android:stretchColumns="0,1,2"
+        android:layout_height="@dimen/abc_action_bar_default_height"
         android:background="@color/gray_bg"
-        android:layout_height="wrap_content">
+        android:checkedButton="0"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rb_publish_supply"
+            android:button="@null"
+            style="@style/font_black_15"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/publish_demand"
+            android:layout_width="0dp"
+            android:textColor="@color/black"
+            android:layout_height="@dimen/abc_action_bar_default_height"
+            android:layout_weight="1"/>
+        <RadioButton
+            android:id="@+id/rb_publish_demand"
+            style="@style/font_black_15"
+            android:button="@null"
+            android:background="@color/white"
+            android:layout_marginLeft="1dp"
+            android:gravity="center"
+            android:text="@string/publish_supply"
+            android:layout_width="0dp"
+            android:textColor="@color/black"
+            android:layout_height="@dimen/abc_action_bar_default_height"
+            android:layout_weight="1"/>
 
-        <TableRow>
-
-            <ImageView
-                style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-        </TableRow>
-        <TableRow>
-
-        <ImageView
-            style="@style/publish_item"
-            android:src="@drawable/ic_launcher"/>
-
-        <ImageView   style="@style/publish_item"
-            android:src="@drawable/ic_launcher"/>
-
-        <ImageView   style="@style/publish_item"
-            android:src="@drawable/ic_launcher"/>
-
-        </TableRow>
-        <TableRow>
-
-            <ImageView
-                style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-        </TableRow>
-        <TableRow>
-
-            <ImageView
-                style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-        </TableRow>
-        <TableRow>
-
-            <ImageView
-                style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-        </TableRow>
-        <TableRow>
-
-            <ImageView
-                style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-            <ImageView   style="@style/publish_item"
-                android:src="@drawable/ic_launcher"/>
-
-        </TableRow>
-    </TableLayout>
-
-</ScrollView>
+    </RadioGroup>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/publish_content"/>
 </LinearLayout>

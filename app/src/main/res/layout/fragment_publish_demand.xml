@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+    <LinearLayout
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:background="@color/gray_bg"
+            android:padding="1dp"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:paddingLeft="3dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/category_spaced"/>
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+                    android:drawableRight="@drawable/right_arro"
+                  />
+            </TableRow>
+            <TableRow
+                android:paddingLeft="3dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/area_spaced"
+                    />
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+                    android:drawableRight="@drawable/right_arro"
+                    />
+            </TableRow>
+            <TableRow
+                android:paddingLeft="3dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/price_spaced"/>
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+                    />
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="元"
+                    android:textColor="@color/gray"
+                   />
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:background="@color/gray_bg"
+            android:padding="1dp"
+            android:layout_marginTop="@dimen/publish_layout_margin"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:paddingLeft="3dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/picture_spaced"/>
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    android:layout_width="0dp"
+                    style="@style/publish_edit"
+                    android:drawableRight="@drawable/right_arro"
+                    android:hint="1张"/>
+            </TableRow>
+            <TableRow
+                android:paddingLeft="3dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/description_spaced"
+                    />
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+                    android:drawableRight="@drawable/right_arro"
+                    android:hint="@string/word10"/>
+            </TableRow>
+            <TableRow
+                android:paddingLeft="3dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/title_spaced"/>
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+                    android:hint="15字以内"
+                    />
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:background="@color/gray_bg"
+            android:padding="1dp"
+            android:layout_marginTop="@dimen/publish_layout_margin"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:paddingLeft="3dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/book_stand"/>
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+
+                    />
+            </TableRow>
+            <TableRow
+                android:paddingLeft="3dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/contact"
+                    />
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+
+                    />
+            </TableRow>
+            <TableRow
+                android:paddingLeft="3dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:paddingBottom="@dimen/publish_layout_padding"
+                android:paddingTop="@dimen/publish_layout_padding"
+                android:background="@color/white"
+                >
+                <TextView android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_black_18"
+                    android:text="@string/mobile"/>
+                <TextView android:layout_width="1dp"
+                    android:height="19dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/gray_bg"/>
+                <EditText
+                    style="@style/publish_edit"
+                    />
+            </TableRow>
+        </TableLayout>
+        <Button
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_yellow"
+            android:text="@string/btn_publish"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            style="@style/font_white_18"/>
+    </LinearLayout>
+</ScrollView>
