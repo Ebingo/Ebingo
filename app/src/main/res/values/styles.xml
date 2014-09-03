@@ -65,6 +65,26 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="single_button">
+        <item name="android:layout_width">180dp</item>
+        <item name="android:layout_height">@dimen/widget_height</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="blue_button" parent="single_button">
+        <item name="android:background">@drawable/btn_blue</item>
+    </style>
+
+    <style name="yellow_button" parent="single_button">
+        <item name="android:background">@drawable/btn_yellow</item>
+    </style>
+
+    <style name="green_button">
+        <item name="android:background">@drawable/btn_green</item>
+    </style>
+
     <style name="back_arro_style">
         <item name="android:src">@drawable/back_arro</item>
         <item name="android:paddingLeft">15dp</item>
@@ -141,7 +161,27 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="publish_table_row_padding">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:paddingTop">9dp</item>
+    </style>
+    <style name="blue_frame_bg_layout">
+        <item name="android:background">@drawable/blue_corner_frame</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+    <style name="vertical_divider_20">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:background">@color/title_bule</item>
+        <item name="android:layout_marginLeft">5dp</item>
     </style>
 
     <style name="blue_horizontal">
