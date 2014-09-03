@@ -119,7 +119,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                     hidKey();
                     noData(getString(R.string.no_history));
                 }else {
-                    hasData();
+                    hasData(true);
                     hidKey();
                 }
 
@@ -140,16 +140,31 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
     }
 
-    private void hasData(){
+    /**
+     *
+     * @param btnVisible 清空按钮是否显示。
+     */
+    private void hasData(boolean btnVisible){
         searchcontentll.setVisibility(View.VISIBLE);
         searchnohistorytv.setVisibility(View.GONE);
+        if (btnVisible){
+            searchclearbtn.setVisibility(View.VISIBLE);
+        }else {
+            searchclearbtn.setVisibility(View.GONE);
+        }
     }
 
-    private void showkey(){
+    /**
+     * 顯示關鍵字項。
+     */
+    private void showkey(String key){
         searchresultkeyll.setVisibility(View.VISIBLE);
 
     }
 
+    /**
+     * 隱藏關鍵字項。
+     */
     private void hidKey(){
         searchresultkeyll.setVisibility(View.GONE);
     }
@@ -199,24 +214,27 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 break;
             }
 
-            case R.id.search_btn:{
+            case R.id.search_btn:{      //搜索按鈕。
 
                 String key = searchbaret.getText().toString();
                 searchbaret.clearFocus();
                 mRefreshView.setFootViewVisibility(View.VISIBLE);
                 mRefreshView.setUpRefreshable(true);
-                if (key != null){
+
+                if (key != null && !key.equals("")){
                     saveHistory(key);
                 }
 
                 mCurSearchType = getSearchType(searchcategrycb.getText().toString());
                 if (mCurSearchType == SearchType.SUPPLY){
-                    getSupplyInfoList(0, searchbaret.getText().toString());
+                    getSupplyInfoList(0, key);
                 }else if(mCurSearchType == SearchType.DEMAND){
-                    getDemandInfoList(0, searchbaret.getText().toString());
+                    getDemandInfoList(0, key);
                 }else{
-                    getCompanyList(0, searchbaret.getText().toString());
+                    getCompanyList(0, key);
                 }
+                
+                showkey(key);       //显示关键字项。
 
                 break;
             }
@@ -360,7 +378,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                     mSearchTypeBeans.addAll(searchDemandBeans);
                     noData(getString(R.string.no_search_data));
                 }else {
-                    hasData();
+                    hasData(false);
                 }
 
                 mAdapter.notifyDataSetChanged(mSearchTypeBeans);
@@ -418,7 +436,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                     mSearchTypeBeans.addAll(searchSupplyBeans);
                     noData(getString(R.string.no_search_data));
                 } else {
-                    hasData();
+                    hasData(false);
                 }
                 mAdapter.notifyDataSetChanged(mSearchTypeBeans);
                 dialog.dismiss();
@@ -472,7 +490,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                     mSearchTypeBeans.addAll(searchInterpriseBeans);
                     noData(getString(R.string.no_search_data));
                 } else {
-                    hasData();
+                    hasData(false);
                 }
 
                 mAdapter.notifyDataSetChanged(mSearchTypeBeans);
