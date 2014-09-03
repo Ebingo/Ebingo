@@ -6,21 +6,19 @@
     android:background="@color/white"
     >
     <LinearLayout
-        android:padding="12dp"
+        style="@style/info_content_pad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TableLayout
             android:layout_width="match_parent"
-            android:background="@color/gray_bg"
-            android:padding="1dp"
+            android:background="@drawable/blue_corner_frame"
+            android:padding="2px"
             android:layout_height="wrap_content">
             <TableRow
                 android:id="@+id/pick_category"
                 android:paddingLeft="3dp"
                 android:paddingBottom="@dimen/publish_layout_padding"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
                 android:paddingTop="@dimen/publish_layout_padding"
                 android:background="@color/white"
                 >
@@ -38,10 +36,9 @@
                     android:drawableRight="@drawable/right_arro"
                     />
             </TableRow>
+            <View style="@style/blue_horizontal"/>
             <TableRow
                 android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
                 android:paddingBottom="@dimen/publish_layout_padding"
                 android:paddingTop="@dimen/publish_layout_padding"
                 android:background="@color/white"
@@ -60,11 +57,10 @@
                     style="@style/publish_edit"
                     android:hint="8-28字"/>
             </TableRow>
+            <View style="@style/blue_horizontal"/>
             <TableRow
                 android:id="@+id/pick_description"
                 android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
                 android:paddingBottom="@dimen/publish_layout_padding"
                 android:paddingTop="@dimen/publish_layout_padding"
                 android:background="@color/white"
@@ -87,15 +83,13 @@
         </TableLayout>
         <TableLayout
             android:layout_width="match_parent"
-            android:background="@color/gray_bg"
-            android:padding="1dp"
+            android:background="@drawable/blue_corner_frame"
+            android:padding="2px"
             android:layout_marginTop="@dimen/publish_layout_margin"
             android:layout_height="wrap_content">
             <TableRow
                 android:paddingLeft="3dp"
                 android:paddingBottom="@dimen/publish_layout_padding"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
                 android:paddingTop="@dimen/publish_layout_padding"
                 android:background="@color/white"
                 >
@@ -112,10 +106,9 @@
                     style="@style/publish_edit"
                     android:hint="至少2字"/>
             </TableRow>
+            <View style="@style/blue_horizontal"/>
             <TableRow
                 android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
                 android:paddingBottom="@dimen/publish_layout_padding"
                 android:paddingTop="@dimen/publish_layout_padding"
                 android:background="@color/white"
@@ -138,15 +131,13 @@
         </TableLayout>
         <TableLayout
             android:layout_width="match_parent"
-            android:background="@color/gray_bg"
-            android:padding="1dp"
+            android:background="@drawable/blue_corner_frame"
+            android:padding="2px"
             android:layout_marginTop="@dimen/publish_layout_margin"
             android:layout_height="wrap_content">
             <TableRow
                 android:id="@+id/pick_label"
                 android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
                 android:paddingBottom="@dimen/publish_layout_padding"
                 android:paddingTop="@dimen/publish_layout_padding"
                 android:background="@color/white"
