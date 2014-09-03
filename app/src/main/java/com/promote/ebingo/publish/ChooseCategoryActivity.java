@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -21,6 +22,7 @@ import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CategoryBeen;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.LogCat;
 
@@ -56,42 +58,20 @@ public class ChooseCategoryActivity extends Activity implements AdapterView.OnIt
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-               LogCat.i("----->onSuccess JSONObject="+response);
-                dialog.dismiss();
+                ContextUtil.toast(response);
             }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                LogCat.i("----->onSuccess JSONArray="+response);
-                 dialog.dismiss();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                super.onSuccess(statusCode, headers, responseString);
-                LogCat.i("----->onSuccess String="+responseString);
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                LogCat.i("----->onFailure JSONObject="+errorResponse);
-                dialog.dismiss();
-            }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                LogCat.i("----->onFailure String="+responseString);
-                dialog.dismiss();
+                ContextUtil.toast(responseString);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                LogCat.i("----->onFailure JSONArray="+errorResponse);
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
             }
         });
 

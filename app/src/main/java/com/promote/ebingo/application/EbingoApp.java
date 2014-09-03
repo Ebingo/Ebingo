@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.promote.ebingo.util.ContextUtil;
 
 import java.io.File;
 
@@ -22,6 +23,7 @@ public class EbingoApp extends Application {
         super.onCreate();
 
         initImageLoaderConfiguration();
+        ContextUtil.init(getApplicationContext());
     }
 
     /**

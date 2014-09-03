@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_bg"
+    android:background="@color/white"
     >
     <LinearLayout
         style="@style/info_content_pad"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TableLayout style="@style/blue_frame_bg_layout">
-            <TableRow style="@style/publish_table_row_padding">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
@@ -23,7 +23,7 @@
                   />
             </TableRow>
             <View style="@style/blue_horizontal"/>
-            <TableRow style="@style/publish_table_row_padding">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
@@ -36,7 +36,7 @@
                     />
             </TableRow>
             <View style="@style/blue_horizontal"/>
-            <TableRow style="@style/publish_table_row_padding">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
@@ -54,7 +54,7 @@
             </TableRow>
         </TableLayout>
         <TableLayout style="@style/blue_frame_bg_layout">
-            <TableRow style="@style/publish_table_row_padding" >
+            <TableRow style="@style/publish_table_row" >
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
@@ -67,7 +67,7 @@
                     android:hint="1张"/>
             </TableRow>
             <View style="@style/blue_horizontal"/>
-            <TableRow style="@style/publish_table_row_padding">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
@@ -80,7 +80,7 @@
                     android:hint="@string/word10"/>
             </TableRow>
             <View style="@style/blue_horizontal"/>
-            <TableRow style="@style/publish_table_row_padding">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
@@ -93,7 +93,7 @@
             </TableRow>
         </TableLayout>
         <TableLayout style="@style/blue_frame_bg_layout">
-            <TableRow style="@style/publish_table_row_padding">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
@@ -104,7 +104,7 @@
                     />
             </TableRow>
             <View style="@style/blue_horizontal"/>
-            <TableRow style="@style/publish_table_row_padding" >
+            <TableRow style="@style/publish_table_row" >
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -117,7 +117,7 @@
                     />
             </TableRow>
             <View style="@style/blue_horizontal"/>
-            <TableRow style="@style/publish_table_row_padding">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_blue_15"
