@@ -14,4 +14,6 @@ public class SearchHistoryBean extends SearchTypeBean{
     public void setHistory(String history) {
         this.history = history;
     }
+
+
 }

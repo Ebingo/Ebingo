@@ -34,6 +34,7 @@
             android:paddingLeft="15dp"
             android:layout_alignParentRight="true"
             android:layout_height="match_parent"
+            android:visibility="invisible"
             style="@style/font_white_18"
             android:text="@string/cancel" />
 

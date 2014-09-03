@@ -63,7 +63,11 @@
     <string name="label_spaced">标    签</string>
     <string name="btn_publish">发    布</string>
     <string name="mobile">电 话</string>
-
+    <string name="yzm">验证码</string>
+    <string name="done">完成</string>
+    <string name="getYzm">获取验证码</string>
+    <string name="show_psw">显示</string>
+    <string name="hide_psw">隐藏</string>
     <string name="phone_number">手机号</string>
     <string name="publish_supply">发布供应</string>
     <string name="publish_demand">发布求购</string>
@@ -91,6 +95,7 @@
     <string name="interprise_abstrace">【公司简介】</string>
     <string name="interprise_sup_dem">【近期供求】</string>
     <string name="no_history">沒有搜索记录</string>
+    <string name="no_search_data">没有搜索到数据</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>

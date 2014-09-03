@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true">
-        <shape >
-            <corners android:radius="2dp"/>
-            <solid android:color="#21A8F2"/>
-        </shape>
-    </item>
-    <item android:state_pressed="false">
-        <shape >
-            <corners android:radius="2dp"/>
-            <solid android:color="#21A8F2"/>
-        </shape>
-    </item>
+    <item android:state_pressed="true" android:drawable="@drawable/blue_normal"/>
+    <item android:state_pressed="false" android:drawable="@drawable/blue_normal"/>
 </selector>

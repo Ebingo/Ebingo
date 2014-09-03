@@ -1,6 +1,7 @@
 package com.promote.ebingo.search;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,13 +18,28 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
+import com.jch.lib.util.HttpUtil;
 import com.jch.lib.view.PullToRefreshView;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.SearchDemandBean;
+import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.bean.SearchHistoryBean;
+import com.promote.ebingo.bean.SearchInterpriseBean;
+import com.promote.ebingo.bean.SearchInterpriseBeanTools;
+import com.promote.ebingo.bean.SearchSupplyBean;
+import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.bean.SearchTypeBean;
+import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.SearchDao;
 
+import org.apache.http.Header;
+import org.json.JSONObject;
+
+import java.io.DataInput;
 import java.util.ArrayList;
 
 public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener{
@@ -85,6 +101,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchbackbtn.setOnClickListener(this);
         searchcategrycb.setOnCheckedChangeListener(this);
         searchbaret.setOnClickListener(this);
+        searchbaret.setOnFocusChangeListener(this);
         searchbtn.setOnClickListener(this);
         searchclearbtn.setOnClickListener(this);
 
@@ -100,9 +117,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             if (msg.what == SEARCh_HISTORY){
                 if (mSearchTypeBeans.size() == 0){
                     hidKey();
-                    noData();
+                    noData(getString(R.string.no_history));
                 }else {
-                    hasData();
+                    hasData(true);
                     hidKey();
                 }
 
@@ -116,15 +133,25 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     /**
      * 没有数据。
      */
-    private void noData(){
+    private void noData(String msg){
         searchcontentll.setVisibility(View.GONE);
         searchnohistorytv.setVisibility(View.VISIBLE);
+        searchnohistorytv.setText(msg);
 
     }
 
-    private void hasData(){
+    /**
+     *
+     * @param btnVisible 清空按钮是否显示。
+     */
+    private void hasData(boolean btnVisible){
         searchcontentll.setVisibility(View.VISIBLE);
         searchnohistorytv.setVisibility(View.GONE);
+        if (btnVisible){
+            searchclearbtn.setVisibility(View.VISIBLE);
+        }else {
+            searchclearbtn.setVisibility(View.GONE);
+        }
     }
 
     private void showkey(){
@@ -167,10 +194,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
             case R.id.search_bar_et:{       //搜索框被点击，显示搜索记录。
 
-                if (mCurSearchType != SearchType.HISTORY){      //如果當前沒有顯示歷史記錄，顯示歷史記錄。
-                    searchbaret.setFocusable(false);
-                    displayHistory();
-                }
+//                if (mCurSearchType != SearchType.HISTORY){      //如果當前沒有顯示歷史記錄，顯示歷史記錄。
+//                    displayHistory();
+//                }
 
                 break;
 
@@ -182,17 +208,25 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 break;
             }
 
-            case R.id.search_btn:{
+            case R.id.search_btn:{      //搜索按鈕。
 
                 String key = searchbaret.getText().toString();
-
-                if (key != null){
+                searchbaret.clearFocus();
+                mRefreshView.setFootViewVisibility(View.VISIBLE);
+                mRefreshView.setUpRefreshable(true);
+                if (key != null && !key.equals("")){
                     saveHistory(key);
                 }
 
-                //TODO 从网络获取
+                mCurSearchType = getSearchType(searchcategrycb.getText().toString());
+                if (mCurSearchType == SearchType.SUPPLY){
+                    getSupplyInfoList(0, searchbaret.getText().toString());
+                }else if(mCurSearchType == SearchType.DEMAND){
+                    getDemandInfoList(0, searchbaret.getText().toString());
+                }else{
+                    getCompanyList(0, searchbaret.getText().toString());
+                }
 
-                mCurSearchType = SearchType.DEMAND;
                 break;
             }
 
@@ -208,6 +242,25 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         }
 
+    }
+
+    /**
+     * 獲得當前搜索類型。
+     *
+     * @param type
+     * @return
+     */
+    private SearchType getSearchType(String type){
+
+        if (getString(R.string.interprise).equals(type)){
+            mCurSearchType = SearchType.INTERPRISE;
+        }else if (getString(R.string.buy).equals(type)){
+            mCurSearchType = SearchType.DEMAND;
+        }else if (getString(R.string.supply).equals(type)){
+            mCurSearchType = SearchType.SUPPLY;
+        }
+
+        return mCurSearchType;
     }
 
     /**
@@ -246,7 +299,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 mHandler.sendEmptyMessage(SEARCh_HISTORY);
             }
         }).start();
-
     }
 
 
@@ -271,7 +323,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     public void onFocusChange(View v, boolean hasFocus) {
 
             if (hasFocus){
-//                displayHistory();
+                displayHistory();
             }
 
     }
@@ -286,6 +338,195 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         public void onDismiss() {
             searchcategrycb.setChecked(false);
         }
+    }
+
+    /**
+     * 從網絡獲取求购信息列表.
+     *
+     * @param lastId
+     */
+    public void getDemandInfoList(final int lastId, String keyword){
+
+        String url = HttpConstant.getDemandInfoList;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("lastId", lastId);
+        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("condition", appendKeyworld(keyword));
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+
+        HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8"){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
+                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
+                    mSearchTypeBeans.clear();
+                }
+                mCurSearchType = SearchType.DEMAND;
+                if (searchDemandBeans != null && searchDemandBeans.size() != 0){
+                    mSearchTypeBeans.addAll(searchDemandBeans);
+                    noData(getString(R.string.no_search_data));
+                }else {
+                    hasData(false);
+                }
+
+                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                getDataFailed();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                getDataFailed();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+
+    /**
+     *
+     * 從網絡获取供应信息列表。
+     *
+     * @param lastId
+     * @param keyword
+     */
+    public void getSupplyInfoList(final int lastId, String keyword){
+
+
+        String url = HttpConstant.getSupplyInfoList;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("lastId", lastId);
+        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("condition", appendKeyworld(keyword));
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+
+        HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
+                if (lastId == 0){           //如果第一次请求，即不是加载更多时。
+                    mSearchTypeBeans.clear();
+                }
+                mCurSearchType = SearchType.SUPPLY;
+                if (searchSupplyBeans != null && searchSupplyBeans.size() != 0) {
+                    mSearchTypeBeans.addAll(searchSupplyBeans);
+                    noData(getString(R.string.no_search_data));
+                } else {
+                    hasData(false);
+                }
+                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                getDataFailed();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                getDataFailed();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    /**
+     * 從網絡获取企业列表。
+     *
+     * @param lastId
+     * @param keyword
+     */
+    public void getCompanyList(final int lastId, String keyword) {
+
+        String url = HttpConstant.getCompanyList;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("lastId", lastId);
+        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("condition", appendKeyworld(keyword));
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+
+        HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<SearchInterpriseBean> searchInterpriseBeans = SearchInterpriseBeanTools.getSearchTypeBeans(response.toString());
+                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
+                    mSearchTypeBeans.clear();
+                }
+                mCurSearchType = SearchType.INTERPRISE;
+                if (searchInterpriseBeans != null && searchInterpriseBeans.size() != 0) {
+                    mSearchTypeBeans.addAll(searchInterpriseBeans);
+                    noData(getString(R.string.no_search_data));
+                } else {
+                    hasData(false);
+                }
+
+                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mSearchTypeBeans.clear();
+                getDataFailed();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                getDataFailed();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    /**
+     * 獲取數據失敗，顯示無數據。
+     */
+    private void getDataFailed(){
+        mSearchTypeBeans.clear();
+        mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+        noData(getString(R.string.no_search_data));
+    }
+
+
+    /**
+     * 拼接赛选条件参数。
+     * @param keyword
+     * @return
+     */
+    private String appendKeyworld(String keyword){
+        StringBuffer sb = new StringBuffer("{\"keywords\":\"");
+        sb.append(keyword);
+        sb.append("\"}");
+        return sb.toString();
     }
 
 }
