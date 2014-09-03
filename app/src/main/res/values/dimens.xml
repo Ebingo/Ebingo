@@ -13,5 +13,9 @@
     <dimen name="sliding_tab_height">40dp</dimen>
     
     <dimen name="section_divide_height">20dp</dimen>
-
+    <dimen name="publish_layout_padding">9dp</dimen>
+    <dimen name="publish_layout_margin">19dp</dimen>
+    <dimen name="layout_padding">6dp</dimen>
+    <dimen name="widget_height">40dp</dimen>
+    <dimen name="ic_padding">5dp</dimen>
 </resources>

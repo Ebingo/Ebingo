@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_gray_11"
-                    android:text="@string/contect" />
+                    android:text="@string/contact" />
 
                 <TextView
                     android:id="@+id/frag_interprise_main_context_tv"

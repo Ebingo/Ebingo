@@ -69,6 +69,22 @@
             android:windowSoftInputMode="stateUnspecified|adjustPan"
             android:label="@string/title_activity_interprise_info" >
         </activity>
+        <activity android:name=".publish.ChooseCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="stateUnspecified|adjustPan"
+            android:label="@string/app_name">
+
+        </activity>
+        <activity android:name=".publish.login.RegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="stateUnspecified|adjustPan"
+            android:label="@string/app_name">
+
+        </activity>
     </application>
 
 </manifest>

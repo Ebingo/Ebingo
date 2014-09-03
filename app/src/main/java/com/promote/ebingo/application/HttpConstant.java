@@ -44,5 +44,10 @@ public class HttpConstant {
      */
     public static final String getIndex = getRootUrl() + "getIndex";
 
+    public static final String getCategories=getRootUrl()+"getCategoryList";
+
+    public static final String login=getRootUrl()+"login";
+
+    public static final String register=getRootUrl()+"register";
 
 }

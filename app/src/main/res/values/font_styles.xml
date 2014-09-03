@@ -3,7 +3,7 @@
 
     <style name="font_black_18">
         <item name="android:textSize">@dimen/font_18</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="font_white_18">

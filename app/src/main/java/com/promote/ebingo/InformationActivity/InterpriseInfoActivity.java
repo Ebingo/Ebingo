@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -38,7 +37,7 @@ public class InterpriseInfoActivity extends Activity {
 
         interpriseinfotab = (PagerSlidingTabStrip) findViewById(R.id.interprise_info_tab);
         interpriseinfovp = (ViewPager) findViewById(R.id.interprise_info_vp);
-        comonnbackbtn = (ImageView) findViewById(R.id.comonn_back_btn);
+        comonnbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
 
         tabStr = getResources().getStringArray(R.array.interprise_info_tab);

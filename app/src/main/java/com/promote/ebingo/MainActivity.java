@@ -127,7 +127,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
                 if (mPublishFragment == null) {
                     mPublishFragment = PublishFragment.newInstance(null, null);
                 }
-                showPublishWindow(findViewById(R.id.publish_rb));
                 changeFrag(mPublishFragment, mCurFragment);
                 break;
             }
@@ -147,35 +146,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
         }
 
-    }
-
-    private  void  showPublishWindow(View view){
-        View content= LayoutInflater.from(this).inflate(R.layout.publish_window,null);
-        final PopupWindow publishWindow=new PopupWindow(content, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
-        content.findViewById(R.id.btn_pb_demand).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                publishWindow.dismiss();
-            }
-        });
-        content.findViewById(R.id.btn_pb_supply).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                publishWindow.dismiss();
-            }
-        });
-        publishWindow.setOutsideTouchable(true);
-        publishWindow.setFocusable(true);
-        publishWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                setDimAmount(1f,1f);
-            }
-        });
-        int location[]=new int[2];
-         view.getLocationOnScreen(location);
-        publishWindow.showAtLocation(view,Gravity.NO_GRAVITY,0,location[1]-view.getHeight());
-        setDimAmount(0.5f,0.5f);
     }
 
     private void setDimAmount(float alpha,float dimAmount){
