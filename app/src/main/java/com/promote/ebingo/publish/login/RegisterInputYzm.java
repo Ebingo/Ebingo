@@ -1,6 +1,7 @@
 package com.promote.ebingo.publish.login;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -8,18 +9,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
-import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
 
 import android.os.Handler;
 import org.apache.http.Header;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Timer;
@@ -56,28 +59,22 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
     }
 
     private void commit(){
+        final String password=edit_password.getText().toString().trim();
+        final String yzm=edit_yzm.getText().toString().trim();
         EbingoRequestParmater parmater=new EbingoRequestParmater(this);
-        parmater.put("yzm", edit_yzm.getText().toString().trim());
-        parmater.put("phonenum", getIntent().getStringExtra("phonenum"));
-        parmater.put("password", edit_password.getText().toString().trim());
-
+        parmater.put("yzm",yzm);
+        parmater.put("password",password);
         HttpUtil.post(HttpConstant.register,parmater,new JsonHttpResponseHandler("utf-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                ContextUtil.toast(response);
-                try {
-                    JSONObject result=response.getJSONObject("response");
-                    Company.getInstance().setCompanyId(result.getInt("company_id"));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                ContextUtil.toast("注册失败！");
+                Toast.makeText(getApplicationContext(),responseString,Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -118,7 +115,35 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
         },0,1000);
 
     }
+    /**
+     * 从后台获取验证码
+     */
+    private void getYzm() {
+        EbingoRequestParmater parmater=new EbingoRequestParmater(this);
+        final ProgressDialog dialog=ProgressDialog.show(RegisterInputYzm.this,null,"正在获取验证码...");
+        HttpUtil.post(HttpConstant.getYzm, parmater, new JsonHttpResponseHandler("utf-8") {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                try {
+                    if ("100".equals(response.getJSONObject("response").getString("code"))) {
+                        startActivityForResult(new Intent(RegisterInputYzm.this, RegisterInputYzm.class), 100);
+                    } else {
+                        ContextUtil.toast("获取验证码失败");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
+        });
+    }
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(isChecked){
@@ -138,15 +163,7 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
                 finish();
                 break;
             case R.id.btn_getYZM:
-                new LoginManager().getYzm(RegisterInputYzm.this,getIntent().getStringExtra("phonenum"),new LoginManager.Callback(){
-
-                @Override
-                public void onSuccess() {
-                    Intent intent=getIntent();
-                    intent.setClass(RegisterInputYzm.this,RegisterInputYzm.class);
-                    startActivityForResult(intent,100);
-                }
-            });
+                getYzm();
                 break;
         }
     }
