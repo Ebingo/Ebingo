@@ -5,7 +5,7 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="tab_btn" parent="font_gray_11">
+    <style name="tab_btn" parent="font_gray_12">
         <item name="android:background">@color/white</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:drawablePadding">-1dp</item>
@@ -29,7 +29,7 @@
     </style>
 
 
-    <style name="gray_11_tv" parent="font_gray_11">
+    <style name="gray_11_tv" parent="font_gray_12">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
     </style>
@@ -77,7 +77,11 @@
 
 
     <style name="category_tv_style">
-        <item name="android:padding">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:layout_margin">0.5dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@drawable/gray_white_selector</item>

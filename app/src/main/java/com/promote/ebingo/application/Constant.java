@@ -17,4 +17,6 @@ public class Constant {
     public static final String CACHE_DIR = Environment.getExternalStorageDirectory() + "/Ebingo";
     /** 圖片緩存路徑. **/
     public static final String IMG_DIR = CACHE_DIR + "/images";
+
+    public static final int DB_VERSION = 1;
 }
