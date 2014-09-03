@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -42,7 +43,7 @@ import org.json.JSONObject;
 import java.io.DataInput;
 import java.util.ArrayList;
 
-public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener{
+public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener, AdapterView.OnItemClickListener{
     /** 當前搜索類型，默認為顯示歷史记录。 **/
     private SearchType mCurSearchType = SearchType.HISTORY;
     private SearchCategoryPop mCategoryPop = null;
@@ -95,6 +96,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         mAdapter = new SearchListAdapter(getApplicationContext(), mCurSearchType, mSearchTypeBeans);
         searchlv.setAdapter(mAdapter);
+        searchlv.setOnItemClickListener(this);
         mRefreshView.setDownRefreshable(false);
         mRefreshView.setOnFooterRefreshListener(this);
 
@@ -334,6 +336,36 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             if (hasFocus){
                 displayHistory();
             }
+
+    }
+
+    //當前不同的搜索類型類型，做不同的操作。
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        switch (mCurSearchType){
+            case HISTORY:{
+
+                break;
+            }
+
+            case DEMAND:{
+                break;
+            }
+
+            case SUPPLY:{
+
+                break;
+            }
+
+            case INTERPRISE:{
+                break;
+            }
+
+            default:{
+
+            }
+        }
 
     }
 
