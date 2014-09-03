@@ -85,6 +85,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchbackbtn.setOnClickListener(this);
         searchcategrycb.setOnCheckedChangeListener(this);
         searchbaret.setOnClickListener(this);
+        searchbaret.setOnFocusChangeListener(this);
         searchbtn.setOnClickListener(this);
         searchclearbtn.setOnClickListener(this);
 
@@ -168,7 +169,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case R.id.search_bar_et:{       //搜索框被点击，显示搜索记录。
 
                 if (mCurSearchType != SearchType.HISTORY){      //如果當前沒有顯示歷史記錄，顯示歷史記錄。
-                    searchbaret.setFocusable(false);
                     displayHistory();
                 }
 
@@ -185,7 +185,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case R.id.search_btn:{
 
                 String key = searchbaret.getText().toString();
-
+                searchbaret.clearFocus();
                 if (key != null){
                     saveHistory(key);
                 }
@@ -246,7 +246,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 mHandler.sendEmptyMessage(SEARCh_HISTORY);
             }
         }).start();
-
     }
 
 

@@ -17,7 +17,7 @@ public class GetIndexBeanTools {
     public static GetIndexBean getIndexBeanJson(String json){
 
 //        Type type = new TypeToken<GetIndexBeanTools>(){}.getType();
-        return  ((GetIndexBeanTools)(new Gson()).fromJson(json,GetIndexBeanTools.class)).getIndexBean();
+        return  ((GetIndexBeanTools)(new Gson()).fromJson(json, GetIndexBeanTools.class)).getIndexBean();
 
     }
 
