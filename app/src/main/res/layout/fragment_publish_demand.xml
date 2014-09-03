@@ -6,74 +6,42 @@
     android:background="@color/white"
     >
     <LinearLayout
-        android:padding="12dp"
+        style="@style/info_content_pad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TableLayout
-            android:layout_width="match_parent"
-            android:background="@color/gray_bg"
-            android:padding="1dp"
-            android:layout_height="wrap_content">
-            <TableRow
-                android:paddingLeft="3dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+        <TableLayout style="@style/blue_frame_bg_layout">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
                     android:text="@string/category_spaced"/>
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                   />
             </TableRow>
-            <TableRow
-                android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+            <View style="@style/blue_horizontal"/>
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
                     android:text="@string/area_spaced"
                     />
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                     />
             </TableRow>
-            <TableRow
-                android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+            <View style="@style/blue_horizontal"/>
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
                     android:text="@string/price_spaced"/>
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
                     />
@@ -81,159 +49,90 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="元"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/title_bule"
                    />
             </TableRow>
         </TableLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:background="@color/gray_bg"
-            android:padding="1dp"
-            android:layout_marginTop="@dimen/publish_layout_margin"
-            android:layout_height="wrap_content">
-            <TableRow
-                android:paddingLeft="3dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+        <TableLayout style="@style/blue_frame_bg_layout">
+            <TableRow style="@style/publish_table_row" >
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
                     android:text="@string/picture_spaced"/>
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     android:layout_width="0dp"
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                     android:hint="1张"/>
             </TableRow>
-            <TableRow
-                android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+            <View style="@style/blue_horizontal"/>
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
                     android:text="@string/description_spaced"
                     />
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                     android:hint="@string/word10"/>
             </TableRow>
-            <TableRow
-                android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+            <View style="@style/blue_horizontal"/>
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
                     android:text="@string/title_spaced"/>
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
                     android:hint="15字以内"
                     />
             </TableRow>
         </TableLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:background="@color/gray_bg"
-            android:padding="1dp"
-            android:layout_marginTop="@dimen/publish_layout_margin"
-            android:layout_height="wrap_content">
-            <TableRow
-                android:paddingLeft="3dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+        <TableLayout style="@style/blue_frame_bg_layout">
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
                     android:text="@string/book_stand"/>
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
-
                     />
             </TableRow>
-            <TableRow
-                android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+            <View style="@style/blue_horizontal"/>
+            <TableRow style="@style/publish_table_row" >
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    android:gravity="center_horizontal"
+                    style="@style/font_blue_15"
                     android:text="@string/contact"
                     />
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
-
                     />
             </TableRow>
-            <TableRow
-                android:paddingLeft="3dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:paddingBottom="@dimen/publish_layout_padding"
-                android:paddingTop="@dimen/publish_layout_padding"
-                android:background="@color/white"
-                >
+            <View style="@style/blue_horizontal"/>
+            <TableRow style="@style/publish_table_row">
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_black_18"
+                    style="@style/font_blue_15"
+                    android:gravity="center_horizontal"
                     android:text="@string/mobile"/>
-                <TextView android:layout_width="1dp"
-                    android:height="19dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@color/gray_bg"/>
+                <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
                     />
             </TableRow>
         </TableLayout>
         <Button
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_yellow"
             android:text="@string/btn_publish"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            style="@style/font_white_18"/>
+            style="@style/yellow_button"/>
     </LinearLayout>
 </ScrollView>
