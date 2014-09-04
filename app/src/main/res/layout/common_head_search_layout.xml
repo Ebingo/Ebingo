@@ -1,49 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:background="@color/gray_bg"
     android:layout_height="@dimen/title_height">
 
-
     <LinearLayout
-        android:id="@+id/search_ll"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_centerInParent="true">
-        <TextView
-            android:id="@+id/search_bar_tv"
-            style="@style/font_white_15"
-            android:text="@string/search"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:background="@drawable/main_search_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <!--<EditText-->
-            <!--android:id="@+id/search_et"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:hint="@string/search"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--style="@style/font_white_15"-->
-            <!--android:background="@drawable/search_bar"-->
-            <!--android:textColorHint="@color/white"-->
-            <!--android:gravity="center_vertical" />-->
-
-        <!--<ImageView-->
-        <!--android:id="@+id/search_btn_img"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:src="@drawable/search_btn"-->
-        <!--android:layout_height="wrap_content" />-->
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_toLeftOf="@+id/search_ll"
-        android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:paddingRight="5dp"
         android:paddingLeft="5dp"
@@ -56,6 +21,20 @@
             android:src="@drawable/logo"
             android:layout_alignParentLeft="true" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/search_bar_tv"
+        style="@style/font_white_15"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:background="@drawable/main_search_bar"
+        android:layout_width="wrap_content"
+        android:layout_weight="2"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
 
-</RelativeLayout>
+</LinearLayout>
