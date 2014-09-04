@@ -91,7 +91,6 @@ public class FindFragment extends Fragment {
     }
 
     private void initialize(ViewGroup view) {
-        searchll = (LinearLayout) view.findViewById(R.id.search_ll);
         fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
 
         String[] categorys = getResources().getStringArray(R.array.category_data);

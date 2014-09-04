@@ -1,10 +1,13 @@
 package com.promote.ebingo.search;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,16 +20,33 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
+import com.jch.lib.util.HttpUtil;
 import com.jch.lib.view.PullToRefreshView;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.SearchDemandBean;
+import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.bean.SearchHistoryBean;
+import com.promote.ebingo.bean.SearchInterpriseBean;
+import com.promote.ebingo.bean.SearchInterpriseBeanTools;
+import com.promote.ebingo.bean.SearchSupplyBean;
+import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.bean.SearchTypeBean;
+import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.SearchDao;
 
+import org.apache.http.Header;
+import org.json.JSONObject;
+
+import java.io.DataInput;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener{
+public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener, AdapterView.OnItemClickListener{
     /** 當前搜索類型，默認為顯示歷史记录。 **/
     private SearchType mCurSearchType = SearchType.HISTORY;
     private SearchCategoryPop mCategoryPop = null;
@@ -79,12 +99,14 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         mAdapter = new SearchListAdapter(getApplicationContext(), mCurSearchType, mSearchTypeBeans);
         searchlv.setAdapter(mAdapter);
+        searchlv.setOnItemClickListener(this);
         mRefreshView.setDownRefreshable(false);
         mRefreshView.setOnFooterRefreshListener(this);
 
         searchbackbtn.setOnClickListener(this);
         searchcategrycb.setOnCheckedChangeListener(this);
         searchbaret.setOnClickListener(this);
+        searchbaret.setOnFocusChangeListener(this);
         searchbtn.setOnClickListener(this);
         searchclearbtn.setOnClickListener(this);
 
@@ -100,9 +122,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             if (msg.what == SEARCh_HISTORY){
                 if (mSearchTypeBeans.size() == 0){
                     hidKey();
-                    noData();
+                    noData(getString(R.string.no_history));
                 }else {
-                    hasData();
+                    hasData(true);
                     hidKey();
                 }
 
@@ -116,22 +138,39 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     /**
      * 没有数据。
      */
-    private void noData(){
+    private void noData(String msg){
         searchcontentll.setVisibility(View.GONE);
         searchnohistorytv.setVisibility(View.VISIBLE);
+        searchnohistorytv.setText(msg);
 
     }
 
-    private void hasData(){
+    /**
+     *
+     * @param btnVisible 清空按钮是否显示。
+     */
+    private void hasData(boolean btnVisible){
         searchcontentll.setVisibility(View.VISIBLE);
         searchnohistorytv.setVisibility(View.GONE);
+        if (btnVisible){
+            searchclearbtn.setVisibility(View.VISIBLE);
+        }else {
+            searchclearbtn.setVisibility(View.GONE);
+        }
     }
 
-    private void showkey(){
+    /**
+     * 顯示關鍵字項。
+     */
+    private void showkey(String key){
         searchresultkeyll.setVisibility(View.VISIBLE);
+        searchkeytv.setText(key);
 
     }
 
+    /**
+     * 隱藏關鍵字項。
+     */
     private void hidKey(){
         searchresultkeyll.setVisibility(View.GONE);
     }
@@ -167,10 +206,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
             case R.id.search_bar_et:{       //搜索框被点击，显示搜索记录。
 
-                if (mCurSearchType != SearchType.HISTORY){      //如果當前沒有顯示歷史記錄，顯示歷史記錄。
-                    searchbaret.setFocusable(false);
-                    displayHistory();
-                }
+//                if (mCurSearchType != SearchType.HISTORY){      //如果當前沒有顯示歷史記錄，顯示歷史記錄。
+//                    displayHistory();
+//                }
 
                 break;
 
@@ -182,17 +220,29 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 break;
             }
 
-            case R.id.search_btn:{
+            case R.id.search_btn:{      //搜索按鈕。
 
                 String key = searchbaret.getText().toString();
+                searchbaret.clearFocus();
 
-                if (key != null){
+
+
+                if (key != null && !key.equals("")){
                     saveHistory(key);
                 }
 
-                //TODO 从网络获取
+                mCurSearchType = getSearchType(searchcategrycb.getText().toString());
+                if (mCurSearchType == SearchType.SUPPLY){
+                    getSupplyInfoList(0, key);
+                }else if(mCurSearchType == SearchType.DEMAND){
+                    getDemandInfoList(0, key);
+                }else{
+                    getCompanyList(0, key);
+                }
+                mRefreshView.setUpRefreshable(true);
+                mRefreshView.setFootViewVisibility(View.VISIBLE);
+                showkey(key);       //显示关键字项。
 
-                mCurSearchType = SearchType.DEMAND;
                 break;
             }
 
@@ -208,6 +258,25 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         }
 
+    }
+
+    /**
+     * 獲得當前搜索類型。
+     *
+     * @param type
+     * @return
+     */
+    private SearchType getSearchType(String type){
+
+        if (getString(R.string.interprise).equals(type)){
+            mCurSearchType = SearchType.INTERPRISE;
+        }else if (getString(R.string.buy).equals(type)){
+            mCurSearchType = SearchType.DEMAND;
+        }else if (getString(R.string.supply).equals(type)){
+            mCurSearchType = SearchType.SUPPLY;
+        }
+
+        return mCurSearchType;
     }
 
     /**
@@ -246,7 +315,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 mHandler.sendEmptyMessage(SEARCh_HISTORY);
             }
         }).start();
-
     }
 
 
@@ -271,8 +339,57 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     public void onFocusChange(View v, boolean hasFocus) {
 
             if (hasFocus){
-//                displayHistory();
+                displayHistory();
             }
+
+    }
+
+    //當前不同的搜索類型類型，做不同的操作。
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        switch (mCurSearchType){
+            case HISTORY:{          //當前顯示搜索記錄。
+
+                SearchHistoryBean historyBean = (SearchHistoryBean) mSearchTypeBeans.get(position);
+                searchbaret.setText(historyBean.getHistory());
+                break;
+            }
+
+            case DEMAND:{       //当前显示求购信息.
+
+                SearchDemandBean demandBean = (SearchDemandBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent();
+                intent.putExtra("id", demandBean.getId());
+                startActivity(intent);
+
+                break;
+            }
+
+            case SUPPLY:{
+
+                SearchSupplyBean supplyBean = (SearchSupplyBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent();
+                intent.putExtra("id", supplyBean.getId());
+                startActivity(intent);
+
+                break;
+            }
+
+            case INTERPRISE:{
+
+                SearchInterpriseBean interpriseBean = (SearchInterpriseBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent();
+                intent.putExtra("id", interpriseBean.getId());
+                startActivity(intent);
+
+                break;
+            }
+
+            default:{
+
+            }
+        }
 
     }
 
@@ -286,6 +403,213 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         public void onDismiss() {
             searchcategrycb.setChecked(false);
         }
+    }
+
+    /**
+     * 從網絡獲取求购信息列表.
+     *
+     *  http://218.244.149.129/eb/index.php?s=/Home/Api/getDemandInfoList
+     *
+     * condition={"keywords":""}&lastId=0&pagesize=20&os=android&secret=deaf3dad91c211dd71775c47e588e7e6&uuid=319875235004276&time=1409792711637
+     *
+     * @param lastId
+     */
+    public void getDemandInfoList(final int lastId, String keyword){
+
+        String url = HttpConstant.getDemandInfoList;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("lastid", lastId);
+        parmater.put("pagesize", 20);       //每页显示20条。
+        try {
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+
+        HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8"){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
+                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
+                    mSearchTypeBeans.clear();
+                }
+                mCurSearchType = SearchType.DEMAND;
+                if (searchDemandBeans == null || searchDemandBeans.size() == 0){
+
+                    noData(getString(R.string.no_search_data));
+                }else {
+                    mSearchTypeBeans.addAll(searchDemandBeans);
+                    hasData(false);
+                }
+
+                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                getDataFailed();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                getDataFailed();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+
+    /**
+     *
+     * 從網絡获取供应信息列表。
+     *
+     * @param lastId
+     * @param keyword
+     */
+    public void getSupplyInfoList(final int lastId, String keyword){
+
+
+        String url = HttpConstant.getSupplyInfoList;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("lastid", lastId);
+        parmater.put("pagesize", 20);       //每页显示20条。
+        try {
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+
+        HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
+                if (lastId == 0){           //如果第一次请求，即不是加载更多时。
+                    mSearchTypeBeans.clear();
+                }
+                mCurSearchType = SearchType.SUPPLY;
+                if (searchSupplyBeans == null || searchSupplyBeans.size()== 0) {
+
+                    noData(getString(R.string.no_search_data));
+                } else {
+                    mSearchTypeBeans.addAll(searchSupplyBeans);
+                    hasData(false);
+                }
+                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                getDataFailed();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                getDataFailed();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    /**
+     * 從網絡获取企业列表。
+     *
+     * @param lastId
+     * @param keyword
+     */
+    public void getCompanyList(final int lastId, String keyword) {
+
+        String url = HttpConstant.getCompanyList;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("lastid", lastId);
+        parmater.put("pagesize", 20);       //每页显示20条。
+        try {
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+
+        HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<SearchInterpriseBean> searchInterpriseBeans = SearchInterpriseBeanTools.getSearchTypeBeans(response.toString());
+                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
+                    mSearchTypeBeans.clear();
+                }
+                mCurSearchType = SearchType.INTERPRISE;
+                if (searchInterpriseBeans == null || searchInterpriseBeans.size() == 0) {
+                    noData(getString(R.string.no_search_data));
+                } else {
+                    mSearchTypeBeans.addAll(searchInterpriseBeans);
+                    hasData(false);
+                }
+
+                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mSearchTypeBeans.clear();
+                getDataFailed();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                getDataFailed();
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    /**
+     * 獲取數據失敗，顯示無數據。
+     */
+    private void getDataFailed(){
+        mSearchTypeBeans.clear();
+        mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+        noData(getString(R.string.no_search_data));
+    }
+
+
+    /**
+     * 拼接赛选条件参数。
+     * @param keyword
+     * @return
+     */
+    private String appendKeyworld(String keyword){
+        StringBuffer sb = new StringBuffer("{\"keywords\":\"");
+        sb.append(keyword);
+        sb.append("\"}");
+        return sb.toString();
     }
 
 }
