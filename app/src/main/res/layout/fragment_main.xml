@@ -30,7 +30,6 @@
                     android:id="@+id/main_frag_vp"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@color/orange_my"
                     />
 
                 <com.jch.lib.view.PagerIndicator
