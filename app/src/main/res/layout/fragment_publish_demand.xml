@@ -10,11 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TableLayout style="@style/blue_frame_bg_layout">
+        <TableLayout style="@style/frame_bg_layout">
             <TableRow style="@style/publish_table_row">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/category_spaced"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
@@ -22,11 +21,10 @@
                     android:drawableRight="@drawable/right_arro"
                   />
             </TableRow>
-            <View style="@style/blue_horizontal"/>
+            <View style="@style/divider_horizontal"/>
             <TableRow style="@style/publish_table_row">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/area_spaced"
                     />
                 <View style="@style/vertical_divider_20"/>
@@ -35,11 +33,10 @@
                     android:drawableRight="@drawable/right_arro"
                     />
             </TableRow>
-            <View style="@style/blue_horizontal"/>
+            <View style="@style/divider_horizontal"/>
             <TableRow style="@style/publish_table_row">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/price_spaced"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
@@ -49,15 +46,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="元"
-                    android:textColor="@color/title_bule"
+                    android:textColor="@color/publish_base_color"
                    />
             </TableRow>
         </TableLayout>
-        <TableLayout style="@style/blue_frame_bg_layout">
+        <TableLayout style="@style/frame_bg_layout">
             <TableRow style="@style/publish_table_row" >
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/picture_spaced"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
@@ -66,11 +62,10 @@
                     android:drawableRight="@drawable/right_arro"
                     android:hint="1张"/>
             </TableRow>
-            <View style="@style/blue_horizontal"/>
+            <View style="@style/divider_horizontal"/>
             <TableRow style="@style/publish_table_row">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/description_spaced"
                     />
                 <View style="@style/vertical_divider_20"/>
@@ -79,11 +74,10 @@
                     android:drawableRight="@drawable/right_arro"
                     android:hint="@string/word10"/>
             </TableRow>
-            <View style="@style/blue_horizontal"/>
+            <View style="@style/divider_horizontal"/>
             <TableRow style="@style/publish_table_row">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/title_spaced"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
@@ -92,23 +86,20 @@
                     />
             </TableRow>
         </TableLayout>
-        <TableLayout style="@style/blue_frame_bg_layout">
+        <TableLayout style="@style/frame_bg_layout">
             <TableRow style="@style/publish_table_row">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/book_stand"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
                     style="@style/publish_edit"
                     />
             </TableRow>
-            <View style="@style/blue_horizontal"/>
+            <View style="@style/divider_horizontal"/>
             <TableRow style="@style/publish_table_row" >
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    style="@style/font_blue_15"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/contact"
                     />
                 <View style="@style/vertical_divider_20"/>
@@ -116,12 +107,10 @@
                     style="@style/publish_edit"
                     />
             </TableRow>
-            <View style="@style/blue_horizontal"/>
+            <View style="@style/divider_horizontal"/>
             <TableRow style="@style/publish_table_row">
-                <TextView android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font_blue_15"
-                    android:gravity="center_horizontal"
+                <TextView
+                    style="@style/pulish_text_style"
                     android:text="@string/mobile"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText

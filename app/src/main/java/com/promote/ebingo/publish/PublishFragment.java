@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,7 +76,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         content=(ViewPager)view.findViewById(R.id.publish_content);
         tabs.setOnCheckedChangeListener(this);
         PublishContentAdapter adapter=new PublishContentAdapter(getChildFragmentManager(),content,tabs);
-        adapter.add(new PublishSupplyFragment()).add(new PublishDemandFragment());
+        adapter.add(new PublishDemand()).add(new PublishSupply());
         content.setAdapter(adapter);
         return view;
     }

@@ -76,6 +76,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
                     if (result ==null){
                         ContextUtil.toast("登录失败");;
                     }else{
+                        ContextUtil.toast(response);;
                         Company company=Company.getInstance();
                         company.setName(result.getString("company_name"));
                         company.setCompanyId(result.getInt("company_id"));
@@ -84,6 +85,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
                         company.setWebsite(result.getString( "website"));
                         company.setRegion(result.getString( "region"));
                         company.setImage(result.getString( "image"));
+                        dismiss();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
