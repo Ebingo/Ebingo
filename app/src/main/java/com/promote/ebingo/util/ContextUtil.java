@@ -25,7 +25,7 @@ public class ContextUtil {
 
     public static void toast(Object object){
         if (mContext==null)throw  new RuntimeException(ContextUtil.class.getName()+" has not called init() ");
-        Toast.makeText(mContext,object.toString(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext,object+"",Toast.LENGTH_SHORT).show();
     }
 
     public static Context getContext(){

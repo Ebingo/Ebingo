@@ -40,7 +40,7 @@ public class DialogUtil {
 	 */
 	public static ProgressDialog waitingDialog(Context context) {
 
-		ProgressDialog dialog = ProgressDialog.show(context, null, "数据访问中", true);
+		ProgressDialog dialog = ProgressDialog.show(context, "", "数据访问中", true);
 		dialog.setCancelable(true);
 		return dialog;
 

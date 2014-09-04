@@ -39,7 +39,7 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
      * 重新获取验证码剩余时间
      */
     int timeLeft=MAX_TIME;
-
+    private Timer timer=null;
     private EditText edit_yzm;
     private EditText edit_password;
     Button btn_getYzm;
@@ -53,6 +53,7 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
         btn_getYzm=(Button)findViewById(R.id.btn_getYZM);
         findViewById(R.id.common_back_btn).setOnClickListener(this);
         findViewById(R.id.btn_getYZM).setOnClickListener(this);
+        startTimer2InvalidateButton();
     }
 
     private void commit(){
@@ -86,38 +87,47 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
      * 启动计时器，更新按钮文字
      */
     private void startTimer2InvalidateButton(){
-
-        final Handler buttonHandler=new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what==1){
-                    btn_getYzm.setText(msg.arg1+"秒后\n重新获取");
-                    btn_getYzm.setEnabled(false);
-                }else{
-                    btn_getYzm.setText("重新获取");
-                    btn_getYzm.setEnabled(true);
-                }
-                return false;
-            }
-        });
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                timeLeft--;
-                Message msg=new Message();
-                if(timeLeft<=0){
-                    this.cancel();
-                    msg.what=2;
-                }else{
-                    msg.what=1;
-                    msg.arg1=timeLeft;
-                }
-                buttonHandler.sendMessage(msg);
-            }
-        },0,1000);
-
+        timeLeft=MAX_TIME;
+        if (timer!=null){
+            timer.cancel();
+            timer=null;
+            task.cancel();
+        }
+        timer=new Timer();
+        timer.schedule(task,1000,1000);
     }
+
+    TimerTask task= new TimerTask() {
+        @Override
+        public void run() {
+            timeLeft--;
+            Message msg=new Message();
+            if(timeLeft<=0){
+                this.cancel();
+                msg.what=2;
+            }else{
+                msg.what=1;
+                msg.arg1=timeLeft;
+            }
+            buttonHandler.sendMessage(msg);
+        }
+    };
+
+     Handler buttonHandler=new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what==1){
+                btn_getYzm.setText(msg.arg1+"秒后\n重新获取");
+                btn_getYzm.setEnabled(false);
+            }else{
+                btn_getYzm.setText("重新获取");
+                btn_getYzm.setEnabled(true);
+            }
+            return false;
+        }
+    });
+
+
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -142,9 +152,7 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
 
                 @Override
                 public void onSuccess() {
-                    Intent intent=getIntent();
-                    intent.setClass(RegisterInputYzm.this,RegisterInputYzm.class);
-                    startActivityForResult(intent,100);
+                   startTimer2InvalidateButton();
                 }
             });
                 break;

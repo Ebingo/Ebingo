@@ -39,6 +39,8 @@ public class HttpConstant {
 
     public static final String KEY = "hdy782634j23487sdfkjw3486";
 
+    public static final String FAIL="fail";//访问网络返回失败
+
     /**
      * 首页显示接口.*
      */

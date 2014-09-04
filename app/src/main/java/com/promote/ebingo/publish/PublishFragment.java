@@ -3,15 +3,22 @@ package com.promote.ebingo.publish;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.publish.login.LoginDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,11 +37,8 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private FragmentManager manager;
-    private PublishDemandFragment demandFragment;
-    private  PublishSupplyFragment supplyFragment;
-    private View view;
-
+    private RadioGroup tabs;
+    private ViewPager content;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -63,18 +67,19 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        manager=getChildFragmentManager();
-        supplyFragment=new PublishSupplyFragment();
-        manager.beginTransaction().add(R.id.publish_content,supplyFragment).commit();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_publish, container, false);
-        RadioGroup group=(RadioGroup)view.findViewById(R.id.publish_type );
-        group.setOnCheckedChangeListener(this);
+        View view = inflater.inflate(R.layout.fragment_publish, container, false);
+        tabs=(RadioGroup)view.findViewById(R.id.publish_type );
+        content=(ViewPager)view.findViewById(R.id.publish_content);
+        tabs.setOnCheckedChangeListener(this);
+        PublishContentAdapter adapter=new PublishContentAdapter(getChildFragmentManager(),content,tabs);
+        adapter.add(new PublishSupplyFragment()).add(new PublishDemandFragment());
+        content.setAdapter(adapter);
         return view;
     }
 
@@ -111,34 +116,55 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId){
             case R.id.rb_publish_demand:
-                    if(demandFragment==null){
-                        demandFragment=new PublishDemandFragment();
-                    }
-                changeFrag(demandFragment,supplyFragment);
+                content.setCurrentItem(1);
                 break;
             case R.id.rb_publish_supply:
-                changeFrag(supplyFragment,demandFragment);
+                content.setCurrentItem(0);
                 break;
         }
     }
 
-    /**
-     * 隐藏显示相应的frag，并将设置当前的fragment。
-     *
-     * @param showFrag 将要显示的frag
-     * @param hideFrag 要隐藏的frag。
-     */
-    private void changeFrag(Fragment showFrag, Fragment hideFrag) {
-        FragmentTransaction ft = manager.beginTransaction();
-        if (showFrag.isAdded()) {
-            ft.show(showFrag);
-        } else {
-            ft.add(R.id.publish_content, showFrag, null);
+    class PublishContentAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
+
+        private RadioGroup tabs;
+        private ViewPager content;
+        private List<Fragment> fragments;
+        public PublishContentAdapter(FragmentManager fm,ViewPager content,RadioGroup tabs) {
+            super(fm);
+            fragments=new ArrayList<Fragment>();
+            this.tabs=tabs;
+            this.content=content;
+            this.content.setOnPageChangeListener(this);
+        }
+
+        public PublishContentAdapter add(Fragment f){
+            fragments.add(f);
+            return this;
+        }
+
+        @Override
+        public void onPageScrolled(int i, float v, int i2) {
 
         }
-        if (hideFrag != null && hideFrag.isAdded()) {
-            ft.hide(hideFrag);
+
+        @Override
+        public void onPageSelected(int i) {
+            ((RadioButton)tabs.getChildAt(i)).setChecked(true);
         }
-        ft.commitAllowingStateLoss();
+
+        @Override
+        public void onPageScrollStateChanged(int i) {
+
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return fragments.get(i);
+        }
     }
 }

@@ -33,7 +33,7 @@ public class EbingoApp extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
                 getApplicationContext())
                 .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                .memoryCache(new LruMemoryCache(1 * 1024 * 1024))
                 .diskCacheSize(50 * 1024 * 1024)
                 .threadPoolSize(Thread.NORM_PRIORITY -2)
                 .denyCacheImageMultipleSizesInMemory()

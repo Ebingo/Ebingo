@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -70,13 +72,19 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
-                    Object response1 = response.get("response");
-                    if (response1 ==null||response1.equals("fail")){
-                        Toast.makeText(getContext(),"登陆失败",Toast.LENGTH_SHORT).show();
+                    JSONObject result = response.getJSONObject("response");
+                    if (result ==null){
+                        ContextUtil.toast("登录失败");;
                     }else{
-
+                        Company company=Company.getInstance();
+                        company.setName(result.getString("company_name"));
+                        company.setCompanyId(result.getInt("company_id"));
+                        company.setVipType(result.getString("viptype"));
+                        company.setIsLock(result.getString("is_lock"));
+                        company.setWebsite(result.getString( "website"));
+                        company.setRegion(result.getString( "region"));
+                        company.setImage(result.getString( "image"));
                     }
-                    LogCat.i(LOG_TAG,"success"+response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -85,14 +93,14 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                LogCat.i(LOG_TAG,"onFailure");
+                ContextUtil.toast(errorResponse);
 
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                LogCat.i(LOG_TAG,"onFailure");
+                ContextUtil.toast(responseString);
             }
         });
     }

@@ -44,8 +44,9 @@
                         android:layout_height="@dimen/widget_height"
                         style="@style/font_black_15"
                         android:background="@null"
+                        android:gravity=""
                         android:inputType="textPassword"
-                        android:hint="密    码"/>
+                        android:hint="密  码"/>
 
                     <ToggleButton
                         android:id="@+id/password_toggle"

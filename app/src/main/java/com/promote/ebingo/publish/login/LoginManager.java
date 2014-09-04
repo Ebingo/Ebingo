@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.application.HttpConstant;
@@ -11,6 +12,7 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,7 +36,7 @@ public class LoginManager {
             final Callback mCallback=callback;
             EbingoRequestParmater parmater=new EbingoRequestParmater(context);
             parmater.put("phonenum",phonenum);
-            final ProgressDialog dialog=ProgressDialog.show(context,null,"正在获取验证码...");
+            final ProgressDialog dialog=DialogUtil.waitingDialog(context);
             HttpUtil.post(HttpConstant.getYzm, parmater, new JsonHttpResponseHandler("utf-8") {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -55,8 +57,21 @@ public class LoginManager {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     super.onFailure(statusCode, headers, responseString, throwable);
-                    mCallback.onFail("responseString");
+                    mCallback.onFail("String:"+responseString);
                 }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    mCallback.onFail("JSONObject:"+errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    mCallback.onFail("JSONArray:"+errorResponse);
+                }
+
 
                 @Override
                 public void onFinish() {

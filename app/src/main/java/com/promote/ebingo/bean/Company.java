@@ -12,7 +12,8 @@ public class Company {
     private String companyTel;//公司电话
     private String region;//公司地区
     private String website; //公司网址
-
+    private String vipType;//会员类型
+    private String isLock;
     private static Company mCompany;
 
     private Company(){
@@ -22,6 +23,22 @@ public class Company {
     public static Company getInstance(){
         if (mCompany==null)mCompany=new Company();
         return mCompany;
+    }
+
+    public String getVipType() {
+        return vipType;
+    }
+
+    public void setVipType(String vipType) {
+        this.vipType = vipType;
+    }
+
+    public String getIsLock() {
+        return isLock;
+    }
+
+    public void setIsLock(String isLock) {
+        this.isLock = isLock;
     }
 
     public Integer getCompanyId() {
