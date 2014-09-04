@@ -1,5 +1,6 @@
 package com.promote.ebingo;
 
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,10 +24,11 @@ import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
 
 
 public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener {
-
     private RadioButton mainrb;
     private RadioButton findrb;
     private RadioButton publishrb;
@@ -161,4 +163,14 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogCat.i("--->",(resultCode==RESULT_OK)+"");
+        if (resultCode==RESULT_OK&&mPublishFragment!=null&&mPublishFragment.isMyRequest(requestCode)){
+            mPublishFragment.onActivityResult(requestCode,resultCode,data);
+        }
+    }
+
 }

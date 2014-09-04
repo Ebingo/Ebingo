@@ -45,14 +45,16 @@ public class HttpConstant {
      * 首页显示接口.*
      */
     public static final String getIndex = getRootUrl() + "getIndex";
-
+    /** 分类列表 **/
     public static final String getCategories=getRootUrl()+"getCategoryList";
-
+    /** 登录 **/
     public static final String login=getRootUrl()+"login";
-
+    /** 注册 **/
     public static final String register=getRootUrl()+"register";
-
+    /** 获取验证码 **/
     public static final String getYzm=getRootUrl()+"getYzm";
+    /** 保存信息 **/
+    public static final String saveInfo=getRootUrl()+"saveInfo";
     /** 获取企业列表 **/
     public static final String getCompanyList=getRootUrl() +"getCompanyList";
     /** 获取供应信息列表 **/

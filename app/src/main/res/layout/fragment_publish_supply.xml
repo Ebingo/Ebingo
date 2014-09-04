@@ -87,8 +87,8 @@
                     style="@style/pulish_text_style"
                     android:text="@string/label_spaced"/>
                 <View style="@style/vertical_divider_20"/>
-                <EditText
-                    android:id="@+id/tv_label"
+                <TextView
+                    android:id="@+id/tv_tags"
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                     android:hint="@string/label_hint"

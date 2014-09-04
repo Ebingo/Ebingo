@@ -58,7 +58,7 @@
     </style>
 
     <style name="blue_15_tv" parent="tv_singl_base_style">
-        <item name="android:textColor">@color/title_bule</item>
+        <item name="android:textColor">@color/title_blue</item>
         <item name="android:textSize">@dimen/font_15</item>
     </style>
 
@@ -164,6 +164,7 @@
         <item name="android:textColor">@color/gray</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@null</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="publish_table_row">

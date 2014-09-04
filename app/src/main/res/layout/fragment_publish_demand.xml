@@ -16,19 +16,23 @@
                     style="@style/pulish_text_style"
                     android:text="@string/category_spaced"/>
                 <View style="@style/vertical_divider_20"/>
-                <EditText
+                <TextView
+                    android:id="@+id/tv_pick_category"
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                   />
             </TableRow>
             <View style="@style/divider_horizontal"/>
-            <TableRow style="@style/publish_table_row">
+            <TableRow
+
+                style="@style/publish_table_row">
                 <TextView
                     style="@style/pulish_text_style"
                     android:text="@string/area_spaced"
                     />
                 <View style="@style/vertical_divider_20"/>
-                <EditText
+                <TextView
+                    android:id="@+id/tv_pick_region"
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                     />
@@ -40,9 +44,11 @@
                     android:text="@string/price_spaced"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
+                    android:id="@+id/edit_price"
                     style="@style/publish_edit"
                     />
-                <TextView android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="元"
@@ -56,8 +62,8 @@
                     style="@style/pulish_text_style"
                     android:text="@string/picture_spaced"/>
                 <View style="@style/vertical_divider_20"/>
-                <EditText
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tv_pick_image"
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                     android:hint="1张"/>
@@ -69,7 +75,8 @@
                     android:text="@string/description_spaced"
                     />
                 <View style="@style/vertical_divider_20"/>
-                <EditText
+                <TextView
+                    android:id="@+id/tv_pick_description"
                     style="@style/publish_edit"
                     android:drawableRight="@drawable/right_arro"
                     android:hint="@string/word10"/>
@@ -81,6 +88,7 @@
                     android:text="@string/title_spaced"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
+                    android:id="@+id/edit_title"
                     style="@style/publish_edit"
                     android:hint="15字以内"
                     />
@@ -93,6 +101,7 @@
                     android:text="@string/book_stand"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
+                    android:id="@+id/edit_book_standard"
                     style="@style/publish_edit"
                     />
             </TableRow>
@@ -104,6 +113,7 @@
                     />
                 <View style="@style/vertical_divider_20"/>
                 <EditText
+                    android:id="@+id/edit_contacts"
                     style="@style/publish_edit"
                     />
             </TableRow>
@@ -114,6 +124,7 @@
                     android:text="@string/mobile"/>
                 <View style="@style/vertical_divider_20"/>
                 <EditText
+                    android:id="@+id/edit_phone"
                     style="@style/publish_edit"
                     />
             </TableRow>

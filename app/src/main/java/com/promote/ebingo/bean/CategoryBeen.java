@@ -25,6 +25,15 @@ import com.google.gson.Gson;
         return id;
     }
 
+    @Override
+    public String toString() {
+        return "CategoryBeen{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }

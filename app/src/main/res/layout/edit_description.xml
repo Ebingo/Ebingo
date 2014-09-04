@@ -15,16 +15,17 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="370dp"
         android:inputType="textMultiLine"
         android:ems="10"
         android:gravity="top"
+        android:hint="请输入产品详细情况"
         android:lineSpacingMultiplier="1.2"
-        android:text="aasdfijhqwperihqwoierhiaasdfijhqwperihqwoierhiaasdfijhqwperihqwoierhiaasdfijhqwperihqwoierhi"
         android:id="@+id/edit_description"/>
 
     <Button
         android:id="@+id/commit"
+        android:onClick="onClick"
         android:layout_marginTop="10dp"
         style="@style/yellow_button"
         android:text="确定"/>

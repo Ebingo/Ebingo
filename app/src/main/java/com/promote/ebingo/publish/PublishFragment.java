@@ -1,5 +1,7 @@
 package com.promote.ebingo.publish;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,9 +13,19 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginDialog;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +41,25 @@ import java.util.List;
 public class PublishFragment extends Fragment implements RadioGroup.OnCheckedChangeListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    /**求购*/
+    public static final String TYPE_DEMAND="1";
+    /**供应*/
+    public static final String TYPE_SUPPLY="2";
+    /**选择分类*/
+    public static final int PICK_CATEGORY=1<<0;
+    /**选择区域*/
+    public static final int PICK_REGION=1<<1;
+    /**选择图片*/
+    public static final int PICK_IMAGE=1<<2;
+    /**选择描述*/
+    public static final int PICK_DESCRIPTION=1<<3;
+    /**选择标签*/
+    public static final int PICK_TAGS =1<<4;
+    /**标记由发布求购页面发出的选择*/
+    public static final int PICK_FOR_DEMAND=1<<8;
+    /**标记选由发布供应页面发出的选择*/
+    public static final int PICK_FOR_SUPPLY=1<<9;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private LoginDialog loginDialog;
@@ -37,6 +68,9 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     private String mParam2;
     private RadioGroup tabs;
     private ViewPager content;
+    PublishDemand publishDemand=new PublishDemand();
+    PublishSupply publishSupply=new PublishSupply();
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -76,7 +110,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         content=(ViewPager)view.findViewById(R.id.publish_content);
         tabs.setOnCheckedChangeListener(this);
         PublishContentAdapter adapter=new PublishContentAdapter(getChildFragmentManager(),content,tabs);
-        adapter.add(new PublishDemand()).add(new PublishSupply());
+        adapter.add(publishDemand).add(publishSupply);
         content.setAdapter(adapter);
         return view;
     }
@@ -98,9 +132,10 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     private void showLoginDialog(){
         if (loginDialog==null){
             loginDialog=new LoginDialog(getActivity());
-//            loginDialog.setCancelable(false);
+            loginDialog.setCancelable(false);
         }
-        if(Company.getInstance().getCompanyId()==null){
+        if(Company.getInstance().getCompanyId()==null&&!loginDialog.isShowing()){
+            LogCat.i("--->","loginDialog.show();");
             loginDialog.show();
         }
     }
@@ -165,4 +200,49 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             return fragments.get(i);
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LogCat.i("--->", Integer.toBinaryString(requestCode));
+        if (isPickFor(PICK_FOR_DEMAND,requestCode))publishDemand.onActivityResult(requestCode,resultCode,data);
+        //publishSupply能自动接收到onActivityResult回调，可能与add的顺序有关。
+        if (isPickFor(PICK_FOR_SUPPLY, requestCode))publishSupply.onActivityResult(requestCode,resultCode,data);
+    }
+    /**
+     * 判断是否为Publish页面发出的请求
+     * @param requestCode
+     * @return
+     */
+    public boolean isMyRequest(final int requestCode){
+        return isPickFor(PICK_FOR_DEMAND, requestCode)||isPickFor(PICK_FOR_SUPPLY, requestCode);
+    }
+
+    public boolean isPickFor(int code,final int requestCode){
+        int myCode=requestCode;
+        return (myCode&code)!=0;
+    }
+
+    public void startPublish(EbingoRequestParmater parmater){
+       final ProgressDialog dialog= DialogUtil.waitingDialog(getActivity());
+        HttpUtil.post(HttpConstant.saveInfo,parmater,new JsonHttpResponseHandler("utf-8"){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                ContextUtil.toast(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                ContextUtil.toast(responseString);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
+        });
+    }
+
 }
