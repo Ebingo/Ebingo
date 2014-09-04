@@ -71,11 +71,11 @@ public class SearchListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        mType = getSearchType();
+//        mType = getSearchType();
         if (mType == SearchType.INTERPRISE) {
 
             InterpriseViewHolder viewHolder = null;
-            if (convertView == null) {
+            if (convertView == null || !(convertView.getTag() instanceof InterpriseViewHolder)) {
                 viewHolder = new InterpriseViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.search_interprise_result_item_layout, null);
                 viewHolder.img = (ImageView) convertView.findViewById(R.id.search_interprise_item_iv);
@@ -85,7 +85,7 @@ public class SearchListAdapter extends BaseAdapter {
                 convertView.setTag(viewHolder);
 
             } else {
-                viewHolder = (InterpriseViewHolder) convertView.getTag();
+                    viewHolder = (InterpriseViewHolder) convertView.getTag();
             }
 
             SearchInterpriseBean interpriseBean = (SearchInterpriseBean) mSearchTypeBeans.get(position);
@@ -97,7 +97,7 @@ public class SearchListAdapter extends BaseAdapter {
         } else if (mType == SearchType.SUPPLY) {
 
             SupplyViewHolder viewHolder = null;
-            if (convertView == null) {
+            if (convertView == null || !(viewHolder instanceof SupplyViewHolder)) {
                 viewHolder = new SupplyViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.search_supply_result_item_layout, null);
 
@@ -122,10 +122,10 @@ public class SearchListAdapter extends BaseAdapter {
             viewHolder.company_name.setText(supplyBean.getCompany());
 
 
-        } else if (mType == SearchType.DEMAND) {
+        } else if (mType == SearchType.DEMAND ) {
 
             DemandViewHolder viewHolder = null;
-            if (convertView == null) {
+            if (convertView == null || !(viewHolder instanceof DemandViewHolder)) {
 
                 viewHolder = new DemandViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.search_buy_result_item_layout, null);

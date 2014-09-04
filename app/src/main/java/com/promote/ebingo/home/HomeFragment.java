@@ -94,9 +94,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     //test data.
     private int imgsRes[] = {R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2,R.drawable.test_main_1, R.drawable.test_main_2};
 
-//    private int mBannerBaseWidth = 720;
-//    private int mBannerBaseHeight = 287;
-    private Point imageSize = new Point(720, 287);
+    private Point imageSize = new Point(720, 258);
     private TextView mainhote8sttv;
     private TextView mainhote7sttv;
 
@@ -335,7 +333,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             this.mContext = context;
 
                 ImageView imgView = new ImageView(context);
-                imgView.setScaleType(ImageView.ScaleType.CENTER);
+                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imgView.setBackgroundResource(R.drawable.loading);
                 imgs.add(imgView);
             }
@@ -346,7 +344,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             imgs.clear();
             for (int i = 0; i < mAds.size(); i++) {
                 ImageView imgView = new ImageView(mContext);
-                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 //                imgView.setBackgroundResource(imgsRes[i]);
                 ImageManager.load(mAds.get(i).getSrc(), imgView, mOptions);
                 setImageViewListner(imgView, mAds.get(i).getType());

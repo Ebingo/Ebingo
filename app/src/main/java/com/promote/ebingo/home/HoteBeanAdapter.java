@@ -94,7 +94,7 @@ public class HoteBeanAdapter extends BaseAdapter {
                }
 
            }
-//           DisplayUtil.reSizeViewByScreenWidth(viewHolder.img, mPoint.x, mPoint.y, mContext);//设置img的大小
+           DisplayUtil.reSizeViewByScreenWidth(viewHolder.img, mPoint.x, mPoint.y, mContext);//设置img的大小
            ImageManager.load(mHotBeans.get(position).getImage(), viewHolder.img, mOptions);
 
        }else{

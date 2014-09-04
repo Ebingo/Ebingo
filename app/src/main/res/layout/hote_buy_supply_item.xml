@@ -6,12 +6,14 @@ android:layout_width="match_parent"
     android:paddingBottom="@dimen/main_item_pad_t_b"
     android:paddingLeft="@dimen/main_tb_marg_l_r"
     android:paddingRight="@dimen/main_tb_marg_l_r"
+    android:gravity="center_vertical"
     android:layout_height="wrap_content">
 
 
     <LinearLayout
     android:layout_width="wrap_content"
     android:orientation="vertical"
+    android:layout_centerVertical="true"
     android:layout_height="wrap_content">
     <LinearLayout
     android:layout_width="wrap_content"
@@ -45,7 +47,7 @@ android:layout_width="match_parent"
     android:id="@+id/main_hot_1get_img"
     android:src="@drawable/circle_img"
     android:layout_alignParentRight="true"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_width="@dimen/common_circl_img_size"
+    android:layout_height="@dimen/common_circl_img_size" />
 
 </RelativeLayout>

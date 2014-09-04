@@ -62,7 +62,8 @@ public class DisplayUtil {
 
         float scaleX = displayWidth / baseX;
 
-        return baseY * scaleX + 0.5f;
+//        return baseY * scaleX + 0.5f;
+        return baseY * scaleX;
     }
 
     /**

@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -28,6 +27,7 @@ import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import  static android.view.ViewGroup.LayoutParams.*;
 /**
  * Created by acer on 2014/9/2.
  */
-public class ChooseCategoryActivity extends Activity implements AdapterView.OnItemClickListener,View.OnClickListener{
+public class PickCategoryActivity extends Activity implements AdapterView.OnItemClickListener,View.OnClickListener{
     ListView categoryList;
     List<CategoryBeen> categories=new ArrayList<CategoryBeen>();
     @Override
@@ -44,8 +44,8 @@ public class ChooseCategoryActivity extends Activity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_trade);
         categoryList=(ListView)findViewById(R.id.category_list);
+        categoryList.setOnItemClickListener(this);
         initData();
-        categoryList.setAdapter(new CategoryAdapter(this));
     }
 
     private void initData(){
@@ -53,12 +53,26 @@ public class ChooseCategoryActivity extends Activity implements AdapterView.OnIt
         findViewById(R.id.common_back_btn).setOnClickListener(this);
         final ProgressDialog dialog= DialogUtil.waitingDialog(this);
         EbingoRequestParmater params=new EbingoRequestParmater(this);
-        HttpUtil.post(HttpConstant.getCategories,new JsonHttpResponseHandler("utf-8"){
+        HttpUtil.post(HttpConstant.getCategories,params,new JsonHttpResponseHandler("utf-8"){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                ContextUtil.toast(response);
+                try {
+
+                    JSONArray array = response.getJSONArray("response");
+                    for (int i = 0; i < array.length(); i++) {
+                           JSONObject object = array.getJSONObject(i);
+                           CategoryBeen categoryBeen = new CategoryBeen();
+                           categoryBeen.setName(object.getString("name"));
+                           categoryBeen.setImage(object.getString("image"));
+                           categoryBeen.setId(object.getInt("id"));
+                           categories.add(categoryBeen);
+                    }
+                    categoryList.setAdapter(new CategoryAdapter(PickCategoryActivity.this));
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -80,8 +94,10 @@ public class ChooseCategoryActivity extends Activity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent data=new Intent();
-        data.putExtra("result",categories.get(position).getName());
-        setResult(RESULT_OK,data);
+        CategoryBeen selectCategory=categories.get(position);
+        data.putExtra("categoryId",selectCategory.getId());
+        data.putExtra("result", selectCategory.getName());
+        setResult(RESULT_OK, data);
         finish();
     }
 
@@ -126,7 +142,8 @@ public class ChooseCategoryActivity extends Activity implements AdapterView.OnIt
                 holder.tv=new TextView(context);
                 holder.tv.setLayoutParams(new AbsListView.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
                 holder.tv.setTextColor(context.getResources().getColor(R.color.black));
-                holder.tv.setTextSize(context.getResources().getDimension(R.dimen.font_18));
+                holder.tv.setTextSize(18);
+                holder.tv.setClickable(false);
                 holder.tv.setBackgroundColor(Color.WHITE);
                 holder.tv.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
                 holder.tv.setPadding(dp(12),dp(8),dp(6),dp(8));
