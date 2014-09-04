@@ -59,22 +59,28 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
     }
 
     private void commit(){
-        final String password=edit_password.getText().toString().trim();
-        final String yzm=edit_yzm.getText().toString().trim();
         EbingoRequestParmater parmater=new EbingoRequestParmater(this);
-        parmater.put("yzm",yzm);
-        parmater.put("password",password);
+        parmater.put("yzm", edit_yzm.getText().toString().trim());
+        parmater.put("phonenum", getIntent().getStringExtra("phonenum"));
+        parmater.put("password", edit_password.getText().toString().trim());
+
         HttpUtil.post(HttpConstant.register,parmater,new JsonHttpResponseHandler("utf-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_SHORT).show();
+                ContextUtil.toast(response);
+                try {
+                    JSONObject result=response.getJSONObject("response");
+                    Company.getInstance().setCompanyId(result.getInt("company_id"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(getApplicationContext(),responseString,Toast.LENGTH_SHORT).show();
+                ContextUtil.toast("注册失败！");
             }
         });
     }
@@ -115,35 +121,7 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
         },0,1000);
 
     }
-    /**
-     * 从后台获取验证码
-     */
-    private void getYzm() {
-        EbingoRequestParmater parmater=new EbingoRequestParmater(this);
-        final ProgressDialog dialog=ProgressDialog.show(RegisterInputYzm.this,null,"正在获取验证码...");
-        HttpUtil.post(HttpConstant.getYzm, parmater, new JsonHttpResponseHandler("utf-8") {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                try {
-                    if ("100".equals(response.getJSONObject("response").getString("code"))) {
-                        startActivityForResult(new Intent(RegisterInputYzm.this, RegisterInputYzm.class), 100);
-                    } else {
-                        ContextUtil.toast("获取验证码失败");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                dialog.dismiss();
-            }
-        });
-    }
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(isChecked){
@@ -163,7 +141,15 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
                 finish();
                 break;
             case R.id.btn_getYZM:
-                getYzm();
+                new LoginManager().getYzm(RegisterInputYzm.this,getIntent().getStringExtra("phonenum"),new LoginManager.Callback(){
+
+                @Override
+                public void onSuccess() {
+                    Intent intent=getIntent();
+                    intent.setClass(RegisterInputYzm.this,RegisterInputYzm.class);
+                    startActivityForResult(intent,100);
+                }
+            });
                 break;
         }
     }

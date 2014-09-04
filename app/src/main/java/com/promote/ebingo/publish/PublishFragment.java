@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.promote.ebingo.R;
+import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.publish.login.LoginDialog;
 
 /**
@@ -80,18 +81,23 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     @Override
     public void onResume() {
         super.onResume();
-
-        if (loginDialog==null){
-            loginDialog=new LoginDialog(getActivity());
-//            loginDialog.setCancelable(false);
-        }
-        loginDialog.show();;
+        showLoginDialog();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden){
+          showLoginDialog();
+        }
+    }
+
+    private void showLoginDialog(){
+        if (loginDialog==null){
+            loginDialog=new LoginDialog(getActivity());
+//            loginDialog.setCancelable(false);
+        }
+        if(Company.getInstance().getCompanyId()==null){
             loginDialog.show();
         }
     }
@@ -100,9 +106,6 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     public void onDetach() {
         super.onDetach();
     }
-
-
-
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
