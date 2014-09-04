@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/home_market_item_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
+        android:layout_width="@dimen/common_circl_img_size"
+        android:layout_height="@dimen/common_circl_img_size"
+        android:scaleType="centerCrop"
         android:src="@drawable/circle_img"/>
     <TextView
         android:id="@+id/home_market_item_tv"

@@ -225,8 +225,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 String key = searchbaret.getText().toString();
                 searchbaret.clearFocus();
 
-
-
                 if (key != null && !key.equals("")){
                     saveHistory(key);
                 }
@@ -439,6 +437,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 }
                 mCurSearchType = SearchType.DEMAND;
                 if (searchDemandBeans == null || searchDemandBeans.size() == 0){
+
 
                     noData(getString(R.string.no_search_data));
                 }else {

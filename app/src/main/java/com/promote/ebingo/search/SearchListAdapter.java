@@ -71,7 +71,7 @@ public class SearchListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        mType = getSearchType();
+//        mType = getSearchType();
         if (mType == SearchType.INTERPRISE) {
 
             InterpriseViewHolder viewHolder = null;

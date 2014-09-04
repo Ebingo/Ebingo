@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="元"
-                    android:textColor="@color/title_bule"
+                    android:textColor="@color/title_blue"
                    />
             </TableRow>
         </TableLayout>

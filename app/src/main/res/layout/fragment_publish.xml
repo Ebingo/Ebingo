@@ -10,7 +10,7 @@
         android:layout_height="@dimen/title_height"
         android:gravity="center"
         style="@style/font_white_20"
-        android:background="@color/title_bule"
+        android:background="@color/title_blue"
         android:text="@string/tab_publish"
        />
     <RadioGroup
