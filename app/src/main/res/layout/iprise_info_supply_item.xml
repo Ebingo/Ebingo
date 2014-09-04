@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/iprise_info_dynamic_date_tv"
+            android:layout_alignParentRight="true"
+            style="@style/font_gray_12"
+            android:text="08-11"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/iprise_info_dyanmic_name_tv"
+            android:layout_width="wrap_content"
+            style="@style/black_15_tv"
+            android:layout_toLeftOf="@id/iprise_info_dynamic_date_tv"
+            android:textStyle="bold"
+            android:text="公司與浙江省信用合作社的合作往來"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/iprise_info_dynamic_content_tv"
+        android:layout_width="wrap_content"
+        style="@style/font_gray_12"
+        android:layout_marginTop="2dp"
+        android:text="小气鬼小气鬼小小气鬼小气鬼气鬼小气鬼小气鬼小气鬼小气鬼小气鬼小气鬼小气鬼"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

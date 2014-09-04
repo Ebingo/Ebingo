@@ -14,8 +14,13 @@ import com.promote.ebingo.R;
  * Created by acer on 2014/9/2.
  */
 public class PublishDemandFragment extends Fragment{
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_publish_demand,null );
     }
+
+
 }
