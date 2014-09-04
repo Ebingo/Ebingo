@@ -2,6 +2,7 @@ package com.promote.ebingo.search;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +42,8 @@ import org.apache.http.Header;
 import org.json.JSONObject;
 
 import java.io.DataInput;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener, AdapterView.OnItemClickListener{
@@ -161,6 +164,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      */
     private void showkey(String key){
         searchresultkeyll.setVisibility(View.VISIBLE);
+        searchkeytv.setText(key);
 
     }
 
@@ -220,8 +224,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
                 String key = searchbaret.getText().toString();
                 searchbaret.clearFocus();
-                mRefreshView.setFootViewVisibility(View.VISIBLE);
-                mRefreshView.setUpRefreshable(true);
+
+
 
                 if (key != null && !key.equals("")){
                     saveHistory(key);
@@ -235,7 +239,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 }else{
                     getCompanyList(0, key);
                 }
-                
+                mRefreshView.setUpRefreshable(true);
+                mRefreshView.setFootViewVisibility(View.VISIBLE);
                 showkey(key);       //显示关键字项。
 
                 break;
@@ -344,21 +349,40 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         switch (mCurSearchType){
-            case HISTORY:{
+            case HISTORY:{          //當前顯示搜索記錄。
 
+                SearchHistoryBean historyBean = (SearchHistoryBean) mSearchTypeBeans.get(position);
+                searchbaret.setText(historyBean.getHistory());
                 break;
             }
 
-            case DEMAND:{
+            case DEMAND:{       //当前显示求购信息.
+
+                SearchDemandBean demandBean = (SearchDemandBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent();
+                intent.putExtra("id", demandBean.getId());
+                startActivity(intent);
+
                 break;
             }
 
             case SUPPLY:{
 
+                SearchSupplyBean supplyBean = (SearchSupplyBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent();
+                intent.putExtra("id", supplyBean.getId());
+                startActivity(intent);
+
                 break;
             }
 
             case INTERPRISE:{
+
+                SearchInterpriseBean interpriseBean = (SearchInterpriseBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent();
+                intent.putExtra("id", interpriseBean.getId());
+                startActivity(intent);
+
                 break;
             }
 
@@ -384,15 +408,23 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     /**
      * 從網絡獲取求购信息列表.
      *
+     *  http://218.244.149.129/eb/index.php?s=/Home/Api/getDemandInfoList
+     *
+     * condition={"keywords":""}&lastId=0&pagesize=20&os=android&secret=deaf3dad91c211dd71775c47e588e7e6&uuid=319875235004276&time=1409792711637
+     *
      * @param lastId
      */
     public void getDemandInfoList(final int lastId, String keyword){
 
         String url = HttpConstant.getDemandInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
-        parmater.put("lastId", lastId);
+        parmater.put("lastid", lastId);
         parmater.put("pagesize", 20);       //每页显示20条。
-        parmater.put("condition", appendKeyworld(keyword));
+        try {
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8"){
@@ -406,10 +438,11 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                     mSearchTypeBeans.clear();
                 }
                 mCurSearchType = SearchType.DEMAND;
-                if (searchDemandBeans != null && searchDemandBeans.size() != 0){
-                    mSearchTypeBeans.addAll(searchDemandBeans);
+                if (searchDemandBeans == null || searchDemandBeans.size() == 0){
+
                     noData(getString(R.string.no_search_data));
                 }else {
+                    mSearchTypeBeans.addAll(searchDemandBeans);
                     hasData(false);
                 }
 
@@ -448,9 +481,13 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         String url = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
-        parmater.put("lastId", lastId);
+        parmater.put("lastid", lastId);
         parmater.put("pagesize", 20);       //每页显示20条。
-        parmater.put("condition", appendKeyworld(keyword));
+        try {
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
@@ -464,10 +501,11 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                     mSearchTypeBeans.clear();
                 }
                 mCurSearchType = SearchType.SUPPLY;
-                if (searchSupplyBeans != null && searchSupplyBeans.size() != 0) {
-                    mSearchTypeBeans.addAll(searchSupplyBeans);
+                if (searchSupplyBeans == null || searchSupplyBeans.size()== 0) {
+
                     noData(getString(R.string.no_search_data));
                 } else {
+                    mSearchTypeBeans.addAll(searchSupplyBeans);
                     hasData(false);
                 }
                 mAdapter.notifyDataSetChanged(mSearchTypeBeans);
@@ -502,9 +540,13 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         String url = HttpConstant.getCompanyList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
-        parmater.put("lastId", lastId);
+        parmater.put("lastid", lastId);
         parmater.put("pagesize", 20);       //每页显示20条。
-        parmater.put("condition", appendKeyworld(keyword));
+        try {
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
@@ -518,10 +560,10 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                     mSearchTypeBeans.clear();
                 }
                 mCurSearchType = SearchType.INTERPRISE;
-                if (searchInterpriseBeans != null && searchInterpriseBeans.size() != 0) {
-                    mSearchTypeBeans.addAll(searchInterpriseBeans);
+                if (searchInterpriseBeans == null || searchInterpriseBeans.size() == 0) {
                     noData(getString(R.string.no_search_data));
                 } else {
+                    mSearchTypeBeans.addAll(searchInterpriseBeans);
                     hasData(false);
                 }
 
