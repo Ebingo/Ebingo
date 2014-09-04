@@ -7,187 +7,222 @@
     tools:context="com.promote.ebingo.InformationActivity.ProductInfoActivity">
 
     <include layout="@layout/common_head_layout"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white"/>
 
-    <ImageView
-        android:id="@+id/product_info_img"
-        android:src="@drawable/test_main_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:id="@+id/prd_info_btm_ll"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            style="@style/info_content_pad"
+            android:background="@color/gray"
+            android:layout_height="48dp">
+
+            <TextView
+                android:id="@+id/prd_info_into_company_tv"
+                style="@style/font_gray_15"
+                android:text="进入企业"
+
+                android:layout_alignParentRight="true"
+                android:drawableRight="@drawable/right_arro"
+                android:drawablePadding="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/prd_info_company_tv"
+                style="@style/orange_15_tv"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/buy_info_into_company_tv"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:text="南京普爾么網絡技術有限公司"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/prd_info_btm_ll"
+            android:layout_height="match_parent">
+
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/info_content_pad">
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:id="@+id/product_info_name_left_ll"
-                        android:layout_gravity="right"
-                        android:layout_width="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="2dp"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/gray_11_tv"
-                            android:text="@string/look_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <TextView
-                            android:id="@+id/product_info_look_num_tv"
-                            style="@style/gray_11_tv"
-                            android:text="1000"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <TextView
-                            style="@style/gray_11_tv"
-                            android:text="@string/search_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/product_info_name_tv"
-                        android:layout_width="wrap_content"
-                        style="@style/light_gray_15_tv"
-                        android:layout_alignParentLeft="true"
-                        android:layout_toLeftOf="@id/product_info_name_left_ll"
-                        android:layout_gravity="left"
-                        android:text="水晶特價 感恩大回饋 水晶珠寶首飾"
-                        android:layout_height="wrap_content" />
-
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="3dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_alignParentLeft="true"
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:layout_marginLeft="2dp"
-                            android:text="@string/rmb_signe"
-                            style="@style/black_15_tv"/>
-
-                        <TextView
-                            android:id="@+id/product_info_price_tv"
-                            style="@style/font_black_15"
-                            android:textStyle="bold"
-                            android:text="269"
-                            android:layout_width="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:id="@+id/product_info_start_num_tv"
-                            android:layout_width="wrap_content"
-                            style="@style/gray_11_tv"
-                            android:text="10"
-                            android:layout_height="wrap_content" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/gray_11_tv"
-                            android:text="@string/start_supply"/>
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/product_info_city_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_alignParentRight="true"
-                        style="@style/gray_11_tv"
-                        android:text="深圳"
-                        android:layout_height="wrap_content" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="3dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/product_info_company_name_tv"
-                        style="@style/orange_14_tv"
-                        android:text="深圳雅典娜珠宝有限公司"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    
-                    <TextView
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/product_info_enter_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/orange_14_tv"
-                        android:text="@string/enter_company"/>
-                    
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@color/divide_gray"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp" />
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                style="@style/info_content_pad"
-                android:layout_height="wrap_content">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        style="@style/blue_15_tv"
-                        android:text="@string/produt_info"
-                        android:layout_height="wrap_content" />
-
-
-                <TextView
-                    android:id="@+id/product_info_detail_tv"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="5dp"
-                    style="@style/font_gray_14"
+                <ImageView
+                    android:id="@+id/product_info_img"
+                    android:src="@drawable/test_main_1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    style="@style/info_content_pad">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/product_info_name_left_ll"
+                            android:layout_gravity="right"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:orientation="horizontal"
+                            android:layout_marginRight="2dp"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/gray_11_tv"
+                                android:text="@string/look_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:id="@+id/product_info_look_num_tv"
+                                style="@style/gray_11_tv"
+                                android:text="1000"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                style="@style/gray_11_tv"
+                                android:text="@string/search_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/product_info_name_tv"
+                            android:layout_width="wrap_content"
+                            style="@style/light_gray_15_tv"
+                            android:layout_alignParentLeft="true"
+                            android:layout_toLeftOf="@id/product_info_name_left_ll"
+                            android:layout_gravity="left"
+                            android:text="水晶特價 感恩大回饋 水晶珠寶首飾"
+                            android:layout_height="wrap_content" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_alignParentLeft="true"
+                            android:layout_width="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:layout_marginLeft="2dp"
+                                android:text="@string/rmb_signe"
+                                style="@style/black_15_tv"/>
+
+                            <TextView
+                                android:id="@+id/product_info_price_tv"
+                                style="@style/font_black_15"
+                                android:textStyle="bold"
+                                android:text="269"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:id="@+id/product_info_start_num_tv"
+                                android:layout_width="wrap_content"
+                                style="@style/gray_11_tv"
+                                android:text="10"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/gray_11_tv"
+                                android:text="@string/start_supply"/>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/product_info_city_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            style="@style/gray_11_tv"
+                            android:text="深圳"
+                            android:layout_height="wrap_content" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/product_info_company_name_tv"
+                            style="@style/orange_14_tv"
+                            android:text="深圳雅典娜珠宝有限公司"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:layout_alignParentRight="true"
+                            android:id="@+id/product_info_enter_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/orange_14_tv"
+                            android:text="@string/enter_company"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@color/divide_gray"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    style="@style/info_content_pad"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            style="@style/blue_15_tv"
+                            android:text="@string/produt_info"
+                            android:layout_height="wrap_content" />
+
+
+                    <TextView
+                        android:id="@+id/product_info_detail_tv"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="5dp"
+                        style="@style/font_gray_14"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
-
-        </LinearLayout>
-
-    </ScrollView>
-
+        </ScrollView>
+    </RelativeLayout>
 </LinearLayout>

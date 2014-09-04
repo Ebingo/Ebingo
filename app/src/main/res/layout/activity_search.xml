@@ -132,6 +132,10 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divide_gray" />
 
     <LinearLayout
         android:id="@+id/search_content_ll"
@@ -140,11 +144,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <com.jch.lib.view.PullToRefreshView
-            android:id="@+id/search_freshview"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+        <!--<com.jch.lib.view.PullToRefreshView-->
+            <!--android:id="@+id/search_freshview"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_height="match_parent">-->
+
 
         <ListView
             android:id="@+id/search_lv"
@@ -152,17 +157,20 @@
             android:divider="@color/divide_gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        </com.jch.lib.view.PullToRefreshView>
-        <Button
-            android:id="@+id/search_clear_btn"
-            android:padding="3dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/gray_bg"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/clear_history"
-            android:layout_width="wrap_content"
-            style="@style/font_gray_18"
-            android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/search_clear_btn"
+                android:padding="3dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/gray_bg"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/clear_history"
+                android:layout_width="wrap_content"
+                style="@style/font_gray_18"
+                android:layout_height="wrap_content" />
+
+        <!--</com.jch.lib.view.PullToRefreshView>-->
+
     </LinearLayout>
     <TextView
         android:id="@+id/search_no_history_tv"

@@ -25,6 +25,9 @@ import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.view.PullToRefreshView;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
+import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
+import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.SearchDemandBean;
@@ -60,7 +63,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private RelativeLayout searchheadcenterll;
     private TextView searchkeytv;
     private LinearLayout searchresultkeyll;
-    private PullToRefreshView mRefreshView;
+//    private PullToRefreshView mRefreshView;
     private ListView searchlv;
     private Button searchclearbtn;
     private LinearLayout searchcontentll;
@@ -90,7 +93,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchbaret = (EditText) findViewById(R.id.search_bar_et);
         searchkeytv = (TextView) findViewById(R.id.search_key_tv);
         searchresultkeyll = (LinearLayout) findViewById(R.id.search_result_key_ll);
-        mRefreshView = (PullToRefreshView) findViewById(R.id.search_freshview);
+//        mRefreshView = (PullToRefreshView) findViewById(R.id.search_freshview);
         searchlv = (ListView) findViewById(R.id.search_lv);
         searchclearbtn = (Button) findViewById(R.id.search_clear_btn);
 
@@ -100,8 +103,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         mAdapter = new SearchListAdapter(getApplicationContext(), mCurSearchType, mSearchTypeBeans);
         searchlv.setAdapter(mAdapter);
         searchlv.setOnItemClickListener(this);
-        mRefreshView.setDownRefreshable(false);
-        mRefreshView.setOnFooterRefreshListener(this);
+//        mRefreshView.setDownRefreshable(false);
+//        mRefreshView.setOnFooterRefreshListener(this);
 
         searchbackbtn.setOnClickListener(this);
         searchcategrycb.setOnCheckedChangeListener(this);
@@ -224,7 +227,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
                 String key = searchbaret.getText().toString();
                 searchbaret.clearFocus();
-
+//                mRefreshView.setVisibility(View.VISIBLE);
+                mAdapter.setViewFreshable(false);  //不讓 lisvView 重複執行getView（）。
                 if (key != null && !key.equals("")){
                     saveHistory(key);
                 }
@@ -237,8 +241,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 }else{
                     getCompanyList(0, key);
                 }
-                mRefreshView.setUpRefreshable(true);
-                mRefreshView.setFootViewVisibility(View.VISIBLE);
+//                mRefreshView.setUpRefreshable(true);
+//                mRefreshView.setFootViewVisibility(View.VISIBLE);
                 showkey(key);       //显示关键字项。
 
                 break;
@@ -301,8 +305,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      */
     private void displayHistory(){
         mCurSearchType = SearchType.HISTORY;
-        mRefreshView.setUpRefreshable(false);
-        mRefreshView.setFootViewVisibility(View.GONE);
+//        mRefreshView.setUpRefreshable(false);
+//        mRefreshView.setFootViewVisibility(View.GONE);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -337,7 +341,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     public void onFocusChange(View v, boolean hasFocus) {
 
             if (hasFocus){
+                mAdapter.setViewFreshable(false);           //不讓 lisvView 重複執行getView（）。
                 displayHistory();
+//                mRefreshView.setVisibility(View.GONE);
             }
 
     }
@@ -357,7 +363,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case DEMAND:{       //当前显示求购信息.
 
                 SearchDemandBean demandBean = (SearchDemandBean) mSearchTypeBeans.get(position);
-                Intent intent = new Intent();
+                Intent intent = new Intent(SearchActivity.this, BuyInfoActivity.class);
                 intent.putExtra("id", demandBean.getId());
                 startActivity(intent);
 
@@ -367,7 +373,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case SUPPLY:{
 
                 SearchSupplyBean supplyBean = (SearchSupplyBean) mSearchTypeBeans.get(position);
-                Intent intent = new Intent();
+                Intent intent = new Intent(SearchActivity.this, ProductInfoActivity.class);
                 intent.putExtra("id", supplyBean.getId());
                 startActivity(intent);
 
@@ -377,7 +383,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case INTERPRISE:{
 
                 SearchInterpriseBean interpriseBean = (SearchInterpriseBean) mSearchTypeBeans.get(position);
-                Intent intent = new Intent();
+                Intent intent = new Intent(SearchActivity.this, InterpriseInfoActivity.class);
                 intent.putExtra("id", interpriseBean.getId());
                 startActivity(intent);
 
