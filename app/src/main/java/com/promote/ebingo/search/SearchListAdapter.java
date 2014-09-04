@@ -51,15 +51,6 @@ public class SearchListAdapter extends BaseAdapter {
                 .showImageOnLoading(R.drawable.loading)
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
-
-    public SearchListAdapter(Context context, SearchType type, ArrayList<SearchTypeBean> searchTypeBeans){
-
-        this.mContext = context;
-        this.mType = type;
-        if (searchTypeBeans != null){
-            this.mSearchTypeBeans = searchTypeBeans;
-        }
-
     }
 
     @Override
