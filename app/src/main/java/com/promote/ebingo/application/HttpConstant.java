@@ -50,4 +50,5 @@ public class HttpConstant {
 
     public static final String register=getRootUrl()+"register";
 
+    public static final String getYzm=getRootUrl()+"getYzm";
 }

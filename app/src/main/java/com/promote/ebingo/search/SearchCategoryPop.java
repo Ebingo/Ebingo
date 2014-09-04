@@ -15,7 +15,6 @@ import com.promote.ebingo.R;
  */
 public class SearchCategoryPop extends PopupWindow {
 
-    private View.OnClickListener mOnClickListener;
 
     private ViewGroup mContentView;
     private TextView categoryleftitembuy;
@@ -32,9 +31,9 @@ public class SearchCategoryPop extends PopupWindow {
         categoryleftiteminterpises = (TextView) mContentView.findViewById(R.id.category_left_item_interpises);
         categoryleftitemsupply = (TextView) mContentView.findViewById(R.id.category_left_item_supply);
 
-        categoryleftitembuy.setOnClickListener(mOnClickListener);
-        categoryleftiteminterpises.setOnClickListener(mOnClickListener);
-        categoryleftitemsupply.setOnClickListener(mOnClickListener);
+        categoryleftitembuy.setOnClickListener(onClickListener);
+        categoryleftiteminterpises.setOnClickListener(onClickListener);
+        categoryleftitemsupply.setOnClickListener(onClickListener);
         // 设置SelectPicPopupWindow的View
         this.setContentView(mContentView);
         // 设置SelectPicPopupWindow的View

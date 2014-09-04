@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/search_result_province_tv"
-                style="@style/font_gray_11"
+                style="@style/font_gray_12"
                 android:text="江蘇"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="發年遼寧鬧死您哦iPhone跑哪裡里弄理髮wional9發你"
-            style="@style/font_gray_11"/>
+            style="@style/font_gray_12"/>
 
     </LinearLayout>
 

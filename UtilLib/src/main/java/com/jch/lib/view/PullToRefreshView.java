@@ -478,6 +478,16 @@ public class PullToRefreshView extends LinearLayout {
     }
 
     /**
+     *
+     * set footView visbility.
+     *
+     * @param visibility
+     */
+    public void setFootViewVisibility(int visibility){
+        mFooterView.setVisibility(visibility);
+    }
+
+    /**
      * header refreshing
      *
      * @description hylin 2012-7-31上午9:10:12

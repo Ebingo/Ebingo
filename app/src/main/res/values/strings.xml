@@ -75,7 +75,7 @@
     <string name="my_demand">我的求购</string>
     <string name="user_name">用户名</string>
     <string name="password">密码</string>
-    <string name="forget_password">忘记密码</string>
+    <string name="find_password">找回密码</string>
     <string name="my_collect">我的收藏</string>
     <string name="my_book">我的订阅</string>
     <string name="my_privilege">我的特权</string>
@@ -95,7 +95,6 @@
     <string name="interprise_abstrace">【公司简介】</string>
     <string name="interprise_sup_dem">【近期供求】</string>
     <string name="no_history">沒有搜索记录</string>
-    <string name="no_search_data">没有搜索到数据</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>

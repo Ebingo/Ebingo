@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/title_height"
+    android:background="@color/title_bule"
+    android:orientation="horizontal"
+    tools:showIn="@layout/activity_register_input_yzm">
+
+    <ImageView
+        android:layout_gravity="center_vertical|left"
+        android:id="@+id/common_back_btn"
+        style="@style/back_arro_style" />
+
+    <TextView
+        android:text="免费注册"
+        android:gravity="center"
+        style="@style/font_white_18"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="5dp"
+        android:background="#4FC4EF"
+        style="@style/font_white_18"
+        android:text="@string/login_" />
+</FrameLayout>

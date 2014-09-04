@@ -1,7 +1,6 @@
 package com.promote.ebingo.publish.login;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +9,8 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.LogCat;
@@ -21,7 +18,7 @@ import com.promote.ebingo.util.LogCat;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import com.promote.ebingo.R;
 /**
  * Created by acer on 2014/9/2.
  */

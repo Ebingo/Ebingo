@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/gray_bg"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/common_register_title" />
+
+        <TableLayout
+            style="@style/info_content_pad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow android:background="@color/white" android:padding="5dp">
+
+                    <EditText
+                        android:id="@+id/edit_yzm"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/widget_height"
+                        style="@style/font_black_15"
+                        android:background="@null"
+                        android:hint="@string/yzm"/>
+
+                    <Button
+                        android:id="@+id/btn_getYZM"
+                        style="@style/green_button"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="20秒后\n重新获取"/>
+                </TableRow>
+
+                <TableRow android:background="@color/white"
+                    android:padding="5dp">
+
+                    <EditText
+                        android:id="@+id/edit_password"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/widget_height"
+                        style="@style/font_black_15"
+                        android:background="@null"
+                        android:inputType="textPassword"
+                        android:hint="密    码"/>
+
+                    <ToggleButton
+                        android:id="@+id/password_toggle"
+                        style="@style/yellow_button"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textOn="@string/show_psw"
+                        android:checked="true"
+                        android:textOff="@string/hide_psw"/>
+
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/btn_done"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                style="@style/yellow_button"
+                android:onClick="onClick"
+                android:text="@string/done"/>
+
+        </TableLayout>
+
+
+
+</LinearLayout>
