@@ -57,7 +57,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
 
         view.findViewById(R.id.pick_category).setOnClickListener(this);
         view.findViewById(R.id.pick_description).setOnClickListener(this);
-        view.findViewById(R.id.pick_label).setOnClickListener(this);
+        view.findViewById(R.id.pick_tags).setOnClickListener(this);
 
         publish.setOnClickListener(this);
     }
@@ -76,8 +76,8 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
                 startActivityForResult(intent,PICK_FOR_DEMAND|PICK_DESCRIPTION);
                 break;
             }
-            case R.id.pick_label:{
-                Intent intent = new Intent(getActivity(), PickCategoryActivity.class);
+            case R.id.pick_tags:{
+                Intent intent = new Intent(getActivity(), AddTagsActivity.class);
                 startActivityForResult(intent,PICK_FOR_DEMAND| PICK_TAGS);
                 break;
             }
@@ -97,6 +97,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
                     parmater.put("contacts",edit_contact.getText().toString().trim());
                     parmater.put("contacts_phone",edit_mobile.getText().toString().trim());
                     ((PublishFragment)parent).startPublish(parmater);
+                    clearText();
                 }
                 break;
             }
@@ -127,5 +128,17 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
 
             }
         }
+    }
+
+    /**
+     * 清空文字
+     */
+    private void clearText(){
+        tv_category.setText(null);
+        edit_title.setText(null);
+        tv_description.setText(null);
+        edit_contact.setText(null);
+        edit_mobile.setText(null);
+        tv_tags.setText(null);
     }
 }

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <include layout="@layout/common_register_title" />
+    <include layout="@layout/common_head_layout_2" />
 
     <EditText
         android:id="@+id/edit_phone"

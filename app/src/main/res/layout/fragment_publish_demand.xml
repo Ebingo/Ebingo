@@ -45,6 +45,7 @@
                 <View style="@style/vertical_divider_20"/>
                 <EditText
                     android:id="@+id/edit_price"
+                    android:inputType="numberDecimal"
                     style="@style/publish_edit"
                     />
                 <TextView
@@ -126,6 +127,7 @@
                 <EditText
                     android:id="@+id/edit_phone"
                     style="@style/publish_edit"
+                    android:inputType="phone"
                     />
             </TableRow>
         </TableLayout>

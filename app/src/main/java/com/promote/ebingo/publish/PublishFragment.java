@@ -136,7 +136,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         }
         if(Company.getInstance().getCompanyId()==null&&!loginDialog.isShowing()){
             LogCat.i("--->","loginDialog.show();");
-            loginDialog.show();
+//            loginDialog.show();
         }
     }
 

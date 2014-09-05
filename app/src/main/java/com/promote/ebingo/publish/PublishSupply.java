@@ -92,6 +92,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                     parmater.put("contacts", edit_contact.getText().toString().trim());
                     parmater.put("contacts_phone", edit_phone.getText().toString().trim());
                     ((PublishFragment) parent).startPublish(parmater);
+                    clearText();
                 }
 
                 break;
@@ -123,5 +124,21 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
 
             }
         }
+    }
+    /**
+     * 清空文字
+     */
+    private void clearText(){
+        tv_pick_category.setText(null);
+        tv_pick_region.setText(null);
+        edit_price.setText(null);
+
+        tv_pick_description.setText(null);
+        edit_contact.setText(null);
+        edit_title.setText(null);
+
+        edit_book_standard.setText(null);
+        edit_contact.setText(null);
+        edit_phone.setText(null);
     }
 }
