@@ -12,8 +12,11 @@ public class SearchSupplyBean extends SearchTypeBean {
     private String image;
     /** 主营业务**/
     private String date;
+
+    private String price;
+
     /**起购标准**/
-    private int min_supply_num;
+    private String min_supply_num;
     /**查看次数**/
     private int read_num;
     /**企业等级**/
@@ -51,11 +54,11 @@ public class SearchSupplyBean extends SearchTypeBean {
         this.date = date;
     }
 
-    public int getMin_supply_num() {
+    public String getMin_supply_num() {
         return min_supply_num;
     }
 
-    public void setMin_supply_num(int min_supply_num) {
+    public void setMin_supply_num(String min_supply_num) {
         this.min_supply_num = min_supply_num;
     }
 
@@ -73,5 +76,13 @@ public class SearchSupplyBean extends SearchTypeBean {
 
     public void setCompany_rank(String company_rank) {
         this.company_rank = company_rank;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 }

@@ -11,7 +11,7 @@ public class SearchDemandBean extends SearchTypeBean {
     private String date = null;
     /**求购简介**/
     private String Introduction = null;
-
+    private String read_num = null;
     public String getDate() {
         return date;
     }
@@ -26,5 +26,13 @@ public class SearchDemandBean extends SearchTypeBean {
 
     public void setIntroduction(String introduction) {
         this.Introduction = introduction;
+    }
+
+    public String getRead_num() {
+        return read_num;
+    }
+
+    public void setRead_num(String read_num) {
+        this.read_num = read_num;
     }
 }

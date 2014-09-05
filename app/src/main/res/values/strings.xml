@@ -32,7 +32,7 @@
     <string name="supply_info">供应信息</string>
     <string name="clear_history">清空历史记录</string>
     <string name="rmb_signe">￥</string>
-    <string name="search_start">件起批</string>
+    <string name="search_start">起批</string>
     <string name="search_look">浏览</string>
     <string name="search_time">次</string>
     <string name="look_num">浏览量</string>
@@ -96,6 +96,8 @@
     <string name="interprise_sup_dem">【近期供求】</string>
     <string name="no_history">沒有搜索记录</string>
     <string name="no_search_data">没有搜索到数据</string>
+    <string name="title_buy_detail">求购详情</string>
+    <string name="title_product_detail">供应详情</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
