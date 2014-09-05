@@ -53,6 +53,8 @@ public class HttpConstant {
     public static final String register=getRootUrl()+"register";
 
     public static final String getYzm=getRootUrl()+"getYzm";
+
+    public static final String saveInfo=getRootUrl()+"saveInfo";
     /** 获取企业列表 **/
     public static final String getCompanyList=getRootUrl() +"getCompanyList";
     /** 获取供应信息列表 **/
