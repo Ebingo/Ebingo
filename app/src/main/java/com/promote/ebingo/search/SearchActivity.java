@@ -374,7 +374,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
                 SearchSupplyBean supplyBean = (SearchSupplyBean) mSearchTypeBeans.get(position);
                 Intent intent = new Intent(SearchActivity.this, ProductInfoActivity.class);
-                intent.putExtra("id", supplyBean.getId());
+                intent.putExtra(ProductInfoActivity.ARG_ID, supplyBean.getId());
                 startActivity(intent);
 
                 break;

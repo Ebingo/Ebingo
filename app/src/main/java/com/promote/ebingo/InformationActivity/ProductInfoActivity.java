@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.promote.ebingo.R;
 
 public class ProductInfoActivity extends Activity implements View.OnClickListener{
-
+    public static final String ARG_ID = "id";
     private TextView prdinfointocompanytv;
     private TextView prdinfocompanytv;
     private RelativeLayout prdinfobtmll;

@@ -29,16 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"></LinearLayout>
     <TextView
-        android:id="@+id/category_item_interpises"
-        style="@style/category_tv_style"
-        android:text="@string/interprise_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <LinearLayout
-        android:background="@color/gray_bg"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"></LinearLayout>
-    <TextView
         android:id="@+id/category_item_supply"
         style="@style/category_tv_style"
         android:text="@string/supply_info"

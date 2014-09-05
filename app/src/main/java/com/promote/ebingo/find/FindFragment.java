@@ -1,28 +1,48 @@
 package com.promote.ebingo.find;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.ImageManager;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.CategoryBeanTools;
+import com.promote.ebingo.bean.CategoryBeen;
+import com.promote.ebingo.category.CategoryActivity;
+import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.search.SearchActivity;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FindFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FindFragment#newInstance} factory method to
+ * Use the {@link com.promote.ebingo.find.FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFragment extends Fragment {
+public class FindFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,6 +54,15 @@ public class FindFragment extends Fragment {
 
     private GridView fragfindgv;
     private LinearLayout searchll;
+    private ImageView searchlogoimg;
+    private TextView searchbartv;
+    private ArrayList<CategoryBeen> mCategoryBeens = new ArrayList<CategoryBeen>();
+
+    private MyGrideAdapter adapter = null;
+    /**
+     * 廣告大圖的緩存機制. *
+     */
+    private DisplayImageOptions mOptions;
 
 
     /**
@@ -64,7 +93,13 @@ public class FindFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
+        mOptions = new DisplayImageOptions.Builder()
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .showImageForEmptyUri(R.drawable.loading)
+                .showImageOnLoading(R.drawable.loading)
+                .showImageOnFail(R.drawable.loading)
+                .cacheInMemory(true).cacheOnDisc(true).build();
 
     }
 
@@ -73,7 +108,6 @@ public class FindFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_find, container, false);
         initialize(view);
         return view;
@@ -91,36 +125,68 @@ public class FindFragment extends Fragment {
     }
 
     private void initialize(ViewGroup view) {
+        searchlogoimg = (ImageView) view.findViewById(R.id.search_logo_img);
+        searchbartv = (TextView) view.findViewById(R.id.search_bar_tv);
         fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
-
         String[] categorys = getResources().getStringArray(R.array.category_data);
-        MyGrideAdapter categoryAdapter = new MyGrideAdapter(categorys, getActivity().getApplicationContext());
-        fragfindgv.setAdapter(categoryAdapter);
+        adapter = new MyGrideAdapter(getActivity().getApplicationContext());
+        fragfindgv.setAdapter(adapter);
+
+        searchbartv.setOnClickListener(this);
+        fragfindgv.setOnItemClickListener(this);
+        getCategoryList();
     }
+
+    @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+        switch (id){
+            case R.id.search_bar_tv:{
+
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+                break;
+            }
+            default:{
+
+            }
+        }
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Intent intent = new Intent(getActivity(), CategoryActivity.class);
+        intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getId());
+        intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getName());
+        startActivity(intent);
+
+    }
+
 
     /**
      * category gridview adapter.
      */
     private class MyGrideAdapter extends BaseAdapter{
 
-        String[] categorys = null;
         Context context = null;
 
-        public MyGrideAdapter(String[] categorys, Context context){
+        public MyGrideAdapter( Context context){
 
-            this.categorys = categorys;
             this.context = context;
         }
 
 
         @Override
         public int getCount() {
-            return categorys.length;
+            return mCategoryBeens.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return categorys[position];
+            return mCategoryBeens.get(position);
         }
 
         @Override
@@ -143,12 +209,57 @@ public class FindFragment extends Fragment {
                 holder = (ViewHolder)convertView.getTag();
             }
 
-            holder.text.setText(categorys[position]);
+            CategoryBeen categoryBeen = mCategoryBeens.get(position);
+            ImageManager.load(categoryBeen.getImage(), holder.imgView, mOptions);
+            holder.text.setText(categoryBeen.getName());
 
             return convertView;
         }
 
     }
+
+    /**
+     * 从网络获取数据。
+     */
+    private void getCategoryList(){
+
+        String urlStr = HttpConstant.getCategories;
+        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
+
+        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<CategoryBeen> categoryBeens = CategoryBeanTools.getCategories(response.toString());
+                if (categoryBeens != null && categoryBeens.size() != 0){
+
+                    mCategoryBeens.clear();
+                    mCategoryBeens.addAll(categoryBeens);
+                    adapter.notifyDataSetChanged();
+                }
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                dialog.dismiss();
+            }
+        });
+    }
+
+
 
 
     static class ViewHolder{

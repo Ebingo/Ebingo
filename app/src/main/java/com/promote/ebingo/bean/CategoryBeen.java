@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 
 /**
  * Created by acer on 2014/9/2.
+ * 分类实例。
+ *
  */
 
 

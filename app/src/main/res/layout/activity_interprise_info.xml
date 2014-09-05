@@ -7,14 +7,31 @@
     android:orientation="vertical"
     tools:context="com.promote.ebingo.InformationActivity.InterpriseInfoActivity">
 
-    <include layout="@layout/common_head_layout"></include>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:background="@color/title_blue"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/title_height">
+
+        <ImageView
+            android:id="@+id/common_back_btn"
+            style="@style/back_arro_style" />
+
+        <TextView
+            android:id="@+id/common_title_tv"
+            style="@style/font_white_18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="電子行業"></TextView>
+
+    </LinearLayout>
 
     <com.jch.lib.view.PagerSlidingTabStrip
         android:layout_width="match_parent"
         android:id="@+id/interprise_info_tab"
         app:indicatorColor="@color/orange_my"
         app:indicatorHeight="2dp"
-        app:tabtextSize="@dimen/font_18"
+        app:tabtextSize="@dimen/font_15"
         app:tabtextAllCaps="false"
         app:underlineColor="@color/info_name_gray"
         app:tabtextColor="@color/info_name_gray"

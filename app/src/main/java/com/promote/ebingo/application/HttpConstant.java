@@ -63,5 +63,7 @@ public class HttpConstant {
     public static final String getSupplyInfoList = getRootUrl() + "getSupplyInfoList";
     /** 获取求购信息列表 **/
     public static final String getDemandInfoList = getRootUrl() + "getDemandInfoList";
+    /** 获取分类接口 **/
+    public static final String getCategoryList = getRootUrl() + "getCategoryList";
 
 }

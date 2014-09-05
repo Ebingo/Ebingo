@@ -17,7 +17,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/category_right_item_buy"
+        android:id="@+id/category_right_item_look"
         style="@style/category_tv_style"
         android:text="@string/search_look"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"></LinearLayout>
     <TextView
-        android:id="@+id/category_right_item_interpises"
+        android:id="@+id/category_right_item_price"
         style="@style/category_tv_style"
         android:text="@string/price"
         android:layout_width="match_parent"
