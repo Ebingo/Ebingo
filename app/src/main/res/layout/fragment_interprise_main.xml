@@ -196,6 +196,7 @@
             android:id="@+id/interpise_main_sup_dem_lv"
             android:layout_width="match_parent"
             android:layout_marginTop="5dp"
+            android:scrollbars="none"
             android:layout_height="wrap_content"></ListView>
     </LinearLayout>
 

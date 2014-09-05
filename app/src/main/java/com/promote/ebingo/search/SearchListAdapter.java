@@ -27,7 +27,18 @@ public class SearchListAdapter extends BaseAdapter {
 
     private Context mContext;
     private SearchType mType;
+    /** 是否应该执行getview（）。 **/
     private DisplayImageOptions mOptions;
+
+    public boolean isViewFreshable() {
+        return viewFreshable;
+    }
+
+    public void setViewFreshable(boolean viewFreshable) {
+        this.viewFreshable = viewFreshable;
+    }
+
+    private boolean viewFreshable = true;
 
     private ArrayList<SearchTypeBean> mSearchTypeBeans = new ArrayList<SearchTypeBean>();
 
@@ -71,8 +82,13 @@ public class SearchListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+//        if (!viewFreshable){            //当外部获取数据点击事件时，getView不可执行。
+//            return convertView;
+//        }
 //        mType = getSearchType();
-        if (mType == SearchType.INTERPRISE) {
+
+        SearchTypeBean searchTypeBean =  mSearchTypeBeans.get(position);
+        if (searchTypeBean instanceof SearchInterpriseBean) {
 
             InterpriseViewHolder viewHolder = null;
             if (convertView == null || !(convertView.getTag() instanceof InterpriseViewHolder)) {
@@ -94,10 +110,10 @@ public class SearchListAdapter extends BaseAdapter {
             viewHolder.region.setText(interpriseBean.getRegion());
             viewHolder.Business.setText(interpriseBean.getBusiness());
 
-        } else if (mType == SearchType.SUPPLY) {
+        } else if (searchTypeBean instanceof SearchSupplyBean) {
 
             SupplyViewHolder viewHolder = null;
-            if (convertView == null || !(viewHolder instanceof SupplyViewHolder)) {
+            if (convertView == null || !(convertView.getTag() instanceof SupplyViewHolder)) {
                 viewHolder = new SupplyViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.search_supply_result_item_layout, null);
 
@@ -116,16 +132,16 @@ public class SearchListAdapter extends BaseAdapter {
             SearchSupplyBean supplyBean = (SearchSupplyBean) mSearchTypeBeans.get(position);
             viewHolder.name.setText(supplyBean.getName());
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
-//            viewHolder.price.setText(supplyBean.);  //服務器字段缺失。
+            viewHolder.price.setText(String.valueOf(supplyBean.getPrice()));  //服務器字段缺失。
             viewHolder.min_num.setText(supplyBean.getMin_supply_num());
-            viewHolder.look_num.setText(supplyBean.getRead_num());
-            viewHolder.company_name.setText(supplyBean.getCompany());
+            viewHolder.look_num.setText(String.valueOf(supplyBean.getRead_num()));
+            viewHolder.company_name.setText(String.valueOf(supplyBean.getCompany()));
 
 
-        } else if (mType == SearchType.DEMAND ) {
+        } else if (searchTypeBean instanceof SearchDemandBean) {
 
             DemandViewHolder viewHolder = null;
-            if (convertView == null || !(viewHolder instanceof DemandViewHolder)) {
+            if (convertView == null || !(convertView.getTag() instanceof DemandViewHolder)) {
 
                 viewHolder = new DemandViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.search_buy_result_item_layout, null);
@@ -141,14 +157,14 @@ public class SearchListAdapter extends BaseAdapter {
             SearchDemandBean demandBean = (SearchDemandBean) mSearchTypeBeans.get(position);
             viewHolder.name.setText(demandBean.getName());
             viewHolder.date.setText(demandBean.getDate());
-//            viewHolder.look_num.setText(demandBean.get);  //服务器字段缺失
+            viewHolder.look_num.setText(String.valueOf(demandBean.getRead_num()));
             viewHolder.introduction.setText(demandBean.getIntroduction());
 
 
         } else {    //搜索记录.
 
             ViewHolder viewHolder = null;
-            if (convertView == null) {
+            if (convertView == null || !(convertView.getTag() instanceof ViewHolder)) {
                 viewHolder = new ViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.search_history_item, null);
                 viewHolder.name = (TextView) convertView.findViewById(R.id.search_history_item_tv);
@@ -170,7 +186,7 @@ public class SearchListAdapter extends BaseAdapter {
      *
      * @return
      */
-    public SearchType getSearchType() {
+    public void getSearchType() {
         if (mSearchTypeBeans.size() > 0) {
             SearchTypeBean searchTypeBean = mSearchTypeBeans.get(0);
             if (searchTypeBean instanceof SearchInterpriseBean) {
@@ -184,7 +200,6 @@ public class SearchListAdapter extends BaseAdapter {
             }
         }
 
-        return mType;
 
     }
 
@@ -192,6 +207,7 @@ public class SearchListAdapter extends BaseAdapter {
 
         this.mSearchTypeBeans = searchTypeBeans;
         getSearchType();
+        viewFreshable = true;
         super.notifyDataSetChanged();
     }
 
@@ -199,22 +215,24 @@ public class SearchListAdapter extends BaseAdapter {
         TextView name;
     }
 
-    class SupplyViewHolder extends ViewHolder {
+    class SupplyViewHolder {
         ImageView img;
         TextView price;
         TextView min_num;
         TextView look_num;
+        TextView name;
         TextView company_name;
     }
 
-    class DemandViewHolder extends ViewHolder {
-
+    class DemandViewHolder {
+        TextView name;
         TextView date;
         TextView look_num;
         TextView introduction;
     }
 
-    class InterpriseViewHolder extends ViewHolder {
+    class InterpriseViewHolder {
+        TextView name;
         ImageView img;
         TextView region;//地區。
         TextView Business; //主营业务。
