@@ -1,10 +1,12 @@
 package com.promote.ebingo.category;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -13,25 +15,28 @@ import com.promote.ebingo.R;
 /**
  * Created by ACER on 2014/9/5.
  */
-public class CategoryRankPopWin extends PopupWindow{
+public class CategoryRankPopWin extends PopupWindow {
 
     private TextView categoryrightitembuy;
     private TextView categoryrightiteminterpises;
 
-    public CategoryRankPopWin(Context context, View.OnClickListener listener){
+    private ViewGroup mContentView;
+    private LinearLayout contentLl = null;
+
+    public CategoryRankPopWin(Context context, View.OnClickListener listener) {
 
         super(context);
 
-        ViewGroup contentView = (ViewGroup)LayoutInflater.from(context).inflate(R.layout.category_right_pop, null);
+        mContentView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.category_right_pop, null);
 
-        categoryrightitembuy = (TextView) contentView.findViewById(R.id.category_right_item_look);
-        categoryrightiteminterpises = (TextView) contentView.findViewById(R.id.category_right_item_price);
-
+        categoryrightitembuy = (TextView) mContentView.findViewById(R.id.category_right_item_look);
+        categoryrightiteminterpises = (TextView) mContentView.findViewById(R.id.category_right_item_price);
+        contentLl = (LinearLayout)mContentView.findViewById(R.id.cate_right_pop_content);
         categoryrightitembuy.setOnClickListener(listener);
         categoryrightiteminterpises.setOnClickListener(listener);
 
         // 设置SelectPicPopupWindow的View
-        this.setContentView(contentView);
+        this.setContentView(mContentView);
         // 设置SelectPicPopupWindow的View
         this.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -45,5 +50,16 @@ public class CategoryRankPopWin extends PopupWindow{
         this.setBackgroundDrawable(new BitmapDrawable());
 
     }
+
+    /**
+     * 获取显示内容的width.
+     *
+     * @return
+     */
+    public int getContentSizeWidth() {
+
+        return contentLl.getWidth();
+    }
+
 
 }

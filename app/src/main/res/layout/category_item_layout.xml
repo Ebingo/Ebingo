@@ -9,6 +9,7 @@
     <ImageView
         android:layout_width="@dimen/list_item_title_img_size"
         android:layout_height="@dimen/list_item_title_img_size"
+        android:layout_gravity="center_vertical"
         android:id="@+id/category_lv_item_img"
         />
     <LinearLayout
