@@ -3,18 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/gray_bg"
+
     tools:context="com.promote.ebingo.find.FindFragment">
 
     <include layout="@layout/common_head_search_layout" />
-
 
     <GridView
         android:id="@+id/frag_find_gv"
         android:numColumns="3"
         android:scrollbars="none"
         android:listSelector="@null"
+        android:background="@color/gray_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </LinearLayout>

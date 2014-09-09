@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@color/white"
+    style="@style/info_content_pad"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="@dimen/list_item_title_img_size"
+        android:layout_height="@dimen/list_item_title_img_size"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/category_lv_item_img"
+        />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/gray_15_tv"
+            android:id="@+id/category_lv_item_name_tv"
+            android:layout_width="wrap_content"
+            android:text="那就哦了蜜農啊誒哦那個您啦"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/orange_15_tv"
+                android:text="@string/rmb_signe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/category_lv_item_price_tv"
+                style="@style/orange_15_tv"
+                android:layout_width="wrap_content"
+                android:text="265"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/category_lv_item_min_num_tv"
+                android:layout_marginLeft="15dp"
+                style="@style/font_gray_12"
+                android:text="12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/font_gray_12"
+                android:text="@string/start_supply"/>
+
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/category_supply_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/font_gray_12"
+                android:layout_alignParentLeft="true"
+                android:text="@string/supply_company"
+                />
+
+
+
+            <LinearLayout
+                android:id="@+id/category_lv_item_right_ll"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="2dp"
+                android:layout_alignParentRight="true"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/search_look"
+                    style="@style/font_gray_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/catgory_lv_look_num_tv"
+                    style="@style/font_gray_12"
+                    android:text="16813"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="@string/search_time"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_toLeftOf="@+id/category_lv_item_right_ll"
+                android:layout_toRightOf="@id/category_supply_tv"
+                android:layout_width="wrap_content"
+                style="@style/gray_12_tv"
+                android:layout_marginLeft="2dp"
+                android:text="深圳市雅典娜主播啊"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

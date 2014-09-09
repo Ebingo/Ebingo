@@ -29,6 +29,8 @@ import com.jch.lib.view.ScrollListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
+import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.Adv;
 import com.promote.ebingo.bean.GetIndexBeanTools;
@@ -347,7 +349,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 //                imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 //                imgView.setBackgroundResource(imgsRes[i]);
                 ImageManager.load(mAds.get(i).getSrc(), imgView, mOptions);
-                setImageViewListner(imgView, mAds.get(i).getType());
+                setImageViewListner(imgView, mAds.get(i).getType(), mAds.get(i).getContent());
                 imgs.add(imgView);
                 super.notifyDataSetChanged();
             }
@@ -358,17 +360,44 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
          * @param imgView
          * @param AdvType   点击事件类别。
          */
-        private void setImageViewListner(ImageView imgView, int AdvType){
-            final Intent intent = new Intent();
-            switch (AdvType){
-//               intent.setClass()
-            }
+        private void setImageViewListner(ImageView imgView,final int AdvType,final String content){
 
             imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-//                    startActivity(intent);
+                    switch (AdvType){
+                        case 1:{            //go 產品詳情頁
+
+                            Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
+                            imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
+                            startActivity(imgIntent);
+                            break;
+                        }
+
+                        case 2:{        //go 分類詳情頁
+
+
+                            break;
+                        }
+
+                        case 3:{        //go 企業詳情
+
+                            Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
+                            intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
+                            startActivity(intent);
+                            break;
+                        }
+
+                        case 4:{        //外聯web頁面.
+
+                            break;
+                        }default:{
+
+                        }
+                    }
+
+
                 }
             });
 
