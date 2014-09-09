@@ -23,4 +23,10 @@
     <dimen name="category_tab_pad_right">50dp</dimen>
 
     <dimen name="list_item_title_img_size">40dp</dimen>
+
+    <dimen name="cate_pop_widht">150dp</dimen>
+
+    <dimen name="interprise_info_img_width">150dp</dimen>
+    <dimen name="interprise_info_img_height">60dp</dimen>
+    
 </resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/info_content_pad"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/iprise_info_dynamic_item_time_tv"
+            android:layout_width="wrap_content"
+            style="@style/gray_12_tv"
+            android:layout_marginLeft="2dp"
+            android:text="08-11"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/black_15_tv"
+            android:text="公司預付覅了呢大禮哦你哦里歐啊你弄"
+            android:id="@+id/iprise_info_dynamic_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/iprise_info_dynamic_item_time_tv"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/iprise_info_dynamic_item_discribe_tv"
+        android:layout_width="match_parent"
+        style="@style/font_gray_12"
+        android:lines="2"
+        android:text="你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦你哦"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

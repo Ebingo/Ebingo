@@ -53,6 +53,10 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfoentertv = (TextView) findViewById(R.id.product_info_enter_tv);
         productinfodetailtv = (TextView) findViewById(R.id.product_info_detail_tv);
 
+        int productId = getIntent().getIntExtra(ARG_ID, -1);
+        assert (productId != -1);
+        //網絡訪問
+
         commontitletv.setText(getString(R.string.title_product_detail));
         commonbackbtn.setOnClickListener(this);
     }

@@ -79,7 +79,7 @@ public class SearchSupplyBean extends SearchTypeBean {
     }
 
     public String getPrice() {
-        return price;
+        return (price == null) || price.equals("") ? "0" : price;
     }
 
     public void setPrice(String price) {

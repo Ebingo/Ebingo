@@ -44,7 +44,6 @@ import com.promote.ebingo.impl.SearchDao;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import java.io.DataInput;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -56,8 +55,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     /**搜索list的显示内容类型，默认是历史记录。**/
     private SearchType mSearchType = SearchType.HISTORY;
     private ImageView searchbackbtn;
-    private TextView searchcancelbtn;
-    private LinearLayout searchbtn;
+    private ImageButton searchBtnIB;
+    private LinearLayout searchClearLl;
     private CheckBox searchcategrycb;
     private EditText searchbaret;
     private RelativeLayout searchheadcenterll;
@@ -83,8 +82,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
     private void initialize() {
 
-        searchcancelbtn = (TextView) findViewById(R.id.search_cancel_btn);
-        searchbtn = (LinearLayout) findViewById(R.id.search_btn);
+        searchBtnIB = (ImageButton) findViewById(R.id.search_btn_ib);
+        searchClearLl = (LinearLayout) findViewById(R.id.search_clear_ll);
         searchheadcenterll = (RelativeLayout) findViewById(R.id.search_head_center_ll);
         searchcontentll = (LinearLayout) findViewById(R.id.search_content_ll);
         searchnohistorytv = (TextView) findViewById(R.id.search_no_history_tv);
@@ -110,8 +109,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchcategrycb.setOnCheckedChangeListener(this);
         searchbaret.setOnClickListener(this);
         searchbaret.setOnFocusChangeListener(this);
-        searchbtn.setOnClickListener(this);
+        searchClearLl.setOnClickListener(this);
         searchclearbtn.setOnClickListener(this);
+        searchBtnIB.setOnClickListener(this);
 
         displayHistory();
 
@@ -223,7 +223,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 break;
             }
 
-            case R.id.search_btn:{      //搜索按鈕。
+            case R.id.search_btn_ib:{      //搜索按鈕。
 
                 String key = searchbaret.getText().toString();
                 searchbaret.clearFocus();
@@ -253,10 +253,17 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 mCategoryPop.dismiss();
 
                 break;
-            }default:{
+            }
+            case R.id.search_clear_ll: {
+
+                searchbaret.setText("");
+                break;
+            }
+            default:{
 
                 break;
             }
+
 
         }
 

@@ -1,10 +1,12 @@
 package com.promote.ebingo.category;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -16,14 +18,19 @@ import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
+import com.promote.ebingo.InformationActivity.CategoryListAdapter;
+import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
+import com.promote.ebingo.bean.SearchTypeBean;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.search.SearchType;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -34,9 +41,9 @@ import java.util.ArrayList;
 
 
 /**
- * 行业分类.
+ * 行业分类列表。
  */
-public class CategoryActivity extends ActionBarActivity implements View.OnClickListener{
+public class CategoryActivity extends Activity implements View.OnClickListener , AdapterView.OnItemClickListener{
 
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
@@ -46,19 +53,27 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
     private ImageView commonbackbtn;
     private TextView commontitletv;
     private int category_id = -1;
-    /** 类别选择弹出window. **/
+    private CategoryListAdapter mListAdapter = null;
+    /**
+     * 类别选择弹出window. *
+     */
     private CategoryTypePop mTypePop;
-    /** 排序選擇 pop window.**/
+    /**
+     * 排序選擇 pop window.*
+     */
     private CategoryRankPopWin mRankPop;
-    /** 當前行業分類類型。默認為供應 **/
+    /**
+     * 當前行業分類類型。默認為供應 *
+     */
     private CategoryType mCurType = CategoryType.SUPPLY;
-    /** 当前排序类型. 默認為瀏覽量**/
+    /**
+     * 当前排序类型. 默認為瀏覽量*
+     */
     private CategoryRankType mCurRankType = CategoryRankType.LOOKNUM;
-    /** 供應。 **/
-    private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
-    /** 求購。 **/
-    private ArrayList<SearchDemandBean> mDemandBeans = new ArrayList<SearchDemandBean>();
-
+    /**
+     * 供應。 *
+     */
+    private ArrayList<SearchTypeBean> mCategoryBean = new ArrayList<SearchTypeBean>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +93,26 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
 
         mTypePop = new CategoryTypePop(getApplicationContext(), this);
         mTypePop.setOnDismissListener(new TypePopDismissLSNER());
-        mRankPop = new CategoryRankPopWin(getApplicationContext(),this);
+        mRankPop = new CategoryRankPopWin(getApplicationContext(), this);
         mRankPop.setOnDismissListener(new RankPopDismissLSNER());
 
         Intent intent = getIntent();
         String category_name = intent.getStringExtra(ARG_NAME);
         category_id = intent.getIntExtra(ARG_ID, -1);
         commonbackbtn.setOnClickListener(this);
-        commontitletv.setText(category_name+"分类");
+        commontitletv.setText(category_name + "分类");
         categoryleftcb.setOnCheckedChangeListener(new CategoryTypeCheckedCL());
         categoryrightcb.setOnCheckedChangeListener(new CategoryRankCheckedCL());
+
+        mListAdapter = new CategoryListAdapter(getApplicationContext(), mCategoryBean);
+        categorylv.setAdapter(mListAdapter);
+        categorylv.setOnItemClickListener(this);
+        //TODO 访问默认数据
+        if (mCurType == CategoryType.SUPPLY){
+            getSupplyInfoList(0);
+        }else {
+            getDemandInfoList(0);
+        }
 
     }
 
@@ -95,8 +120,8 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
     public void onClick(View v) {
 
         int id = v.getId();
-        switch (id){
-            case R.id.common_back_btn:{
+        switch (id) {
+            case R.id.common_back_btn: {
 
                 onBackPressed();
                 this.finish();
@@ -104,34 +129,71 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
 
             }
 
-            case R.id.category_item_buy:{       //求购
-
+            case R.id.category_item_buy: {       //求购
+                categoryleftcb.setText(((TextView)v).getText());
                 mCurType = CategoryType.DEMAND;
+                mTypePop.dismiss();
+                getDemandInfoList(0);
 
                 break;
             }
-            case R.id.category_item_supply:{    //供應
+            case R.id.category_item_supply: {    //供應
+                categoryleftcb.setText(((TextView)v).getText());
                 mCurType = CategoryType.SUPPLY;
-
+                mTypePop.dismiss();
+                getSupplyInfoList(0);
                 break;
             }
 
-            case R.id.category_right_item_look:{        //浏览量
+            case R.id.category_right_item_look: {        //浏览量
+                categoryrightcb.setText(((TextView)v).getText());
                 mCurRankType = CategoryRankType.LOOKNUM;
+                mRankPop.dismiss();
+                if (mCurType == CategoryType.DEMAND){
+                    getDemandInfoList(0);
+                }else {
+                    getSupplyInfoList(0);
+                }
+
 
                 break;
             }
             case R.id.category_right_item_price: {      //价格
-
+                categoryrightcb.setText(((TextView)v).getText());
                 mCurRankType = CategoryRankType.PRICE;
-                //TODO\
+                mRankPop.dismiss();
+                if (mCurType == CategoryType.DEMAND){
+                    getDemandInfoList(0);
+                }else {
+                    getSupplyInfoList(0);
+                }
 
                 break;
             }
 
-            default:{
+            default: {
 
             }
+        }
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        SearchTypeBean searchTypeBean = mCategoryBean.get(position);
+        if (searchTypeBean instanceof SearchDemandBean){
+
+            Intent intent = new Intent(CategoryActivity.this, BuyInfoActivity.class);
+            intent.putExtra(BuyInfoActivity.DEMAND_ID, (searchTypeBean).getId());
+            startActivity(intent);
+
+        }else if (searchTypeBean instanceof SearchSupplyBean){
+
+            Intent intent = new Intent(CategoryActivity.this, ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID, searchTypeBean.getId());
+            startActivity(intent);
+
         }
 
     }
@@ -139,16 +201,17 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
     /**
      * 行業種類選擇監聽.
      */
-   private class CategoryTypeCheckedCL implements CompoundButton.OnCheckedChangeListener{
+    private class CategoryTypeCheckedCL implements CompoundButton.OnCheckedChangeListener {
 
-       @Override
-       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-           if (isChecked){
-               mTypePop.showAsDropDown(categoryleftcb, 0 , DisplayUtil.px2dip(getApplicationContext(), 3));
-           }
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
 
-       }
-   }
+                mTypePop.showAsDropDown(categoryleftcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) /2, DisplayUtil.dip2px(getApplicationContext(), -5));
+            }
+
+        }
+    }
 
     /**
      * 行业排列顺序选择监听。
@@ -157,10 +220,29 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked){
-                mRankPop.showAsDropDown(categoryrightcb, 0 , DisplayUtil.px2dip(getApplicationContext(), 3));
+            if (isChecked) {
+
+                mRankPop.showAsDropDown(categoryrightcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) /2 , DisplayUtil.dip2px(getApplicationContext(), -5));
             }
         }
+    }
+
+    /**
+     * 獲取popwin的偏移量。
+     *
+     * @param percentOffset 屏幕宽度的百分比。
+     * @return
+     */
+    private int getPopOffsetX(float percentOffset) {
+
+        Point point = new Point();
+
+        DisplayUtil.getSize(getWindowManager().getDefaultDisplay(), point);
+
+        int offset = (int) (point.x * percentOffset);
+        LogCat.d("screenSize:" + offset);
+        return offset;
+
     }
 
     /**
@@ -186,7 +268,7 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
         }
     }
 
-    private String getRank(){
+    private String getRank() {
 
         String rankType = null;
         if (mCurRankType == CategoryRankType.LOOKNUM) {
@@ -223,19 +305,19 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
-                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
-                    mDemandBeans.clear();
-                }
                 if (searchDemandBeans == null || searchDemandBeans.size() == 0) {
 
-
 //                    noData(getString(R.string.no_search_data));
-                } else {
-//                    mSearchTypeBeans.addAll(searchDemandBeans);
+                } else if (lastId == 0) { //如果第一次请求，即不是加载更多时。
+
+                    mCategoryBean.clear();
+                    mCategoryBean.addAll(searchDemandBeans);
+                }else {
+                    mCategoryBean.addAll(searchDemandBeans);
 //                    hasData(false);
                 }
 
-//                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                mListAdapter.notifyDataSetChanged();
                 dialog.dismiss();
 
             }
@@ -262,16 +344,15 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
      * 從網絡获取供应信息列表。
      *
      * @param lastId
-     * @param keyword
+     *
      */
-    public void getSupplyInfoList(final int lastId, String keyword) {
+    public void getSupplyInfoList(final int lastId) {
 
 
         String url = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
         parmater.put("pagesize", 20);       //每页显示20条。
-
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
@@ -286,17 +367,19 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
-                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
-//                    mSearchTypeBeans.clear();
-                }
+
                 if (searchSupplyBeans == null || searchSupplyBeans.size() == 0) {
 
 //                    noData(getString(R.string.no_search_data));
+
+                } else if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
+                    mCategoryBean.clear();
+                    mCategoryBean.addAll(searchSupplyBeans);
                 } else {
-                    mSupplyBeans.addAll(searchSupplyBeans);
+                    mCategoryBean.addAll(searchSupplyBeans);
 //                    hasData(false);
                 }
-//                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                mListAdapter.notifyDataSetChanged();
                 dialog.dismiss();
 
             }
@@ -320,15 +403,14 @@ public class CategoryActivity extends ActionBarActivity implements View.OnClickL
 
 
     /**
-     *
      * @param category_id
-     * @param rankType      time, hote.
+     * @param rankType    time, hote.
      * @return
      */
     private String appendKeyworld(int category_id, String rankType) {
         StringBuffer sb = new StringBuffer("{\"sort\":\"");
         sb.append(rankType);
-        sb.append("\",\"company_id\":");
+        sb.append("\",\"category_id\":");
         sb.append(category_id);
         sb.append("}");
         return sb.toString();

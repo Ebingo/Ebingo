@@ -18,19 +18,19 @@
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             style="@style/info_content_pad"
-            android:background="@color/gray"
+            android:background="@color/into_enter_bg"
             android:layout_height="48dp">
 
             <TextView
                 android:id="@+id/buy_info_into_company_tv"
                 style="@style/font_gray_15"
                 android:text="进入企业"
-
                 android:layout_alignParentRight="true"
                 android:drawableRight="@drawable/right_arro"
                 android:drawablePadding="5dp"
+                android:gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
             <TextView
                 android:id="@+id/buy_info_company_tv"
                 style="@style/orange_15_tv"

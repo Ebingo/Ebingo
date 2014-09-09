@@ -9,7 +9,9 @@
     <ImageView
         android:layout_width="@dimen/list_item_title_img_size"
         android:layout_height="@dimen/list_item_title_img_size"
+        android:layout_gravity="center_vertical"
         android:id="@+id/category_lv_item_img"
+        android:layout_marginLeft="2dp"
         />
     <LinearLayout
         android:orientation="vertical"
@@ -41,7 +43,7 @@
 
             <TextView
                 android:id="@+id/category_lv_item_min_num_tv"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 style="@style/font_gray_12"
                 android:text="12"
                 android:layout_width="wrap_content"
@@ -93,6 +95,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/category_lv_item_privater_tv"
                 android:layout_toLeftOf="@+id/category_lv_item_right_ll"
                 android:layout_toRightOf="@id/category_supply_tv"
                 android:layout_width="wrap_content"

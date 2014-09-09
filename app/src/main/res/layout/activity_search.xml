@@ -24,19 +24,19 @@
              />
 
 
-        <TextView
-            android:id="@+id/search_cancel_btn"
+        <ImageButton
+            android:id="@+id/search_btn_ib"
             android:layout_width="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:paddingRight="15dp"
+            android:background="@null"
             android:paddingLeft="15dp"
+            android:src="@drawable/white_search_btn"
             android:layout_alignParentRight="true"
             android:layout_height="match_parent"
-            android:visibility="invisible"
-            style="@style/font_white_18"
-            android:text="@string/cancel" />
+            style="@style/font_white_18" />
 
 
         <RelativeLayout
@@ -45,12 +45,12 @@
             android:gravity="center_vertical"
             android:layout_centerInParent="true"
             android:layout_toRightOf="@id/search_back_btn"
-            android:layout_toLeftOf="@id/search_cancel_btn"
+            android:layout_toLeftOf="@id/search_btn_ib"
             android:id="@+id/search_head_center_ll"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/search_btn"
+                android:id="@+id/search_clear_ll"
                 android:gravity="center"
                 android:background="@drawable/search_bar_right_shape"
                 android:layout_alignParentRight="true"
@@ -62,14 +62,14 @@
                     android:layout_width="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/white_search_btn" />
+                    android:background="@drawable/search_clear_btn" />
               </LinearLayout>
 
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_toLeftOf="@id/search_btn"
+                android:layout_toLeftOf="@id/search_clear_ll"
                 android:gravity="center_vertical"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -162,7 +162,7 @@
                 android:id="@+id/search_clear_btn"
                 android:padding="3dp"
                 android:layout_marginTop="20dp"
-                android:background="@color/gray_bg"
+                android:background="@drawable/clear_history_btn_selector"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/clear_history"
                 android:layout_width="wrap_content"

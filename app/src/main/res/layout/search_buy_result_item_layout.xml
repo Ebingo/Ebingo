@@ -72,6 +72,7 @@
         android:id="@+id/search_result_describe_tv"
         style="@style/font_gray_12"
         android:layout_width="match_parent"
+        android:lines="2"
         android:text="發范德薩范德薩佛你。呢哦iohoinioj是"
         android:layout_height="wrap_content" />
 

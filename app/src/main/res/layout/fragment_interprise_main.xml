@@ -139,7 +139,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/blue_15_tv"
+            style="@style/black_15_tv"
             android:text="@string/interprise_range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -164,7 +164,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/blue_15_tv"
+            style="@style/black_15_tv"
             android:layout_width="match_parent"
             android:text="@string/interprise_abstrace"
             android:layout_height="wrap_content" />
@@ -188,7 +188,7 @@
 
         <TextView
             android:text="@string/interprise_sup_dem"
-            style="@style/blue_15_tv"
+            style="@style/black_15_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
