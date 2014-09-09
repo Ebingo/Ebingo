@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5000"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/content_layout"
+        style="@style/info_content_pad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/gray_bg"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_upload_normal_pic"
+            style="@style/blue_button"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="上传普通图片" />
+
+        <Button
+            android:id="@+id/btn_upload_3d_pic"
+            style="@style/blue_button"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="上传3D图片" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/blue_button"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="取消" />
+    </LinearLayout>
+</LinearLayout>

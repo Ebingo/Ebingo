@@ -64,4 +64,5 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
                 break;
         }
     }
+
 }

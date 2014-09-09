@@ -17,13 +17,16 @@
         android:layout_height="wrap_content"
         style="@style/font_blue_15"
         android:text="热门标签(069dd4 24点)"/>
-        <TableLayout
+        <GridView
             android:layout_marginTop="15dp"
+            android:numColumns="5"
             android:layout_marginBottom="15dp"
+            android:horizontalSpacing="4dp"
+            android:verticalSpacing="4dp"
             android:id="@+id/tags_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </TableLayout>
+        </GridView>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +41,8 @@
             <MultiAutoCompleteTextView
                 android:id="@+id/edit_add_tags"
                 android:layout_width="240dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
                 android:background="@drawable/corner_frame"
                 android:layout_height="@dimen/widget_height" />
             <Button

@@ -12,7 +12,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.MD5;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -62,10 +64,13 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
 
     private void commit(){
         EbingoRequestParmater parmater=new EbingoRequestParmater(this);
+        String password=edit_password.getText().toString().trim();
+        String passwordMD5=new MD5().getStrToMD5(password);
         parmater.put("yzm", edit_yzm.getText().toString().trim());
         parmater.put("phonenum", getIntent().getStringExtra("phonenum"));
-        parmater.put("password", edit_password.getText().toString().trim());
-
+        parmater.put("password",passwordMD5 );
+        LogCat.i("--->",parmater.toString()+" 正在注册。。。");
+        final ProgressDialog dialog= DialogUtil.waitingDialog(this);
         HttpUtil.post(HttpConstant.register,parmater,new JsonHttpResponseHandler("utf-8"){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -73,7 +78,9 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
                 ContextUtil.toast(response);
                 try {
                     JSONObject result=response.getJSONObject("response");
-                    Company.getInstance().setCompanyId(result.getInt("company_id"));
+                    if (LoginManager.OK.equals(result.getString("code"))){
+                        Company.getInstance().setCompanyId(result.getInt("company_id"));
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -83,6 +90,12 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 ContextUtil.toast("注册失败！");
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
             }
         });
     }

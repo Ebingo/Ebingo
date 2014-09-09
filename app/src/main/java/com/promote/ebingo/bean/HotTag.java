@@ -4,8 +4,17 @@ package com.promote.ebingo.bean;
  * Created by acer on 2014/9/5.
  */
 public class HotTag {
-    String name;
-    Integer id;
+    private String name;
+    private Integer id;
+    transient boolean isSelect=false;
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean isSelect) {
+        this.isSelect = isSelect;
+    }
 
     public String getName() {
         return name;
