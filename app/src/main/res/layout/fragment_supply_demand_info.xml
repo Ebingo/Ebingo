@@ -1,13 +1,31 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.promote.ebingo.InformationActivity.SupplyDemandInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="供求信息" />
+        android:layout_weight="1"
+        android:layout_height="wrap_content"></ListView>
 
-</FrameLayout>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_height="@dimen/title_height">
+
+       <RadioButton
+           android:id="@+id/frag_iprise_supply_ll"
+           android:text="@string/supply_info"
+           android:checked="true"
+
+       style="@style/iprise_s_d_tab_style" />
+       <RadioButton
+           android:id="@+id/frag_iprise_demand_ll"
+           android:text="@string/buy_info"
+           style="@style/iprise_s_d_tab_style" />
+   </RadioGroup>
+
+</LinearLayout>

@@ -9,6 +9,9 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * 根据屏幕比例，计算控件显示大小。
@@ -67,6 +70,51 @@ public class DisplayUtil {
     }
 
     /**
+     *
+     *
+     * @param windowManager
+     * @param baseY
+     * @param basex
+     * @param exceptDis 去除的宽度。
+     * @return
+     */
+    public static float sizeYByX(WindowManager windowManager,  float baseY, float basex, int exceptDis){
+
+        final  Display display = windowManager.getDefaultDisplay();
+        Point mPoint = new Point();
+        getSize(display, mPoint);
+        if (exceptDis > mPoint.x){
+            return 0.0f;
+        }
+
+        float displayWidth = mPoint.x - exceptDis;
+        float scaleX = displayWidth /basex;
+
+        return baseY * scaleX;
+
+    }
+
+    /**
+     * 根据屏幕宽度设置view的大小.(去除view的margin。
+     *
+     * @param view       要改變尺寸的view。
+     * @param baseWidth  viwe的基准宽.
+     * @param baseHeight view的基准高。
+     */
+    public static void reSizeViewByWidth(View view, int baseWidth, int baseHeight, Activity activity) {
+
+        LinearLayout.LayoutParams pagerParams = (LinearLayout.LayoutParams) view
+                .getLayoutParams();
+
+
+        int marginDis = pagerParams.leftMargin + pagerParams.rightMargin;
+        pagerParams.height = (int) DisplayUtil.sizeYByX(activity
+                .getWindowManager(), baseHeight, baseWidth, marginDis);
+        pagerParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        view.setLayoutParams(pagerParams);
+    }
+
+    /**
      * 根据屏幕宽度设置view的大小.
      * @param view   要改變尺寸的view。
      * @param baseWidth   viwe的基准宽.
@@ -76,6 +124,7 @@ public class DisplayUtil {
 
         ViewGroup.LayoutParams pagerParams = (ViewGroup.LayoutParams) view
                 .getLayoutParams();
+
         pagerParams.height = (int) DisplayUtil.sizeYByX(activity
                 .getWindowManager(), baseHeight, baseWidth);
         pagerParams.width = ViewGroup.LayoutParams.MATCH_PARENT;

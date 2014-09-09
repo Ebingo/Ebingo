@@ -29,6 +29,7 @@ import com.jch.lib.view.ScrollListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
@@ -38,6 +39,7 @@ import com.promote.ebingo.bean.GetIndexBeanTools.GetIndexBean;
 import com.promote.ebingo.bean.HotBean;
 import com.promote.ebingo.bean.HotCategory;
 import com.promote.ebingo.bean.TodayNum;
+import com.promote.ebingo.category.CategoryActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.search.SearchActivity;
@@ -453,6 +455,11 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
          * @return
          */
          public int getCurPosition(int position){
+
+             int imgsize = imgs.size();
+             if (imgsize == 0){
+                 return 0;
+             }
              int loopPosition = position % imgs.size();
              return loopPosition;
          }
@@ -571,6 +578,10 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             //TODO
             HotCategory category = hot_category.get(position);
+            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+            intent.putExtra(CategoryActivity.ARG_ID, category.getId());
+            intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
+            startActivity(intent);
 
         }
     }
@@ -584,6 +595,10 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+            HotBean hotBean =  hot_demand.get(position);
+            Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
+            intent.putExtra(BuyInfoActivity.DEMAND_ID, hotBean.getId());
+            startActivity(intent);
         }
     }
 
@@ -595,7 +610,11 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        }
+            HotBean hotBean = hot_supply.get(position);
+            Intent intent = new Intent(getActivity(), ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID, hotBean.getId());
+            startActivity(intent);
+    }
     }
 
 

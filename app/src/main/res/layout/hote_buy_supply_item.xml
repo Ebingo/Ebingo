@@ -4,6 +4,7 @@
 android:layout_width="match_parent"
     android:paddingTop="@dimen/main_item_pad_t_b"
     android:paddingBottom="@dimen/main_item_pad_t_b"
+
     android:paddingLeft="@dimen/main_tb_marg_l_r"
     android:paddingRight="@dimen/main_tb_marg_l_r"
     android:gravity="center_vertical"

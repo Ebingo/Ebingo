@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -17,13 +18,18 @@ import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
+import com.promote.ebingo.InformationActivity.CategoryListAdapter;
+import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
+import com.promote.ebingo.bean.SearchTypeBean;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.search.SearchType;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -37,7 +43,7 @@ import java.util.ArrayList;
 /**
  * 行业分类列表。
  */
-public class CategoryActivity extends Activity implements View.OnClickListener {
+public class CategoryActivity extends Activity implements View.OnClickListener , AdapterView.OnItemClickListener{
 
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
@@ -47,6 +53,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
     private ImageView commonbackbtn;
     private TextView commontitletv;
     private int category_id = -1;
+    private CategoryListAdapter mListAdapter = null;
     /**
      * 类别选择弹出window. *
      */
@@ -66,12 +73,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
     /**
      * 供應。 *
      */
-    private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
-    /**
-     * 求購。 *
-     */
-    private ArrayList<SearchDemandBean> mDemandBeans = new ArrayList<SearchDemandBean>();
-
+    private ArrayList<SearchTypeBean> mCategoryBean = new ArrayList<SearchTypeBean>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,16 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
         categoryleftcb.setOnCheckedChangeListener(new CategoryTypeCheckedCL());
         categoryrightcb.setOnCheckedChangeListener(new CategoryRankCheckedCL());
 
+        mListAdapter = new CategoryListAdapter(getApplicationContext(), mCategoryBean);
+        categorylv.setAdapter(mListAdapter);
+        categorylv.setOnItemClickListener(this);
+        //TODO 访问默认数据
+        if (mCurType == CategoryType.SUPPLY){
+            getSupplyInfoList(0);
+        }else {
+            getDemandInfoList(0);
+        }
+
     }
 
     @Override
@@ -120,6 +132,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
             case R.id.category_item_buy: {       //求购
                 categoryleftcb.setText(((TextView)v).getText());
                 mCurType = CategoryType.DEMAND;
+                mTypePop.dismiss();
                 getDemandInfoList(0);
 
                 break;
@@ -127,6 +140,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
             case R.id.category_item_supply: {    //供應
                 categoryleftcb.setText(((TextView)v).getText());
                 mCurType = CategoryType.SUPPLY;
+                mTypePop.dismiss();
                 getSupplyInfoList(0);
                 break;
             }
@@ -134,6 +148,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
             case R.id.category_right_item_look: {        //浏览量
                 categoryrightcb.setText(((TextView)v).getText());
                 mCurRankType = CategoryRankType.LOOKNUM;
+                mRankPop.dismiss();
                 if (mCurType == CategoryType.DEMAND){
                     getDemandInfoList(0);
                 }else {
@@ -146,6 +161,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
             case R.id.category_right_item_price: {      //价格
                 categoryrightcb.setText(((TextView)v).getText());
                 mCurRankType = CategoryRankType.PRICE;
+                mRankPop.dismiss();
                 if (mCurType == CategoryType.DEMAND){
                     getDemandInfoList(0);
                 }else {
@@ -158,6 +174,26 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
             default: {
 
             }
+        }
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        SearchTypeBean searchTypeBean = mCategoryBean.get(position);
+        if (searchTypeBean instanceof SearchDemandBean){
+
+            Intent intent = new Intent(CategoryActivity.this, BuyInfoActivity.class);
+            intent.putExtra(BuyInfoActivity.DEMAND_ID, (searchTypeBean).getId());
+            startActivity(intent);
+
+        }else if (searchTypeBean instanceof SearchSupplyBean){
+
+            Intent intent = new Intent(CategoryActivity.this, ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID, searchTypeBean.getId());
+            startActivity(intent);
+
         }
 
     }
@@ -254,7 +290,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
         parmater.put("pagesize", 20);       //每页显示20条。
-        parmater.put("content", appendKeyworld(category_id, getRank()));
 
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
@@ -270,19 +305,19 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
-                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
-                    mDemandBeans.clear();
-                }
                 if (searchDemandBeans == null || searchDemandBeans.size() == 0) {
 
-
 //                    noData(getString(R.string.no_search_data));
-                } else {
-//                    mSearchTypeBeans.addAll(searchDemandBeans);
+                } else if (lastId == 0) { //如果第一次请求，即不是加载更多时。
+
+                    mCategoryBean.clear();
+                    mCategoryBean.addAll(searchDemandBeans);
+                }else {
+                    mCategoryBean.addAll(searchDemandBeans);
 //                    hasData(false);
                 }
 
-//                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                mListAdapter.notifyDataSetChanged();
                 dialog.dismiss();
 
             }
@@ -309,7 +344,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
      * 從網絡获取供应信息列表。
      *
      * @param lastId
-     * @param keyword
+     *
      */
     public void getSupplyInfoList(final int lastId) {
 
@@ -318,7 +353,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
         parmater.put("pagesize", 20);       //每页显示20条。
-        parmater.put("content", appendKeyworld(category_id, getRank()));
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
@@ -333,17 +367,19 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
-                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
-//                    mSearchTypeBeans.clear();
-                }
+
                 if (searchSupplyBeans == null || searchSupplyBeans.size() == 0) {
 
 //                    noData(getString(R.string.no_search_data));
+
+                } else if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
+                    mCategoryBean.clear();
+                    mCategoryBean.addAll(searchSupplyBeans);
                 } else {
-                    mSupplyBeans.addAll(searchSupplyBeans);
+                    mCategoryBean.addAll(searchSupplyBeans);
 //                    hasData(false);
                 }
-//                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
+                mListAdapter.notifyDataSetChanged();
                 dialog.dismiss();
 
             }
@@ -374,7 +410,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener {
     private String appendKeyworld(int category_id, String rankType) {
         StringBuffer sb = new StringBuffer("{\"sort\":\"");
         sb.append(rankType);
-        sb.append("\",\"company_id\":");
+        sb.append("\",\"category_id\":");
         sb.append(category_id);
         sb.append("}");
         return sb.toString();

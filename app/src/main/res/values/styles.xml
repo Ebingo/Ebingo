@@ -196,10 +196,28 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/publish_base_color</item>
     </style>
-    <style name="pulish_text_style">
+    <style name="publish_text_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/publish_base_color</item>
     </style>
+
+    <style name="inter_prise_info_img">
+        <item name="android:layout_width">@dimen/interprise_info_img_width</item>
+        <item name="android:layout_height">@dimen/interprise_info_img_height</item>
+    </style>
+
+    <style name="iprise_s_d_tab_style" parent="orange_15_tv">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:button">@null</item>
+        <item name="android:textColor">@drawable/gray_orange_selector</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
+
 </resources>

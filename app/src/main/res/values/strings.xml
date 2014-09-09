@@ -32,7 +32,7 @@
     <string name="supply_info">供应信息</string>
     <string name="clear_history">清空历史记录</string>
     <string name="rmb_signe">￥</string>
-    <string name="search_start">起批</string>
+    <string name="search_start">起批发</string>
     <string name="search_look">浏览</string>
     <string name="search_time">次</string>
     <string name="look_num">浏览量</string>
@@ -82,11 +82,13 @@
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
     <string name="my_profile">企业资料</string>
+
     <string-array name="interprise_info_tab">
         <item>公司首页</item>
         <item>企业动态</item>
         <item>供求信息</item>
     </string-array>
+
     <string name="address">地址：</string>
     <string name="http_addr">网址：</string>
     <string name="tell">电话：</string>
@@ -130,5 +132,6 @@
     </string-array>
 
     <string name="title_activity_interprise_info">Ebingo</string>
+    <string name="title_activity_interprise_new">Ebingo</string>
 
 </resources>

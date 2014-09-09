@@ -1,6 +1,7 @@
 package com.promote.ebingo.InformationActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,10 +9,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.impl.EbingoRequestParmater;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class BuyInfoActivity extends Activity implements View.OnClickListener{
 
+    public static final String DEMAND_ID = "demand_id";
     private TextView buyinfointocompanytv;
     private TextView buyinfocompanytv;
     private RelativeLayout buyinfobtmll;
@@ -46,6 +56,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener{
         buyinfodetailtv = (TextView) findViewById(R.id.buy_info_detail_tv);
         buyInfocontactphonetv = (Button) findViewById(R.id.buy_Info_contact_phone_tv);
 
+        int demandId = getIntent().getIntExtra(DEMAND_ID, -1);
+        assert (demandId != -1);
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getString(R.string.title_buy_detail));
     }
@@ -66,6 +78,44 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener{
             }
 
         }
+
+    }
+
+    /**
+     * 獲得詳情。
+     */
+    private void getInfoDetail(int demandId){
+
+        String urlStr = HttpConstant.getInfoDetail;
+
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("company_id", "0");    //TODO 測試數據
+        parmater.put("info_id", demandId);
+
+        final ProgressDialog dialog = DialogUtil.waitingDialog(BuyInfoActivity.this);
+        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                dialog.dismiss();
+                super.onSuccess(statusCode, headers, response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+                dialog.dismiss();
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                dialog.dismiss();
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
 
     }
 }
