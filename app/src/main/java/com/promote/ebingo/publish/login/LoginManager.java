@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.MD5;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -26,8 +27,8 @@ public class LoginManager {
     /**
      * 服务端返回100时，表示发送成功。返回101表示获取失败
      */
-    private final String OK="101";
-    private final String FAIL="100";
+    public static final String OK="100";
+    public static final String FAIL="101";
     /**
      * 获取验证码
      * @param context
@@ -47,11 +48,11 @@ public class LoginManager {
                         if (OK.equals(response.getJSONObject("response").getString("code"))) {
                             mCallback.onSuccess();
                         } else {
-                            mCallback.onFail("获取验证码失败");
+                            mCallback.onFail("获取验证码失败"+response);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mCallback.onFail("获取验证码失败");
+                        mCallback.onFail("获取验证码失败"+response);
                     }
 
                 }
@@ -95,7 +96,7 @@ public class LoginManager {
 
         EbingoRequestParmater parmater=new EbingoRequestParmater(ContextUtil.getContext());
         parmater.put("phonenum",phone);
-        parmater.put("password",password);
+        parmater.put("password",new MD5().getStrToMD5(password));
         HttpUtil.post(HttpConstant.login,parmater,new JsonHttpResponseHandler("utf-8"){
 
             @Override

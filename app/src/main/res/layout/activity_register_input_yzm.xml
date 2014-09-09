@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <include layout="@layout/common_register_title" />
+    <include layout="@layout/common_head_layout_2" />
 
         <TableLayout
             style="@style/info_content_pad"
@@ -15,7 +15,7 @@
             <TableLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TableRow android:background="@color/white" android:padding="5dp">
+                <TableRow android:background="@color/white" android:padding="3dp">
 
                     <EditText
                         android:id="@+id/edit_yzm"
@@ -23,6 +23,7 @@
                         android:layout_weight="1"
                         android:layout_height="@dimen/widget_height"
                         style="@style/font_black_15"
+                        android:gravity="center_vertical"
                         android:background="@null"
                         android:hint="@string/yzm"/>
 
@@ -33,9 +34,9 @@
                         android:layout_gravity="center_vertical"
                         android:text="20秒后\n重新获取"/>
                 </TableRow>
-
+                <View style="@style/divider_horizontal"/>
                 <TableRow android:background="@color/white"
-                    android:padding="5dp">
+                    android:padding="3dp">
 
                     <EditText
                         android:id="@+id/edit_password"
@@ -44,7 +45,7 @@
                         android:layout_height="@dimen/widget_height"
                         style="@style/font_black_15"
                         android:background="@null"
-                        android:gravity=""
+                        android:gravity="center_vertical"
                         android:inputType="textPassword"
                         android:hint="密  码"/>
 

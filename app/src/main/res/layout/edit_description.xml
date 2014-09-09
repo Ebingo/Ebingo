@@ -18,6 +18,7 @@
         android:layout_height="370dp"
         android:inputType="textMultiLine"
         android:ems="10"
+        android:background="@drawable/corner_frame"
         android:gravity="top"
         android:hint="请输入产品详细情况"
         android:lineSpacingMultiplier="1.2"

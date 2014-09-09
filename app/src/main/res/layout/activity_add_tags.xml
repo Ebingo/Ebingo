@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/gray_bg"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <include layout="@layout/common_head_layout_2"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/gray_bg"
+        style="@style/info_content_pad"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/font_blue_15"
+        android:text="热门标签(069dd4 24点)"/>
+        <GridView
+            android:layout_marginTop="15dp"
+            android:numColumns="5"
+            android:layout_marginBottom="15dp"
+            android:horizontalSpacing="4dp"
+            android:verticalSpacing="4dp"
+            android:id="@+id/tags_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </GridView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/font_blue_15"
+            android:text="新增标签(069dd4 24点)"/>
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <MultiAutoCompleteTextView
+                android:id="@+id/edit_add_tags"
+                android:layout_width="240dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:background="@drawable/corner_frame"
+                android:layout_height="@dimen/widget_height" />
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:onClick="onClick"
+                android:layout_height="@dimen/widget_height"
+                android:text="添加"
+                android:layout_marginLeft="15dp"
+                style="@style/yellow_button"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

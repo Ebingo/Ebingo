@@ -45,6 +45,7 @@
                 <View style="@style/vertical_divider_20"/>
                 <EditText
                     android:id="@+id/edit_price"
+                    android:inputType="numberDecimal"
                     style="@style/publish_edit"
                     />
                 <TextView
@@ -126,9 +127,18 @@
                 <EditText
                     android:id="@+id/edit_phone"
                     style="@style/publish_edit"
+                    android:inputType="phone"
                     />
             </TableRow>
         </TableLayout>
+        <ImageView
+            android:id="@+id/picked_image"
+            android:layout_width="180dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="180dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_launcher"/>
         <Button
             android:text="@string/btn_publish"
             android:layout_gravity="center_horizontal"

@@ -130,5 +130,10 @@
     </string-array>
 
     <string name="title_activity_interprise_info">Ebingo</string>
-
+    <string name="enterprise_image">企业形象</string>
+    <string name="enterprise_address">企业地址</string>
+    <string name="enterprise_name">企业名称</string>
+    <string name="enterprise_phone">企业电话</string>
+    <string name="enterprise_site">企业网址</string>
+    <string name="enterprise_email">企业邮箱</string>
 </resources>

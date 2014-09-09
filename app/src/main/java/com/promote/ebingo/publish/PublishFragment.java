@@ -51,10 +51,12 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     public static final int PICK_REGION=1<<1;
     /**选择图片*/
     public static final int PICK_IMAGE=1<<2;
+    /**拍照*/
+    public static final int PICK_CAMERA=1<<3;
     /**选择描述*/
-    public static final int PICK_DESCRIPTION=1<<3;
+    public static final int PICK_DESCRIPTION=1<<4;
     /**选择标签*/
-    public static final int PICK_TAGS =1<<4;
+    public static final int PICK_TAGS =1<<5;
     /**标记由发布求购页面发出的选择*/
     public static final int PICK_FOR_DEMAND=1<<8;
     /**标记选由发布供应页面发出的选择*/
@@ -136,7 +138,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         }
         if(Company.getInstance().getCompanyId()==null&&!loginDialog.isShowing()){
             LogCat.i("--->","loginDialog.show();");
-            loginDialog.show();
+//            loginDialog.show();
         }
     }
 

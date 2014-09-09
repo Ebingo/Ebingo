@@ -14,19 +14,19 @@
         style="@style/back_arro_style" />
 
     <TextView
-        android:text="免费注册"
+        android:id="@+id/common_title_tv"
+        android:text="标题"
         android:gravity="center"
         style="@style/font_white_18"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/btn_login"
+    <TextView
+        android:id="@+id/btn_done"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="5dp"
-        android:background="#4FC4EF"
         style="@style/font_white_18"
-        android:text="@string/login_" />
+        android:text="完成" />
 </FrameLayout>

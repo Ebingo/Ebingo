@@ -1,17 +1,14 @@
-package com.promote.ebingo.publish;
+package com.promote.ebingo.publish.login;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.promote.ebingo.R;
-
 /**
- * Created by acer on 2014/9/4.
+ * Created by acer on 2014/9/9.
  */
-public class AddLabelActivity extends Activity{
+public class EnterpriseSettingActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.);
     }
 }
