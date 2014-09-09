@@ -33,7 +33,7 @@
             android:ems="10"
             android:hint="@string/password"/>
         <Button
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_done"
             android:layout_width="match_parent"
             android:layout_height="@dimen/widget_height"
             android:layout_gravity="center_horizontal"

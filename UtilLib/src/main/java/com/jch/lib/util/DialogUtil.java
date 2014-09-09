@@ -39,12 +39,12 @@ public class DialogUtil {
 	 * @return
 	 */
 	public static ProgressDialog waitingDialog(Context context) {
-
-		ProgressDialog dialog = ProgressDialog.show(context, "", "数据访问中", true);
-		dialog.setCancelable(true);
-		return dialog;
-
+		return waitingDialog(context,"数据访问中");
 	}
+
+    public static ProgressDialog waitingDialog(Context context,String msg){
+        return ProgressDialog.show(context, "", msg, true);
+    }
 
 	public static AlertDialog msgSinglBtnAlertDialog(Context context, String msg) {
 

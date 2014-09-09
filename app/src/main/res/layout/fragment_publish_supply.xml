@@ -75,13 +75,14 @@
                 <View style="@style/vertical_divider_20"/>
                 <EditText
                     android:id="@+id/edit_mobile"
+                    android:inputType="phone"
                     style="@style/publish_edit"/>
             </TableRow>
 
         </TableLayout>
         <TableLayout style="@style/frame_bg_layout">
             <TableRow
-                android:id="@+id/pick_label"
+                android:id="@+id/pick_tags"
                 style="@style/publish_table_row">
                 <TextView
                     style="@style/publish_text_style"

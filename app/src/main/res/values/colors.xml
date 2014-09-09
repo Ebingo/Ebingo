@@ -3,6 +3,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="gray">#615F60</color>
+    <color name="light_gray">#c4c9cb</color>
     <color name="into_enter_bg">#DDDDDD</color>
     <color name="info_name_gray">#8d9695</color>
     <color name="orange_my">#ff7300</color>
