@@ -11,7 +11,7 @@
     <dimen name="main_item_pad_l_r">20dp</dimen>
 
     <dimen name="sliding_tab_height">40dp</dimen>
-    
+
     <dimen name="section_divide_height">20dp</dimen>
     <dimen name="publish_layout_margin">19dp</dimen>
     <dimen name="layout_padding">6dp</dimen>
@@ -28,5 +28,6 @@
 
     <dimen name="interprise_info_img_width">150dp</dimen>
     <dimen name="interprise_info_img_height">60dp</dimen>
-    
+    <dimen name="loing_divide_height">20dp</dimen>
+
 </resources>

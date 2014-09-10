@@ -140,10 +140,10 @@
     </style>
 
     <style name="cent_item" parent="gray_15_tv">
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingLeft">30dp</item>
-        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingRight">20dp</item>
         <item name="android:background">@color/white</item>
         <item name="android:drawableRight">@drawable/right_arro</item>
         <item name="android:layout_marginTop">1dp</item>

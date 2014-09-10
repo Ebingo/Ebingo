@@ -62,7 +62,7 @@
                         android:padding="5dp"
                         android:background="@drawable/login_btn_shape"
                         android:layout_marginTop="10dp"
-                        style="@style/font_white_18"
+                        style="@style/font_gray_18"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 

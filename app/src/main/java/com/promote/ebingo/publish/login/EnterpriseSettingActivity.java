@@ -6,7 +6,7 @@ import android.os.Bundle;
 /**
  * Created by acer on 2014/9/9.
  */
-public class EnterpriseSettingActivity extends Activity{
+public class EnterpriseSettingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
