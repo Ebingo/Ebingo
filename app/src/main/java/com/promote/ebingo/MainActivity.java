@@ -24,6 +24,7 @@ import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
+import com.promote.ebingo.publish.login.RegisterActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -166,11 +167,15 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        LogCat.i("--->",(resultCode==RESULT_OK)+"");
-        if (resultCode==RESULT_OK&&mPublishFragment!=null&&mPublishFragment.isMyRequest(requestCode)){
+        LogCat.i("--->","requestCode:"+requestCode+" Result ok?:"+resultCode);
+        if (mPublishFragment!=null&&mPublishFragment.isMyRequest(requestCode)){
+            LogCat.i("--->","mPublishFragment->onActivityResult");
             mPublishFragment.onActivityResult(requestCode,resultCode,data);
+        }else if(requestCode== RegisterActivity.REQUEST_CODE&&resultCode==RESULT_OK){
+            changeFrag(mCenterFragment,mCenterFragment);
+            centerrb.setChecked(true);
         }
+
     }
 
 }

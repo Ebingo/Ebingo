@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by acer on 2014/9/5.
@@ -29,5 +30,12 @@ public class JsonUtil {
             list.add(t);
         }
         return list;
+    }
+    public static <T> void  getArray(JSONArray array,Class<T> cls,List<T> list) throws JSONException {
+        Gson gson=new Gson();
+        for (int i=0;i<array.length();i++){
+            T t=gson.fromJson(array.get(i).toString(),cls);
+            list.add(t);
+        }
     }
 }

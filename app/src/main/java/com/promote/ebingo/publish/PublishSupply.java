@@ -2,23 +2,14 @@ package com.promote.ebingo.publish;
 
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,24 +18,26 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
-import com.jch.lib.util.ImageManager;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.jch.lib.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
-import com.promote.ebingo.util.Dimension;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
 
-import java.io.ByteArrayOutputStream;
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -58,35 +51,39 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     private EditText edit_contact;
     private EditText edit_phone;
     private EditText edit_price;
-    private EditText edit_book_standard;
+    private EditText edit_min_sell_num;
 
     private TextView tv_pick_description;
     private TextView tv_pick_category;
     private TextView tv_pick_region;
+    private TextView tv_pick_image;
 
     private ImageView picked_image;
-    private final int PREVIEW=100;
-    private final String CAMERA_PICTURE_NAME = "publish_upload";
+
+    private final String CAMERA_PICTURE_NAME = "publish_upload.png";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_publish_demand, null);
+        View v = inflater.inflate(R.layout.publish_supply, null);
         edit_title = (EditText) v.findViewById(R.id.edit_title);
         edit_contact = (EditText) v.findViewById(R.id.edit_contact);
         edit_phone = (EditText) v.findViewById(R.id.edit_phone);
         edit_price = (EditText) v.findViewById(R.id.edit_price);
-        edit_book_standard = (EditText) v.findViewById(R.id.edit_book_standard);
+        edit_min_sell_num = (EditText) v.findViewById(R.id.edit_min_sell_num);
 
         tv_pick_category = (TextView) v.findViewById(R.id.tv_pick_category);
         tv_pick_description = (TextView) v.findViewById(R.id.tv_pick_description);
         tv_pick_region = (TextView) v.findViewById(R.id.tv_pick_region);
+        tv_pick_image = (TextView) v.findViewById(R.id.tv_pick_image);
 
         picked_image = (ImageView) v.findViewById(R.id.picked_image);
 
         tv_pick_category.setOnClickListener(this);
         tv_pick_description.setOnClickListener(this);
         tv_pick_region.setOnClickListener(this);
-        v.findViewById(R.id.tv_pick_image).setOnClickListener(this);
+        tv_pick_image.setOnClickListener(this);
+        picked_image.setOnClickListener(this);
+        v.findViewById(R.id.btn_publish).setOnClickListener(this);
         return v;
     }
 
@@ -110,7 +107,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PICK_REGION);
                 break;
             }
-
+            case R.id.picked_image:
             case R.id.tv_pick_image: {
                 showPupWindow();
                 break;
@@ -123,12 +120,19 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                     EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
                     parmater.put("type", TYPE_DEMAND);
                     parmater.put("company_id", Company.getInstance().getCompanyId());
+
                     parmater.put("category_id", tv_pick_category.getTag());
-                    parmater.put("region_name", Company.getInstance().getRegion());
-                    parmater.put("title", edit_title.getText().toString().trim());
+                    parmater.put("region_name", tv_pick_region.getText().toString().trim());
+                    parmater.put("price", edit_price.getText().toString().trim());
+
+                    parmater.put("image_url", edit_price.getText().toString().trim());
                     parmater.put("description", tv_pick_description.getText().toString().trim());
+                    parmater.put("title", edit_title.getText().toString().trim());
+
+                    parmater.put("min_sell_num", edit_min_sell_num.getText().toString().trim());
                     parmater.put("contacts", edit_contact.getText().toString().trim());
                     parmater.put("contacts_phone", edit_phone.getText().toString().trim());
+                    LogCat.i("--->"+parmater);
                     ((PublishFragment) parent).startPublish(parmater);
                     clearText();
                 }
@@ -146,7 +150,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         if (data != null) {
             result = data.getStringExtra("result");
         }
-        requestCode = requestCode & (0xff);
+        requestCode = requestCode & (0xfff);
         LogCat.i("--->", "requestCode:" + Integer.toBinaryString(requestCode));
         switch (requestCode) {
             case PICK_CATEGORY:
@@ -165,7 +169,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 LogCat.i("--->", uri.toString());
                 if (uri != null) {
                     toPreviewActivity(uri);
-//                    new LoadImageTask().execute(uri);
                 }
                 break;
             case PICK_CAMERA:
@@ -176,54 +179,67 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                         return;
                     }
                 }
-//              new LoadImageTask().execute(Uri.fromFile(file));
                 toPreviewActivity(Uri.fromFile(file));
                 break;
             case PREVIEW:
-                new LoadImageTask().execute(data.getData());
+                if (data == null) return;
+                uploadImage(data.getData());
                 break;
         }
     }
 
-    private void toPreviewActivity(Uri uri){
-        Intent intent=new Intent(getActivity(),PreviewActivity.class);
-        intent.setData(uri);
-        startActivityForResult(intent, PREVIEW);
+    /**
+     * 根据uri上传上传图片
+     * @param uri
+     */
+    private void uploadImage(Uri uri) {
+        final Dialog dialog = DialogUtil.waitingDialog(getActivity(), "正在上传图片...");
+        ContentResolver resolver = getActivity().getContentResolver();
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(resolver, uri);
+            picked_image.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity());
+        parmater.put("image", ImageUtil.base64Encode(bitmap));
+        HttpUtil.post(HttpConstant.uploadImage, parmater, new JsonHttpResponseHandler("utf-8") {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                ContextUtil.toast(response);
+                try {
+                    JSONObject result = response.getJSONObject("response");
+                    String image_url=result.getString("data");
+                    LogCat.i("--->",image_url);
+                    if (HttpConstant.CODE_OK.equals(result.getString("code")))
+                        tv_pick_image.setTag(image_url);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                dialog.dismiss();
+            }
+        });
     }
 
     /**
-     * 根据Uri来加载一个图片，并压缩
+     * 将image战士到PreviewActivity中
+     * @param image
      */
-    private class LoadImageTask extends AsyncTask<Uri, Void, Bitmap> {
-
-        private LoadImageTask() {
+    private void toPreviewActivity(Uri image) {
+        if (PreviewActivity.isPreviewing()||getActivity()==null) {
+            return;
         }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            picked_image.setImageResource(R.drawable.img_loading_01);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Uri... params) {
-            ContentResolver resolver = getActivity().getContentResolver();
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(resolver, params[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            picked_image.setImageBitmap(result);
-            picked_image.requestFocus();
-        }
+        LogCat.i("--->","toPreviewActivity:getActivity="+getActivity());
+        Intent intent = new Intent(getActivity(), PreviewActivity.class);
+        intent.setData(image);
+        getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PREVIEW);
     }
-
 
     private PopupWindow window;
     View.OnClickListener popupWindowListener = new View.OnClickListener() {//popupWindow点击事件处理
@@ -332,7 +348,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         edit_contact.setText(null);
         edit_title.setText(null);
 
-        edit_book_standard.setText(null);
+        edit_min_sell_num.setText(null);
         edit_contact.setText(null);
         edit_phone.setText(null);
     }

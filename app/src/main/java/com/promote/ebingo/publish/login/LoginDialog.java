@@ -59,7 +59,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
                 });
                 break;
             case R.id.tv_reg:
-                getContext().startActivity(new Intent(getContext(),RegisterActivity.class));
+                getOwnerActivity().startActivityForResult(new Intent(getContext(),RegisterActivity.class),RegisterActivity.REQUEST_CODE);
                 dismiss();
                 break;
         }

@@ -13,15 +13,13 @@ import com.promote.ebingo.R;
 /**
  * Created by acer on 2014/9/4.
  */
-public class EditDescription extends Activity implements View.OnClickListener{
+public class EditDescription extends PublishBaseActivity implements View.OnClickListener{
     private EditText edit_description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_description);
-        CheckBox a;
-        findViewById(R.id.common_back_btn).setOnClickListener(this);
-        ((TextView)findViewById(R.id.common_title_tv)).setText("产品描述");
+        setBackTitle("产品描述");
         edit_description= ((EditText)findViewById(R.id.edit_description));
         edit_description.setText(getIntent().getStringExtra("description"));
         edit_description.setSelection(edit_description.length());
@@ -39,6 +37,7 @@ public class EditDescription extends Activity implements View.OnClickListener{
                 setResult(RESULT_OK,result);
                 finish();
                 break;
+            default:super.onClick(v);
 
         }
     }

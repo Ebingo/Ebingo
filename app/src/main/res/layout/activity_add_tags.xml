@@ -40,19 +40,22 @@
 
             <MultiAutoCompleteTextView
                 android:id="@+id/edit_add_tags"
-                android:layout_width="240dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
                 android:background="@drawable/corner_frame"
                 android:layout_height="@dimen/widget_height" />
             <Button
+                style="@style/yellow_button"
                 android:id="@+id/btn_add"
-                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_width="80dp"
                 android:onClick="onClick"
                 android:layout_height="@dimen/widget_height"
                 android:text="添加"
                 android:layout_marginLeft="15dp"
-                style="@style/yellow_button"/>
+                />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -32,6 +32,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.text.InputType.*;
+import static com.promote.ebingo.publish.login.RegisterActivity.REQUEST_CODE;
 /**
  * Created by acer on 2014/9/3.
  */
@@ -81,6 +82,9 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
                     if (LoginManager.OK.equals(result.getString("code"))){
                         Company.getInstance().setCompanyId(result.getInt("company_id"));
                     }
+                    //测试用
+                    Intent intent=new Intent(RegisterInputYzm.this,EnterpriseSettingActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -173,6 +177,15 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
                 }
             });
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REQUEST_CODE&&resultCode==RESULT_OK){
+            setResult(RESULT_OK,data);
+            finish();
         }
     }
 }

@@ -19,6 +19,8 @@ public class HttpConstant {
 
     public static String LOCAL_URL = "/ebingoo/index.php?s=/Home/Api/";
 
+
+
     public static String getHost() {
 
         if (Constant.isReleaseAble()) {
@@ -40,6 +42,8 @@ public class HttpConstant {
     public static final String KEY = "hdy782634j23487sdfkjw3486";
 
     public static final String FAIL="fail";//访问网络返回失败
+    public static final  String CODE_OK="100";//成功返回码
+    public static final  String CODE_FAIL="101";//失败返回码
 
     /**
      * 首页显示接口.*
@@ -65,5 +69,9 @@ public class HttpConstant {
     public static final String getDemandInfoList = getRootUrl() + "getDemandInfoList";
     /** 获取信息详情接口. **/
     public static final String getInfoDetail = getRootUrl() + "getInfoDetail";
+    /** 上传图片接口. **/
+    public static final String uploadImage = getRootUrl() + "uploadImage";
+    /** 更新企业信息. **/
+    public static final String updateCompanyInfo = getRootUrl() + "updateCompanyInfo";
 
 }

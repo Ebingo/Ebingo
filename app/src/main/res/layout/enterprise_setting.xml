@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray_bg"
     android:orientation="vertical">
 
     <include layout="@layout/common_head_layout" />
@@ -25,12 +26,19 @@
 
                 <View style="@style/vertical_divider_20" />
 
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:scaleType="center"
-                    android:src="@drawable/interprise_main_img" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image_enterprise"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:layout_gravity="right"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/interprise_main_img" />
+                </LinearLayout>
 
                 <ImageView style="@style/right_arrow" />
             </TableRow>
@@ -48,7 +56,9 @@
 
                 <View style="@style/vertical_divider_20" />
 
-                <EditText style="@style/publish_edit" />
+                <EditText
+                    android:id="@+id/edit_enterprise_name"
+                    style="@style/publish_edit" />
 
             </TableRow>
 
@@ -62,7 +72,9 @@
 
                 <View style="@style/vertical_divider_20" />
 
-                <EditText style="@style/publish_edit" />
+                <EditText
+                    android:id="@+id/edit_enterprise_address"
+                    style="@style/publish_edit" />
 
             </TableRow>
 
@@ -76,7 +88,9 @@
 
                 <View style="@style/vertical_divider_20" />
 
-                <EditText style="@style/publish_edit" />
+                <EditText
+                    android:id="@+id/edit_enterprise_phone"
+                    style="@style/publish_edit" />
 
             </TableRow>
 
@@ -90,7 +104,9 @@
 
                 <View style="@style/vertical_divider_20" />
 
-                <EditText style="@style/publish_edit" />
+                <EditText
+                    android:id="@+id/edit_enterprise_site"
+                    style="@style/publish_edit" />
 
             </TableRow>
 
@@ -104,8 +120,18 @@
 
                 <View style="@style/vertical_divider_20" />
 
-                <EditText style="@style/publish_edit" />
+                <EditText
+                    android:id="@+id/edit_enterprise_email"
+                    style="@style/publish_edit" />
             </TableRow>
         </TableLayout>
+
+        <Button
+            android:id="@+id/btn_done"
+            style="@style/yellow_button"
+            android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
+            android:onClick="onClick"
+            android:text="@string/done" />
     </LinearLayout>
 </LinearLayout>
