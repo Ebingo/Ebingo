@@ -40,6 +40,7 @@
     <string name="start_supply">条起供应</string>
     <string name="supply_company">供应商:</string>
     <string name="enter_company">进入公司</string>
+    <string name="title_product_info">产品详情</string>
     <string name="produt_info">【产品详情】</string>
     <string name="buy_detail">【求购详情】</string>
     <string name="publish_time">发布时间：</string>
@@ -98,6 +99,10 @@
     <string name="no_search_data">没有搜索到数据</string>
     <string name="title_buy_detail">求购详情</string>
     <string name="title_product_detail">供应详情</string>
+    <string name="look_time">查看次数:</string>
+    <string name="look_unite">次</string>
+    <string name="phone_num">手机号</string>
+
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>

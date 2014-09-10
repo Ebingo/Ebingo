@@ -1,6 +1,7 @@
 package com.promote.ebingo.center;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.promote.ebingo.R;
+import com.promote.ebingo.publish.login.LoginActivity;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -21,7 +23,7 @@ import com.promote.ebingo.R;
  * Use the {@link com.promote.ebingo.center.CenterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CenterFragment extends Fragment {
+public class CenterFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -98,6 +100,13 @@ public class CenterFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+
+
+        super.onResume();
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -132,6 +141,88 @@ public class CenterFragment extends Fragment {
         centtellhistorytv = (TextView) view.findViewById(R.id.cent_tell_history_tv);
         centsettingtv = (TextView) view.findViewById(R.id.cent_setting_tv);
         centprofiletv = (TextView) view.findViewById(R.id.cent_profile_tv);
+
+        centerloginbtn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+        switch (id) {
+            case R.id.center_head_iv: {
+
+
+                break;
+            }
+
+            case R.id.center_login_btn: {
+
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+
+                break;
+            }
+
+            case R.id.cent_top_img_ll: {
+
+                break;
+            }
+            case R.id.center_supply_num_tv: {
+
+                break;
+            }
+            case R.id.center_demand_num_tv: {
+
+                break;
+            }
+            case R.id.center_collect_num_tv: {
+
+                break;
+            }
+            case R.id.center_msg_num_tv: {
+
+                break;
+            }
+            case R.id.cent_supply_tv: {
+
+                break;
+            }
+            case R.id.cent_demand_tv: {
+
+                break;
+            }
+            case R.id.cent_collet_tv: {
+
+                break;
+            }
+            case R.id.cent_book_tv: {
+
+                break;
+            }
+            case R.id.cent_privilege_tv: {
+
+                break;
+            }
+            case R.id.cent_profile_tv: {
+
+                break;
+            }
+
+            case R.id.cent_setting_tv: {
+
+                break;
+            }
+            case R.id.cent_tell_history_tv: {
+
+                break;
+            }
+            default: {
+
+            }
+        }
+
+
     }
 
     /**
