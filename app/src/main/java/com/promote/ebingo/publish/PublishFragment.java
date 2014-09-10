@@ -57,10 +57,12 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     public static final int PICK_DESCRIPTION=1<<4;
     /**选择标签*/
     public static final int PICK_TAGS =1<<5;
+    /**预览*/
+    public static final int PREVIEW=1<<6;
     /**标记由发布求购页面发出的选择*/
-    public static final int PICK_FOR_DEMAND=1<<8;
+    public static final int PICK_FOR_DEMAND=1<<13;
     /**标记选由发布供应页面发出的选择*/
-    public static final int PICK_FOR_SUPPLY=1<<9;
+    public static final int PICK_FOR_SUPPLY=1<<14;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -137,8 +139,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             loginDialog.setCancelable(false);
         }
         if(Company.getInstance().getCompanyId()==null&&!loginDialog.isShowing()){
-            LogCat.i("--->","loginDialog.show();");
-//            loginDialog.show();
+            loginDialog.show();
         }
     }
 

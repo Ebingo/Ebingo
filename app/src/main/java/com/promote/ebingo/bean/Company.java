@@ -14,15 +14,27 @@ public class Company {
     private String website; //公司网址
     private String vipType;//会员类型
     private String isLock;
+    private String email;
     private static Company mCompany;
 
-    private Company(){
+    private Company() {
 
     }
 
-    public static Company getInstance(){
-        if (mCompany==null)mCompany=new Company();
+    public static Company getInstance() {
+        if (mCompany == null) {
+            mCompany = new Company();
+//            mCompany.setCompanyId(10);
+        }
         return mCompany;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getVipType() {

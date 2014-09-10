@@ -3,43 +3,21 @@ package com.promote.ebingo.publish;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Region;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
 import com.jch.lib.util.DialogUtil;
-import com.jch.lib.util.ImageManager;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.utils.ImageSizeUtils;
 import com.promote.ebingo.R;
 import com.promote.ebingo.util.ImageUtil;
-import com.promote.ebingo.util.LogCat;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by acer on 2014/9/9.
@@ -49,6 +27,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
     private Uri savedUri;
     private ImageView picked_image;
     public static  final String PIC_NAME="ebingoo_preview.png";
+    private static boolean isPreviewing=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +36,13 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
         picked_image= (ImageView) findViewById(R.id.imageView);
         uri=getIntent().getData();
         new LoadImageTask().execute(uri);
+        isPreviewing=true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isPreviewing=false;
     }
 
     @Override
@@ -68,11 +54,20 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
             case R.id.btn_done:
                 Intent data=new Intent();
                 data.setData(savedUri);
-                setResult(RESULT_OK,data);
+                setResult(RESULT_OK, data);
                 finish();
                 break;
         }
     }
+
+    /**
+     *
+     * @return if this activity is Previewing pictures
+     */
+    public static boolean isPreviewing(){
+        return isPreviewing;
+    }
+
     /**
      * 根据Uri来加载一个图片，并压缩
      */
@@ -116,7 +111,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
                 picked_image.setImageBitmap(result);
                 picked_image.requestFocus();
                 dialog.dismiss();
-                savedUri= new ImageUtil().saveBitmap(result, PIC_NAME);
+                savedUri= ImageUtil.saveBitmap(result, PIC_NAME);
             } catch (Exception e) {
                 e.printStackTrace();
             }

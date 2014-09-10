@@ -27,8 +27,7 @@ import org.json.JSONObject;
 public class RegisterActivity extends Activity implements View.OnClickListener{
     private final String logTag = getClass().getSimpleName();
     EditText edit_phone;
-    private final String OK="100";
-    private final String FAIL="101";
+    public static final int REQUEST_CODE=1001;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +48,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                             {
                                 Intent intent=new Intent(RegisterActivity.this, RegisterInputYzm.class);
                                 intent.putExtra("phonenum",phonenum);
-                                startActivityForResult(intent, 100);
+                                startActivityForResult(intent, REQUEST_CODE);
                             }
                         }
 
@@ -57,6 +56,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                 }else{
                     ContextUtil.toast("请输入正确的手机号！");
                 }
+                //测试用
+                Intent intent=new Intent(this,EnterpriseSettingActivity.class);
+                startActivityForResult(intent,REQUEST_CODE);
 
                 break;
             }
@@ -66,13 +68,12 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
         }
     }
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==100&&resultCode==RESULT_OK){
-               finish();
+        if (requestCode==REQUEST_CODE&&resultCode==RESULT_OK){
+            setResult(RESULT_OK,data);
+            finish();
         }
     }
 }

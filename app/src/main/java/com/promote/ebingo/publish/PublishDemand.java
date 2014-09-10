@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -32,14 +31,12 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
     EditText edit_contact;
     EditText edit_mobile;
 
-    Button publish;
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_publish_supply, container,false);
+        View view = inflater.inflate(R.layout.publish_demand, container,false);
         init(view);
         return view;
     }
@@ -53,13 +50,10 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
         edit_contact=(EditText)view.findViewById(R.id.edit_contact);
         edit_mobile=(EditText)view.findViewById(R.id.edit_mobile);
 
-        publish=(Button)view.findViewById(R.id.btn_publish);
-
         view.findViewById(R.id.pick_category).setOnClickListener(this);
         view.findViewById(R.id.pick_description).setOnClickListener(this);
         view.findViewById(R.id.pick_tags).setOnClickListener(this);
-
-        publish.setOnClickListener(this);
+        view.findViewById(R.id.btn_publish).setOnClickListener(this);
     }
 
     @Override
@@ -112,7 +106,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
         if (data!=null){
             result=data.getStringExtra("result");
         }
-        requestCode=requestCode&(0xff);
+        requestCode=requestCode&(0xfff);
         if(result!=null){
             switch (requestCode){
                 case PICK_CATEGORY:
