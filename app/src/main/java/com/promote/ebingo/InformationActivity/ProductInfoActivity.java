@@ -22,8 +22,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     private TextView productinfopricetv;
     private TextView productinfostartnumtv;
     private TextView productinfocitytv;
-    private TextView productinfocompanynametv;
-    private TextView productinfoentertv;
     private TextView productinfodetailtv;
     private ImageView commonbackbtn;
     private TextView commontitletv;
@@ -49,8 +47,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfopricetv = (TextView) findViewById(R.id.product_info_price_tv);
         productinfostartnumtv = (TextView) findViewById(R.id.product_info_start_num_tv);
         productinfocitytv = (TextView) findViewById(R.id.product_info_city_tv);
-        productinfocompanynametv = (TextView) findViewById(R.id.product_info_company_name_tv);
-        productinfoentertv = (TextView) findViewById(R.id.product_info_enter_tv);
         productinfodetailtv = (TextView) findViewById(R.id.product_info_detail_tv);
 
         int productId = getIntent().getIntExtra(ARG_ID, -1);

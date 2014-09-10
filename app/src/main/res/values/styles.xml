@@ -18,6 +18,8 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+
+
     <style name="tv_singl_base_style">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
@@ -74,8 +76,6 @@
         <item name="android:layout_height">@dimen/widget_height</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
@@ -172,7 +172,6 @@
     </style>
 
     <style name="publish_table_row">
-        <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingBottom">9dp</item>
         <item name="android:paddingTop">9dp</item>
