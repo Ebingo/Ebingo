@@ -196,8 +196,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
      */
     private class LoadImageTask extends AsyncTask<Uri, Void, Bitmap> {
 
-        private final int max_size = 300 * 1024;
-
         private LoadImageTask() {
         }
 
