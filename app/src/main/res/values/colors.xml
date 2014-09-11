@@ -18,4 +18,5 @@
     <color name="green">#5FA103</color>
     <color name="publish_base_color">#666666</color>
     <color name="login_bg_gray">#E9F0F5</color>
+    <color name="text_black">#3a3a3a</color>
 </resources>

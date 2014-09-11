@@ -1,9 +1,13 @@
 package com.promote.ebingo.center;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +16,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CurCompanyNumBeanTools;
+import com.promote.ebingo.bean.CurrentCompanyBaseNumBean;
+import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginActivity;
+import com.promote.ebingo.util.Dimension;
+import com.promote.ebingo.util.ImageUtil;
+import com.promote.ebingo.util.LogCat;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -102,7 +122,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
 
-
+        setHeadImage(Company.getInstance().getImageUri());
         super.onResume();
     }
 
@@ -124,6 +144,21 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            getCurrentCompanyBaseNum();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void initialize(View view) {
 
         centerheadiv = (ImageView) view.findViewById(R.id.center_head_iv);
@@ -143,6 +178,29 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centprofiletv = (TextView) view.findViewById(R.id.cent_profile_tv);
 
         centerloginbtn.setOnClickListener(this);
+        centprivilegetv.setOnClickListener(this);
+        setHeadImage(Company.getInstance().getImageUri());
+    }
+
+
+    /**
+     * 设置头像
+     *
+     * @param uri
+     */
+    public void setHeadImage(Uri uri) {
+        if (uri == null) {
+            LogCat.e("--->","setHeadImage uriError uri="+uri);
+            return;
+        }
+
+        try {
+            Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+            centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bm, (int)Dimension.dp(48)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -152,6 +210,11 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         switch (id) {
             case R.id.center_head_iv: {
 
+                if (isLogined()) {
+
+                } else {
+
+                }
 
                 break;
             }
@@ -169,15 +232,19 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.center_supply_num_tv: {
+                Intent intent = new Intent(getActivity(), MySupplyActivity.class);
+                startActivity(intent);
 
                 break;
             }
             case R.id.center_demand_num_tv: {
-
+                Intent intent = new Intent(getActivity(), MyDemandActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.center_collect_num_tv: {
-
+                Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.center_msg_num_tv: {
@@ -197,11 +264,13 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.cent_book_tv: {
-
+                Intent intent = new Intent(getActivity(), MyBookActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_privilege_tv: {
-
+                Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_profile_tv: {
@@ -222,8 +291,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -238,6 +307,79 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    /**
+     * 获取当前登录公司的基本参数
+     */
+    private void getCurrentCompanyBaseNum() {
+
+        String urlStr = HttpConstant.getCurrentCompanyBaseNum;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
+        parmater.put("company_id", Company.getInstance().getCompanyId());
+        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+
+        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("UTF-8") {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                CurCompanyNumBeanTools curCompanyNumBeanTools = CurCompanyNumBeanTools.getCurConpanyNumBeanTools(response.toString());
+
+                if (curCompanyNumBeanTools != null) {
+                    if (curCompanyNumBeanTools.getCode() == 100) {
+
+                        CurrentCompanyBaseNumBean currentCompanyBaseNumBean = curCompanyNumBeanTools.getData();
+                        centersupplynumtv.setText(currentCompanyBaseNumBean.getSupply());
+                        centerdemandnumtv.setText(currentCompanyBaseNumBean.getDemand());
+                        centercollectnumtv.setText(currentCompanyBaseNumBean.getWishlist());
+                        centermsgnumtv.setText(currentCompanyBaseNumBean.getNews());
+                    }
+                }
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                dialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 是否已经登录。
+     *
+     * @return
+     */
+    private boolean isLogined() {
+
+        Company company = Company.getInstance();
+        if (company.getCompanyId() >= 0) {
+
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
+    /**
+     * 进入登录.
+     */
+    private void gotoLogin() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
 
 }

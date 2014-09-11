@@ -79,7 +79,7 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
                 ContextUtil.toast(response);
                 try {
                     JSONObject result=response.getJSONObject("response");
-                    if (LoginManager.OK.equals(result.getString("code"))){
+                    if (HttpConstant.CODE_OK.equals(result.getString("code"))){
                         Company.getInstance().setCompanyId(result.getInt("company_id"));
                     }
                     //测试用

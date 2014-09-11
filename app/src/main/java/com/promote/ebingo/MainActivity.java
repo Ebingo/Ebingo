@@ -1,35 +1,26 @@
 package com.promote.ebingo;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import  android.view.ViewGroup.LayoutParams;
+
 import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
 import com.promote.ebingo.publish.login.RegisterActivity;
-import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 
-public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener {
+public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener,PublishFragment.PublishCallback {
     private RadioButton mainrb;
     private RadioButton findrb;
     private RadioButton publishrb;
@@ -87,6 +78,10 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
      * @param hideFrag 要隐藏的frag。
      */
     private void changeFrag(Fragment showFrag, Fragment hideFrag) {
+        if (showFrag == hideFrag) {
+            LogCat.e(MainActivity.class.getName() + ":changeFrag:showFrag=hideFragment");
+            return;
+        }
         FragmentTransaction ft = mFM.beginTransaction();
         if (showFrag.isAdded()) {
             ft.show(showFrag);
@@ -151,7 +146,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
     }
 
-    private void setDimAmount(float alpha,float dimAmount){
+    private void setDimAmount(float alpha, float dimAmount) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.alpha = alpha;
         lp.dimAmount = dimAmount;
@@ -167,15 +162,22 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LogCat.i("--->","requestCode:"+requestCode+" Result ok?:"+resultCode);
-        if (mPublishFragment!=null&&mPublishFragment.isMyRequest(requestCode)){
-            LogCat.i("--->","mPublishFragment->onActivityResult");
-            mPublishFragment.onActivityResult(requestCode,resultCode,data);
-        }else if(requestCode== RegisterActivity.REQUEST_CODE&&resultCode==RESULT_OK){
-            changeFrag(mCenterFragment,mCenterFragment);
+        LogCat.i("--->", "requestCode:" + requestCode + " Result ok?:" + resultCode);
+        if (mPublishFragment != null && mPublishFragment.isMyRequest(requestCode)) {
+            LogCat.i("--->", "mPublishFragment->onActivityResult");
+            mPublishFragment.onActivityResult(requestCode, resultCode, data);
+        } else if (requestCode == RegisterActivity.REQUEST_CODE && resultCode == RESULT_OK) {
+            if (mCenterFragment == null) {
+                mCenterFragment = new CenterFragment();
+            }
+            changeFrag(mCenterFragment, mCurFragment);
             centerrb.setChecked(true);
         }
 
     }
 
+    @Override
+    public void onDialogDismiss() {
+        mainrb.setChecked(true);
+    }
 }

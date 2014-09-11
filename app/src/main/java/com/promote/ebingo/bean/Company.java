@@ -1,5 +1,7 @@
 package com.promote.ebingo.bean;
 
+import android.net.Uri;
+
 /**
  * Created by acer on 2014/9/3.
  */
@@ -15,6 +17,10 @@ public class Company {
     private String vipType;//会员类型
     private String isLock;
     private String email;
+    private Uri imageUri;//公司图片在手机中的位置
+
+
+
     private static Company mCompany;
 
     private Company() {
@@ -31,6 +37,13 @@ public class Company {
 
     public String getEmail() {
         return email;
+    }
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
     }
 
     public void setEmail(String email) {
@@ -116,4 +129,22 @@ public class Company {
     public void setWebsite(String website) {
         this.website = website;
     }
+
+    /**
+     * 清空公司。
+     */
+    public void clearCompany() {
+
+        companyId = -1;//公司Id
+        image = null;  //公司图片url
+        name = null;   //公司名
+        head = null;   //负责人名称
+        headPhone = null;  //负责人电话
+        companyTel = null;  //公司电话
+        region = null;    //公司地区
+        website = null;   //公司网址
+        vipType = null;    //会员类型
+        isLock = null;
+    }
+
 }

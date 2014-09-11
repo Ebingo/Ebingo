@@ -1,6 +1,7 @@
 package com.promote.ebingo.publish;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,33 +37,54 @@ import java.util.List;
  * to handle interaction events.
  * Use the {@link PublishFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
-public class PublishFragment extends Fragment implements RadioGroup.OnCheckedChangeListener{
+public class PublishFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    /**求购*/
-    public static final String TYPE_DEMAND="1";
-    /**供应*/
-    public static final String TYPE_SUPPLY="2";
-    /**选择分类*/
-    public static final int PICK_CATEGORY=1<<0;
-    /**选择区域*/
-    public static final int PICK_REGION=1<<1;
-    /**选择图片*/
-    public static final int PICK_IMAGE=1<<2;
-    /**拍照*/
-    public static final int PICK_CAMERA=1<<3;
-    /**选择描述*/
-    public static final int PICK_DESCRIPTION=1<<4;
-    /**选择标签*/
-    public static final int PICK_TAGS =1<<5;
-    /**预览*/
-    public static final int PREVIEW=1<<6;
-    /**标记由发布求购页面发出的选择*/
-    public static final int PICK_FOR_DEMAND=1<<13;
-    /**标记选由发布供应页面发出的选择*/
-    public static final int PICK_FOR_SUPPLY=1<<14;
+    /**
+     * 求购
+     */
+    public static final String TYPE_DEMAND = "1";
+    /**
+     * 供应
+     */
+    public static final String TYPE_SUPPLY = "2";
+    /**
+     * 选择分类
+     */
+    public static final int PICK_CATEGORY = 1 << 0;
+    /**
+     * 选择区域
+     */
+    public static final int PICK_REGION = 1 << 1;
+    /**
+     * 选择图片
+     */
+    public static final int PICK_IMAGE = 1 << 2;
+    /**
+     * 拍照
+     */
+    public static final int PICK_CAMERA = 1 << 3;
+    /**
+     * 选择描述
+     */
+    public static final int PICK_DESCRIPTION = 1 << 4;
+    /**
+     * 选择标签
+     */
+    public static final int PICK_TAGS = 1 << 5;
+    /**
+     * 预览
+     */
+    public static final int PREVIEW = 1 << 6;
+    /**
+     * 标记由发布求购页面发出的选择
+     */
+    public static final int PICK_FOR_DEMAND = 1 << 13;
+    /**
+     * 标记选由发布供应页面发出的选择
+     */
+    public static final int PICK_FOR_SUPPLY = 1 << 14;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -72,8 +94,8 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     private String mParam2;
     private RadioGroup tabs;
     private ViewPager content;
-    PublishDemand publishDemand=new PublishDemand();
-    PublishSupply publishSupply=new PublishSupply();
+    PublishDemand publishDemand = new PublishDemand();
+    PublishSupply publishSupply = new PublishSupply();
 
     /**
      * Use this factory method to create a new instance of
@@ -92,6 +114,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         fragment.setArguments(args);
         return fragment;
     }
+
     public PublishFragment() {
         // Required empty public constructor
     }
@@ -110,10 +133,10 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_publish, container, false);
-        tabs=(RadioGroup)view.findViewById(R.id.publish_type );
-        content=(ViewPager)view.findViewById(R.id.publish_content);
+        tabs = (RadioGroup) view.findViewById(R.id.publish_type);
+        content = (ViewPager) view.findViewById(R.id.publish_content);
         tabs.setOnCheckedChangeListener(this);
-        PublishContentAdapter adapter=new PublishContentAdapter(getChildFragmentManager(),content,tabs);
+        PublishContentAdapter adapter = new PublishContentAdapter(getChildFragmentManager(), content, tabs);
         adapter.add(publishDemand).add(publishSupply);
         content.setAdapter(adapter);
         return view;
@@ -128,19 +151,41 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden){
-          showLoginDialog();
+        if (!hidden) {
+            showLoginDialog();
         }
     }
 
-    private void showLoginDialog(){
-        if (loginDialog==null){
-            loginDialog=new LoginDialog(getActivity());
+    private void showLoginDialog() {
+        if (loginDialog == null) {
+            loginDialog = new LoginDialog(getActivity());
             loginDialog.setCancelable(false);
+            loginDialog.setOwnerActivity(getActivity());
+            loginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if (callback != null)
+                        callback.onDialogDismiss();
+                }
+            });
         }
-        if(Company.getInstance().getCompanyId()==null&&!loginDialog.isShowing()){
+        if (Company.getInstance().getCompanyId() == null && !loginDialog.isShowing()&&!isHidden()) {
             loginDialog.show();
         }
+    }
+
+    public PublishCallback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(PublishCallback callback) {
+        this.callback = callback;
+    }
+
+    private PublishCallback callback;
+
+    public interface PublishCallback {
+        public void onDialogDismiss();
     }
 
     @Override
@@ -150,7 +195,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId){
+        switch (checkedId) {
             case R.id.rb_publish_demand:
                 content.setCurrentItem(1);
                 break;
@@ -165,15 +210,16 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         private RadioGroup tabs;
         private ViewPager content;
         private List<Fragment> fragments;
-        public PublishContentAdapter(FragmentManager fm,ViewPager content,RadioGroup tabs) {
+
+        public PublishContentAdapter(FragmentManager fm, ViewPager content, RadioGroup tabs) {
             super(fm);
-            fragments=new ArrayList<Fragment>();
-            this.tabs=tabs;
-            this.content=content;
+            fragments = new ArrayList<Fragment>();
+            this.tabs = tabs;
+            this.content = content;
             this.content.setOnPageChangeListener(this);
         }
 
-        public PublishContentAdapter add(Fragment f){
+        public PublishContentAdapter add(Fragment f) {
             fragments.add(f);
             return this;
         }
@@ -185,7 +231,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
 
         @Override
         public void onPageSelected(int i) {
-            ((RadioButton)tabs.getChildAt(i)).setChecked(true);
+            ((RadioButton) tabs.getChildAt(i)).setChecked(true);
         }
 
         @Override
@@ -207,27 +253,31 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogCat.i("--->", Integer.toBinaryString(requestCode));
-        if (isPickFor(PICK_FOR_DEMAND,requestCode))publishDemand.onActivityResult(requestCode,resultCode,data);
+        if (isPickFor(PICK_FOR_DEMAND, requestCode))
+            publishDemand.onActivityResult(requestCode, resultCode, data);
         //publishSupply能自动接收到onActivityResult回调，可能与add的顺序有关。
-        if (isPickFor(PICK_FOR_SUPPLY, requestCode))publishSupply.onActivityResult(requestCode,resultCode,data);
+        if (isPickFor(PICK_FOR_SUPPLY, requestCode))
+            publishSupply.onActivityResult(requestCode, resultCode, data);
     }
+
     /**
      * 判断是否为Publish页面发出的请求
+     *
      * @param requestCode
      * @return
      */
-    public boolean isMyRequest(final int requestCode){
-        return isPickFor(PICK_FOR_DEMAND, requestCode)||isPickFor(PICK_FOR_SUPPLY, requestCode);
+    public boolean isMyRequest(final int requestCode) {
+        return isPickFor(PICK_FOR_DEMAND, requestCode) || isPickFor(PICK_FOR_SUPPLY, requestCode);
     }
 
-    public boolean isPickFor(int code,final int requestCode){
-        int myCode=requestCode;
-        return (myCode&code)!=0;
+    public boolean isPickFor(int code, final int requestCode) {
+        int myCode = requestCode;
+        return (myCode & code) != 0;
     }
 
-    public void startPublish(EbingoRequestParmater parmater){
-       final ProgressDialog dialog= DialogUtil.waitingDialog(getActivity());
-        HttpUtil.post(HttpConstant.saveInfo,parmater,new JsonHttpResponseHandler("utf-8"){
+    public void startPublish(EbingoRequestParmater parmater) {
+        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+        HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);

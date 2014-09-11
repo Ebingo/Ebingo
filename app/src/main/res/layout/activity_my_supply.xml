@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.promote.ebingo.center.MySupplyActivity">
+
+    <include layout="@layout/common_head_layout" />
+
+
+    <ListView
+        android:id="@+id/mysupply_lv"
+        android:layout_width="match_parent"
+        android:dividerHeight="0.5dp"
+        android:divider="@color/gray_bg"
+        android:layout_height="wrap_content"></ListView>
+
+    <include
+        layout="@layout/common_nodate"
+        android:id="@+id/nodata"></include>
+
+</LinearLayout>

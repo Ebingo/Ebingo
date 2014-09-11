@@ -83,11 +83,13 @@
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
     <string name="my_profile">企业资料</string>
+
     <string-array name="interprise_info_tab">
         <item>公司首页</item>
         <item>企业动态</item>
         <item>供求信息</item>
     </string-array>
+
     <string name="address">地址：</string>
     <string name="http_addr">网址：</string>
     <string name="tell">电话：</string>
@@ -102,7 +104,11 @@
     <string name="look_time">查看次数:</string>
     <string name="look_unite">次</string>
     <string name="phone_num">手机号</string>
-
+    <string name="price_unit">元/件</string>
+    <string name="supply_start_num">件起供应</string>
+    <string name="no_data">没有数据！</string>
+    <string name="delete">删除</string>
+    <string name="yuan">元</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -142,5 +148,35 @@
     <string name="enterprise_phone">企业电话</string>
     <string name="enterprise_site">企业网址</string>
     <string name="enterprise_email">企业邮箱</string>
+    <string name="title_activity_my_supply">MySupplyActivity</string>
+    <string name="title_activity_my_demand">Ebingo</string>
+    <string name="title_activity_my_cellection">Ebingo</string>
+    <string name="title_activity_my_book">Ebingo</string>
+
+    <string-array name="privilege_info_visitor">
+        <item>查看企业供求信息</item>
+        <item>发布企业详细信息</item>
+        <item>免费升级普通会员</item>
+    </string-array>
+
+    <string-array name="privilege_info_normal_vip">
+        <item>享受游客全部特权</item>
+        <item>发布企业求购信息</item>
+        <item>可订阅3个标签，精确推送相关求购信息</item>
+    </string-array>
+
+    <string-array name="privilege_info_vip">
+        <item>享受普通会员全部特权</item>
+        <item>发布企业求购信息/供应信息</item>
+        <item>可一键拨打电话咨询产品详细情况</item>
+        <item>可订阅23个标签，精确推送相关求购信息</item>
+    </string-array>
+
+    <string-array name="privilege_info_vvip">
+        <item>享受VIP会员全部特权</item>
+        <item>可订阅标签数不限</item>
+        <item>享受产品3D展示，全方位展示您的产品</item>
+        <item>邮件推送功能，实时获取最新供求信息</item>
+    </string-array>
 
 </resources>

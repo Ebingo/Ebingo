@@ -19,7 +19,6 @@
     </style>
 
 
-
     <style name="tv_singl_base_style">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
@@ -67,6 +66,12 @@
     </style>
 
     <style name="black_15_tv" parent="font_black_15">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+
+    <style name="red_15_tv" parent="font_red_15">
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
     </style>
@@ -158,6 +163,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/white</item>
     </style>
+
     <style name="publish_edit">
         <item name="android:layout_margin">1dp</item>
         <item name="android:paddingLeft">4dp</item>
@@ -179,12 +185,14 @@
         <item name="android:background">@null</item>
         <item name="android:paddingRight">5dp</item>
     </style>
+
     <style name="frame_bg_layout">
         <item name="android:background">@drawable/corner_frame</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">20dp</item>
     </style>
+
     <style name="vertical_divider_20">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">20dp</item>
@@ -197,12 +205,14 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/publish_base_color</item>
     </style>
+
     <style name="pulish_text_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/publish_base_color</item>
     </style>
+
     <style name="tag_style">
         <item name="android:button">@drawable/tags_bg</item>
         <item name="android:background">@drawable/tags_bg</item>
@@ -241,6 +251,40 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="item_pad_black_15_tv" parent="font_black_15">
 
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">30dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+    </style>
+
+    <style name="item_pad_gray_15_tv" parent="font_gray_15">
+
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">30dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+    </style>
+
+    <style name="center_num_style">
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+    <style name="rb_my_privilege_info">
+        <item name="android:background">@drawable/rb_privilege_bg</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+    </style>
 
 </resources>
