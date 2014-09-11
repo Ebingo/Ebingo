@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.RelativeLayout;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -36,12 +37,8 @@ import java.util.LinkedList;
  */
 public class AddTagsActivity extends PublishBaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     MultiAutoCompleteTextView edit_add_tab;
-    StringBuilder tagsStringBuilder = new StringBuilder();
-    private GridView gridView;
     private LinkedList<HotTag> tagList = new LinkedList<HotTag>();
-    private LinkedList<HotTag> userTagList = new LinkedList<HotTag>();
-    private HotTagAdapter adapter;
-
+    private AutoLineLayout tagContainer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,19 +47,17 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
     }
 
     private void init() {
-        gridView = (GridView) findViewById(R.id.tags_container);
-        adapter = new HotTagAdapter();
-        gridView.setAdapter(adapter);
         findViewById(R.id.btn_done).setOnClickListener(this);
+        tagContainer= (AutoLineLayout) findViewById(R.id.tags_container);
         setBackTitle("添加标签");
         edit_add_tab = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
 
-        new Handler().postDelayed(new Runnable() {//延迟100ms，等Activity加载完布局再获取热门标签
+        new Handler().postDelayed(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签
             @Override
             public void run() {
                 getData(AddTagsActivity.this);
             }
-        }, 100);
+        }, 10);
     }
 
     private void getData(Context context) {
@@ -75,8 +70,9 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                 try {
                     JSONArray array = response.getJSONObject("response").getJSONArray("data");
                     JsonUtil.getArray(array, HotTag.class, tagList);
-                    tagList.addAll(userTagList);
-                    adapter.notifyDataSetChanged();
+                    for (HotTag tag:tagList){
+                        addTag(tag);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -111,8 +107,8 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                 if (!isTagsMax()) {
                     HotTag hotTag = new HotTag();
                     hotTag.setName(tag);
-                    addUserTag(hotTag);
-                    adapter.notifyDataSetChanged();
+                    hotTag.setSelect(true);
+                    addTag(hotTag);
                     edit_add_tab.setText(null);
                 } else {
                     toastTagIsMax();
@@ -120,34 +116,30 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                 break;
             case R.id.btn_done:
 
-                StringBuilder userTags = new StringBuilder();
-                for (HotTag hotTag : userTagList) userTags.append(hotTag.getName() + ",");
-                tagList.removeAll(userTagList);
-                for (HotTag hotTag : tagList)
-                    if (hotTag.isSelect()) userTags.append(hotTag.getName() + ",");
-
-                int lastSpiltIndex = userTags.lastIndexOf(",");
-                String selectTags = "";
-                if (lastSpiltIndex > 0) {
-                    selectTags = userTags.toString().substring(0, lastSpiltIndex);
+                StringBuilder selectTags = new StringBuilder();
+                for (int i=0;i<tagList.size();i++){
+                    HotTag temp=tagList.get(i);
+                    if (temp.isSelect()) selectTags.append(temp.getName());
+                    if(i<tagList.size()-1)selectTags.append(",");
                 }
+
                 Intent data = new Intent();
-                data.putExtra("result", selectTags);
+                data.putExtra("result", selectTags.toString());
                 setResult(RESULT_OK, data);
                 finish();
                 break;
         }
     }
 
-    /**
-     * 将用户添加的标签添加到集合中
-     *
-     * @param hotTag
-     */
-    private void addUserTag(HotTag hotTag) {
-        tagList.removeAll(userTagList);
-        userTagList.add(hotTag);
-        tagList.addAll(userTagList);
+    private void addTag(HotTag tag){
+        if (tag==null)return;
+        tagList.add(tag);
+        CheckBox checkBox= (CheckBox) View.inflate(this,R.layout.tag,null);
+        checkBox.setTag(tag);
+        checkBox.setText(tag.getName());
+        checkBox.setChecked(tag.isSelect());
+        checkBox.setSingleLine(false);
+        tagContainer.addView(checkBox);
     }
 
     /**
@@ -156,23 +148,20 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
      * @return
      */
     private boolean isTagsMax() {
-        tagList.removeAll(userTagList);
-        int tagNum = 0;
-        for (HotTag hotTag : tagList) {
-            if (hotTag.isSelect()) tagNum++;
+        int selectTagNum=0;
+        for (HotTag tag:tagList){
+            if (tag.isSelect()) {
+                selectTagNum++;
+            }
         }
-        tagNum += userTagList.size();
-        tagList.addAll(userTagList);
-        return tagNum >= 10;
+        return selectTagNum >= 10;
     }
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
         HotTag hotTag = (HotTag) buttonView.getTag();
-        if (userTagList.contains(hotTag)) {//如果属于用户添加标签集合，直接return
-            return;
-        } else if (isChecked && isTagsMax()) {
+
+        if (isChecked && isTagsMax()) {
             toastTagIsMax();
             buttonView.setChecked(false);
         } else {
@@ -187,53 +176,4 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
         ContextUtil.toast("最多只能添加10个标签");
     }
 
-    class HotTagAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return tagList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return tagList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            HotTag tag = tagList.get(position);
-            CheckBox tagBox;
-            if (convertView == null) {
-                tagBox = (CheckBox) View.inflate(AddTagsActivity.this, R.layout.tag, null);
-                tagBox.setOnCheckedChangeListener(AddTagsActivity.this);
-                convertView = tagBox;
-            } else {
-                tagBox = (CheckBox) convertView;
-            }
-            tagBox.setTag(tag);
-            if (userTagList.contains(tag)) {
-                convertView.setOnClickListener(clickDismiss);
-                tagBox.setChecked(true);
-                tagBox.setOnCheckedChangeListener(null);
-            }
-            tagBox.setText(tag.getName());
-            return convertView;
-        }
-
-        View.OnClickListener clickDismiss = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tagList.removeAll(userTagList);
-                userTagList.remove(v.getTag());
-                tagList.addAll(userTagList);
-                adapter.notifyDataSetChanged();
-                ;
-            }
-        };
-    }
 }

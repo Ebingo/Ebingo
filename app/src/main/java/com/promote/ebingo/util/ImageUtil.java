@@ -92,19 +92,45 @@ public class ImageUtil {
         return "data:image/png;base64," + Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
+    /**
+     * 以一个bitmap的中心为圆点，以radius为半径，去截取
+     * @param src
+     * @param radius
+     * @return
+     */
     public static Bitmap roundBitmap(Bitmap src, int radius) {
 
-        int s_w=src.getWidth();
-        int s_h=src.getHeight();
+        int src_w=src.getWidth();
+        int src_h=src.getHeight();
+        int result_length=radius*2;
+        LogCat.i("--->","src_w="+src_w+" src_h="+src_h);
+        float scale;
+        if(src_w>src_h){
+            scale=result_length/(float)src_h;
+        }else{
+            scale=result_length/(float)src_w;
+        }
+        src_w*=scale;
+        src_h*=scale;
+        LogCat.i("--->","src_w="+src_w+" src_h="+src_h+" scale="+scale+" radius="+radius);
+        Bitmap resizeSrc=Bitmap.createScaledBitmap(src,src_w,src_h,false);//缩放后的Bitmap
 
         final Paint paint=new Paint();
         paint.setAntiAlias(true);
-        Bitmap result=Bitmap.createBitmap(radius*2,radius*2, Bitmap.Config.ARGB_8888);
+        Bitmap result=Bitmap.createBitmap(result_length,result_length, Bitmap.Config.ARGB_8888);
         Canvas canvas=new Canvas(result);
+//        canvas.drawARGB(0,0,0,0);//背景透明效果
         canvas.drawCircle(radius,radius,radius,paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
-        canvas.drawBitmap(src,0,0,paint);
+        float translate_x=(result.getWidth()-resizeSrc.getWidth())/2;
+        float translate_y=(result.getHeight()-resizeSrc.getHeight())/2;
+
+        canvas.save();
+        canvas.translate(translate_x,translate_y);
+        canvas.drawBitmap(resizeSrc,0,0,paint);
+        canvas.restore();
+
         return result;
     }
 }

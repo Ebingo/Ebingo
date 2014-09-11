@@ -68,4 +68,8 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+       dismiss();
+    }
 }

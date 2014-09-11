@@ -141,6 +141,11 @@
             android:name=".center.MySupplyActivity"
             android:label="@string/title_activity_my_supply" >
         </activity>
+        <activity
+            android:name=".center.MyPrivilegeActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
     </application>
 
 </manifest>

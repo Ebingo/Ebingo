@@ -143,6 +143,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
             image_enterprise.setImageBitmap(bitmap);
+            Company.getInstance().setImageUri(uri);
         } catch (IOException e) {
             e.printStackTrace();
         }
