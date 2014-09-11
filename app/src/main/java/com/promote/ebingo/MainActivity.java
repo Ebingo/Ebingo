@@ -1,5 +1,6 @@
 package com.promote.ebingo;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -87,6 +88,10 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
      * @param hideFrag 要隐藏的frag。
      */
     private void changeFrag(Fragment showFrag, Fragment hideFrag) {
+        if(showFrag==hideFrag){
+            LogCat.e(MainActivity.class.getName()+":changeFrag:showFrag=hideFragment");
+            return;
+        }
         FragmentTransaction ft = mFM.beginTransaction();
         if (showFrag.isAdded()) {
             ft.show(showFrag);
@@ -172,10 +177,12 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
             LogCat.i("--->","mPublishFragment->onActivityResult");
             mPublishFragment.onActivityResult(requestCode,resultCode,data);
         }else if(requestCode== RegisterActivity.REQUEST_CODE&&resultCode==RESULT_OK){
-            changeFrag(mCenterFragment,mCenterFragment);
+            if(mCenterFragment==null){
+                mCenterFragment=new CenterFragment();
+            }
+            changeFrag(mCenterFragment,mCurFragment);
             centerrb.setChecked(true);
         }
 
     }
-
 }

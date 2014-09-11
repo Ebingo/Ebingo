@@ -22,37 +22,38 @@ import java.io.IOException;
 /**
  * Created by acer on 2014/9/9.
  */
-public class PreviewActivity extends Activity implements View.OnClickListener{
+public class PreviewActivity extends Activity implements View.OnClickListener {
     private Uri uri;
     private Uri savedUri;
     private ImageView picked_image;
-    public static  final String PIC_NAME="ebingoo_preview.png";
-    private static boolean isPreviewing=false;
+    public static final String PIC_NAME = "ebingoo_preview.png";
+    private static boolean isPreviewing = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.preview_activity);
         findViewById(R.id.common_back_btn).setOnClickListener(this);
-        picked_image= (ImageView) findViewById(R.id.imageView);
-        uri=getIntent().getData();
+        picked_image = (ImageView) findViewById(R.id.imageView);
+        uri = getIntent().getData();
         new LoadImageTask().execute(uri);
-        isPreviewing=true;
+        isPreviewing = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isPreviewing=false;
+        isPreviewing = false;
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.common_back_btn:
                 finish();
                 break;
             case R.id.btn_done:
-                Intent data=new Intent();
+                Intent data = new Intent();
                 data.setData(savedUri);
                 setResult(RESULT_OK, data);
                 finish();
@@ -61,10 +62,9 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     *
      * @return if this activity is Previewing pictures
      */
-    public static boolean isPreviewing(){
+    public static boolean isPreviewing() {
         return isPreviewing;
     }
 
@@ -111,7 +111,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
                 picked_image.setImageBitmap(result);
                 picked_image.requestFocus();
                 dialog.dismiss();
-                savedUri= ImageUtil.saveBitmap(result, PIC_NAME);
+                savedUri = ImageUtil.saveBitmap(result, PIC_NAME);
             } catch (Exception e) {
                 e.printStackTrace();
             }

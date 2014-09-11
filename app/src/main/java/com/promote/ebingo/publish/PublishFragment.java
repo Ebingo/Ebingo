@@ -137,6 +137,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         if (loginDialog==null){
             loginDialog=new LoginDialog(getActivity());
             loginDialog.setCancelable(false);
+            loginDialog.setOwnerActivity(getActivity());
         }
         if(Company.getInstance().getCompanyId()==null&&!loginDialog.isShowing()){
             loginDialog.show();

@@ -5,6 +5,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Xfermode;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -32,12 +37,14 @@ import java.io.IOException;
  */
 public class ImageUtil {
 
-    private static String getImageFile(){
+    private static String getImageFile() {
         return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
-    /** 保存方法 */
-    public static Uri saveBitmap(Bitmap bm,String picName) {
+    /**
+     * 保存方法
+     */
+    public static Uri saveBitmap(Bitmap bm, String picName) {
         File f = new File(getImageFile(), picName);
         if (f.exists()) {
             f.delete();
@@ -57,12 +64,12 @@ public class ImageUtil {
         return Uri.fromFile(f);
     }
 
-    public static Bitmap readBitmap(String picName){
-        Bitmap bitmap=null;
+    public static Bitmap readBitmap(String picName) {
+        Bitmap bitmap = null;
         try {
-            File f = new File(getImageFile(),picName);
+            File f = new File(getImageFile(), picName);
             FileInputStream inputStream = new FileInputStream(f);
-            bitmap= BitmapFactory.decodeFile(f.getAbsolutePath());
+            bitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
             inputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -72,16 +79,32 @@ public class ImageUtil {
         return bitmap;
     }
 
-    public static String base64Encode(Bitmap bitmap){
-        ByteArrayOutputStream bos=new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,bos);
-        byte[] bytes=bos.toByteArray();
+    public static String base64Encode(Bitmap bitmap) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        byte[] bytes = bos.toByteArray();
         try {
             bos.flush();
             bos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "data:image/png;base64,"+Base64.encodeToString(bytes,Base64.DEFAULT);
+        return "data:image/png;base64," + Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+    public static Bitmap roundBitmap(Bitmap src, int radius) {
+
+        int s_w=src.getWidth();
+        int s_h=src.getHeight();
+
+        final Paint paint=new Paint();
+        paint.setAntiAlias(true);
+        Bitmap result=Bitmap.createBitmap(radius*2,radius*2, Bitmap.Config.ARGB_8888);
+        Canvas canvas=new Canvas(result);
+        canvas.drawCircle(radius,radius,radius,paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        canvas.drawBitmap(src,0,0,paint);
+        return result;
     }
 }

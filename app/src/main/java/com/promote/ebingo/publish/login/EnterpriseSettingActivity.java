@@ -104,6 +104,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                                 company.setEmail(email);
                                 setResult(RESULT_OK,new Intent());
                                 finish();
+                            }else{
+                                ContextUtil.toast(response);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
