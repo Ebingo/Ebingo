@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -190,13 +189,13 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
      */
     public void setHeadImage(Uri uri) {
         if (uri == null) {
-            LogCat.e("--->","setHeadImage uriError uri="+uri);
+            LogCat.e("--->", "setHeadImage uriError uri=" + uri);
             return;
         }
 
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-            centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bm, (int)Dimension.dp(48)));
+            centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bm, (int) Dimension.dp(48)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -232,19 +231,16 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.center_supply_num_tv: {
-                Intent intent = new Intent(getActivity(), MySupplyActivity.class);
-                startActivity(intent);
+
 
                 break;
             }
             case R.id.center_demand_num_tv: {
-                Intent intent = new Intent(getActivity(), MyDemandActivity.class);
-                startActivity(intent);
+
                 break;
             }
             case R.id.center_collect_num_tv: {
-                Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
-                startActivity(intent);
+
                 break;
             }
             case R.id.center_msg_num_tv: {
@@ -252,15 +248,18 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.cent_supply_tv: {
-
+                Intent intent = new Intent(getActivity(), MySupplyActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_demand_tv: {
-
+                Intent intent = new Intent(getActivity(), MyDemandActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_collet_tv: {
-
+                Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_book_tv: {
