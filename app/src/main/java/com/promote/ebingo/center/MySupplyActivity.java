@@ -9,16 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.promote.ebingo.R;
-
-public class MySupplyActivity extends ActionBarActivity implements View.OnClickListener {
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
