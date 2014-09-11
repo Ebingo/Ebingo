@@ -83,11 +83,13 @@
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
     <string name="my_profile">企业资料</string>
+
     <string-array name="interprise_info_tab">
         <item>公司首页</item>
         <item>企业动态</item>
         <item>供求信息</item>
     </string-array>
+
     <string name="address">地址：</string>
     <string name="http_addr">网址：</string>
     <string name="tell">电话：</string>
@@ -102,7 +104,9 @@
     <string name="look_time">查看次数:</string>
     <string name="look_unite">次</string>
     <string name="phone_num">手机号</string>
-
+    <string name="price_unit">元/件</string>
+    <string name="supply_start_num">件起供应</string>
+    <string name="no_data">没有数据！</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -142,5 +146,6 @@
     <string name="enterprise_phone">企业电话</string>
     <string name="enterprise_site">企业网址</string>
     <string name="enterprise_email">企业邮箱</string>
+    <string name="title_activity_my_supply">MySupplyActivity</string>
 
 </resources>

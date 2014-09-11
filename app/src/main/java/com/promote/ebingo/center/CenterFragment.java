@@ -1,6 +1,7 @@
 package com.promote.ebingo.center;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,8 +13,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CurCompanyNumBeanTools;
+import com.promote.ebingo.bean.CurrentCompanyBaseNumBean;
+import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginActivity;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -124,6 +136,21 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            getCurrentCompanyBaseNum();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void initialize(View view) {
 
         centerheadiv = (ImageView) view.findViewById(R.id.center_head_iv);
@@ -152,6 +179,11 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         switch (id) {
             case R.id.center_head_iv: {
 
+                if (isLogined()) {
+
+                } else {
+
+                }
 
                 break;
             }
@@ -222,8 +254,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -238,6 +270,79 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    /**
+     * 获取当前登录公司的基本参数
+     */
+    private void getCurrentCompanyBaseNum() {
+
+        String urlStr = HttpConstant.getCurrentCompanyBaseNum;
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
+        parmater.put("company_id", Company.getInstance().getCompanyId());
+        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+
+        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("UTF-8") {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                CurCompanyNumBeanTools curCompanyNumBeanTools = CurCompanyNumBeanTools.getCurConpanyNumBeanTools(response.toString());
+
+                if (curCompanyNumBeanTools != null) {
+                    if (curCompanyNumBeanTools.getCode() == 100) {
+
+                        CurrentCompanyBaseNumBean currentCompanyBaseNumBean = curCompanyNumBeanTools.getData();
+                        centersupplynumtv.setText(currentCompanyBaseNumBean.getSupply());
+                        centerdemandnumtv.setText(currentCompanyBaseNumBean.getDemand());
+                        centercollectnumtv.setText(currentCompanyBaseNumBean.getWishlist());
+                        centermsgnumtv.setText(currentCompanyBaseNumBean.getNews());
+                    }
+                }
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                dialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 是否已经登录。
+     *
+     * @return
+     */
+    private boolean isLogined() {
+
+        Company company = Company.getInstance();
+        if (company.getCompanyId() >= 0) {
+
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
+    /**
+     * 进入登录.
+     */
+    private void gotoLogin() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
 
 }
