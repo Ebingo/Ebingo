@@ -15,8 +15,8 @@ import com.promote.ebingo.R;
 /**
  * Created by acer on 2014/9/2.
  */
-public class LoginDialog extends Dialog implements View.OnClickListener{
-    private final String LOG_TAG=getClass().getSimpleName();
+public class LoginDialog extends Dialog implements View.OnClickListener {
+    private final String LOG_TAG = getClass().getSimpleName();
     private EditText edit_phone;
     private EditText edit_password;
 
@@ -33,17 +33,17 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
     }
 
     private void initWidgets() {
-        edit_phone=(EditText)findViewById(R.id.edit_user_name);
-        edit_password=(EditText)findViewById(R.id.edit_password);
+        edit_phone = (EditText) findViewById(R.id.edit_user_name);
+        edit_password = (EditText) findViewById(R.id.edit_password);
         findViewById(R.id.btn_done).setOnClickListener(this);
         findViewById(R.id.tv_reg).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_done:
-               final ProgressDialog dialog= DialogUtil.waitingDialog(getContext());
+                final ProgressDialog dialog = DialogUtil.waitingDialog(getContext());
                 new LoginManager().doLogin(edit_phone.getText().toString().trim(), edit_password.getText().toString().trim(), new LoginManager.Callback() {
                     @Override
                     public void onSuccess() {
@@ -55,8 +55,6 @@ public class LoginDialog extends Dialog implements View.OnClickListener{
                     public void onFail(String msg) {
                         super.onFail(msg);
                         dialog.dismiss();
-
-
                     }
                 });
                 break;

@@ -4,7 +4,7 @@ package com.promote.ebingo.bean;
  * Created by acer on 2014/9/3.
  */
 public class Company {
-    private Integer companyId;//公司Id
+    private int companyId = -1;//公司Id
     private String image;//公司图片url
     private String name;//公司名
     private String head;//负责人名称
@@ -116,4 +116,22 @@ public class Company {
     public void setWebsite(String website) {
         this.website = website;
     }
+
+    /**
+     * 清空公司。
+     */
+    public void clearCompany() {
+
+        companyId = -1;//公司Id
+        image = null;  //公司图片url
+        name = null;   //公司名
+        head = null;   //负责人名称
+        headPhone = null;  //负责人电话
+        companyTel = null;  //公司电话
+        region = null;    //公司地区
+        website = null;   //公司网址
+        vipType = null;    //会员类型
+        isLock = null;
+    }
+
 }

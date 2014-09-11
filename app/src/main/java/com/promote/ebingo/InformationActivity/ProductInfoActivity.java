@@ -53,7 +53,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         assert (productId != -1);
         //網絡訪問
 
-        commontitletv.setText(getString(R.string.title_product_detail));
+        commontitletv.setText(
+                (R.string.produt_info));
         commonbackbtn.setOnClickListener(this);
     }
 

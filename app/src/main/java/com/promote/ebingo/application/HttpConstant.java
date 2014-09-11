@@ -49,29 +49,51 @@ public class HttpConstant {
      * 首页显示接口.*
      */
     public static final String getIndex = getRootUrl() + "getIndex";
-    /** 获取分类列表 **/
-    public static final String getCategories=getRootUrl()+"getCategoryList";
-    /** 登录 **/
-    public static final String login=getRootUrl()+"login";
-    /** 注册 **/
-    public static final String register=getRootUrl()+"register";
-    /** 获取验证码 **/
-    public static final String getYzm=getRootUrl()+"getYzm";
-    /** 发布信息 **/
-    public static final String saveInfo=getRootUrl()+"saveInfo";
-    /** 获取热门标签 **/
-    public static final String getHotTags=getRootUrl()+"getHotTags";
-    /** 获取企业列表 **/
-    public static final String getCompanyList=getRootUrl() +"getCompanyList";
-    /** 获取供应信息列表 **/
+    /**
+     * 获取分类列表 *
+     */
+    public static final String getCategories = getRootUrl() + "getCategoryList";
+    /**
+     * 登录 *
+     */
+    public static final String login = getRootUrl() + "login";
+    /**
+     * 注册 *
+     */
+    public static final String register = getRootUrl() + "register";
+    /**
+     * 获取验证码 *
+     */
+    public static final String getYzm = getRootUrl() + "getYzm";
+    /**
+     * 发布信息 *
+     */
+    public static final String saveInfo = getRootUrl() + "saveInfo";
+    /**
+     * 获取热门标签 *
+     */
+    public static final String getHotTags = getRootUrl() + "getHotTags";
+    /**
+     * 获取企业列表 *
+     */
+    public static final String getCompanyList = getRootUrl() + "getCompanyList";
+    /**
+     * 获取供应信息列表 *
+     */
     public static final String getSupplyInfoList = getRootUrl() + "getSupplyInfoList";
-    /** 获取求购信息列表 **/
+    /**
+     * 获取求购信息列表 *
+     */
     public static final String getDemandInfoList = getRootUrl() + "getDemandInfoList";
-    /** 获取信息详情接口. **/
+    /**
+     * 获取信息详情接口. *
+     */
     public static final String getInfoDetail = getRootUrl() + "getInfoDetail";
     /** 上传图片接口. **/
     public static final String uploadImage = getRootUrl() + "uploadImage";
     /** 更新企业信息. **/
     public static final String updateCompanyInfo = getRootUrl() + "updateCompanyInfo";
+    /** 获取当前登录公司的基本参数. **/
+    public static final String getCurrentCompanyBaseNum = getRootUrl() + "getCurrentCompanyBaseNum";
 
 }
