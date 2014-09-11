@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@color/white"
+    style="@style/info_content_pad"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/mycol_item_img"
+        android:layout_marginRight="3dp"
+        android:layout_width="@dimen/list_item_title_img_size"
+        android:layout_height="@dimen/list_item_title_img_size" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mycol_item_name"
+            style="@style/font_black_15"
+            android:lines="2"
+            android:gravity="center_vertical"
+            android:text="静里欧尼你哦你好农药后来里哦你会粉色发额发的说法"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/font_red_12"
+                android:text="@string/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/font_red_12"
+                android:layout_marginLeft="2dp"
+                android:id="@+id/mycol_item_price_tv"
+                android:layout_width="wrap_content"
+                android:text="15632"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/font_red_12"
+                android:text="@string/yuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_weight="7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="2dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/font_gray_12"
+                        android:text="@string/collect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/mycol_item_times_tv"
+                        android:text="420"
+                        style="@style/font_gray_12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/font_gray_12"
+                        android:layout_width="wrap_content"
+                        android:text="@string/search_time"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="2dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mycol_item_time_tv"
+            style="@style/font_gray_12"
+            android:text="2014-07-10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

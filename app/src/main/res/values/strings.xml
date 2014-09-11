@@ -107,6 +107,8 @@
     <string name="price_unit">元/件</string>
     <string name="supply_start_num">件起供应</string>
     <string name="no_data">没有数据！</string>
+    <string name="delete">删除</string>
+    <string name="yuan">元</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -147,6 +149,9 @@
     <string name="enterprise_site">企业网址</string>
     <string name="enterprise_email">企业邮箱</string>
     <string name="title_activity_my_supply">MySupplyActivity</string>
+    <string name="title_activity_my_demand">Ebingo</string>
+    <string name="title_activity_my_cellection">Ebingo</string>
+    <string name="title_activity_my_book">Ebingo</string>
 
     <string-array name="privilege_info_visitor">
         <item>查看企业供求信息</item>

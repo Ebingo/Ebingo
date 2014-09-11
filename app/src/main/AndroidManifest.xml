@@ -142,6 +142,18 @@
             android:label="@string/title_activity_my_supply" >
         </activity>
         <activity
+            android:name=".center.MyDemandActivity"
+            android:label="@string/title_activity_my_demand" >
+        </activity>
+        <activity
+            android:name=".center.MyCollectionActivity"
+            android:label="@string/title_activity_my_cellection" >
+        </activity>
+        <activity
+            android:name=".center.MyBookActivity"
+            android:label="@string/title_activity_my_book" >
+        </activity>
+        <activity
             android:name=".center.MyPrivilegeActivity"
             android:screenOrientation="portrait"
             >

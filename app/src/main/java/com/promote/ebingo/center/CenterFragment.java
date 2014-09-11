@@ -232,15 +232,19 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.center_supply_num_tv: {
+                Intent intent = new Intent(getActivity(), MySupplyActivity.class);
+                startActivity(intent);
 
                 break;
             }
             case R.id.center_demand_num_tv: {
-
+                Intent intent = new Intent(getActivity(), MyDemandActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.center_collect_num_tv: {
-
+                Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.center_msg_num_tv: {
@@ -260,7 +264,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.cent_book_tv: {
-
+                Intent intent = new Intent(getActivity(), MyBookActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_privilege_tv: {

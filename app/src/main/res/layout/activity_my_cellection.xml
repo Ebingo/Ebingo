@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context="com.promote.ebingo.center.MyCollectionActivity">
+
+
+    <include layout="@layout/common_head_layout" />
+
+    <ListView
+        android:id="@+id/mycol_lv"
+        android:layout_width="match_parent"
+        android:divider="@color/divide_gray"
+        android:dividerHeight="0.5dp"
+        android:layout_height="match_parent"></ListView>
+</LinearLayout>
