@@ -48,7 +48,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
     private void init() {
         Company company = Company.getInstance();
         if (company.getCompanyId() == null) return;
-        if (!TextUtils.isEmpty(company.getVipType())) tv_vipType.setText(company.getVipType());
+        if (!TextUtils.isEmpty(company.getVipType())) tv_vipType.setText(VipType.valueOf(company.getVipType()).name);
         if (!TextUtils.isEmpty(company.getName())) tv_name.setText(company.getName());
         setHeadImage(company.getImageUri());
     }
@@ -92,7 +92,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
             getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[0]).commit();
         } else {
             for (int i = 0; i < fragments.length; i++) {
-                if (fragments[i].getVipType().equals(vipType)) {
+                if (fragments[i].getVipType().code.equals(vipType)) {
                     getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[i]).commit();
                     cur = i;
                     break;
@@ -161,7 +161,8 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
 
         @Override
         public String toString() {
-            return code + ":" + name;
+
+            super.toString();return code ;
         }
 
     }

@@ -61,7 +61,7 @@
     <string name="label_hint">标签越多，供应商越容易看到</string>
     <string name="title_spaced">标    题</string>
     <string name="description_spaced">描    述</string>
-    <string name="label_spaced">标    签</string>
+    <string name="label_spaced">标签</string>
     <string name="btn_publish">发    布</string>
     <string name="mobile">电 话</string>
     <string name="yzm">验证码</string>

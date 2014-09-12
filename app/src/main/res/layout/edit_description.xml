@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/gray_bg"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
-    <include layout="@layout/common_head_layout"/>
+    <include layout="@layout/common_head_layout_2" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        style="@style/info_content_pad"
-        android:orientation="vertical"
         android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="370dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:background="@drawable/corner_frame"
-        android:gravity="top"
-        android:hint="请输入产品详细情况"
-        android:lineSpacingMultiplier="1.2"
-        android:id="@+id/edit_description"/>
+        <LinearLayout
+            style="@style/info_content_pad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/commit"
-        android:onClick="onClick"
-        android:layout_marginTop="10dp"
-        style="@style/yellow_button"
-        android:text="确定"/>
+            <EditText
+                android:id="@+id/edit_description"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:background="@drawable/corner_frame"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="请输入产品详细情况"
+                android:inputType="textMultiLine"
+                android:lineSpacingMultiplier="1.2"
+                android:padding="3dp" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/commit"
+                style="@style/yellow_button"
+                android:layout_marginTop="10dp"
+                android:onClick="onClick"
+                android:text="确定" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

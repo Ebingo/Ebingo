@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -31,7 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,6 +82,16 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
      * 预览
      */
     public static final int PREVIEW = 1 << 6;
+
+    public static final int EDIT_TITLE = 1 << 7 + 1;
+    public static final int EDIT_BUY_NUM = 1 << 7 + 2;
+    public static final int EDIT_CONTACT = 1 << 7 + 3;
+    public static final int EDIT_PHONE = 1 << 7 + 4;
+    public static final int EDIT_TAG = 1 << 7 + 5;
+    public static final int EDIT_PRICE = 1 << 7 + 6;
+    public static final int EDIT_MIN_SELL_NUM = 1 << 7 + 7;
+
+
     /**
      * 标记由发布求购页面发出的选择
      */
@@ -87,6 +100,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
      * 标记选由发布供应页面发出的选择
      */
     public static final int PICK_FOR_SUPPLY = 1 << 14;
+
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -166,12 +180,12 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             loginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    if (callback != null&&Company.getInstance().getCompanyId()==null)
+                    if (callback != null && Company.getInstance().getCompanyId() == null)
                         callback.onLoginCancel();
                 }
             });
         }
-        if (Company.getInstance().getCompanyId() == null && !loginDialog.isShowing()&&!isHidden()) {
+        if (Company.getInstance().getCompanyId() == null && !loginDialog.isShowing() && !isHidden()) {
             loginDialog.show();
         }
     }
@@ -286,9 +300,9 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
                 super.onSuccess(statusCode, headers, response);
                 ContextUtil.toast(response);
                 try {
-                    JSONObject result=response.getJSONObject("response");
-                    if(HttpConstant.CODE_OK.equals(result.getString("code"))){
-                        Intent intent=new Intent(getActivity(), MySupplyActivity.class);
+                    JSONObject result = response.getJSONObject("response");
+                    if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
+                        Intent intent = new Intent(getActivity(), MySupplyActivity.class);
                         startActivity(intent);
                     }
                 } catch (JSONException e) {
@@ -308,6 +322,51 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
                 dialog.dismiss();
             }
         });
+    }
+
+    public static class Error {
+
+        public static final int CATEGORY_EMPTY = 1;
+        public static final int REGION_EMPTY = 2;
+        public static final int IMAGE_EMPTY = 3;
+        public static final int DESCRIPTION_EMPTY = 4;
+        public static final int TAGS_EMPTY = 5;
+        public static final int TITLE_EMPTY = 6;
+        public static final int BUY_NUM_EMPTY = 7;
+        public static final int CONTACT_EMPTY = 8;
+        public static final int PHONE_EMPTY = 9;
+        public static final int PRICE_EMPTY = 10;
+        public static final int MIN_SELL_NUM_EMPTY = 11;
+        public static final int TITLE_LENGTH_ERROR = 12;
+        public static final int DESCRIPTION_LENGTH_ERROR = 13;
+        public static final int CONTACT_LENGTH_ERROR = 14;
+        public static final int PHONE_FORMAT_ERROR = 15;
+        private static Map<Integer, String> errorMap = new HashMap<Integer, String>();
+
+        static {
+            errorMap.put(CATEGORY_EMPTY, "请输入类别");
+            errorMap.put(REGION_EMPTY, "请输入区域");
+            errorMap.put(IMAGE_EMPTY, "请选择图片");
+            errorMap.put(DESCRIPTION_EMPTY, "请输入产品描述");
+            errorMap.put(DESCRIPTION_LENGTH_ERROR, "描述需要10字以上");
+            errorMap.put(TAGS_EMPTY, "请添加标签");
+            errorMap.put(TITLE_EMPTY, "请编辑标题");
+            errorMap.put(TITLE_LENGTH_ERROR, "标题长度30字以下");
+            errorMap.put(BUY_NUM_EMPTY, "请输入求购数量");
+            errorMap.put(CONTACT_EMPTY, "请填写联系人姓名");
+            errorMap.put(CONTACT_LENGTH_ERROR, "联系人姓名为2-4字");
+            errorMap.put(PHONE_EMPTY, "请填写联系人手机号");
+            errorMap.put(PHONE_FORMAT_ERROR, "手机格式不正确");
+            errorMap.put(PRICE_EMPTY, "请输入价格");
+            errorMap.put(MIN_SELL_NUM_EMPTY, "请输入起订标准");
+        }
+        public static String get(int code){
+            return errorMap.get(code);
+        }
+        public static void showError(View v,int code){
+            ContextUtil.toast(get(code));
+            v.requestFocus();
+        }
     }
 
 }

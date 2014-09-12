@@ -84,7 +84,7 @@ public class LoginManager {
     }
 
 
-    public boolean isMobile(String input) {
+    public static boolean isMobile(String input) {
         if (TextUtils.isEmpty(input)) return false;
         else return input.matches("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
     }
@@ -106,7 +106,6 @@ public class LoginManager {
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         callback.onSuccess();
                         LogCat.i(response+"");
-//                        {"response":{"data":{"is_lock":"0","company_name":"普而摩"},"code":100},"region":"江苏南京","viptype":"0","company_id":"6","website":"http:\/\/www.chinapromoe.com.cn","company_name":"普而摩","image":"http:\/\/218.244.149.129\/eb\/\/Public\/Home\/images\/app\/Upload\/\/8\/0\/8099e00cc745d16c345154907288aa75.png","is_lock":"0"}
                         JSONObject data=result.getJSONObject("data");
                         Company company = Company.getInstance();
                         company.setName(data.getString("company_name"));
@@ -134,11 +133,6 @@ public class LoginManager {
                 callback.onFail(errorResponse + "");
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                callback.onFail(responseString + "");
-            }
         });
     }
 

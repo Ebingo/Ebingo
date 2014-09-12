@@ -21,7 +21,7 @@
             <TableRow style="@style/publish_table_row">
 
                 <TextView
-                    style="@style/pulish_text_style"
+                    style="@style/publish_text_style"
                     android:text="@string/enterprise_image" />
 
                 <View style="@style/vertical_divider_20" />
@@ -51,7 +51,7 @@
             <TableRow style="@style/publish_table_row">
 
                 <TextView
-                    style="@style/pulish_text_style"
+                    style="@style/publish_text_style"
                     android:text="@string/enterprise_name" />
 
                 <View style="@style/vertical_divider_20" />
@@ -67,7 +67,7 @@
             <TableRow style="@style/publish_table_row">
 
                 <TextView
-                    style="@style/pulish_text_style"
+                    style="@style/publish_text_style"
                     android:text="@string/enterprise_address" />
 
                 <View style="@style/vertical_divider_20" />
@@ -83,7 +83,7 @@
             <TableRow style="@style/publish_table_row">
 
                 <TextView
-                    style="@style/pulish_text_style"
+                    style="@style/publish_text_style"
                     android:text="@string/enterprise_phone" />
 
                 <View style="@style/vertical_divider_20" />
@@ -99,7 +99,7 @@
             <TableRow style="@style/publish_table_row">
 
                 <TextView
-                    style="@style/pulish_text_style"
+                    style="@style/publish_text_style"
                     android:text="@string/enterprise_site" />
 
                 <View style="@style/vertical_divider_20" />
@@ -115,7 +115,7 @@
             <TableRow style="@style/publish_table_row">
 
                 <TextView
-                    style="@style/pulish_text_style"
+                    style="@style/publish_text_style"
                     android:text="@string/enterprise_email" />
 
                 <View style="@style/vertical_divider_20" />

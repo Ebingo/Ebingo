@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,8 @@ import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.MyDemandActivity;
-import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -28,40 +29,45 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.promote.ebingo.publish.PublishFragment.*;
-
+import static com.promote.ebingo.publish.PublishFragment.PICK_CATEGORY;
+import static com.promote.ebingo.publish.PublishFragment.PICK_DESCRIPTION;
+import static com.promote.ebingo.publish.PublishFragment.PICK_FOR_DEMAND;
+import static com.promote.ebingo.publish.PublishFragment.PICK_TAGS;
+import static com.promote.ebingo.publish.PublishFragment.TYPE_DEMAND;
+import static com.promote.ebingo.publish.PublishFragment.Error;
 /**
  * 发布求购
  * Created by acer on 2014/9/2.
  */
-public class PublishDemand extends Fragment implements View.OnClickListener{
+public class PublishDemand extends Fragment implements View.OnClickListener {
 
-    TextView tv_category;
-    TextView tv_description;
+    TextView tv_pick_category;
+    TextView tv_pick_description;
     TextView tv_tags;
 
     EditText edit_title;
     EditText edit_contact;
-    EditText edit_mobile;
-
+    EditText edit_phone;
+    EditText edit_demand_num;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.publish_demand, container,false);
+        View view = inflater.inflate(R.layout.publish_demand, container, false);
         init(view);
         return view;
     }
 
     private void init(View view) {
-        tv_category =(TextView)view.findViewById(R.id.tv_category);
-        tv_tags =(TextView)view.findViewById(R.id.tv_tags);
-        tv_description =(TextView)view.findViewById(R.id.tv_description);
+        tv_pick_category = (TextView) view.findViewById(R.id.tv_category);
+        tv_tags = (TextView) view.findViewById(R.id.tv_tags);
+        tv_pick_description = (TextView) view.findViewById(R.id.tv_description);
 
-        edit_title=(EditText)view.findViewById(R.id.edit_title);
-        edit_contact=(EditText)view.findViewById(R.id.edit_contact);
-        edit_mobile=(EditText)view.findViewById(R.id.edit_mobile);
+        edit_title = (EditText) view.findViewById(R.id.edit_title);
+        edit_contact = (EditText) view.findViewById(R.id.edit_contact);
+        edit_phone = (EditText) view.findViewById(R.id.edit_mobile);
+        edit_demand_num = (EditText) view.findViewById(R.id.edit_demand_num);
 
         view.findViewById(R.id.pick_category).setOnClickListener(this);
         view.findViewById(R.id.pick_description).setOnClickListener(this);
@@ -71,7 +77,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.pick_category: {
                 Intent intent = new Intent(getActivity(), PickCategoryActivity.class);
                 startActivityForResult(intent, PICK_FOR_DEMAND | PICK_CATEGORY);
@@ -79,36 +85,60 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
             }
             case R.id.pick_description: {
                 Intent intent = new Intent(getActivity(), EditDescription.class);
-                intent.putExtra("description",tv_description.getText().toString().trim());
-                startActivityForResult(intent,PICK_FOR_DEMAND|PICK_DESCRIPTION);
+                intent.putExtra("description", tv_pick_description.getText().toString().trim());
+                startActivityForResult(intent, PICK_FOR_DEMAND | PICK_DESCRIPTION);
                 break;
             }
-            case R.id.pick_tags:{
+            case R.id.pick_tags: {
                 Intent intent = new Intent(getActivity(), AddTagsActivity.class);
-                startActivityForResult(intent,PICK_FOR_DEMAND| PICK_TAGS);
+                startActivityForResult(intent, PICK_FOR_DEMAND | PICK_TAGS);
                 break;
             }
 
-            case R.id.btn_publish:{
+            case R.id.btn_publish: {
+                Integer category_id = (Integer) tv_pick_category.getTag();
+                String title = edit_title.getText().toString().trim();
+                String tags = tv_tags.getText().toString().trim();
+                String description = tv_pick_description.getText().toString().trim();
+                String contacts = edit_contact.getText().toString().trim();
+                String contact_phone = edit_phone.getText().toString().trim();
+                String demand_num = edit_demand_num.getText().toString().trim();
+                Integer company_id = Company.getInstance().getCompanyId();
 
-                Fragment parent=getParentFragment();
-                if (parent instanceof  PublishFragment){
-                    EbingoRequestParmater parmater=new EbingoRequestParmater(v.getContext());
-                    parmater.put("type",TYPE_DEMAND);
-                    parmater.put("company_id", Company.getInstance().getCompanyId());
-                    parmater.put("category_id",tv_category.getTag());
-                    parmater.put("region_name", Company.getInstance().getRegion());
-                    parmater.put("title",edit_title.getText().toString().trim());
-                    parmater.put("tags",tv_tags.getText().toString().trim());
-                    parmater.put("description",tv_description.getText().toString().trim());
-                    parmater.put("contacts",edit_contact.getText().toString().trim());
-                    parmater.put("contacts_phone",edit_mobile.getText().toString().trim());
+                if (company_id == null) ContextUtil.toast("请重新登录！");
+                else if (category_id == null)Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
+                else if (TextUtils.isEmpty(title)) Error.showError(edit_title, Error.TITLE_EMPTY);
+                else if (TextUtils.isEmpty(description)) Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
+                else if (TextUtils.isEmpty(demand_num)) Error.showError(edit_demand_num, Error.BUY_NUM_EMPTY);
+                else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
+                else if (getChineseNum(contacts)<2||getChineseNum(contacts)>4) Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
+                else if (TextUtils.isEmpty(contact_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
+                else if (LoginManager.isMobile(contact_phone)) Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
+                else {
+                    EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
+                    parmater.put("type", TYPE_DEMAND);
+                    parmater.put("company_id", company_id);
+                    parmater.put("category_id", category_id);
+                    parmater.put("title", title);
+                    parmater.put("tags", tags);
+                    parmater.put("description", description);
+                    parmater.put("contacts", contacts);
+                    parmater.put("contacts_phone", contact_phone);
+                    parmater.put("buy_num", demand_num);
                     startPublish(parmater);
-
                 }
+
                 break;
             }
         }
+    }
+
+    private int getChineseNum(String input){
+        return input.length()/2;
+    }
+
+    private void toastEmpty(String param) {
+        ContextUtil.toast("请输入" + param);
     }
 
     @Override
@@ -116,19 +146,19 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
         super.onActivityResult(requestCode, resultCode, data);
 
         String result = null;
-        if (data!=null){
-            result=data.getStringExtra("result");
+        if (data != null) {
+            result = data.getStringExtra("result");
         }
-        requestCode=requestCode&(0xfff);
-        if(result!=null){
-            switch (requestCode){
+        requestCode = requestCode & (0xfff);
+        if (result != null) {
+            switch (requestCode) {
                 case PICK_CATEGORY:
-                    tv_category.setText(result);
-                    tv_category.setTag(data.getIntExtra("categoryId",0));
-                    LogCat.i("--->", "categoryId:" + tv_category.getTag());
+                    tv_pick_category.setText(result);
+                    tv_pick_category.setTag(data.getIntExtra("categoryId", 0));
+                    LogCat.i("--->", "categoryId:" + tv_pick_category.getTag());
                     break;
                 case PICK_DESCRIPTION:
-                    tv_description.setText(result);
+                    tv_pick_description.setText(result);
                     break;
                 case PICK_TAGS:
                     tv_tags.setText(result);
@@ -176,13 +206,23 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
     /**
      * 清空文字
      */
-    private void clearText(){
-        tv_category.setText(null);
+    private void clearText() {
+        tv_pick_category.setText(null);
         edit_title.setText(null);
-        tv_description.setText(null);
+        tv_pick_description.setText(null);
         edit_contact.setText(null);
-        edit_mobile.setText(null);
+        edit_phone.setText(null);
         tv_tags.setText(null);
+    }
 
+    /**
+     * 判断所传参数是否有空字段
+     */
+    private boolean isEmptyParamExists(Object... params) {
+        for (Object param : params) {
+            if (param == null) return false;
+            if (param instanceof String && "".equals(param)) return false;
+        }
+        return true;
     }
 }

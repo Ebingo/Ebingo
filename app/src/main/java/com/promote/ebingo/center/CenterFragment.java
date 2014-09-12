@@ -123,6 +123,13 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
 
         setHeadImage(Company.getInstance().getImageUri());
+        String companyName=Company.getInstance().getName();
+        if (!TextUtils.isEmpty(companyName)){
+            centerloginbtn.setText(companyName);
+            centerloginbtn.setClickable(false);
+        }else{
+            centerloginbtn.setClickable(true);
+        }
         super.onResume();
     }
 

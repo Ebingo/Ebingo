@@ -49,9 +49,11 @@ public class PrivilegeInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if (vipType == null){
-            String name=savedInstanceState.getString("vipCode");
-            String code=savedInstanceState.getString("code");
-            vipType=VipType.valueOf(code+":"+name);
+            try {
+                vipType=VipType.values()[savedInstanceState.getInt("vipType")];
+            } catch (NullPointerException e) {
+                throw new RuntimeException(PrivilegeInfoFragment.class.getName()+":vipType is null!");
+            }
         }
         String[] info = getResources().getStringArray(resMap.get(vipType.code));
         View v = inflater.inflate(R.layout.privilege_info, null);
@@ -64,8 +66,7 @@ public class PrivilegeInfoFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("vipCode", vipType.code);
-        outState.putString("vipName", vipType.name);
+        outState.putInt("vipCode", vipType.ordinal());
     }
 
     private void addItem(LinearLayout content, String[] items, LayoutInflater inflater) {
@@ -75,10 +76,8 @@ public class PrivilegeInfoFragment extends Fragment {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (int)getResources().getDimension(R.dimen.widget_height));
             lp.setMargins(dp(3), dp(5), dp(3), dp(5));
             item.setLayoutParams(lp);
-            item.setPadding(3,0,3,0);
             item.setEnabled(false);
             item.setTextSize(13);
-            item.setTextColor(Color.DKGRAY);
             item.setSingleLine(false);
             item.setText(str);
             item.setGravity(Gravity.CENTER_VERTICAL);

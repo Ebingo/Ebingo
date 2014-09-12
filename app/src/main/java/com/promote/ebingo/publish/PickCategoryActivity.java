@@ -32,45 +32,48 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import  static android.view.ViewGroup.LayoutParams.*;
+
+import static android.view.ViewGroup.LayoutParams.*;
+
 /**
  * Created by acer on 2014/9/2.
  */
-public class PickCategoryActivity extends Activity implements AdapterView.OnItemClickListener,View.OnClickListener{
+public class PickCategoryActivity extends Activity implements AdapterView.OnItemClickListener, View.OnClickListener {
     ListView categoryList;
-    List<CategoryBeen> categories=new ArrayList<CategoryBeen>();
+    List<CategoryBeen> categories = new ArrayList<CategoryBeen>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_trade);
-        categoryList=(ListView)findViewById(R.id.category_list);
+        categoryList = (ListView) findViewById(R.id.category_list);
         categoryList.setOnItemClickListener(this);
         initData();
     }
 
-    private void initData(){
-        ((TextView)findViewById(R.id.common_title_tv)).setText(getString(R.string.choose_trade));
+    private void initData() {
+        ((TextView) findViewById(R.id.common_title_tv)).setText(getString(R.string.choose_trade));
         findViewById(R.id.common_back_btn).setOnClickListener(this);
-        final ProgressDialog dialog= DialogUtil.waitingDialog(this);
-        EbingoRequestParmater params=new EbingoRequestParmater(this);
-        HttpUtil.post(HttpConstant.getCategories,params,new JsonHttpResponseHandler("utf-8"){
+        final ProgressDialog dialog = DialogUtil.waitingDialog(this);
+        EbingoRequestParmater params = new EbingoRequestParmater(this);
+        HttpUtil.post(HttpConstant.getCategories, params, new JsonHttpResponseHandler("utf-8") {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                LogCat.i("--->", response + "");
                 try {
-
                     JSONArray array = response.getJSONArray("response");
                     for (int i = 0; i < array.length(); i++) {
-                           JSONObject object = array.getJSONObject(i);
-                           CategoryBeen categoryBeen = new CategoryBeen();
-                           categoryBeen.setName(object.getString("name"));
-                           categoryBeen.setImage(object.getString("image"));
-                           categoryBeen.setId(object.getInt("id"));
-                           categories.add(categoryBeen);
+                        JSONObject object = array.getJSONObject(i);
+                        CategoryBeen categoryBeen = new CategoryBeen();
+                        categoryBeen.setName(object.getString("name"));
+                        categoryBeen.setImage(object.getString("image"));
+                        categoryBeen.setId(object.getInt("id"));
+                        categories.add(categoryBeen);
                     }
                     categoryList.setAdapter(new CategoryAdapter(PickCategoryActivity.this));
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -92,9 +95,9 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent data=new Intent();
-        CategoryBeen selectCategory=categories.get(position);
-        data.putExtra("categoryId",selectCategory.getId());
+        Intent data = new Intent();
+        CategoryBeen selectCategory = categories.get(position);
+        data.putExtra("categoryId", selectCategory.getId());
         data.putExtra("result", selectCategory.getName());
         LogCat.i("");
         setResult(RESULT_OK, data);
@@ -103,13 +106,13 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.common_back_btn){
+        if (v.getId() == R.id.common_back_btn) {
             setResult(RESULT_CANCELED);
             finish();
         }
     }
 
-    class CategoryAdapter extends BaseAdapter{
+    class CategoryAdapter extends BaseAdapter {
         private Activity context;
 
 
@@ -136,31 +139,32 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            LogCat.i(position+"");
-            if(convertView==null){
-                holder=new ViewHolder();
-                holder.tv=new TextView(context);
-                holder.tv.setLayoutParams(new AbsListView.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+            LogCat.i(position + "");
+            if (convertView == null) {
+                holder = new ViewHolder();
+                holder.tv = new TextView(context);
+                holder.tv.setLayoutParams(new AbsListView.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
                 holder.tv.setTextColor(context.getResources().getColor(R.color.black));
                 holder.tv.setTextSize(18);
                 holder.tv.setClickable(false);
                 holder.tv.setBackgroundColor(Color.WHITE);
-                holder.tv.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
-                holder.tv.setPadding(dp(12),dp(8),dp(6),dp(8));
-                convertView=holder.tv;
-            }else{
-                holder=(ViewHolder)convertView.getTag();
+                holder.tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+                holder.tv.setPadding(dp(12), dp(8), dp(6), dp(8));
+                convertView = holder.tv;
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
             holder.tv.setText(categories.get(position).getName());
             convertView.setTag(holder);
             return convertView;
         }
-        private int dp(float value){
-            return (int)Dimension.dp(value);
+
+        private int dp(float value) {
+            return (int) Dimension.dp(value);
         }
     }
 
-    static class ViewHolder{
+    static class ViewHolder {
         TextView tv;
     }
 }
