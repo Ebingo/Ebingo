@@ -15,4 +15,6 @@
         android:divider="@color/divide_gray"
         android:dividerHeight="0.5dp"
         android:layout_height="match_parent"></ListView>
+
+    <include layout="@layout/common_nodate" />
 </LinearLayout>
