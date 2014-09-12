@@ -31,13 +31,12 @@ public class ItemDelteDialog extends Dialog {
     private int mId;
 
     public ItemDelteDialog(Context context, DeleteItemListener clickListener) {
+
         super(context);
         this.mDeleteItemListener = clickListener;
+
     }
 
-    public ItemDelteDialog(Context context, int theme) {
-        super(context, theme);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

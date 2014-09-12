@@ -61,7 +61,9 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
         commontitletv.setText(R.string.my_demand);
         adapter = new MyAdapter();
         mydemandlv.setAdapter(adapter);
-        mItemDeleteDialog = new ItemDelteDialog(getApplicationContext(), this);
+        mydemandlv.setOnItemClickListener(this);
+        mydemandlv.setOnItemLongClickListener(this);
+        mItemDeleteDialog = new ItemDelteDialog(this, this);
 
         getMyDemandList(0);
     }
@@ -198,8 +200,9 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mDelDemandBean = mDemandBeans.get(position);
-        mItemDeleteDialog.setItemText(mDelDemandBean.getName(), mDelDemandBean.getId());
         mItemDeleteDialog.show();
+        mItemDeleteDialog.setItemText(mDelDemandBean.getName(), mDelDemandBean.getId());
+
         return true;
     }
 
@@ -216,7 +219,7 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
     }
 
 
-    class MyAdapter extends BaseAdapter {
+    private class MyAdapter extends BaseAdapter {
 
 
         @Override
@@ -241,9 +244,9 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.mydemand_item_layout, null);
                 viewHolder = new ViewHolder();
-                viewHolder.nameTv = (TextView) findViewById(R.id.mydemand_name_tv);
-                viewHolder.lookTv = (TextView) findViewById(R.id.mydemand_look_num_tv);
-                viewHolder.timeTv = (TextView) findViewById(R.id.mydemand_time_tv);
+                viewHolder.nameTv = (TextView) convertView.findViewById(R.id.mydemand_name_tv);
+                viewHolder.lookTv = (TextView) convertView.findViewById(R.id.mydemand_look_num_tv);
+                viewHolder.timeTv = (TextView) convertView.findViewById(R.id.mydemand_time_tv);
 
                 convertView.setTag(viewHolder);
             } else {

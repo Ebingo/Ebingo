@@ -104,5 +104,13 @@ public class HttpConstant {
      * 删除供求信息. *
      */
     public static final String deleteInfo = getRootUrl() + "deleteInfo";
+    /**
+     * 获取收藏列表(getWishlist)
+     */
+    public static final String getWishlist = getRootUrl() + "getWishlist";
+    /**
+     * 取消收藏接口
+     */
+    public static final String cancleWishlist = getRootUrl() + "cancleWishlist";
 
 }
