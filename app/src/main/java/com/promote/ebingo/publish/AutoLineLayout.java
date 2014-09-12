@@ -14,6 +14,7 @@ import java.util.Hashtable;
  * Created by acer on 2014/9/11.
  */
 public class AutoLineLayout extends LinearLayout {
+    public static final int ITEM_SPACING = 8;
     private Hashtable<View, Rect> map = new Hashtable<View, Rect>();
 
     public AutoLineLayout(Context context) {
@@ -42,12 +43,13 @@ public class AutoLineLayout extends LinearLayout {
 
             child.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
             // 此处增加onlayout中的换行判断，用于计算所需的高度
-            int child_w = child.getMeasuredWidth();
+            int child_w = child.getMeasuredWidth()+ ITEM_SPACING;
             int child_h = child.getMeasuredHeight();
             mX += child_w;  //将每次子控件宽度进行统计叠加，如果大于设定的高度则需要换行，高度即Top坐标也需重新设置
 
             rect.left = getPosition(i - j, i);
             rect.right = rect.left + child.getMeasuredWidth();
+            LogCat.i("--->","mX="+mX+",mWidth="+mWidth);
             if (mX >= mWidth) {
                 mX = child_w;
                 mY += child_h;
@@ -87,7 +89,7 @@ public class AutoLineLayout extends LinearLayout {
 
     public int getPosition(int row, int childIndex) {
         if (row > 0) {
-            return getPosition(row - 1, childIndex - 1) + getChildAt(childIndex - 1).getMeasuredWidth() + 8;
+            return getPosition(row - 1, childIndex - 1) + getChildAt(childIndex - 1).getMeasuredWidth() + ITEM_SPACING;
         }
         return getPaddingLeft();
     }

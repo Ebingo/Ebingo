@@ -35,6 +35,7 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
     MultiAutoCompleteTextView edit_add_tab;
     private LinkedList<HotTag> tagList = new LinkedList<HotTag>();
     private AutoLineLayout tagContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +45,8 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
 
     private void init() {
         findViewById(R.id.btn_done).setOnClickListener(this);
-        tagContainer= (AutoLineLayout) findViewById(R.id.tags_container);
-        setBackTitle("添加标签");
+        tagContainer = (AutoLineLayout) findViewById(R.id.tags_container);
+        setBackTitle(getString(R.string.title_add_tag));
         edit_add_tab = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
 
         new Handler().postDelayed(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签
@@ -66,7 +67,7 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                 try {
                     JSONArray array = response.getJSONObject("response").getJSONArray("data");
                     JsonUtil.getArray(array, HotTag.class, tagList);
-                    for (HotTag tag:tagList){
+                    for (HotTag tag : tagList) {
                         addTagToView(tag);
                     }
                 } catch (JSONException e) {
@@ -114,10 +115,12 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
             case R.id.btn_done:
 
                 StringBuilder selectTags = new StringBuilder();
-                for (int i=0;i<tagList.size();i++){
-                    HotTag temp=tagList.get(i);
-                    if (temp.isSelect()) selectTags.append(temp.getName());
-                    if(i<tagList.size()-1)selectTags.append(",");
+                for (int i = 0; i < tagList.size(); i++) {
+                    HotTag temp = tagList.get(i);
+                    if (temp.isSelect()) {
+                        selectTags.append(temp.getName());
+                        if (i < tagList.size() - 1) selectTags.append(",");
+                    }
                 }
 
                 Intent data = new Intent();
@@ -130,11 +133,12 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
 
     /**
      * 将标签加载到视图上面
+     *
      * @param tag
      */
-    private void addTagToView(HotTag tag){
-        if (tag==null)return;
-        CheckBox checkBox= (CheckBox) View.inflate(this,R.layout.tag,null);
+    private void addTagToView(HotTag tag) {
+        if (tag == null) return;
+        CheckBox checkBox = (CheckBox) View.inflate(this, R.layout.tag, null);
         checkBox.setTag(tag);
         checkBox.setText(tag.getName());
         checkBox.setChecked(tag.isSelect());
@@ -149,15 +153,15 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
      * @return
      */
     private boolean isTagsMax() {
-        int selectTagNum=0;
-        for (HotTag tag:tagList){
+        int selectTagNum = 0;
+        for (HotTag tag : tagList) {
             if (tag.isSelect()) {
                 selectTagNum++;
             }
         }
-        ContextUtil.toast("selectTagNum="+selectTagNum);
         return selectTagNum >= 10;
     }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 

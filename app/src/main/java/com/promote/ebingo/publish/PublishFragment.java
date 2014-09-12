@@ -20,12 +20,14 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -276,12 +278,22 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     }
 
     public void startPublish(EbingoRequestParmater parmater) {
+
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 ContextUtil.toast(response);
+                try {
+                    JSONObject result=response.getJSONObject("response");
+                    if(HttpConstant.CODE_OK.equals(result.getString("code"))){
+                        Intent intent=new Intent(getActivity(), MySupplyActivity.class);
+                        startActivity(intent);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

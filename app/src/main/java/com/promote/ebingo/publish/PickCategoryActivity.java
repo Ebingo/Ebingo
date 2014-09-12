@@ -88,7 +88,6 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
                 dialog.dismiss();
             }
         });
-
     }
 
     @Override
@@ -97,6 +96,7 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
         CategoryBeen selectCategory=categories.get(position);
         data.putExtra("categoryId",selectCategory.getId());
         data.putExtra("result", selectCategory.getName());
+        LogCat.i("");
         setResult(RESULT_OK, data);
         finish();
     }

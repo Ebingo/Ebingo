@@ -47,6 +47,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         tvreg = (TextView) findViewById(R.id.tv_reg);
 
         commonbackbtn.setOnClickListener(this);
+        commontitletv.setText(getResources().getString(R.string.login_));
         btndone.setOnClickListener(this);
     }
 

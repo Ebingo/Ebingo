@@ -80,14 +80,8 @@
                     android:background="@color/trans_black"
                     android:layout_alignParentBottom="true"
                     android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:layout_height="wrap_content" >
+
+                    <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_supply_num_tv"
@@ -95,6 +89,7 @@
                             style="@style/font_white_15"
                             android:text="23"
                             android:layout_height="wrap_content" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             style="@style/font_white_15"
@@ -102,14 +97,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:layout_height="wrap_content">
+                    <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_demand_num_tv"
@@ -125,14 +113,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:layout_height="wrap_content">
+                    <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_collect_num_tv"
@@ -148,14 +129,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-                        android:layout_height="wrap_content">
+                    <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_msg_num_tv"
@@ -179,7 +153,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="15dp"/>
+                android:layout_height="15dp" />
+
             <TextView
                 android:id="@+id/cent_supply_tv"
                 style="@style/cent_item"
@@ -200,7 +175,7 @@
                 android:id="@+id/cent_collet_tv"
                 style="@style/cent_item"
                 android:drawableLeft="@drawable/center_collect"
-                android:text="@string/my_supply"
+                android:text="@string/my_collect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

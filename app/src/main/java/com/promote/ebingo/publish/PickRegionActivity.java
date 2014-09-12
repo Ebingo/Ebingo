@@ -39,7 +39,7 @@ public class PickRegionActivity extends Activity implements AdapterView.OnItemCl
         listView = (ListView) findViewById(R.id.category_list);
         listView.setOnItemClickListener(this);
         listView.setAdapter(new RegionAdapter(this));
-        ((TextView) findViewById(R.id.common_title_tv)).setText(getString(R.string.choose_trade));
+        ((TextView) findViewById(R.id.common_title_tv)).setText("选择区域");
         findViewById(R.id.common_back_btn).setOnClickListener(this);
     }
 
