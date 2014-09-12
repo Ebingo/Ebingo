@@ -1,9 +1,9 @@
 package com.promote.ebingo.center;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MyCollectionActivity extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MyCollectionActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private ListView mycollv;
     private ImageView commonbackbtn;
@@ -66,6 +66,7 @@ public class MyCollectionActivity extends ActionBarActivity implements View.OnCl
         mycollv = (ListView) findViewById(R.id.mycol_lv);
 
         commontitletv.setText(getString(R.string.my_collect));
+        commonbackbtn.setOnClickListener(this);
         myAdapter = new MyAdapter();
         mycollv.setAdapter(myAdapter);
         mycollv.setOnItemClickListener(this);

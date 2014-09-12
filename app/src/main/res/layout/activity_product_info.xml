@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="com.promote.ebingo.InformationActivity.ProductInfoActivity">
 
-    <include layout="@layout/common_head_layout"/>
+    <include layout="@layout/common_head_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,128 +53,164 @@
 
 
             <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/product_info_img"
                     android:src="@drawable/test_main_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <LinearLayout
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    style="@style/info_content_pad">
+                    style="@style/info_content_pad"
+                    android:gravity="clip_vertical"
+                    android:layout_height="wrap_content">
 
                     <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:gravity="center_vertical"
-                        android:layout_height="wrap_content">
+                        android:id="@+id/product_info_rl_ll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true">
 
+                        <CheckBox
+                            android:id="@+id/product_info_tel_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginRight="3dp"
+                            android:background="@drawable/product_info_tel" />
+
+                        <CheckBox
+                            android:id="@+id/product_info_collect_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:layout_toRightOf="@id/product_info_tel_cb"
+                            android:background="@drawable/product_info_collect_sel" />
+
+                        <LinearLayout
+                            android:layout_alignTop="@id/product_info_tel_cb"
+                            android:layout_alignBottom="@id/product_info_tel_cb"
+                            android:layout_width="0.5dp"
+                            android:orientation="horizontal"
+                            android:layout_height="20dp"
+                            android:background="@color/divide_gray"
+                            android:layout_marginLeft="3dp" />
+
+                    </RelativeLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_toLeftOf="@id/product_info_rl_ll">
 
 
                         <TextView
                             android:id="@+id/product_info_name_tv"
                             android:layout_width="wrap_content"
-                            style="@style/light_gray_15_tv"
+                            style="@style/font_gray_15"
                             android:layout_alignParentLeft="true"
                             android:layout_gravity="left"
                             android:text="水晶特價 感恩大回饋 水晶珠寶首飾"
                             android:layout_height="wrap_content" />
 
 
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:layout_alignParentLeft="true"
-                            android:layout_width="wrap_content"
-                            android:orientation="horizontal"
-                            android:id="@+id/product_info_price_ll"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="center_vertical"
                             android:layout_height="wrap_content">
 
-                            <TextView
+                            <LinearLayout
+                                android:layout_alignParentLeft="true"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:layout_marginLeft="2dp"
-                                android:text="@string/rmb_signe"
-                                style="@style/black_15_tv"/>
+                                android:orientation="horizontal"
+                                android:id="@+id/product_info_price_ll"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="@string/rmb_signe"
+                                    style="@style/orange_15_tv" />
+
+                                <TextView
+                                    android:id="@+id/product_info_price_tv"
+                                    style="@style/orange_15_tv"
+                                    android:textStyle="bold"
+                                    android:text="269"
+                                    android:layout_width="wrap_content"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_height="wrap_content" />
+
+                                <TextView
+                                    android:id="@+id/product_info_start_num_tv"
+                                    android:layout_width="wrap_content"
+                                    style="@style/gray_11_tv"
+                                    android:text="10"
+                                    android:layout_height="wrap_content" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/gray_11_tv"
+                                    android:text="@string/start_supply" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/product_info_name_left_ll"
+                                android:layout_gravity="right"
+                                android:layout_width="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_alignBottom="@id/product_info_price_ll"
+                                android:layout_toRightOf="@id/product_info_price_ll"
+                                android:layout_marginLeft="10dp"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    style="@style/gray_11_tv"
+                                    android:text="@string/search_look"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+                                <TextView
+                                    android:id="@+id/product_info_look_num_tv"
+                                    style="@style/gray_11_tv"
+                                    android:text="1000"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+
+                                <TextView
+                                    style="@style/gray_11_tv"
+                                    android:text="@string/search_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
 
                             <TextView
-                                android:id="@+id/product_info_price_tv"
-                                style="@style/font_black_15"
-                                android:textStyle="bold"
-                                android:text="269"
+                                android:id="@+id/product_info_city_tv"
                                 android:layout_width="wrap_content"
-                                android:layout_marginRight="10dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignBottom="@id/product_info_price_ll"
+                                style="@style/gray_11_tv"
+                                android:text="深圳"
                                 android:layout_height="wrap_content" />
 
-                            <TextView
-                                android:id="@+id/product_info_start_num_tv"
-                                android:layout_width="wrap_content"
-                                style="@style/gray_11_tv"
-                                android:text="10"
-                                android:layout_height="wrap_content" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/gray_11_tv"
-                                android:text="@string/start_supply"/>
+                        </RelativeLayout>
 
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/product_info_name_left_ll"
-                            android:layout_gravity="right"
-                            android:layout_width="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_alignBottom="@id/product_info_price_ll"
-                            android:layout_toRightOf="@id/product_info_price_ll"
-                            android:layout_marginLeft="10dp"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                style="@style/gray_11_tv"
-                                android:text="@string/look_num"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                android:id="@+id/product_info_look_num_tv"
-                                style="@style/gray_11_tv"
-                                android:text="1000"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                style="@style/gray_11_tv"
-                                android:text="@string/search_time"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/product_info_city_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignBottom="@id/product_info_price_ll"
-                            style="@style/gray_11_tv"
-                            android:text="深圳"
-                            android:layout_height="wrap_content" />
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:background="@color/divide_gray"
@@ -188,10 +224,10 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                            android:layout_width="wrap_content"
-                            style="@style/blue_15_tv"
-                            android:text="@string/produt_info"
-                            android:layout_height="wrap_content" />
+                        android:layout_width="wrap_content"
+                        style="@style/blue_15_tv"
+                        android:text="@string/produt_info"
+                        android:layout_height="wrap_content" />
 
 
                     <TextView

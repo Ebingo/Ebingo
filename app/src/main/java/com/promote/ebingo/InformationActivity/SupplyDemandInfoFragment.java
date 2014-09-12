@@ -1,7 +1,6 @@
 package com.promote.ebingo.InformationActivity;
 
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import com.promote.ebingo.R;
  * A simple {@link Fragment} subclass.
  * Use the {@link SupplyDemandInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
+ * <p/>
  * 供求信息。
  */
 public class SupplyDemandInfoFragment extends Fragment {
@@ -43,6 +42,7 @@ public class SupplyDemandInfoFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public SupplyDemandInfoFragment() {
         // Required empty public constructor
     }
