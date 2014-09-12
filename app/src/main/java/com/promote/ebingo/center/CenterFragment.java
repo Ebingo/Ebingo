@@ -178,6 +178,10 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         centerloginbtn.setOnClickListener(this);
         centprivilegetv.setOnClickListener(this);
+        centsupplytv.setOnClickListener(this);
+        centdemandtv.setOnClickListener(this);
+        centcollettv.setOnClickListener(this);
+        centbooktv.setOnClickListener(this);
         setHeadImage(Company.getInstance().getImageUri());
     }
 
@@ -248,28 +252,40 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.cent_supply_tv: {
-                Intent intent = new Intent(getActivity(), MySupplyActivity.class);
-                startActivity(intent);
+                if (isLogined()) {
+                    Intent intent = new Intent(getActivity(), MySupplyActivity.class);
+                    startActivity(intent);
+                }
                 break;
             }
             case R.id.cent_demand_tv: {
-                Intent intent = new Intent(getActivity(), MyDemandActivity.class);
-                startActivity(intent);
+                if (isLogined()) {
+                    Intent intent = new Intent(getActivity(), MyDemandActivity.class);
+                    startActivity(intent);
+                }
+
                 break;
             }
             case R.id.cent_collet_tv: {
-                Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
-                startActivity(intent);
+                if (isLogined()) {
+                    Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
+                    startActivity(intent);
+                }
+
                 break;
             }
             case R.id.cent_book_tv: {
-                Intent intent = new Intent(getActivity(), MyBookActivity.class);
-                startActivity(intent);
+                if (isLogined()) {
+                    Intent intent = new Intent(getActivity(), MyBookActivity.class);
+                    startActivity(intent);
+                }
+
                 break;
             }
             case R.id.cent_privilege_tv: {
                 Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
                 startActivity(intent);
+
                 break;
             }
             case R.id.cent_profile_tv: {
@@ -364,11 +380,12 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private boolean isLogined() {
 
         Company company = Company.getInstance();
-        if (company.getCompanyId() >= 0) {
+        if (company.getCompanyId() != null && company.getCompanyId() > 0) {
 
             return true;
         } else {
-
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
             return false;
         }
     }

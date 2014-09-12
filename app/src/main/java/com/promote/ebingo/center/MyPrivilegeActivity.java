@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.jch.lib.util.TextUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.util.Dimension;
@@ -31,6 +30,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
     private TextView tv_vipType;
     private TextView tv_name;
     private ImageView iv_head;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,18 +38,18 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         ((RadioGroup) findViewById(R.id.rb_group)).setOnCheckedChangeListener(this);
         ((TextView) findViewById(R.id.common_title_tv)).setText("我的特权");
         findViewById(R.id.common_back_btn).setOnClickListener(this);
-        tv_vipType= (TextView) findViewById(R.id.tv_vipType);
-        tv_name= (TextView) findViewById(R.id.tv_name);
-        iv_head= (ImageView) findViewById(R.id.iv_head);
+        tv_vipType = (TextView) findViewById(R.id.tv_vipType);
+        tv_name = (TextView) findViewById(R.id.tv_name);
+        iv_head = (ImageView) findViewById(R.id.iv_head);
         initFragment();
         init();
     }
 
     private void init() {
-        Company company=Company.getInstance();
-        if(company.getCompanyId()==null)return;
-        if(!TextUtils.isEmpty(company.getVipType())) tv_vipType.setText(company.getVipType());
-        if(!TextUtils.isEmpty(company.getName())) tv_name.setText(company.getName());
+        Company company = Company.getInstance();
+        if (company.getCompanyId() == null) return;
+        if (!TextUtils.isEmpty(company.getVipType())) tv_vipType.setText(company.getVipType());
+        if (!TextUtils.isEmpty(company.getName())) tv_name.setText(company.getName());
         setHeadImage(company.getImageUri());
     }
 
@@ -148,8 +148,8 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
     }
 
 
-    enum VipType{
-        VISITOR("9","游客"),NORMAL_VIP("0","普通会员"),VIP("1","VIP用户"),VVIP("2","VVIP用户");
+    enum VipType {
+        VISITOR("9", "游客"), NORMAL_VIP("0", "普通会员"), VIP("1", "VIP用户"), VVIP("2", "VVIP用户");
         public String code;
         public String name;
 
@@ -161,7 +161,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
 
         @Override
         public String toString() {
-            return code+":"+name;
+            return code + ":" + name;
         }
 
     }

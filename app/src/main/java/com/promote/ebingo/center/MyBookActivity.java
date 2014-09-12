@@ -1,12 +1,13 @@
 package com.promote.ebingo.center;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.promote.ebingo.R;
 
-public class MyBookActivity extends ActionBarActivity {
+public class MyBookActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +18,9 @@ public class MyBookActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.my_book, menu);
         return true;
     }

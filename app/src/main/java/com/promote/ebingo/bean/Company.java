@@ -20,8 +20,7 @@ public class Company {
     private Uri imageUri;//公司图片在手机中的位置
 
 
-
-    private static Company mCompany;
+    private static Company mCompany = null;
 
     private Company() {
 
@@ -38,6 +37,7 @@ public class Company {
     public String getEmail() {
         return email;
     }
+
     public Uri getImageUri() {
         return imageUri;
     }

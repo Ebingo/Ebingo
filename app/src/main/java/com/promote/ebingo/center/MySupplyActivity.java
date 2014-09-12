@@ -1,9 +1,9 @@
 package com.promote.ebingo.center;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MySupplyActivity extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MySupplyActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private ListView mysupplylv;
     private ImageView commonbackbtn;
@@ -176,13 +176,6 @@ public class MySupplyActivity extends ActionBarActivity implements View.OnClickL
      */
     private class MyAdapter extends BaseAdapter {
 
-        private ImageView mysupplyitemimg;
-        private ImageView mysupplyarroimg;
-        private TextView mysupplyitemname;
-        private TextView mysupplypricetv;
-        private TextView mysupplysupplynumtv;
-        private TextView mysupplytime;
-
         @Override
         public int getCount() {
             return mSupplyBeans.size();
@@ -207,11 +200,11 @@ public class MySupplyActivity extends ActionBarActivity implements View.OnClickL
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.mysupply_item, null);
                 viewHolder = new ViewHolder();
 
-                viewHolder.img = (ImageView) findViewById(R.id.mysupply_item_img);
-                viewHolder.nameTv = (TextView) findViewById(R.id.mysupply_item_name);
-                viewHolder.priceTv = (TextView) findViewById(R.id.mysupply_price_tv);
-                viewHolder.startTv = (TextView) findViewById(R.id.mysupply_supply_num_tv);
-                viewHolder.timeTv = (TextView) findViewById(R.id.mysupply_time);
+                viewHolder.img = (ImageView) convertView.findViewById(R.id.mysupply_item_img);
+                viewHolder.nameTv = (TextView) convertView.findViewById(R.id.mysupply_item_name);
+                viewHolder.priceTv = (TextView) convertView.findViewById(R.id.mysupply_price_tv);
+                viewHolder.startTv = (TextView) convertView.findViewById(R.id.mysupply_supply_num_tv);
+                viewHolder.timeTv = (TextView) convertView.findViewById(R.id.mysupply_time);
 
                 convertView.setTag(viewHolder);
             } else {

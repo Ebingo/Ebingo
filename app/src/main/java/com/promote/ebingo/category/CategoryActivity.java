@@ -19,7 +19,6 @@ import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
-import com.promote.ebingo.InformationActivity.CategoryListAdapter;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -29,7 +28,6 @@ import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.bean.SearchTypeBean;
 import com.promote.ebingo.impl.EbingoRequestParmater;
-import com.promote.ebingo.search.SearchType;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -43,7 +41,7 @@ import java.util.ArrayList;
 /**
  * 行业分类列表。
  */
-public class CategoryActivity extends Activity implements View.OnClickListener , AdapterView.OnItemClickListener{
+public class CategoryActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
@@ -108,9 +106,9 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
         categorylv.setAdapter(mListAdapter);
         categorylv.setOnItemClickListener(this);
         //TODO 访问默认数据
-        if (mCurType == CategoryType.SUPPLY){
+        if (mCurType == CategoryType.SUPPLY) {
             getSupplyInfoList(0);
-        }else {
+        } else {
             getDemandInfoList(0);
         }
 
@@ -130,7 +128,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
             }
 
             case R.id.category_item_buy: {       //求购
-                categoryleftcb.setText(((TextView)v).getText());
+                categoryleftcb.setText(((TextView) v).getText());
                 mCurType = CategoryType.DEMAND;
                 mTypePop.dismiss();
                 getDemandInfoList(0);
@@ -138,7 +136,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
                 break;
             }
             case R.id.category_item_supply: {    //供應
-                categoryleftcb.setText(((TextView)v).getText());
+                categoryleftcb.setText(((TextView) v).getText());
                 mCurType = CategoryType.SUPPLY;
                 mTypePop.dismiss();
                 getSupplyInfoList(0);
@@ -146,12 +144,12 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
             }
 
             case R.id.category_right_item_look: {        //浏览量
-                categoryrightcb.setText(((TextView)v).getText());
+                categoryrightcb.setText(((TextView) v).getText());
                 mCurRankType = CategoryRankType.LOOKNUM;
                 mRankPop.dismiss();
-                if (mCurType == CategoryType.DEMAND){
+                if (mCurType == CategoryType.DEMAND) {
                     getDemandInfoList(0);
-                }else {
+                } else {
                     getSupplyInfoList(0);
                 }
 
@@ -159,12 +157,12 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
                 break;
             }
             case R.id.category_right_item_price: {      //价格
-                categoryrightcb.setText(((TextView)v).getText());
+                categoryrightcb.setText(((TextView) v).getText());
                 mCurRankType = CategoryRankType.PRICE;
                 mRankPop.dismiss();
-                if (mCurType == CategoryType.DEMAND){
+                if (mCurType == CategoryType.DEMAND) {
                     getDemandInfoList(0);
-                }else {
+                } else {
                     getSupplyInfoList(0);
                 }
 
@@ -182,13 +180,13 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         SearchTypeBean searchTypeBean = mCategoryBean.get(position);
-        if (searchTypeBean instanceof SearchDemandBean){
+        if (searchTypeBean instanceof SearchDemandBean) {
 
             Intent intent = new Intent(CategoryActivity.this, BuyInfoActivity.class);
             intent.putExtra(BuyInfoActivity.DEMAND_ID, (searchTypeBean).getId());
             startActivity(intent);
 
-        }else if (searchTypeBean instanceof SearchSupplyBean){
+        } else if (searchTypeBean instanceof SearchSupplyBean) {
 
             Intent intent = new Intent(CategoryActivity.this, ProductInfoActivity.class);
             intent.putExtra(ProductInfoActivity.ARG_ID, searchTypeBean.getId());
@@ -207,7 +205,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
 
-                mTypePop.showAsDropDown(categoryleftcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) /2, DisplayUtil.dip2px(getApplicationContext(), -5));
+                mTypePop.showAsDropDown(categoryleftcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
             }
 
         }
@@ -222,7 +220,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
 
-                mRankPop.showAsDropDown(categoryrightcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) /2 , DisplayUtil.dip2px(getApplicationContext(), -5));
+                mRankPop.showAsDropDown(categoryrightcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
             }
         }
     }
@@ -306,13 +304,13 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
 
                 ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
                 if (searchDemandBeans == null || searchDemandBeans.size() == 0) {
-
+                    mCategoryBean.clear();
 //                    noData(getString(R.string.no_search_data));
                 } else if (lastId == 0) { //如果第一次请求，即不是加载更多时。
 
                     mCategoryBean.clear();
                     mCategoryBean.addAll(searchDemandBeans);
-                }else {
+                } else {
                     mCategoryBean.addAll(searchDemandBeans);
 //                    hasData(false);
                 }
@@ -344,7 +342,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
      * 從網絡获取供应信息列表。
      *
      * @param lastId
-     *
      */
     public void getSupplyInfoList(final int lastId) {
 
@@ -369,7 +366,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener ,
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
 
                 if (searchSupplyBeans == null || searchSupplyBeans.size() == 0) {
-
+                    mCategoryBean.clear();
 //                    noData(getString(R.string.no_search_data));
 
                 } else if (lastId == 0) {           //如果第一次请求，即不是加载更多时。

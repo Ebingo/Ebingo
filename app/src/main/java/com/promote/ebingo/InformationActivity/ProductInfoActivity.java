@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.promote.ebingo.R;
 
-public class ProductInfoActivity extends Activity implements View.OnClickListener{
+public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
     private TextView prdinfointocompanytv;
     private TextView prdinfocompanytv;
@@ -54,7 +54,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         //網絡訪問
 
         commontitletv.setText(
-                (R.string.produt_info));
+                (R.string.title_product_info));
         commonbackbtn.setOnClickListener(this);
     }
 
@@ -62,16 +62,16 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     public void onClick(View v) {
 
         int id = v.getId();
-        switch (id){
+        switch (id) {
 
-            case R.id.common_back_btn:{
+            case R.id.common_back_btn: {
 
                 onBackPressed();
                 finish();
                 break;
             }
 
-            default:{
+            default: {
 
             }
 
