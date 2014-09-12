@@ -178,7 +178,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     }
 
     @Override
-    public void onDialogDismiss() {
+    public void onLoginCancel() {
         mainrb.setChecked(true);
     }
 }

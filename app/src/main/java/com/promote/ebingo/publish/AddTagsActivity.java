@@ -7,13 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.GridView;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.RelativeLayout;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -71,7 +67,7 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                     JSONArray array = response.getJSONObject("response").getJSONArray("data");
                     JsonUtil.getArray(array, HotTag.class, tagList);
                     for (HotTag tag:tagList){
-                        addTag(tag);
+                        addTagToView(tag);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -108,7 +104,8 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                     HotTag hotTag = new HotTag();
                     hotTag.setName(tag);
                     hotTag.setSelect(true);
-                    addTag(hotTag);
+                    tagList.add(hotTag);
+                    addTagToView(hotTag);
                     edit_add_tab.setText(null);
                 } else {
                     toastTagIsMax();
@@ -131,14 +128,18 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
         }
     }
 
-    private void addTag(HotTag tag){
+    /**
+     * 将标签加载到视图上面
+     * @param tag
+     */
+    private void addTagToView(HotTag tag){
         if (tag==null)return;
-        tagList.add(tag);
         CheckBox checkBox= (CheckBox) View.inflate(this,R.layout.tag,null);
         checkBox.setTag(tag);
         checkBox.setText(tag.getName());
         checkBox.setChecked(tag.isSelect());
         checkBox.setSingleLine(false);
+        checkBox.setOnCheckedChangeListener(this);
         tagContainer.addView(checkBox);
     }
 
@@ -154,6 +155,7 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                 selectTagNum++;
             }
         }
+        ContextUtil.toast("selectTagNum="+selectTagNum);
         return selectTagNum >= 10;
     }
     @Override

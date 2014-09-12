@@ -164,8 +164,8 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             loginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    if (callback != null)
-                        callback.onDialogDismiss();
+                    if (callback != null&&Company.getInstance().getCompanyId()==null)
+                        callback.onLoginCancel();
                 }
             });
         }
@@ -185,7 +185,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     private PublishCallback callback;
 
     public interface PublishCallback {
-        public void onDialogDismiss();
+        public void onLoginCancel();
     }
 
     @Override

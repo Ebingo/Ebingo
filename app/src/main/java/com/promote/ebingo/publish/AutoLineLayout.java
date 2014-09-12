@@ -27,7 +27,7 @@ public class AutoLineLayout extends LinearLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int mWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final int mWidth = MeasureSpec.getSize(widthMeasureSpec);
         int mCount = getChildCount();
 
         int mX = 0;
@@ -59,7 +59,7 @@ public class AutoLineLayout extends LinearLayout {
             }
             rect.bottom =  rect.top + child.getMeasuredHeight();
             mY =  rect.top;  //每次的高度必须记录 否则控件会叠加到一起
-            map.put(child, rect);
+            map.put(child, new Rect(rect));
         }
         setMeasuredDimension(mWidth,  rect.bottom);
     }
