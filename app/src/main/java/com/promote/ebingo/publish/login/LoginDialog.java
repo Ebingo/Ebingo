@@ -12,6 +12,8 @@ import android.widget.EditText;
 import com.jch.lib.util.DialogUtil;
 
 import com.promote.ebingo.R;
+import com.promote.ebingo.util.ContextUtil;
+
 /**
  * Created by acer on 2014/9/2.
  */
@@ -54,7 +56,6 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
                     @Override
                     public void onFail(String msg) {
                         super.onFail(msg);
-                        dialog.dismiss();
                     }
                 });
                 break;
