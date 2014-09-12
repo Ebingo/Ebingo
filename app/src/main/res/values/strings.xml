@@ -178,5 +178,6 @@
         <item>享受产品3D展示，全方位展示您的产品</item>
         <item>邮件推送功能，实时获取最新供求信息</item>
     </string-array>
-
+    <string name="title_add_tag">添加标签</string>
+    <string name="title_description">添加标签</string>
 </resources>

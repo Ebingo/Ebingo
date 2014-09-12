@@ -1,6 +1,7 @@
 package com.promote.ebingo.publish;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,9 +12,21 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.MyDemandActivity;
+import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static com.promote.ebingo.publish.PublishFragment.*;
 
@@ -90,8 +103,8 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
                     parmater.put("description",tv_description.getText().toString().trim());
                     parmater.put("contacts",edit_contact.getText().toString().trim());
                     parmater.put("contacts_phone",edit_mobile.getText().toString().trim());
-                    ((PublishFragment)parent).startPublish(parmater);
-                    clearText();
+                    startPublish(parmater);
+
                 }
                 break;
             }
@@ -112,6 +125,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
                 case PICK_CATEGORY:
                     tv_category.setText(result);
                     tv_category.setTag(data.getIntExtra("categoryId",0));
+                    LogCat.i("--->", "categoryId:" + tv_category.getTag());
                     break;
                 case PICK_DESCRIPTION:
                     tv_description.setText(result);
@@ -124,6 +138,41 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
         }
     }
 
+    public void startPublish(EbingoRequestParmater parmater) {
+
+        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+        HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                ContextUtil.toast(response);
+                try {
+                    JSONObject result = response.getJSONObject("response");
+                    if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
+                        Intent intent = new Intent(getActivity(), MyDemandActivity.class);
+                        startActivity(intent);
+                        clearText();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                ContextUtil.toast(responseString);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
+        });
+    }
+
+
     /**
      * 清空文字
      */
@@ -134,5 +183,6 @@ public class PublishDemand extends Fragment implements View.OnClickListener{
         edit_contact.setText(null);
         edit_mobile.setText(null);
         tv_tags.setText(null);
+
     }
 }

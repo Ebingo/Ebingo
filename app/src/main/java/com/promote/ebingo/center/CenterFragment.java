@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,6 +123,10 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
 
         setHeadImage(Company.getInstance().getImageUri());
+        if(!TextUtils.isEmpty(Company.getInstance().getName())){
+            centerloginbtn.setText(Company.getInstance().getName());
+            centerloginbtn.setClickable(false);
+        }
         super.onResume();
     }
 
@@ -178,7 +183,9 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         centerloginbtn.setOnClickListener(this);
         centprivilegetv.setOnClickListener(this);
-        setHeadImage(Company.getInstance().getImageUri());
+
+
+
     }
 
 

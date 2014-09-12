@@ -3,6 +3,7 @@ package com.promote.ebingo.publish;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.ImageUtil;
@@ -118,7 +120,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
 
                 if (parent instanceof PublishFragment) {
                     EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
-                    parmater.put("type", TYPE_DEMAND);
+                    parmater.put("type", TYPE_SUPPLY);
                     parmater.put("company_id", Company.getInstance().getCompanyId());
 
                     parmater.put("category_id", tv_pick_category.getTag());
@@ -132,9 +134,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                     parmater.put("min_sell_num", edit_min_sell_num.getText().toString().trim());
                     parmater.put("contacts", edit_contact.getText().toString().trim());
                     parmater.put("contacts_phone", edit_phone.getText().toString().trim());
-                    LogCat.i("--->"+parmater);
-                    ((PublishFragment) parent).startPublish(parmater);
-                    clearText();
+                    LogCat.i("--->" + parmater);
+                    startPublish(parmater);
+
                 }
 
                 break;
@@ -155,7 +157,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         switch (requestCode) {
             case PICK_CATEGORY:
                 tv_pick_category.setText(result);
-                tv_pick_category.setTag(data.getStringExtra("categoryId"));
+                tv_pick_category.setTag(data.getIntExtra("categoryId", 0));
+                LogCat.i("--->", "categoryId:" + tv_pick_category.getTag());
                 break;
             case PICK_DESCRIPTION:
                 tv_pick_description.setText(result);
@@ -190,6 +193,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
 
     /**
      * 根据uri上传上传图片
+     *
      * @param uri
      */
     private void uploadImage(Uri uri) {
@@ -211,8 +215,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 ContextUtil.toast(response);
                 try {
                     JSONObject result = response.getJSONObject("response");
-                    String image_url=result.getString("data");
-                    LogCat.i("--->",image_url);
+                    String image_url = result.getString("data");
+                    LogCat.i("--->", image_url);
                     if (HttpConstant.CODE_OK.equals(result.getString("code")))
                         tv_pick_image.setTag(image_url);
                 } catch (JSONException e) {
@@ -229,13 +233,14 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
 
     /**
      * 将image战士到PreviewActivity中
+     *
      * @param image
      */
     private void toPreviewActivity(Uri image) {
-        if (PreviewActivity.isPreviewing()||getActivity()==null) {
+        if (PreviewActivity.isPreviewing() || getActivity() == null) {
             return;
         }
-        LogCat.i("--->","toPreviewActivity:getActivity="+getActivity());
+        LogCat.i("--->", "toPreviewActivity:getActivity=" + getActivity());
         Intent intent = new Intent(getActivity(), PreviewActivity.class);
         intent.setData(image);
         getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PREVIEW);
@@ -351,5 +356,41 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         edit_min_sell_num.setText(null);
         edit_contact.setText(null);
         edit_phone.setText(null);
+
+        picked_image.setImageBitmap(null);
     }
+    public void startPublish(EbingoRequestParmater parmater) {
+
+        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+        HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                ContextUtil.toast(response);
+                try {
+                    JSONObject result = response.getJSONObject("response");
+                    if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
+                        Intent intent = new Intent(getActivity(), MySupplyActivity.class);
+                        startActivity(intent);
+                        clearText();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                ContextUtil.toast(responseString);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
+        });
+    }
+
 }

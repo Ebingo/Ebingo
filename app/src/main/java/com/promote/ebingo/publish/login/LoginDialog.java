@@ -56,6 +56,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
                     @Override
                     public void onFail(String msg) {
                         super.onFail(msg);
+                        dialog.dismiss();
                     }
                 });
                 break;

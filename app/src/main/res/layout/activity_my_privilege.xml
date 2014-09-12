@@ -62,22 +62,26 @@
                 android:id="@+id/rb_visitor"
                 style="@style/rb_my_privilege_info"
                 android:checked="true"
-                android:drawableRight="@drawable/rb_visitor" />
+                android:text="游客"
+                android:drawableTop="@drawable/rb_visitor" />
 
             <RadioButton
                 android:id="@+id/rb_user"
                 style="@style/rb_my_privilege_info"
-                android:drawableRight="@drawable/rb_user" />
+                android:text="普通会员"
+                android:drawableTop="@drawable/rb_user" />
 
             <RadioButton
                 android:id="@+id/rb_vip"
+                android:text="VIP会员"
                 style="@style/rb_my_privilege_info"
-                android:drawableRight="@drawable/rb_vip" />
+                android:drawableTop="@drawable/rb_vip" />
 
             <RadioButton
                 android:id="@+id/rb_vvip"
+                android:text="VVIP会员"
                 style="@style/rb_my_privilege_info"
-                android:drawableRight="@drawable/rb_vvip" />
+                android:drawableTop="@drawable/rb_vvip" />
 
         </RadioGroup>
 
