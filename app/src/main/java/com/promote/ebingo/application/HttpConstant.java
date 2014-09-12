@@ -88,18 +88,16 @@ public class HttpConstant {
      * 获取信息详情接口. *
      */
     public static final String getInfoDetail = getRootUrl() + "getInfoDetail";
-    /**
-     * 上传图片接口. *
-     */
+    /** 上传图片接口. **/
     public static final String uploadImage = getRootUrl() + "uploadImage";
-    /**
-     * 更新企业信息. *
-     */
+    /** 更新企业信息. **/
     public static final String updateCompanyInfo = getRootUrl() + "updateCompanyInfo";
-    /**
-     * 获取当前登录公司的基本参数. *
-     */
+    /** 获取当前登录公司的基本参数. **/
     public static final String getCurrentCompanyBaseNum = getRootUrl() + "getCurrentCompanyBaseNum";
+    /**
+     * 删除供求信息. *
+     */
+    public static final String deleteInfo = getRootUrl() + "deleteInfo";
     /**
      * 删除供求信息. *
      */
