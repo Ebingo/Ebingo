@@ -32,7 +32,7 @@ public class AutoLineLayout extends LinearLayout {
 
         int mX = 0;
         int mY = 0;
-        Rect rect=new Rect(0,0,5,0);
+        Rect rect = new Rect(0, 0, 5, 0);
 
 
         int j = 0;
@@ -57,11 +57,11 @@ public class AutoLineLayout extends LinearLayout {
                 rect.top = mY + 5;
                 //PS：如果发现高度还是有问题就得自己再细调了
             }
-            rect.bottom =  rect.top + child.getMeasuredHeight();
-            mY =  rect.top;  //每次的高度必须记录 否则控件会叠加到一起
+            rect.bottom = rect.top + child.getMeasuredHeight();
+            mY = rect.top;  //每次的高度必须记录 否则控件会叠加到一起
             map.put(child, new Rect(rect));
         }
-        setMeasuredDimension(mWidth,  rect.bottom);
+        setMeasuredDimension(mWidth, rect.bottom);
     }
 
     @Override
