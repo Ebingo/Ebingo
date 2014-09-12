@@ -1,4 +1,4 @@
-package com.promote.ebingo.InformationActivity;
+package com.promote.ebingo.category;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by ACER on 2014/9/9.
  *
- *
+ *行业分类list adapter。
  *
  */
 public class CategoryListAdapter extends BaseAdapter {
