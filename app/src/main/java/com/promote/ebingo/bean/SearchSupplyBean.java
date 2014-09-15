@@ -1,9 +1,11 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ACER on 2014/9/2.
  */
-public class SearchSupplyBean extends SearchTypeBean {
+public class SearchSupplyBean extends SearchTypeBean implements Serializable{
     /**公司名称**/
     private String company;
     /**地区**/
@@ -84,5 +86,19 @@ public class SearchSupplyBean extends SearchTypeBean {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchSupplyBean{" +
+                "company='" + company + '\'' +
+                ", region='" + region + '\'' +
+                ", image='" + image + '\'' +
+                ", date='" + date + '\'' +
+                ", price='" + price + '\'' +
+                ", min_supply_num='" + min_supply_num + '\'' +
+                ", read_num=" + read_num +
+                ", company_rank='" + company_rank + '\'' +
+                '}';
     }
 }

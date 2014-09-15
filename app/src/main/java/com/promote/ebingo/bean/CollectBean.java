@@ -1,5 +1,7 @@
 package com.promote.ebingo.bean;
 
+import java.util.Date;
+
 /**
  * Created by ACER on 2014/9/12.
  */
@@ -32,7 +34,7 @@ public class CollectBean {
     /**
      * 搜藏次数. *
      */
-    private int collectTimes;
+    private String collectTimes;
     /**
      * 图片路径. *
      */
@@ -86,11 +88,11 @@ public class CollectBean {
         this.price = price;
     }
 
-    public int getCollectTimes() {
+    public String getCollectTimes() {
         return collectTimes;
     }
 
-    public void setCollectTimes(int collectTimes) {
+    public void setCollectTimes(String collectTimes) {
         this.collectTimes = collectTimes;
     }
 

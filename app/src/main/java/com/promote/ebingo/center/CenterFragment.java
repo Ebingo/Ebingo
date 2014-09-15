@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +24,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
-import com.promote.ebingo.bean.CurCompanyNumBeanTools;
-import com.promote.ebingo.bean.CurrentCompanyBaseNumBean;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.Dimension;
@@ -31,6 +31,7 @@ import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -130,6 +131,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }else{
             centerloginbtn.setClickable(true);
         }
+        getCurrentCompanyBaseNum();
         super.onResume();
     }
 
@@ -158,6 +160,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             getCurrentCompanyBaseNum();
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -190,6 +193,31 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centdemandtv.setOnClickListener(this);
         centcollettv.setOnClickListener(this);
         centbooktv.setOnClickListener(this);
+        HttpUtil.post(HttpConstant.uploadImage, null, new JsonHttpResponseHandler("utf-8") {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                LogCat.i("--->", response + "onSuccess");
+                byte[] decode = Base64.decode(response + "", Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decode, 0, decode.length);
+                centerheadiv.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                super.onFailure(statusCode, headers, responseString, throwable);
+//                LogCat.i("--->", responseString + "onFailure");
+//                byte[] decode = Base64.decode(responseString + "", Base64.DEFAULT);
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(decode, 0, decode.length);
+//                centerheadiv.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                LogCat.i("--->", "testing");
+            }
+        });
     }
 
 
@@ -336,28 +364,36 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
      */
     private void getCurrentCompanyBaseNum() {
 
+        if (Company.getInstance().getCompanyId()==null){
+            centersupplynumtv.setText("0");
+            centerdemandnumtv.setText("0");
+            centercollectnumtv.setText("0");
+            centermsgnumtv.setText("0");
+            return;
+        }
+
         String urlStr = HttpConstant.getCurrentCompanyBaseNum;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
         parmater.put("company_id", Company.getInstance().getCompanyId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
-
+        LogCat.i("--->"+parmater);
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("UTF-8") {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-
-                CurCompanyNumBeanTools curCompanyNumBeanTools = CurCompanyNumBeanTools.getCurConpanyNumBeanTools(response.toString());
-
-                if (curCompanyNumBeanTools != null) {
-                    if (curCompanyNumBeanTools.getCode() == 100) {
-
-                        CurrentCompanyBaseNumBean currentCompanyBaseNumBean = curCompanyNumBeanTools.getData();
-                        centersupplynumtv.setText(currentCompanyBaseNumBean.getSupply());
-                        centerdemandnumtv.setText(currentCompanyBaseNumBean.getDemand());
-                        centercollectnumtv.setText(currentCompanyBaseNumBean.getWishlist());
-                        centermsgnumtv.setText(currentCompanyBaseNumBean.getNews());
+                try {
+                    response=response.getJSONObject("response");
+                    if (HttpConstant.CODE_OK.equals(response.getString("code"))){
+                        LogCat.i("--->",response+"");
+                        JSONObject data=response.getJSONObject("data");
+                        centersupplynumtv.setText(data.getString("supply"));
+                        centerdemandnumtv.setText(data.getString("demand"));
+                        centercollectnumtv.setText(data.getString("wishlist"));
+                        centermsgnumtv.setText(data.getString("news"));
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
                 dialog.dismiss();
@@ -376,6 +412,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
                 dialog.dismiss();
             }
+
         });
     }
 

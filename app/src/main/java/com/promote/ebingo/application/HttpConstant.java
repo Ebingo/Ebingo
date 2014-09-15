@@ -29,7 +29,7 @@ public class HttpConstant {
         }
     }
 
-    private static String getRootUrl() {
+    public static String getRootUrl() {
 
         if (LOCALHOST) {
             return TEST_HOST + LOCAL_URL;
@@ -99,10 +99,6 @@ public class HttpConstant {
      */
     public static final String deleteInfo = getRootUrl() + "deleteInfo";
     /**
-     * 删除供求信息. *
-     */
-    public static final String deleteInfo = getRootUrl() + "deleteInfo";
-    /**
      * 获取收藏列表(getWishlist)
      */
     public static final String getWishlist = getRootUrl() + "getWishlist";
@@ -110,5 +106,6 @@ public class HttpConstant {
      * 取消收藏接口
      */
     public static final String cancleWishlist = getRootUrl() + "cancleWishlist";
+    public static final String applyVip=getRootUrl()+"applyVip";
 
 }

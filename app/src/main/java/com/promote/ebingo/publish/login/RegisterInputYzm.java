@@ -69,7 +69,7 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
         String passwordMD5=new MD5().getStrToMD5(password);
         parmater.put("yzm", edit_yzm.getText().toString().trim());
         parmater.put("phonenum", getIntent().getStringExtra("phonenum"));
-        parmater.put("password",passwordMD5 );
+        parmater.put("password",password );
         LogCat.i("--->",parmater.toString()+" 正在注册。。。");
         final ProgressDialog dialog= DialogUtil.waitingDialog(this);
         HttpUtil.post(HttpConstant.register,parmater,new JsonHttpResponseHandler("utf-8"){
@@ -81,10 +81,10 @@ public class RegisterInputYzm extends Activity implements CompoundButton.OnCheck
                     JSONObject result=response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))){
                         Company.getInstance().setCompanyId(result.getInt("company_id"));
+                        Intent intent=new Intent(RegisterInputYzm.this,EnterpriseSettingActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE);
                     }
-                    //测试用
-                    Intent intent=new Intent(RegisterInputYzm.this,EnterpriseSettingActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }

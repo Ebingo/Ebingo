@@ -2,6 +2,8 @@ package com.promote.ebingo.bean;
 
 import android.net.Uri;
 
+import com.promote.ebingo.publish.VipType;
+
 /**
  * Created by acer on 2014/9/3.
  */
@@ -14,7 +16,7 @@ public class Company {
     private String companyTel;//公司电话
     private String region;//公司地区
     private String website; //公司网址
-    private String vipType;//会员类型
+    private String vipType= VipType.VISITOR.code;//会员类型，默认是游客
     private String isLock;
     private String email;
     private Uri imageUri;//公司图片在手机中的位置
@@ -29,7 +31,7 @@ public class Company {
     public static Company getInstance() {
         if (mCompany == null) {
             mCompany = new Company();
-//            mCompany.setCompanyId(10);
+            mCompany.setCompanyId(6);
         }
         return mCompany;
     }

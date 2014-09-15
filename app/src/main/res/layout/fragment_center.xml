@@ -87,7 +87,7 @@
                             android:id="@+id/center_supply_num_tv"
                             android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="23"
+                            android:text="0"
                             android:layout_height="wrap_content" />
 
                         <TextView
@@ -103,7 +103,7 @@
                             android:id="@+id/center_demand_num_tv"
                             android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="3"
+                            android:text="0"
                             android:layout_height="wrap_content" />
 
                         <TextView
@@ -119,7 +119,7 @@
                             android:id="@+id/center_collect_num_tv"
                             android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="56"
+                            android:text="0"
                             android:layout_height="wrap_content" />
 
                         <TextView
@@ -135,7 +135,7 @@
                             android:id="@+id/center_msg_num_tv"
                             android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="18"
+                            android:text="0"
                             android:layout_height="wrap_content" />
 
                         <TextView
@@ -158,7 +158,7 @@
             <TextView
                 android:id="@+id/cent_supply_tv"
                 style="@style/cent_item"
-                android:drawableLeft="@drawable/cente_supply"
+                android:drawableLeft="@drawable/center_supply"
                 android:text="@string/my_supply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

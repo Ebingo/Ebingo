@@ -1,5 +1,6 @@
 package com.promote.ebingo.publish;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.MyPrivilegeActivity;
 import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginDialog;
@@ -82,15 +85,6 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
      * 预览
      */
     public static final int PREVIEW = 1 << 6;
-
-    public static final int EDIT_TITLE = 1 << 7 + 1;
-    public static final int EDIT_BUY_NUM = 1 << 7 + 2;
-    public static final int EDIT_CONTACT = 1 << 7 + 3;
-    public static final int EDIT_PHONE = 1 << 7 + 4;
-    public static final int EDIT_TAG = 1 << 7 + 5;
-    public static final int EDIT_PRICE = 1 << 7 + 6;
-    public static final int EDIT_MIN_SELL_NUM = 1 << 7 + 7;
-
 
     /**
      * 标记由发布求购页面发出的选择
@@ -190,6 +184,28 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         }
     }
 
+    private void showVipDialog(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        builder.setMessage("您好！您目前是普通会员，没有权限发布自己的产品供应信息，您可以点击下方升级按钮进行升级。")
+        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                content.setCurrentItem(0);
+
+            }
+        })
+        .setPositiveButton("升级",new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent=new Intent(getActivity(), MyPrivilegeActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     public PublishCallback getCallback() {
         return callback;
     }
@@ -211,6 +227,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+        LogCat.i("--->","onCheckedChanged");
         switch (checkedId) {
             case R.id.rb_publish_demand:
                 content.setCurrentItem(1);
@@ -248,6 +265,10 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         @Override
         public void onPageSelected(int i) {
             ((RadioButton) tabs.getChildAt(i)).setChecked(true);
+            final String vipType=Company.getInstance().getVipType();
+            if(!VipType.canPublishSupply(vipType)){
+                showVipDialog();
+            }
         }
 
         @Override
@@ -360,10 +381,12 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             errorMap.put(PRICE_EMPTY, "请输入价格");
             errorMap.put(MIN_SELL_NUM_EMPTY, "请输入起订标准");
         }
-        public static String get(int code){
+
+        public static String get(int code) {
             return errorMap.get(code);
         }
-        public static void showError(View v,int code){
+
+        public static void showError(View v, int code) {
             ContextUtil.toast(get(code));
             v.requestFocus();
         }

@@ -26,6 +26,7 @@ import com.promote.ebingo.bean.CollectBean;
 import com.promote.ebingo.bean.CollectBeanTools;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -107,6 +108,7 @@ public class MyCollectionActivity extends Activity implements View.OnClickListen
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                LogCat.i("--->",response.toString());
                 ArrayList<CollectBean> collectBeans = CollectBeanTools.getCollections(response.toString());
                 if (collectBeans != null && collectBeans.size() >= 0) {
                     mycollv.setVisibility(View.VISIBLE);
@@ -188,7 +190,7 @@ public class MyCollectionActivity extends Activity implements View.OnClickListen
             ImageManager.load(collectBean.getImg(), viewHolder.imgIv, mOptions);
             viewHolder.nameTv.setText(collectBean.getTitle());
             viewHolder.priceTv.setText(collectBean.getPrice());
-            viewHolder.timesTv.setText(Integer.toString(collectBean.getCollectTimes()));
+            viewHolder.timesTv.setText(collectBean.getCollectTimes());
             viewHolder.timeTv.setText(collectBean.getTime());
 
             return convertView;

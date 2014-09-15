@@ -171,6 +171,13 @@
             android:windowSoftInputMode="stateUnspecified|adjustPan"
             android:name=".center.MyPrivilegeActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateUnspecified|adjustPan"
+            android:name=".center.CallRecordActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

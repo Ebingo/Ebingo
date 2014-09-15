@@ -15,9 +15,7 @@ import java.util.List;
  */
 public class JsonUtil {
     public static <T> T get(String json,Class<T> cls){
-        Type type = new TypeToken<T>() {
-        }.getType();
-        return (T)(new Gson().fromJson(json, type));
+        return (T)(new Gson().fromJson(json, cls));
     }
 
 

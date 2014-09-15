@@ -13,6 +13,7 @@ public class DetailInfoBean {
      * 标题 *
      */
     private String title;
+    private String description;
     /**
      * 创建时间 *
      */
@@ -70,6 +71,16 @@ public class DetailInfoBean {
      * 求购数量. *
      */
     private int buy_num;
+    /** 公司名称. **/
+    private String company_name;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getCompany_name() {
         return company_name;
@@ -79,8 +90,7 @@ public class DetailInfoBean {
         this.company_name = company_name;
     }
 
-    /** 公司名称. **/
-    private String company_name;
+
 
 
     public int getInfo_id() {

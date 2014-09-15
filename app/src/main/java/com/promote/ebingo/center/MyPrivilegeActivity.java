@@ -9,12 +9,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.jch.lib.util.TextUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
@@ -27,7 +28,7 @@ import java.io.IOException;
 public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
     private PrivilegeInfoFragment[] fragments;
-    private int cur;
+    private int cur=0;
     private TextView tv_vipType;
     private TextView tv_name;
     private ImageView iv_head;
@@ -48,7 +49,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
     private void init() {
         Company company=Company.getInstance();
         if(company.getCompanyId()==null)return;
-        if(!TextUtils.isEmpty(company.getVipType())) tv_vipType.setText(company.getVipType());
+        if(!TextUtils.isEmpty(company.getVipType())) tv_vipType.setText(VipType.nameOf(company.getVipType()));
         if(!TextUtils.isEmpty(company.getName())) tv_name.setText(company.getName());
         setHeadImage(company.getImageUri());
     }
@@ -70,7 +71,6 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void initFragment() {
@@ -86,15 +86,15 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
 
         fragments[3] = new PrivilegeInfoFragment();
         fragments[3].setVipType(VipType.VVIP);
-
+        getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content,fragments[0]).commit();
         String vipType = Company.getInstance().getVipType();
         if (TextUtils.isEmpty(vipType)) {
-            getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[0]).commit();
+            changeFrag(0);
         } else {
             for (int i = 0; i < fragments.length; i++) {
-                if (fragments[i].getVipType().equals(vipType)) {
-                    getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[i]).commit();
-                    cur = i;
+                if (fragments[i].getVipType().code.equals(vipType)) {
+                    changeFrag(i);
+                    ((RadioButton)((RadioGroup) findViewById(R.id.rb_group)).getChildAt(i)).setChecked(true);
                     break;
                 }
             }
@@ -122,7 +122,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
     }
 
     private void changeFrag(int to) {
-        if (fragments[to] == fragments[cur]) {
+        if (to==cur) {
             return;
         }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -147,22 +147,4 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         }
     }
 
-
-    enum VipType{
-        VISITOR("9","游客"),NORMAL_VIP("0","普通会员"),VIP("1","VIP用户"),VVIP("2","VVIP用户");
-        public String code;
-        public String name;
-
-        VipType(String code, String name) {
-            this.code = code;
-            this.name = name;
-        }
-
-
-        @Override
-        public String toString() {
-            return code+":"+name;
-        }
-
-    }
 }

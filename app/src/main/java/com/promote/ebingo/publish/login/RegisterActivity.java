@@ -56,9 +56,6 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
                 }else{
                     ContextUtil.toast("请输入正确的手机号！");
                 }
-                //测试用
-                Intent intent=new Intent(this,EnterpriseSettingActivity.class);
-                startActivityForResult(intent,REQUEST_CODE);
 
                 break;
             }
