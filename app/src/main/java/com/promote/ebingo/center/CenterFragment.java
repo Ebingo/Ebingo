@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,10 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.settings.SettingActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.Dimension;
@@ -125,14 +124,19 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
 
         setHeadImage(Company.getInstance().getImageUri());
-        String companyName=Company.getInstance().getName();
-        if (!TextUtils.isEmpty(companyName)){
+        String companyName = Company.getInstance().getName();
+        if (!TextUtils.isEmpty(companyName)) {
             centerloginbtn.setText(companyName);
             centerloginbtn.setClickable(false);
-        }else{
+        } else {
             centerloginbtn.setClickable(true);
         }
-        getCurrentCompanyBaseNum();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getCurrentCompanyBaseNum();
+            }
+        }, 100);
         super.onResume();
     }
 
@@ -195,32 +199,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centcollettv.setOnClickListener(this);
         centbooktv.setOnClickListener(this);
         centprofiletv.setOnClickListener(this);
-
-        HttpUtil.post(HttpConstant.uploadImage, null, new JsonHttpResponseHandler("utf-8") {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                LogCat.i("--->", response + "onSuccess");
-                byte[] decode = Base64.decode(response + "", Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decode, 0, decode.length);
-                centerheadiv.setImageBitmap(bitmap);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                super.onFailure(statusCode, headers, responseString, throwable);
-//                LogCat.i("--->", responseString + "onFailure");
-//                byte[] decode = Base64.decode(responseString + "", Base64.DEFAULT);
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(decode, 0, decode.length);
-//                centerheadiv.setImageBitmap(bitmap);
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                LogCat.i("--->", "testing");
-            }
-        });
+        centtellhistorytv.setOnClickListener(this);
+        centsettingtv.setOnClickListener(this);
     }
 
 
@@ -333,11 +313,13 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             }
 
             case R.id.cent_setting_tv: {
-
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_tell_history_tv: {
-
+                Intent intent = new Intent(getActivity(), CallRecordActivity.class);
+                startActivity(intent);
                 break;
             }
             default: {
@@ -368,7 +350,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
      */
     private void getCurrentCompanyBaseNum() {
 
-        if (Company.getInstance().getCompanyId()==null){
+        if (Company.getInstance().getCompanyId() == null) {
             centersupplynumtv.setText("0");
             centerdemandnumtv.setText("0");
             centercollectnumtv.setText("0");
@@ -380,17 +362,17 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
         parmater.put("company_id", Company.getInstance().getCompanyId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
-        LogCat.i("--->"+parmater);
+        LogCat.i("--->" + parmater);
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("UTF-8") {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
-                    response=response.getJSONObject("response");
-                    if (HttpConstant.CODE_OK.equals(response.getString("code"))){
-                        LogCat.i("--->",response+"");
-                        JSONObject data=response.getJSONObject("data");
+                    response = response.getJSONObject("response");
+                    if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
+                        LogCat.i("--->", response + "");
+                        JSONObject data = response.getJSONObject("data");
                         centersupplynumtv.setText(data.getString("supply"));
                         centerdemandnumtv.setText(data.getString("demand"));
                         centercollectnumtv.setText(data.getString("wishlist"));

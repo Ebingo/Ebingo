@@ -1,10 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/gray_bg"
+    android:paddingBottom="9dp"
+    android:paddingLeft="11dp"
+    android:paddingRight="11dp"
+    android:paddingTop="8dp">
 
     <ImageView
+        android:id="@+id/dial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/center_tell" />
-</LinearLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_call" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/font_black_15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/dial"
+        android:layout_toLeftOf="@+id/dial"
+        android:singleLine="true"
+        android:text="求购钻戒2000个" />
+
+    <TextView
+        android:id="@+id/contact"
+        style="@style/font_gray_14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/date"
+        android:text="朱先生" />
+
+    <TextView
+        android:id="@+id/date"
+        style="@style/font_gray_14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/dial"
+        android:layout_marginRight="4dp"
+        android:layout_toLeftOf="@+id/dial"
+        android:layout_toStartOf="@+id/dial"
+        android:text="2014-9-16" />
+</RelativeLayout>

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.jch.lib.util.DialogUtil;
@@ -19,13 +18,13 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.settings.EnterpriseSettingActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import android.os.Handler;
 import org.apache.http.Header;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Timer;

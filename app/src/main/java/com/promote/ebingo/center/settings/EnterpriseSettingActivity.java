@@ -1,4 +1,4 @@
-package com.promote.ebingo.publish.login;
+package com.promote.ebingo.center.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_setting">设 置</string>
+    <string name="title_about">关于我们</string>
+    <string name="title_company_data">企业资料</string>
+    <string name="title_call_record">通话记录</string>
+    <string name="title_my_privilege">我的特权</string>
+    <string name="title_add_tag">添加标签</string>
+    <string name="title_description">添加描述</string>
+    <string name="title_suggestion">意见反馈</string>
+</resources>

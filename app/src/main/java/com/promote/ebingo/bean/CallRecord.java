@@ -9,7 +9,16 @@ public class CallRecord {
     String name;
     String type;//关联信息类型1求2供
     String call_time;//上次拨打时间
-    String phone_num;
+    String phone_num;//被叫电话号码
+    String contacts;
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+    }
 
     public Integer getInfoId() {
         return infoId;

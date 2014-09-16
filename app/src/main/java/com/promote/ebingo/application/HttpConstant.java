@@ -106,6 +106,17 @@ public class HttpConstant {
      * 取消收藏接口
      */
     public static final String cancleWishlist = getRootUrl() + "cancleWishlist";
+    /**
+     * 申请vip
+     */
     public static final String applyVip=getRootUrl()+"applyVip";
+    /**
+     * 获取拨号纪录接口
+     */
+    public static final String getCallRecord=getRootUrl()+"getCallRecord";
+    /**
+     * 意见反馈
+     */
+    public static final String addAdvice=getRootUrl()+"addAdvice";
 
 }

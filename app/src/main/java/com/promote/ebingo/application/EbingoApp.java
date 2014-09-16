@@ -28,9 +28,7 @@ public class EbingoApp extends Application {
 
     @Override
     public void onCreate() {
-
         super.onCreate();
-
         mCurCompanyData = getApplicationContext().getSharedPreferences(EBINGO_COMPANY_DATA, MODE_PRIVATE);
         initImageLoaderConfiguration();
         ContextUtil.init(getApplicationContext());
@@ -100,9 +98,7 @@ public class EbingoApp extends Application {
      * 清除current company.
      */
     public void cleanCurComany() {
-
         mCurCompanyData.edit().clear().commit();
-
     }
 
 }

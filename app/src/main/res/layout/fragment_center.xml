@@ -195,7 +195,7 @@
                 android:id="@+id/cent_privilege_tv"
                 style="@style/cent_item"
                 android:drawableLeft="@drawable/center_privilege"
-                android:text="@string/my_privilege"
+                android:text="@string/title_my_privilege"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

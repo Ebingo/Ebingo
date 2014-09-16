@@ -14,7 +14,7 @@
 
             <TableRow
                 android:id="@+id/pick_category"
-                style="@style/publish_table_row">
+                style="@style/frame_table_row">
 
                 <TextView
                     style="@style/publish_text_style"
@@ -30,7 +30,7 @@
 
             <View style="@style/divider_horizontal" />
 
-            <TableRow style="@style/publish_table_row">
+            <TableRow style="@style/frame_table_row">
 
                 <TextView
                     style="@style/publish_text_style"
@@ -50,7 +50,7 @@
 
             <TableRow
                 android:id="@+id/pick_description"
-                style="@style/publish_table_row">
+                style="@style/frame_table_row">
 
                 <TextView
                     style="@style/publish_text_style"
@@ -68,7 +68,7 @@
 
         <TableLayout style="@style/frame_bg_layout">
 
-            <TableRow style="@style/publish_table_row">
+            <TableRow style="@style/frame_table_row">
 
                 <TextView
                     style="@style/publish_text_style"
@@ -84,7 +84,7 @@
 
             <View style="@style/divider_horizontal" />
 
-            <TableRow style="@style/publish_table_row">
+            <TableRow style="@style/frame_table_row">
 
                 <TextView
                     style="@style/publish_text_style"
@@ -100,7 +100,7 @@
 
             <View style="@style/divider_horizontal" />
 
-            <TableRow style="@style/publish_table_row">
+            <TableRow style="@style/frame_table_row">
 
                 <TextView
                     style="@style/publish_text_style"
@@ -120,7 +120,7 @@
 
             <TableRow
                 android:id="@+id/pick_tags"
-                style="@style/publish_table_row">
+                style="@style/frame_table_row">
 
                 <TextView
                     style="@style/publish_text_style"

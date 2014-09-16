@@ -79,7 +79,6 @@
     <string name="find_password">找回密码</string>
     <string name="my_collect">我的收藏</string>
     <string name="my_book">我的订阅</string>
-    <string name="my_privilege">我的特权</string>
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
     <string name="my_profile">企业资料</string>
@@ -178,6 +177,10 @@
         <item>享受产品3D展示，全方位展示您的产品</item>
         <item>邮件推送功能，实时获取最新供求信息</item>
     </string-array>
-    <string name="title_add_tag">添加标签</string>
-    <string name="title_description">添加标签</string>
+    <string name="about_name">南京普而摩网络技术有限公司</string>
+    <string name="about_contact">董小姐</string>
+    <string name="about_email">kefu@chinapromo.cn</string>
+    <string name="about_number">025-68713202</string>
+    <string name="company">公司</string>
+    <string name="qq_group">问题反馈QQ群：32111452</string>
 </resources>

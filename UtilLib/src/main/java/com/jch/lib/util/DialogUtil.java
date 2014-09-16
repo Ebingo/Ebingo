@@ -11,53 +11,58 @@ import com.jch.lib.R;
 
 /**
  * 自定义公共的dialog.
- * 
+ *
  * @author Administrator
- * 
  */
 public class DialogUtil {
 
-	/**
-	 * 
-	 * 网络连接提示.
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public static Dialog netLineWarning(Context context) {
+    /**
+     * 网络连接提示.
+     *
+     * @param context
+     * @return
+     */
+    public static Dialog netLineWarning(Context context) {
 
-		Dialog dialog = new Dialog(context);
+        Dialog dialog = new Dialog(context);
 
-		return dialog;
+        return dialog;
 
-	}
+    }
 
-	/**
-	 * 旋转等待dialog.
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public static ProgressDialog waitingDialog(Context context) {
-		return waitingDialog(context,"数据访问中");
-	}
+    /**
+     * 旋转等待dialog.
+     *
+     * @param context
+     * @return
+     */
+    public static ProgressDialog waitingDialog(Context context) {
+        return waitingDialog(context, "数据访问中");
+    }
 
-    public static ProgressDialog waitingDialog(Context context,String msg){
+    public static ProgressDialog waitingDialog(Context context, String msg) {
         return ProgressDialog.show(context, "", msg, true);
     }
 
-	public static AlertDialog msgSinglBtnAlertDialog(Context context, String msg) {
+    public static AlertDialog msgSinglBtnAlertDialog(Context context, String msg) {
 
-		AlertDialog dialog = new AlertDialog.Builder(context).setMessage(msg)
-				.setPositiveButton(R.string.ok, new OnClickListener() {
+        AlertDialog dialog = new AlertDialog.Builder(context).setMessage(msg)
+                .setPositiveButton(R.string.ok, new OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 }).create();
-		return dialog;
+        return dialog;
 
-	}
+    }
 
+    public static void showListDialog(Context context, OnClickListener l, String... items) {
+        new AlertDialog.Builder(context).setItems(items, l).show();
+    }
+
+    public static void showDeleteDialog(Context context,OnClickListener l){
+        showListDialog(context,l,context.getString(R.string.delete),context.getString(R.string.cancel));
+    }
 }

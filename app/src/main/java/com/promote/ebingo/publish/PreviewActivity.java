@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,7 +34,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.preview_activity);
         findViewById(R.id.common_back_btn).setOnClickListener(this);
-        picked_image = (ImageView) findViewById(R.id.imageView);
+        picked_image = (ImageView) findViewById(R.id.dial);
         uri = getIntent().getData();
         new LoadImageTask().execute(uri);
         isPreviewing = true;

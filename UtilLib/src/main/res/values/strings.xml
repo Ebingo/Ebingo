@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">UtilLib</string>
     <string name="ok">确定</string>
+    <string name="delete">删除</string>
     <string name="cancel">取消</string>
     <string name="pull_to_refresh_pull_label">下拉刷新</string>
     <string name="pull_to_refresh_release_label">松开后刷新</string>

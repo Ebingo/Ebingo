@@ -1,15 +1,19 @@
 package com.promote.ebingo.center;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,13 +23,16 @@ import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -34,11 +41,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MySupplyActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MySupplyActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
+    private static final int ITEM_DELETE_ID = 1;
+    private static final int ITEM_CANCEL_ID = 2;
     private ListView mysupplylv;
-    private ImageView commonbackbtn;
-    private TextView commontitletv;
     private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
     private DisplayImageOptions mOptions;
     private MyAdapter adapter;
@@ -61,43 +68,41 @@ public class MySupplyActivity extends Activity implements View.OnClickListener, 
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
-        commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
-        commontitletv = (TextView) findViewById(R.id.common_title_tv);
         mysupplylv = (ListView) findViewById(R.id.mysupply_lv);
 
-        commontitletv.setText(getResources().getString(R.string.my_supply));
-        commonbackbtn.setOnClickListener(this);
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
 
         adapter = new MyAdapter();
         mysupplylv.setAdapter(adapter);
         mysupplylv.setOnItemClickListener(this);
+        mysupplylv.setOnItemLongClickListener(this);
         getMySupply(0);
     }
 
-    @Override
-    public void onClick(View v) {
+    private TextView titleView;
 
-        int id = v.getId();
+    private void delete(final int id){
+        EbingoRequestParmater param = new EbingoRequestParmater(this);
+        param.put("company_id", Company.getInstance().getCompanyId());
+        param.put("infoid",id);
 
-        switch (id) {
-
-            case R.id.common_back_btn: {
-                onBackPressed();
-                finish();
-                break;
+        HttpUtil.post(HttpConstant.deleteInfo, param, new EbingoHandler() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                mSupplyBeans.remove(id);
+                adapter.notifyDataSetChanged();
             }
 
-            case R.id.common_title_tv: {
-                break;
-            }
-            default: {
+            @Override
+            public void onFail(int statusCode, String msg) {
 
             }
 
+            @Override
+            public void onFinish() {
 
-        }
-
+            }
+        });
     }
 
     private void getMySupply(int lastId) {
@@ -169,6 +174,22 @@ public class MySupplyActivity extends Activity implements View.OnClickListener, 
         intent.putExtra(ProductInfoActivity.ARG_ID, mSupplyBeans.get(position).getId());
         startActivity(intent);
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        DialogUtil.showDeleteDialog(this, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:delete(position);
+                        break;
+                    case 1:
+                        break;
+                }
+            }
+        });
+        return false;
     }
 
     /**

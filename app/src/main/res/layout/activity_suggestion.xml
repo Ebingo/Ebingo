@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_head_layout" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            style="@style/info_content_pad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/font_blue_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="反馈内容" />
+
+            <EditText
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:background="@drawable/corner_frame"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="请输入您的宝贵意见！"
+                android:inputType="textMultiLine"
+                android:lineSpacingMultiplier="1.2"
+                android:padding="3dp" />
+
+            <TextView
+                style="@style/font_gray_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/qq_group" />
+
+            <Button
+                android:id="@+id/commit"
+                style="@style/yellow_button"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:onClick="onClick"
+                android:text="发 布" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

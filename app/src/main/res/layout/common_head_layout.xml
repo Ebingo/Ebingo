@@ -6,6 +6,8 @@
 
     <ImageView
         android:id="@+id/common_back_btn"
+        android:onClick="onClick"
+        android:clickable="true"
         style="@style/back_arro_style" />
 
     <TextView

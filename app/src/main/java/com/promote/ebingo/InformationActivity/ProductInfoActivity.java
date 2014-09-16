@@ -25,6 +25,7 @@ import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.MyCollectionActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.util.ContextUtil;
 
 public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
@@ -121,7 +122,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 //                productinfoDetailwv.loadUrl(mDetailInfoBean);
                 break;
             case R.id.product_info_tel_cb:
-                dialCompanyNumber();
+                ContextUtil.dialNumber(this,mDetailInfoBean.getPhone_num());
                 break;
             case R.id.product_info_collect_cb:
                 Intent intent=new Intent(this, MyCollectionActivity.class);
@@ -132,31 +133,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         }
     }
 
-    /**
-     * 拨打公司电话
-     */
-    private void dialCompanyNumber() {
-        final String mobile=mDetailInfoBean.getPhone_num();
-        if (TextUtils.isEmpty(mobile))return;
-        DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        Intent intent=new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+mobile));
-                        startActivity(intent);
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        dialog.dismiss();
-                        break;
-                }
-            }
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("拨打电话")
-                .setMessage("是否拨打" + mobile + "?")
-                .setPositiveButton("拨打", null).setNegativeButton("取消", null).show();
-    }
+
 
     /**
      * 獲得詳情。

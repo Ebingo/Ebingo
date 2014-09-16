@@ -38,7 +38,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_privilege);
         ((RadioGroup) findViewById(R.id.rb_group)).setOnCheckedChangeListener(this);
-        ((TextView) findViewById(R.id.common_title_tv)).setText("我的特权");
+        ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
         findViewById(R.id.common_back_btn).setOnClickListener(this);
         tv_vipType = (TextView) findViewById(R.id.tv_vipType);
         tv_name = (TextView) findViewById(R.id.tv_name);
