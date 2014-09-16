@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -193,6 +194,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centdemandtv.setOnClickListener(this);
         centcollettv.setOnClickListener(this);
         centbooktv.setOnClickListener(this);
+        centprofiletv.setOnClickListener(this);
+
         HttpUtil.post(HttpConstant.uploadImage, null, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -324,7 +327,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.cent_profile_tv: {
-
+                Intent intent = new Intent(getActivity(), MyEnterPriseInfoActivity.class);
+                startActivity(intent);
                 break;
             }
 
@@ -425,7 +429,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         Company company = Company.getInstance();
         if (company.getCompanyId() != null && company.getCompanyId() > 0) {
-
             return true;
         } else {
             Intent intent = new Intent(getActivity(), LoginActivity.class);

@@ -1,7 +1,10 @@
 package com.promote.ebingo.center;
 
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +23,7 @@ import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.VipType;
+import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.LogCat;
@@ -39,14 +43,14 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
 
     private Map<String, Integer> resMap = new HashMap<String, Integer>();
 
-    private VipType vipType;
+    private VipType displayVipType;
 
-    public VipType getVipType() {
-        return vipType;
+    public VipType getDisplayVipType() {
+        return displayVipType;
     }
 
-    public void setVipType(VipType vipType) {
-        this.vipType = vipType;
+    public void setDisplayVipType(VipType vipType) {
+        this.displayVipType = vipType;
     }
 
     @Override
@@ -61,19 +65,19 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if (vipType == null) {
+        if (displayVipType == null) {
             try {
-                vipType = VipType.values()[savedInstanceState.getInt("vipType")];
+                displayVipType = VipType.values()[savedInstanceState.getInt("displayVipType")];
             } catch (NullPointerException e) {
-                throw new RuntimeException(PrivilegeInfoFragment.class.getName() + ":vipType is null!");
+                throw new RuntimeException(PrivilegeInfoFragment.class.getName() + ":displayVipType is null!");
             }
         }
-        String[] info = getResources().getStringArray(resMap.get(vipType.code));
+        String[] info = getResources().getStringArray(resMap.get(displayVipType.code));
         View v = inflater.inflate(R.layout.privilege_info, null);
         addItem((LinearLayout) v.findViewById(R.id.info_content), info, inflater);
-        if (vipType.compareTo(VipType.VISITOR)==0){
+        if (displayVipType.compareTo(VipType.VISITOR) == 0) {
             v.findViewById(R.id.btn_apply_vip).setVisibility(View.GONE);
-        }else{
+        } else {
             v.findViewById(R.id.btn_apply_vip).setOnClickListener(this);
         }
 
@@ -83,7 +87,7 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("vipType", vipType.ordinal());
+        outState.putInt("displayVipType", displayVipType.ordinal());
     }
 
     private void addItem(LinearLayout content, String[] items, LayoutInflater inflater) {
@@ -110,30 +114,33 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_apply_vip:
-
-               VipType curVipType=VipType.parse(Company.getInstance().getVipType());
-               if (getVipType().compareTo(curVipType)<=0){
-                    ContextUtil.toast("您当前为"+curVipType.name+",不需要再申请"+getVipType().name+"。");
-               }else{
-                   startApply();
-               }
+                VipType curVipType = VipType.parse(Company.getInstance().getVipType());
+                if (getDisplayVipType().compareTo(curVipType) <= 0) {
+                    ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
+                } else if (getDisplayVipType().compareTo(VipType.NORMAL_VIP) == 0) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    startApply();
+                }
                 break;
         }
     }
-    private void startApply(){
-        final Dialog dialog= DialogUtil.waitingDialog(getActivity(),"正在提交申请...");
-        EbingoRequestParmater parmater=new EbingoRequestParmater(getActivity());
+
+    private void startApply() {
+        final Dialog dialog = DialogUtil.waitingDialog(getActivity(), "正在提交申请...");
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity());
         parmater.put("company_id", Company.getInstance().getCompanyId());
-        parmater.put("apply_type","");
-        HttpUtil.post(HttpConstant.applyVip,parmater,new JsonHttpResponseHandler("utf-8"){
+        parmater.put("apply_type", "");
+        HttpUtil.post(HttpConstant.applyVip, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                LogCat.i("--->",response+"");
+                LogCat.i("--->", response + "");
                 try {
-                    response=response.getJSONObject("response");
-                    if (HttpConstant.CODE_OK.equals(response.getString("code"))){
-                        ContextUtil.toast("提交申请成功！");
+                    response = response.getJSONObject("response");
+                    if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
+                        showDialog();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -151,5 +158,17 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
                 dialog.dismiss();
             }
         });
+    }
+
+    private void showDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("温馨提示")
+                .setMessage("提交申请成功！请耐心等待工作人员处理。")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 }

@@ -31,7 +31,7 @@ public class Company {
     public static Company getInstance() {
         if (mCompany == null) {
             mCompany = new Company();
-            mCompany.setCompanyId(6);
+//            mCompany.setCompanyId(6);
         }
         return mCompany;
     }

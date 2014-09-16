@@ -1,11 +1,13 @@
 package com.promote.ebingo.InformationActivity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,6 +22,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.bean.DetailInfoBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.impl.GetInfoDetail;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -37,7 +40,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
     private TextView buynumtv;
     private TextView buyinfopublishtimetv;
     private TextView publishlooknumtv;
-    private TextView buyinfodetailtv;
+    private WebView buyinfodetailtv;
     private Button buyInfocontactphonetv;
     private ImageView commonbackbtn;
     private TextView commontitletv;
@@ -62,7 +65,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buynumtv = (TextView) findViewById(R.id.buy_num_tv);
         buyinfopublishtimetv = (TextView) findViewById(R.id.buy_info_publish_time_tv);
         publishlooknumtv = (TextView) findViewById(R.id.publish_look_num_tv);
-        buyinfodetailtv = (TextView) findViewById(R.id.buy_info_detail_tv);
+        buyinfodetailtv = (WebView) findViewById(R.id.buy_info_detail_tv);
         buyInfocontactphonetv = (Button) findViewById(R.id.buy_info_contact_phone_tv);
 
         int demandId = getIntent().getIntExtra(DEMAND_ID, -1);
@@ -70,24 +73,10 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getString(R.string.title_buy_detail));
         buyInfocontactphonetv.setOnClickListener(this);
-        getDataByOnline();
+        getInfoDetail();
 
     }
 
-    /**
-     * 根据company判断当前用户是否为游客.
-     */
-    private void getDataByOnline() {
-
-        Company company = Company.getInstance();
-        if (company.getCompanyId() != null) {
-            getInfoDetail(company.getCompanyId());
-        } else {
-            getInfoDetail(0);
-        }
-
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -133,9 +122,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
     /**
      * 獲得詳情。
      */
-    private void getInfoDetail(int demandId) {
-
-        String urlStr = HttpConstant.getInfoDetail;
+    private void getInfoDetail() {
 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         Company company = Company.getInstance();
@@ -145,38 +132,20 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             parmater.put("company_id", "0");    //游客
         }
 
-        parmater.put("info_id", demandId);
-
-        final ProgressDialog dialog = DialogUtil.waitingDialog(BuyInfoActivity.this);
-        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
-
+        parmater.put("info_id", getIntent().getIntExtra(DEMAND_ID,-1));
+        final Dialog dialog=DialogUtil.waitingDialog(this);
+        GetInfoDetail.getInfoDetail(parmater, new GetInfoDetail.CallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
-                DetailInfoBean detailInfo = DetailInfoBeanTools.getDetailInfo(response.toString());
-                if (detailInfo != null) {
-                    mDetailInfoBean = detailInfo;
-                    initData();
-                } else {
-                    // TODO 获取数据失败。
-                }
-
+            public void onFailed(String msg) {
+                //nodata
                 dialog.dismiss();
-                super.onSuccess(statusCode, headers, response);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-
+            public void onSuccess(DetailInfoBean detailInfoBean) {
+                mDetailInfoBean = detailInfoBean;
+                initData();
                 dialog.dismiss();
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
-                dialog.dismiss();
-                super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
 
@@ -186,15 +155,13 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
-
         buyinfonametv.setText(mDetailInfoBean.getTitle());
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
         publishlooknumtv.setText(String.valueOf(mDetailInfoBean.getRead_num()));
-        buyinfodetailtv.setText(mDetailInfoBean.getContacts());
         buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
-
-
+        buyinfodetailtv.getSettings().setJavaScriptEnabled(true);
+        buyinfodetailtv.loadDataWithBaseURL(HttpConstant.getRootUrl(), mDetailInfoBean.getDescription(), "text/html", "UTF-8", "about:blank");
     }
 
 }
