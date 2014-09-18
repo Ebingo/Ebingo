@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 import com.promote.ebingo.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link SupplyDemandInfoFragment#newInstance} factory method to
+ * A simple {@link android.support.v4.app.Fragment} subclass.
+ * Use the {@link com.promote.ebingo.InformationActivity.SupplyDemandInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  * <p/>
  * 供求信息。
  */
-public class SupplyDemandInfoFragment extends Fragment {
+public class SupplyDemandInfoFragment extends InterpriseBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

@@ -11,14 +11,14 @@ import android.view.ViewGroup;
 import com.promote.ebingo.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link InterpriseDynamicFragment#newInstance} factory method to
+ * A simple {@link android.support.v4.app.Fragment} subclass.
+ * Use the {@link com.promote.ebingo.InformationActivity.InterpriseDynamicFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  * 企業動態。
  *
  */
-public class InterpriseDynamicFragment extends Fragment {
+public class InterpriseDynamicFragment extends InterpriseBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

@@ -7,25 +7,25 @@ import android.view.MotionEvent;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
-import java.util.Locale;
-import java.util.logging.LogManager;
-
 /**
  * Created by jch on 2014/8/25.
- *
+ * <p/>
  * 適用于嵌套到scrollView中
  */
-public class ScrollListView extends ListView{
+public class ScrollListView extends ListView {
 
     private ScrollView mParentScrollView;
 
     private static final String TAG = "SCROLLLISTVIEW";
+
     public ScrollListView(Context context) {
         super(context);
     }
+
     public ScrollListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     public ScrollListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -39,7 +39,7 @@ public class ScrollListView extends ListView{
     }
 
 
-    public void setParentScrollView(ScrollView parentScrollView){
+    public void setParentScrollView(ScrollView parentScrollView) {
         this.mParentScrollView = parentScrollView;
     }
 
@@ -58,10 +58,10 @@ public class ScrollListView extends ListView{
 
             case MotionEvent.ACTION_UP:
 
-                Log.d(TAG,"onInterceptTouchEvent up");
+                Log.d(TAG, "onInterceptTouchEvent up");
             case MotionEvent.ACTION_CANCEL:
 
-                Log.d(TAG,"onInterceptTouchEvent cancel");
+                Log.d(TAG, "onInterceptTouchEvent cancel");
 
                 setParentScrollAble(true);//当手指松开时，让父ScrollView重新拿到onTouch权限
 
@@ -82,7 +82,7 @@ public class ScrollListView extends ListView{
      */
     private void setParentScrollAble(boolean flag) {
 
-        mParentScrollView.requestDisallowInterceptTouchEvent(!flag);//这里的parentScrollView就是listview外面的那个scrollview
+//        mParentScrollView.requestDisallowInterceptTouchEvent(!flag);//这里的parentScrollView就是listview外面的那个scrollview
 
 
     }

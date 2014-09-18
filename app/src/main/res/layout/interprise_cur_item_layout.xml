@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/info_content_pad"
+    android:background="@color/white">
+
+
+    <ImageView
+        android:id="@+id/interprise_cur_item_img"
+        android:layout_width="@dimen/intpr_info_img_width"
+        android:src="@drawable/cur_demaind"
+        android:layout_height="@dimen/intpr_info_img_heiht" />
+
+
+    <TextView
+        android:id="@+id/interprise_cur_item_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="05-06"
+        android:layout_centerVertical="true"
+        style="@style/font_gray_12" />
+
+    <TextView
+        style="@style/gray_12_tv"
+        android:id="@+id/interprise_cur_item_describe_tv"
+        android:layout_toLeftOf="@id/interprise_cur_item_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/interprise_cur_item_img"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:text="求购缝纫机100台"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
