@@ -258,9 +258,9 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
         }
 
         /**
-         * 拨打电话
-         *
+         * 拨打电话，并添加通话记录
          * @param context
+         * @param record record中必须包含 phone_number,call_id,to_id,info_id
          */
         public static void dialNumber(final Activity context, final CallRecord record) {
             final String number = record.getPhone_num();

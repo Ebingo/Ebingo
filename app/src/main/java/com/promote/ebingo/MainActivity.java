@@ -16,6 +16,7 @@ import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
+import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.publish.login.RegisterActivity;
 import com.promote.ebingo.util.LogCat;
 
@@ -167,7 +168,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         if (mPublishFragment != null && mPublishFragment.isMyRequest(requestCode)) {
             LogCat.i("--->", "mPublishFragment->onActivityResult");
             mPublishFragment.onActivityResult(requestCode, resultCode, data);
-        } else if (requestCode == RegisterActivity.REQUEST_CODE && resultCode == RESULT_OK) {
+        } else if (requestCode == LoginDialog.REQUEST_CODE && resultCode == RESULT_OK) {
             if (mCenterFragment == null) {
                 mCenterFragment = new CenterFragment();
             }

@@ -5,6 +5,7 @@ package com.promote.ebingo.bean;
  */
 public class DetailInfoBean {
 
+
     /**
      * 信息 id *
      */
@@ -220,6 +221,29 @@ public class DetailInfoBean {
 
     public void setBuy_num(int buy_num) {
         this.buy_num = buy_num;
+    }
+    @Override
+    public String toString() {
+        return "DetailInfoBean{" +
+                "info_id=" + info_id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", create_time='" + create_time + '\'' +
+                ", company_id=" + company_id +
+                ", read_num=" + read_num +
+                ", category_id=" + category_id +
+                ", contacts='" + contacts + '\'' +
+                ", phone_num='" + phone_num + '\'' +
+                ", region='" + region + '\'' +
+                ", type=" + type +
+                ", image='" + image + '\'' +
+                ", url_3d='" + url_3d + '\'' +
+                ", price='" + price + '\'' +
+                ", min_sell_num='" + min_sell_num + '\'' +
+                ", inwishlist=" + inwishlist +
+                ", buy_num=" + buy_num +
+                ", company_name='" + company_name + '\'' +
+                '}';
     }
 
 }

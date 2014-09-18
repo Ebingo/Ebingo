@@ -33,4 +33,9 @@
     <dimen name="intpr_info_img_width">30dp</dimen>
     <dimen name="intpr_info_img_heiht">25dp</dimen>
 
+    <dimen name="login_widget_height">45dp</dimen>
+    <dimen name="logo_margin_top">27dp</dimen>
+    <dimen name="logo_margin_bottom">26dp</dimen>
+    <dimen name="login_btn_margin_top">27dp</dimen>
+    <dimen name="login_input_height">50dp</dimen>
 </resources>

@@ -7,9 +7,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,11 +27,11 @@ import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
-import com.jch.lib.util.TextUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.MyPrivilegeActivity;
 import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginManager;
@@ -47,9 +45,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+
 import static com.promote.ebingo.publish.PublishFragment.Error;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.promote.ebingo.publish.PublishFragment.*;
 
@@ -71,13 +68,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     private ImageView picked_image;
 
     private final String CAMERA_PICTURE_NAME = "publish_upload.png";
-
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -130,47 +120,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.btn_publish: {
-                Integer company_id = Company.getInstance().getCompanyId();
-                Integer category_id = (Integer) tv_pick_category.getTag();
-                String region_name = tv_pick_region.getText().toString().trim();
-                String price = edit_price.getText().toString().trim();
-                String image_url = edit_price.getText().toString().trim();
-                String description = tv_pick_description.getText().toString().trim();
-                String title = edit_title.getText().toString().trim();
-                String contacts = edit_contact.getText().toString().trim();
-                String contacts_phone = edit_phone.getText().toString().trim();
-                String min_sell_num=edit_min_sell_num.getText().toString().trim();
-
-                if (company_id == null) ContextUtil.toast("请重新登录！");
-                else if (category_id == null)Error.showError(tv_pick_category,Error.CATEGORY_EMPTY);
-                else if (TextUtils.isEmpty(region_name)) Error.showError(tv_pick_region,Error.REGION_EMPTY);
-                else if (TextUtils.isEmpty(title)) Error.showError(edit_title,Error.TITLE_EMPTY);
-
-                else if (TextUtils.isEmpty(price)) Error.showError(edit_price,Error.PRICE_EMPTY);
-                else if (TextUtils.isEmpty(image_url)) Error.showError(tv_pick_image,Error.IMAGE_EMPTY);
-                else if (TextUtils.isEmpty(description)) Error.showError(tv_pick_description,Error.DESCRIPTION_EMPTY);
-
-                else if (TextUtils.isEmpty(min_sell_num)) Error.showError(edit_min_sell_num,Error.MIN_SELL_NUM_EMPTY);
-                else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact,Error.CONTACT_EMPTY);
-                else if (TextUtils.isEmpty(contacts_phone)) Error.showError(edit_phone,Error.PHONE_EMPTY);
-                else if (LoginManager.isMobile(contacts_phone)) Error.showError(edit_phone,Error.PHONE_FORMAT_ERROR);
-                else {
-                    EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
-                    parmater.put("type", TYPE_SUPPLY);
-                    parmater.put("company_id", company_id);
-
-                    parmater.put("category_id", category_id);
-                    parmater.put("region_name", region_name);
-                    parmater.put("price", price);
-
-                    parmater.put("image_url", image_url);
-                    parmater.put("description", description);
-                    parmater.put("title", title);
-
-                    parmater.put("min_sell_num", min_sell_num);
-                    parmater.put("contacts", contacts);
-                    parmater.put("contacts_phone", contacts_phone);
-                    LogCat.i("--->" + parmater);
+                EbingoRequestParmater parmater = checkInformation();
+                if (parmater != null) {
                     startPublish(parmater);
                 }
                 break;
@@ -178,12 +129,60 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void toastEmpty(String param) {
-        ContextUtil.toast("请输入" + param);
-    }
+    /**
+     * 执行信息校验，并返回参数
+     *
+     * @return
+     */
+    private EbingoRequestParmater checkInformation() {
+        EbingoRequestParmater parmater = null;
+        Integer company_id = Company.getInstance().getCompanyId();
+        Integer category_id = (Integer) tv_pick_category.getTag();
+        String region_name = tv_pick_region.getText().toString().trim();
+        String price = edit_price.getText().toString().trim();
+        String image_url = edit_price.getText().toString().trim();
+        String description = tv_pick_description.getText().toString().trim();
+        String title = edit_title.getText().toString().trim();
+        String contacts = edit_contact.getText().toString().trim();
+        String contacts_phone = edit_phone.getText().toString().trim();
+        String min_sell_num = edit_min_sell_num.getText().toString().trim();
 
-    private void toastEmptySelect(String param) {
-        ContextUtil.toast("请选择" + param);
+        if (company_id == null) ContextUtil.toast("请重新登录！");
+        else if (category_id == null) Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
+        else if (TextUtils.isEmpty(region_name))
+            Error.showError(tv_pick_region, Error.REGION_EMPTY);
+        else if (TextUtils.isEmpty(title)) Error.showError(edit_title, Error.TITLE_EMPTY);
+
+        else if (TextUtils.isEmpty(price)) Error.showError(edit_price, Error.PRICE_EMPTY);
+        else if (TextUtils.isEmpty(image_url)) Error.showError(tv_pick_image, Error.IMAGE_EMPTY);
+        else if (TextUtils.isEmpty(description))
+            Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
+
+        else if (TextUtils.isEmpty(min_sell_num))
+            Error.showError(edit_min_sell_num, Error.MIN_SELL_NUM_EMPTY);
+        else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
+        else if (TextUtils.isEmpty(contacts_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
+        else if (LoginManager.isMobile(contacts_phone))
+            Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
+        else {
+            parmater = new EbingoRequestParmater(getActivity());
+            parmater.put("type", TYPE_SUPPLY);
+            parmater.put("company_id", company_id);
+
+            parmater.put("category_id", category_id);
+            parmater.put("region_name", region_name);
+            parmater.put("price", price);
+
+            parmater.put("image_url", image_url);
+            parmater.put("description", description);
+            parmater.put("title", title);
+
+            parmater.put("min_sell_num", min_sell_num);
+            parmater.put("contacts", contacts);
+            parmater.put("contacts_phone", contacts_phone);
+            LogCat.i("--->" + parmater);
+        }
+        return parmater;
     }
 
     @Override
@@ -220,6 +219,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
             case PREVIEW:
                 if (data == null) return;
                 uploadImage(data.getData());
+                break;
+            case APPLY_3D:
+                ContextUtil.toast(result);
                 break;
         }
     }
@@ -296,38 +298,47 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         public void onClick(View v) {
             window.dismiss();
             switch (v.getId()) {
-                case R.id.btn_upload_normal_pic:
-                    showPickDialog("上传普通图片");
+                case R.id.btn_album:
+                    openAlbum();
                     break;
-                case R.id.btn_upload_3d_pic:
-                    showPickDialog("上传3D图片");
+                case R.id.btn_camera:
+                    openCamera();
                     break;
             }
         }
     };
 
-    /**
-     * 选择获取图片的方式
-     *
-     * @param title
-     */
-    private void showPickDialog(String title) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title).setItems(new String[]{"相册", "拍照"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                switch (which) {
-                    case 0:
-                        openAlbum();
-                        break;
-                    case 1:
-                        openCamera();
-                        break;
-                }
-            }
-        }).create().show();
+    private void check() {
+        if (VipType.parse(Company.getInstance().getVipType()).compareTo(VipType.VVIP) < 0) {
+            Intent intent=new Intent(getActivity(), MyPrivilegeActivity.class);
+            intent.putExtra(MyPrivilegeActivity.VVIP,true);
+        } else {
+        }
+
     }
+
+//    /**
+//     * 选择获取图片的方式
+//     *
+//     * @param title
+//     */
+//    private void showPickDialog(String title) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(title).setItems(new String[]{"相册", "拍照"}, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//                switch (which) {
+//                    case 0:
+//                        openAlbum();
+//                        break;
+//                    case 1:
+//                        openCamera();
+//                        break;
+//                }
+//            }
+//        }).show();
+//    }
 
 
     /**
@@ -336,8 +347,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     public void showPupWindow() {
         final View contentView = View.inflate(getActivity(), R.layout.pick_picture_method, null);
         final View content_layout = contentView.findViewById(R.id.content_layout);
-        contentView.findViewById(R.id.btn_upload_normal_pic).setOnClickListener(popupWindowListener);
-        contentView.findViewById(R.id.btn_upload_3d_pic).setOnClickListener(popupWindowListener);
+        contentView.findViewById(R.id.btn_album).setOnClickListener(popupWindowListener);
+        contentView.findViewById(R.id.btn_camera).setOnClickListener(popupWindowListener);
         contentView.findViewById(R.id.btn_cancel).setOnClickListener(popupWindowListener);
         window = new PopupWindow(contentView, 0, 0, true);
         window.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -369,7 +380,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
      * 从相册中选择一张图片
      */
     private void openAlbum() {
-
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);

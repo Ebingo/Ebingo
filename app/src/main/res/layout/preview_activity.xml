@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_done"
+        android:id="@+id/common_title_done"
         android:onClick="onClick"
         style="@style/blue_button"
         android:layout_width="80dp"

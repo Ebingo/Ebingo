@@ -24,6 +24,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.BaseActivity;
+import com.promote.ebingo.BaseListActivity;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -41,11 +43,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MySupplyActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MySupplyActivity extends BaseListActivity implements AdapterView.OnItemLongClickListener {
 
-    private static final int ITEM_DELETE_ID = 1;
-    private static final int ITEM_CANCEL_ID = 2;
-    private ListView mysupplylv;
     private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
     private DisplayImageOptions mOptions;
     private MyAdapter adapter;
@@ -54,10 +53,15 @@ public class MySupplyActivity extends BaseActivity implements AdapterView.OnItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_my_supply);
         initialize();
     }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent = new Intent(MySupplyActivity.this, ProductInfoActivity.class);
+        intent.putExtra(ProductInfoActivity.ARG_ID, mSupplyBeans.get(position).getId());
+        startActivity(intent);
+    }
 
     private void initialize() {
 
@@ -68,23 +72,19 @@ public class MySupplyActivity extends BaseActivity implements AdapterView.OnItem
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
-        mysupplylv = (ListView) findViewById(R.id.mysupply_lv);
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
 
         adapter = new MyAdapter();
-        mysupplylv.setAdapter(adapter);
-        mysupplylv.setOnItemClickListener(this);
-        mysupplylv.setOnItemLongClickListener(this);
+        setListAdapter(adapter);
+        getListView().setOnItemLongClickListener(this);
         getMySupply(0);
     }
 
-    private TextView titleView;
-
-    private void delete(final int id){
+    private void delete(final int id) {
         EbingoRequestParmater param = new EbingoRequestParmater(this);
         param.put("company_id", Company.getInstance().getCompanyId());
-        param.put("infoid",id);
+        param.put("infoid", id);
 
         HttpUtil.post(HttpConstant.deleteInfo, param, new EbingoHandler() {
             @Override
@@ -124,14 +124,9 @@ public class MySupplyActivity extends BaseActivity implements AdapterView.OnItem
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
-                if (searchSupplyBeans != null && searchSupplyBeans.size() != 0) {
-                    mysupplylv.setVisibility(View.VISIBLE);
-                    mSupplyBeans.clear();
-                    mSupplyBeans.addAll(searchSupplyBeans);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    mysupplylv.setVisibility(View.GONE);
-                }
+                mSupplyBeans.clear();
+                mSupplyBeans.addAll(searchSupplyBeans);
+                adapter.notifyDataSetChanged();
 
                 dialog.dismiss();
 
@@ -140,14 +135,12 @@ public class MySupplyActivity extends BaseActivity implements AdapterView.OnItem
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                mysupplylv.setVisibility(View.GONE);
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                mysupplylv.setVisibility(View.GONE);
                 dialog.dismiss();
             }
         });
@@ -168,21 +161,13 @@ public class MySupplyActivity extends BaseActivity implements AdapterView.OnItem
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        Intent intent = new Intent(MySupplyActivity.this, ProductInfoActivity.class);
-        intent.putExtra(ProductInfoActivity.ARG_ID, mSupplyBeans.get(position).getId());
-        startActivity(intent);
-
-    }
-
-    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
         DialogUtil.showDeleteDialog(this, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0:delete(position);
+                    case 0:
+                        delete(position);
                         break;
                     case 1:
                         break;

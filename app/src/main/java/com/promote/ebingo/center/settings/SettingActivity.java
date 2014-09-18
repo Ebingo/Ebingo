@@ -42,7 +42,7 @@ public class SettingActivity extends BaseActivity {
                         }).show();
                 break;
             case R.id.clear_cache:
-                ((EbingoApp)getApplicationContext()).cleanCurComany();
+
                 ContextUtil.toast("清除成功！");
                 break;
             case R.id.suggestion:
@@ -50,6 +50,7 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.logout:
                 Company.getInstance().clearCompany();
+//                ((EbingoApp)getApplicationContext()).cleanCurComany();
                 toActivity(LoginActivity.class);
                 finish();
                 break;

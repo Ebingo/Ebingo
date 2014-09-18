@@ -11,6 +11,7 @@
     <ImageView
         android:layout_gravity="center_vertical|left"
         android:id="@+id/common_back_btn"
+        android:onClick="onClick"
         style="@style/back_arro_style" />
 
     <TextView
@@ -22,11 +23,13 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/btn_done"
+        android:id="@+id/common_title_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="9dp"
+        android:clickable="true"
+        android:onClick="onClick"
         style="@style/font_white_18"
         android:text="完成" />
 </FrameLayout>

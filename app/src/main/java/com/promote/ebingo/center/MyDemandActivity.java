@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -31,11 +32,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MyDemandActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
+public class MyDemandActivity extends BaseListActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
 
-    private ListView mydemandlv;
-    private ImageView commonbackbtn;
-    private TextView commontitletv;
     private ArrayList<SearchDemandBean> mDemandBeans = new ArrayList<SearchDemandBean>();
     private MyAdapter adapter;
     private ItemDelteDialog mItemDeleteDialog = null;
@@ -47,42 +45,16 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_demand);
         initialize();
     }
 
     private void initialize() {
-        commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
-        commontitletv = (TextView) findViewById(R.id.common_title_tv);
-        mydemandlv = (ListView) findViewById(R.id.mydemand_lv);
 
-        commonbackbtn.setOnClickListener(this);
-        commontitletv.setText(R.string.my_demand);
         adapter = new MyAdapter();
-        mydemandlv.setAdapter(adapter);
-        mydemandlv.setOnItemClickListener(this);
-        mydemandlv.setOnItemLongClickListener(this);
+        setListAdapter(adapter);
+        getListView().setOnItemLongClickListener(this);
         mItemDeleteDialog = new ItemDelteDialog(this, this);
         getMyDemandList(0);
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        int id = v.getId();
-        switch (id) {
-
-            case R.id.common_back_btn: {
-
-                onBackPressed();
-                finish();
-                break;
-            }
-
-            default: {
-                break;
-            }
-        }
     }
 
     private void getMyDemandList(int lastId) {
@@ -104,29 +76,22 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 ArrayList<SearchDemandBean> demandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
-                if (demandBeans != null && demandBeans.size() != 0) {
-                    mydemandlv.setVisibility(View.VISIBLE);
-                    mDemandBeans.clear();
-                    mDemandBeans.addAll(demandBeans);
 
-                    adapter.notifyDataSetChanged();
-                } else {
-                    mydemandlv.setVisibility(View.GONE);
-                }
+                mDemandBeans.clear();
+                mDemandBeans.addAll(demandBeans);
+                adapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                mydemandlv.setVisibility(View.GONE);
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                mydemandlv.setVisibility(View.GONE);
                 dialog.dismiss();
             }
         });
@@ -187,8 +152,7 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(MyDemandActivity.this, BuyInfoActivity.class);
         intent.putExtra(BuyInfoActivity.DEMAND_ID, mDemandBeans.get(position).getId());
         startActivity(intent);

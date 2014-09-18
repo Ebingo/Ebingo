@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/gray_bg"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <include layout="@layout/common_head_layout_2" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        style="@style/logo_style"
+        android:src="@drawable/logo_large" />
+
     <EditText
         android:id="@+id/edit_phone"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/widget_height"
         style="@style/font_black_15"
-        android:padding="8dp"
-        android:background="@color/white"
-        android:layout_margin="12dp"
-        android:hint="@string/phone_number"/>
-    <Button
-        android:id="@+id/btn_getYZM"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/widget_height"
-        android:layout_margin="12dp"
-        android:padding="5dp"
+        android:drawableLeft="@drawable/ic_edit_account"
+        android:drawablePadding="@dimen/ic_padding"
+        android:layout_height="@dimen/login_input_height"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/corner_frame"
+        android:hint="@string/hint_edit_phone"
+        android:inputType="phone"
+        android:padding="8dp" />
+
+    <Button
+        android:id="@+id/btn_next"
+        style="@style/blue_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_widget_height"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="@dimen/login_btn_margin_top"
         android:onClick="onClick"
-        style="@style/font_white_15"
-        android:text="获 取 验 证 码"
-        android:background="@drawable/btn_yellow"/>
+        android:padding="5dp"
+        android:text="下 一 步" />
 </LinearLayout>

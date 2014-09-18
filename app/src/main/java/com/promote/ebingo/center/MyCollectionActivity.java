@@ -19,6 +19,7 @@ import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -33,22 +34,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MyCollectionActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MyCollectionActivity extends BaseListActivity implements View.OnClickListener {
 
-    private ListView mycollv;
-    private ImageView commonbackbtn;
-    private TextView commontitletv;
     private DisplayImageOptions mOptions;
 
     private MyAdapter myAdapter = null;
 
     private ArrayList<CollectBean> mCollections = new ArrayList<CollectBean>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_cellection);
         initialize();
     }
 
@@ -62,32 +58,12 @@ public class MyCollectionActivity extends Activity implements View.OnClickListen
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
-        commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
-        commontitletv = (TextView) findViewById(R.id.common_title_tv);
-        mycollv = (ListView) findViewById(R.id.mycol_lv);
 
-        commontitletv.setText(getString(R.string.my_collect));
-        commonbackbtn.setOnClickListener(this);
         myAdapter = new MyAdapter();
-        mycollv.setAdapter(myAdapter);
-        mycollv.setOnItemClickListener(this);
+        setListAdapter(myAdapter);
         getWishlist(0);
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.common_back_btn: {
-
-                onBackPressed();
-                finish();
-                break;
-            }
-
-        }
-
-    }
 
     /**
      * 获取收藏列表.
@@ -108,39 +84,31 @@ public class MyCollectionActivity extends Activity implements View.OnClickListen
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                LogCat.i("--->",response.toString());
+                LogCat.i("--->", response.toString());
                 ArrayList<CollectBean> collectBeans = CollectBeanTools.getCollections(response.toString());
-                if (collectBeans != null && collectBeans.size() >= 0) {
-                    mycollv.setVisibility(View.VISIBLE);
-                    mCollections.clear();
-                    mCollections.addAll(collectBeans);
-                    myAdapter.notifyDataSetChanged();
-                } else {
-                    mycollv.setVisibility(View.GONE);
-                }
 
+                mCollections.clear();
+                mCollections.addAll(collectBeans);
+                myAdapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                mycollv.setVisibility(View.GONE);
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                mycollv.setVisibility(View.GONE);
                 dialog.dismiss();
             }
         });
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(MyCollectionActivity.this, ProductInfoActivity.class);
         intent.putExtra(ProductInfoActivity.ARG_ID, mCollections.get(position).getInfo_id());
         intent.putExtra("collectId", mCollections.get(position).getId());

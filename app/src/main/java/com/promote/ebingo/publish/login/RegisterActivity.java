@@ -1,30 +1,19 @@
 package com.promote.ebingo.publish.login;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.jch.lib.util.HttpUtil;
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.HttpConstant;
-import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
-import com.promote.ebingo.util.LogCat;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by acer on 2014/9/2.
  */
-public class RegisterActivity extends Activity implements View.OnClickListener{
+public class RegisterActivity extends BaseActivity implements View.OnClickListener{
     private final String logTag = getClass().getSimpleName();
     EditText edit_phone;
     public static final int REQUEST_CODE=1001;
@@ -33,11 +22,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_get_yzm);
         edit_phone=(EditText)findViewById(R.id.edit_phone);
-        findViewById(R.id.common_back_btn).setOnClickListener(this);
+        ((TextView)findViewById(R.id.common_title_done)).setText(R.string.login_);
     }
     public void onClick(View v){
         switch (v.getId()){
-            case R.id.btn_getYZM:
+            case R.id.btn_next:
             {
                 final String phonenum=edit_phone.getText().toString().trim();//用户输入的手机号
                 LoginManager manager=new LoginManager();
@@ -59,8 +48,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
 
                 break;
             }
-            case R.id.common_back_btn:
-                finish();
+            case R.id.common_title_done:
+                Intent intent=new Intent(this,LoginActivity.class);
+                startActivity(intent);
                 break;
         }
     }
