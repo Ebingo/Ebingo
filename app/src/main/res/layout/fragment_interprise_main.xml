@@ -180,7 +180,9 @@
 
             <com.jch.lib.view.ScrollListView
                 android:id="@+id/interpise_main_sup_dem_lv"
+                android:divider="@color/info_list_div"
                 android:layout_width="match_parent"
+                android:dividerHeight="0.5dp"
                 android:layout_marginTop="5dp"
                 android:scrollbars="none"
                 android:layout_height="match_parent" />

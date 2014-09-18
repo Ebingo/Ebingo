@@ -16,16 +16,16 @@
         android:orientation="horizontal"
         android:layout_height="@dimen/title_height">
 
-       <RadioButton
-           android:id="@+id/frag_iprise_supply_ll"
-           android:text="@string/supply_info"
-           android:checked="true"
+        <RadioButton
+            android:id="@+id/frag_iprise_supply_ll"
+            android:text="@string/supply_info"
+            android:checked="true"
+            style="@style/iprise_s_d_tab_style" />
 
-       style="@style/iprise_s_d_tab_style" />
-       <RadioButton
-           android:id="@+id/frag_iprise_demand_ll"
-           android:text="@string/buy_info"
-           style="@style/iprise_s_d_tab_style" />
-   </RadioGroup>
+        <RadioButton
+            android:id="@+id/frag_iprise_demand_ll"
+            android:text="@string/buy_info"
+            style="@style/iprise_s_d_tab_style" />
+    </RadioGroup>
 
 </LinearLayout>

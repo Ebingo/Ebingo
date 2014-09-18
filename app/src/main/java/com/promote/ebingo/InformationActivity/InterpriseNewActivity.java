@@ -9,6 +9,8 @@ import com.promote.ebingo.R;
 
 public class InterpriseNewActivity extends Activity {
 
+    public final static String ARG_ID = "news_id";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,4 +36,6 @@ public class InterpriseNewActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
