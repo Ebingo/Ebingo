@@ -76,12 +76,12 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.login.RegisterActivity"
-            android:label="@string/reg"
+            android:label="@string/reg_for_free"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.login.RegisterInputYzm"
-            android:label="@string/reg"
+            android:label="@string/reg_for_free"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity

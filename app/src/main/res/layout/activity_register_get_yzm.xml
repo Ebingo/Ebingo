@@ -24,7 +24,8 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:background="@drawable/corner_frame"
-        android:hint="@string/phone_number"
+        android:hint="@string/hint_edit_phone"
+        android:inputType="phone"
         android:padding="8dp" />
 
     <Button

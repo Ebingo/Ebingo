@@ -15,7 +15,8 @@
             android:drawableLeft="@drawable/ic_edit_account"
             android:id="@+id/edit_user_name"
             android:drawablePadding="@dimen/ic_padding"
-            android:hint="@string/user_name"
+
+            android:hint="@string/hint_edit_phone"
             />
 
         <EditText
@@ -31,7 +32,7 @@
             android:inputType="textPassword"
             android:id="@+id/edit_password"
             android:ems="10"
-            android:hint="@string/password"/>
+            android:hint="@string/hint_edit_psw"/>
         <Button
             android:id="@+id/common_title_done"
             android:layout_width="match_parent"

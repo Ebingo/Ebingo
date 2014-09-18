@@ -183,4 +183,7 @@
     <string name="company">公司</string>
     <string name="qq_group">问题反馈QQ群：32111452</string>
     <string name="notice_3d">尊敬的VVIP会员：</string>
+    <string name="hint_edit_phone">请输入手机号</string>
+    <string name="hint_edit_psw">请输入密码</string>
+    <string name="hint_edit_verify">请输入验证码</string>
 </resources>

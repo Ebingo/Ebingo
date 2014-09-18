@@ -33,8 +33,8 @@
                 android:layout_height="@dimen/login_input_height"
                 android:drawableLeft="@drawable/ic_edit_account"
                 android:drawablePadding="@dimen/ic_padding"
-                android:hint="@string/phone_num"
-                android:inputType="number"
+                android:hint="@string/hint_edit_phone"
+                android:inputType="phone"
                 android:singleLine="true" />
 
             <View style="@style/divider_horizontal" />
@@ -46,7 +46,7 @@
                 android:layout_height="@dimen/login_input_height"
                 android:drawableLeft="@drawable/ic_edit_password"
                 android:drawablePadding="@dimen/ic_padding"
-                android:hint="@string/password"
+                android:hint="@string/hint_edit_psw"
                 android:inputType="textPassword"
                 android:singleLine="true" />
 

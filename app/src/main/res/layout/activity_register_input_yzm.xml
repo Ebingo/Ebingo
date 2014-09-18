@@ -16,6 +16,7 @@
 
     <LinearLayout
         style="@style/info_content_pad"
+        android:paddingTop="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -31,7 +32,7 @@
                     android:layout_height="@dimen/login_input_height"
                     android:drawableLeft="@drawable/ic_regsiter_verify"
                     android:drawablePadding="@dimen/ic_padding"
-                    android:hint="@string/yzm" />
+                    android:hint="@string/hint_edit_verify" />
 
                 <Button
                     android:id="@+id/btn_next"
@@ -61,7 +62,7 @@
                     android:layout_height="@dimen/login_input_height"
                     android:drawableLeft="@drawable/ic_edit_password"
                     android:drawablePadding="@dimen/ic_padding"
-                    android:hint="密  码"
+                    android:hint="@string/hint_edit_psw"
                     android:inputType="textPassword" />
 
                 <ToggleButton
