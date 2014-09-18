@@ -37,13 +37,13 @@ public class GetInfoDetail {
                 DetailInfoBean detailInfo = null;
                 try {
                     response=response.getJSONObject("response");
+                    LogCat.i("--->",response+"");
                     if (HttpConstant.CODE_OK.equals(response.getString("code"))){
                         LogCat.i("--->", response.getJSONObject("data").toString());
                         detailInfo = JsonUtil.get(response.getJSONObject("data").toString(), DetailInfoBean.class);
                         if (detailInfo != null) {
                             callBack.onSuccess(detailInfo);
                         } else {
-
                             String msg = "获取数据错误";
                             callBack.onFailed(msg);
                             // TODO 获取数据失败。
@@ -61,12 +61,13 @@ public class GetInfoDetail {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 String msg = "获取数据失败";
                 callBack.onFailed(msg);
+                LogCat.i("--->",errorResponse+"");
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
+                LogCat.i("--->",responseString+"");
                 String msg = "获取数据失败";
                 callBack.onFailed(msg);
                 super.onFailure(statusCode, headers, responseString, throwable);

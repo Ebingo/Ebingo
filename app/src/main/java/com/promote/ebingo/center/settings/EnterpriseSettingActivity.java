@@ -9,12 +9,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -22,7 +24,9 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.PreviewActivity;
 import com.promote.ebingo.publish.PublishBaseActivity;
+import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -32,6 +36,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+
 import static com.promote.ebingo.publish.login.RegisterActivity.REQUEST_CODE;
 
 /**
@@ -62,8 +67,32 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         edit_enterprise_phone = findEdit(R.id.edit_enterprise_phone);
         edit_enterprise_site = findEdit(R.id.edit_enterprise_site);
         edit_enterprise_email = findEdit(R.id.edit_enterprise_email);
-
         image_enterprise.setOnClickListener(this);
+        setData();
+    }
+    private void setData() {
+        Company company = Company.getInstance();
+        if (!TextUtils.isEmpty(company.getName())) edit_enterprise_name.setText(company.getName());
+        edit_enterprise_address.setText(company.getRegion());
+        edit_enterprise_site.setText(company.getWebsite());
+        edit_enterprise_email.setText(company.getEmail());
+        edit_enterprise_phone.setText(company.getHeadPhone());
+        image_enterprise.setContentDescription(company.getImage());
+        setHeadImage(Company.getInstance().getImageUri());
+    }
+
+    public void setHeadImage(Uri uri) {
+        if (uri == null) {
+            LogCat.e("--->", "setHeadImage uriError uri=" + uri);
+            return;
+        }
+
+        try {
+            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            image_enterprise.setImageBitmap(bm);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -71,8 +100,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         switch (v.getId()) {
             case R.id.btn_done:
                 EbingoRequestParmater parmater = new EbingoRequestParmater(this);
-                final Integer company_id=6;
-                final String image_url = image_enterprise.getTag() + "";
+                final Integer company_id = 6;
+                final String image_url = image_enterprise.getContentDescription()+"";
                 final String name = edit_enterprise_name.getText().toString().trim();
                 final String company_tel = edit_enterprise_phone.getText().toString().trim();
                 final String region = edit_enterprise_address.getText().toString().trim();
@@ -92,9 +121,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         try {
-                            JSONObject result=response.getJSONObject("response");
-                            if(HttpConstant.CODE_OK.equals(result.getString("code"))){
-                                Company company=Company.getInstance();
+                            JSONObject result = response.getJSONObject("response");
+                            if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
+                                Company company = Company.getInstance();
                                 company.setCompanyId(company_id);
                                 company.setImage(image_url);
                                 company.setName(name);
@@ -102,9 +131,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                                 company.setRegion(region);
                                 company.setWebsite(website);
                                 company.setEmail(email);
-                                setResult(RESULT_OK,new Intent());
+                                setResult(RESULT_OK, new Intent());
                                 finish();
-                            }else{
+                            } else {
                                 ContextUtil.toast(response);
                             }
                         } catch (JSONException e) {
@@ -157,7 +186,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code")))
-                        image_enterprise.setTag(result.getString("data"));
+                        image_enterprise.setContentDescription(result.getString("data"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -188,7 +217,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                         break;
                 }
             }
-        }).create().show();
+        }).show();
     }
 
     /**

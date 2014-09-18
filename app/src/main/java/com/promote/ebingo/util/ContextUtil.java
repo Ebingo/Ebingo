@@ -49,30 +49,5 @@ public class ContextUtil {
         return mContext.getString(resId);
     }
 
-    /**
-     * 拨打电话
-     * @param context
-     * @param number
-     */
-    public static void dialNumber(final Activity context, final String number) {
-        if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return;
-        DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
-                        context.startActivity(intent);
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        dialog.dismiss();
-                        break;
-                }
-            }
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("拨打电话")
-                .setMessage("是否拨打" + number + "?")
-                .setPositiveButton("拨打", null).setNegativeButton("取消", null).show();
-    }
+
 }

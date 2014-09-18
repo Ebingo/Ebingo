@@ -75,7 +75,7 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
         String[] info = getResources().getStringArray(resMap.get(displayVipType.code));
         View v = inflater.inflate(R.layout.privilege_info, null);
         addItem((LinearLayout) v.findViewById(R.id.info_content), info, inflater);
-        if (displayVipType.compareTo(VipType.VISITOR) == 0) {
+        if (displayVipType.compareTo(VipType.parse(Company.getInstance().getVipType())) <= 0) {
             v.findViewById(R.id.btn_apply_vip).setVisibility(View.GONE);
         } else {
             v.findViewById(R.id.btn_apply_vip).setOnClickListener(this);

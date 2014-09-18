@@ -143,6 +143,7 @@ public class MyCollectionActivity extends Activity implements View.OnClickListen
 
         Intent intent = new Intent(MyCollectionActivity.this, ProductInfoActivity.class);
         intent.putExtra(ProductInfoActivity.ARG_ID, mCollections.get(position).getInfo_id());
+        intent.putExtra("collectId", mCollections.get(position).getId());
         startActivity(intent);
     }
 

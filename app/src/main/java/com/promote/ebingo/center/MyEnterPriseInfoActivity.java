@@ -1,21 +1,24 @@
 package com.promote.ebingo.center;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
-import com.jch.lib.util.TextUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.impl.EbingoHandler;
+import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginActivity;
+import com.promote.ebingo.util.JsonUtil;
+
+import org.json.JSONObject;
 
 /**
  * Created by acer on 2014/9/16.
@@ -34,7 +37,7 @@ public class MyEnterPriseInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_enterprise_activity);
-        init();
+        findIds();
         if (Company.getInstance().getCompanyId() == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -47,7 +50,7 @@ public class MyEnterPriseInfoActivity extends BaseActivity {
         setData();
     }
 
-    private void init() {
+    private void findIds() {
         tv_companyName = (TextView) findViewById(R.id.tv_companyName);
         tv_region_top = (TextView) findViewById(R.id.tv_region_top);
         tv_vipType = (TextView) findViewById(R.id.tv_vipType);

@@ -41,14 +41,14 @@
                     style="@style/font_blue_15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="南京普尔摩" />
+                    android:text="公司名" />
 
                 <TextView
                     android:id="@+id/tv_region_top"
                     style="@style/font_gray_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="江苏 南京" />
+                    android:text="公司地区" />
 
                 <TextView
                     android:id="@+id/tv_vipType"

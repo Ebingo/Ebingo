@@ -45,7 +45,6 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
     private SearchDemandBean mDelDemandBean = null;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_demand);
@@ -64,7 +63,6 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
         mydemandlv.setOnItemClickListener(this);
         mydemandlv.setOnItemLongClickListener(this);
         mItemDeleteDialog = new ItemDelteDialog(this, this);
-
         getMyDemandList(0);
     }
 
@@ -99,7 +97,6 @@ public class MyDemandActivity extends Activity implements View.OnClickListener, 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
 
         HttpUtil.post(urlStr, parma, new JsonHttpResponseHandler() {
 

@@ -8,24 +8,34 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.TextUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
+import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.center.MyCollectionActivity;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
@@ -34,7 +44,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     private TextView prdinfointocompanytv;
     private TextView prdinfocompanytv;
     private RelativeLayout prdinfobtmll;
-    private ImageView productinfoimg;
+    private WebView productinfoimg;
     private CheckBox productinfotelcb;
     private CheckBox productinfocollectcb;
     private RelativeLayout productinforlll;
@@ -46,8 +56,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     private LinearLayout productinfonameleftll;
     private TextView productinfocitytv;
     private WebView productinfoDetailwv;
-
     private DetailInfoBean mDetailInfoBean = null;
+    private int collectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +68,14 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
 
     private void initialize() {
-
+        collectId = getIntent().getIntExtra("collectId", -1);
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
 
         prdinfointocompanytv = (TextView) findViewById(R.id.prd_info_into_company_tv);//进入公司
         prdinfocompanytv = (TextView) findViewById(R.id.prd_info_company_tv);//公司名
         prdinfobtmll = (RelativeLayout) findViewById(R.id.prd_info_btm_ll);
-        productinfoimg = (ImageView) findViewById(R.id.product_info_img);
+        productinfoimg = (WebView) findViewById(R.id.product_info_img);
         productinfotelcb = (CheckBox) findViewById(R.id.product_info_tel_cb);//电话咨询
         productinfocollectcb = (CheckBox) findViewById(R.id.product_info_collect_cb);//收藏
         productinforlll = (RelativeLayout) findViewById(R.id.product_info_rl_ll);
@@ -81,16 +91,30 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         assert (productId != -1);
         //網絡訪問
         getInfoDetail(productId);
-        commontitletv.setText(
-                (R.string.title_product_info));
+        commontitletv.setText(R.string.title_product_info);
         commonbackbtn.setOnClickListener(this);
         productinfotelcb.setOnClickListener(this);
-        productinfocollectcb.setOnClickListener(this);
         prdinfointocompanytv.setOnClickListener(this);
+        productinfocollectcb.setOnClickListener(this);
+        productinfoimg.getSettings().setJavaScriptEnabled(true);
+        productinfoimg.loadUrl("http://218.244.149.129/3d/wai/index.html");
     }
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        int location[]=new int[2];
+//        productinfoimg.getLocationOnScreen(location);
+//        int w=productinfoimg.getWidth();
+//        int h=productinfoimg.getHeight();
+//        if(location[0]+w<event.getX()||location[0]>event.getX()||location[1]+h<event.getY()||location[1]>event.getY()){
+//            productinfoimg.onTouchEvent(event);
+//            return true;
+//        }
+//        return false;
+//    }
 
     private void setData(DetailInfoBean infoBean) {
+        LogCat.i("--->", infoBean + "");
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
         pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
@@ -100,6 +124,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         } else {
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "");
         }
+        productinfocollectcb.setChecked(infoBean.getInwishlist() == 1);
         productinfocitytv.setText(infoBean.getRegion());
         productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
         productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
@@ -119,21 +144,88 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 break;
             }
             case R.id.prd_info_into_company_tv:
-//                productinfoDetailwv.loadUrl(mDetailInfoBean);
+                Intent intent=new Intent(this,InterpriseInfoActivity.class);
+                intent.putExtra(InterpriseInfoActivity.ARG_ID,mDetailInfoBean.getCompany_id());
+                startActivity(intent);
                 break;
             case R.id.product_info_tel_cb:
-                ContextUtil.dialNumber(this,mDetailInfoBean.getPhone_num());
+                CallRecord record=new CallRecord();
+                record.setCall_id(Company.getInstance().getCompanyId());
+                record.setInfoId(mDetailInfoBean.getInfo_id());
+                record.setTo_id(mDetailInfoBean.getCompany_id());
+                record.setPhone_num(mDetailInfoBean.getPhone_num());
+                CallRecordActivity.CallRecordManager.dialNumber(this, record);
                 break;
             case R.id.product_info_collect_cb:
-                Intent intent=new Intent(this, MyCollectionActivity.class);
-                startActivity(intent);
+                if (productinfocollectcb.isChecked()){
+                    addCollection(mDetailInfoBean.getInfo_id());
+                } else {
+                    cancelCollection(collectId);
+                }
                 break;
             default: {
             }
         }
     }
 
+    /**
+     * 添加收藏
+     * @param id
+     */
+    private void addCollection(int id){
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("company_id", Company.getInstance().getCompanyId());
+        parmater.put("info_id",id);
+        HttpUtil.post(HttpConstant.addToWishlist, parmater, new EbingoHandler() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                ContextUtil.toast("添加收藏成功！");
+                try {
+                    collectId = response.getJSONObject("data").getInt("wishlistid");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onFail(int statusCode, String msg) {
+                ContextUtil.toast("添加收藏失败！"+msg);
+                productinfocollectcb.setChecked(false);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+    }
+
+    /**
+     * 取消收藏
+     * @param id
+     */
+    private void cancelCollection(int id){
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("company_id", Company.getInstance().getCompanyId());
+        parmater.put("wishlistid",id);
+        HttpUtil.post(HttpConstant.cancleWishlist, parmater, new EbingoHandler() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                ContextUtil.toast("取消收藏成功！");
+            }
+
+            @Override
+            public void onFail(int statusCode, String msg) {
+                ContextUtil.toast("取消收藏失败！"+msg);
+                productinfocollectcb.setChecked(true);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+    }
 
     /**
      * 獲得詳情。

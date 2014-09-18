@@ -119,4 +119,14 @@ public class HttpConstant {
      */
     public static final String addAdvice=getRootUrl()+"addAdvice";
 
+    /**
+     * 添加收藏
+     */
+    public static final String addToWishlist=getRootUrl()+"addToWishlist";
+
+    /**
+     * 添加通话记录
+     */
+    public static final String addCallRecord=getRootUrl()+"addCallRecord";
+
 }

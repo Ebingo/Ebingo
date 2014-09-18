@@ -24,9 +24,14 @@ public class Company {
 
     private static Company mCompany = null;
 
-    private Company() {
+    public Company() {
 
     }
+
+    /**
+     * 获取当前公司
+     * @return
+     */
 
     public static Company getInstance() {
         if (mCompany == null) {

@@ -361,7 +361,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         String urlStr = HttpConstant.getCurrentCompanyBaseNum;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
         parmater.put("company_id", Company.getInstance().getCompanyId());
-        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         LogCat.i("--->" + parmater);
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("UTF-8") {
 
@@ -381,24 +380,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                dialog.dismiss();
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-
-                dialog.dismiss();
-            }
-
         });
     }
 

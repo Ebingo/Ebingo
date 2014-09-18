@@ -4,15 +4,25 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.publish.AutoLineLayout;
 
-public class MyBookActivity extends Activity {
+public class MyBookActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_book);
+        LinearLayout layout= (LinearLayout) findViewById(R.id.tag_content);
+        TagView tagView = (TagView) View.inflate(this, R.layout.sample_tag_view, null);
+        layout.addView(tagView);
     }
 
 

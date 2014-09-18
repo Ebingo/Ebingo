@@ -1,9 +1,15 @@
 package com.promote.ebingo.center;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,11 +23,13 @@ import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.VaildUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.JsonUtil;
@@ -43,12 +51,15 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
     private final static int ITEM_CANCEL_ID = 3;
     private ArrayList<CallRecord> records;
     private RecordAdapter adapter;
+    private CallRecordManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_record);
         ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
         findViewById(R.id.common_back_btn).setOnClickListener(this);
+        manager = new CallRecordManager(getApplicationContext());
         getCallRecord();
         registerForContextMenu(getListView());
     }
@@ -74,7 +85,7 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
                     JSONArray recordsJson = response.getJSONArray("response");
                     records = new ArrayList<CallRecord>();
                     JsonUtil.getArray(recordsJson, CallRecord.class, records);
-                    adapter=new RecordAdapter(CallRecordActivity.this, records);
+                    adapter = new RecordAdapter(CallRecordActivity.this, records);
                     setListAdapter(adapter);
                 } catch (JSONException e) {
                     LogCat.e("NO Call Record!");
@@ -124,7 +135,7 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
                                 ContextUtil.toast("操作成功!");
                                 records.remove(info.position);
                                 adapter.notifyDataSetChanged();
-                            }else {
+                            } else {
                                 ContextUtil.toast("操作失败!");
                             }
                         } catch (JSONException e) {
@@ -187,16 +198,33 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
             holder.title.setText(callRecord.getName());
             holder.contact.setText(callRecord.getContacts());
             holder.date.setText(callRecord.getCall_time());
-            holder.dial.setTag(callRecord.getPhone_num());
-            holder.dial.setOnClickListener(dialListener);
+            holder.dial.setTag(callRecord);
+            holder.dial.setOnClickListener(new DialListener());
             convertView.setTag(holder);
             return convertView;
+        }
+
+        class DialListener implements View.OnClickListener {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    CallRecord record = (CallRecord) v.getTag();
+                    LogCat.i("--->", record + "");
+                    LogCat.i("--->", record.getPhone_num() + "");
+                    LogCat.i("--->", record.getTo_id() + "");
+                    CallRecordManager.dialNumber(CallRecordActivity.this, record);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         private View.OnClickListener dialListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContextUtil.dialNumber(CallRecordActivity.this, v.getTag().toString());
+                CallRecord record = (CallRecord) v.getTag();
+                CallRecordManager.dialNumber(CallRecordActivity.this, record);
             }
         };
 
@@ -206,6 +234,58 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
             TextView contact;
             TextView date;
             View dial;
+        }
+    }
+
+    public static class CallRecordManager {
+        private Context context;
+
+        public CallRecordManager(Context context) {
+            this.context = context;
+        }
+
+        public void addCallRecord(CallRecord record, JsonHttpResponseHandler handler) {
+            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
+            parmater.put("call_id", record.getCall_id());
+            parmater.put("to_id", record.getTo_id());
+            parmater.put("info_id", record.getInfoId());
+            HttpUtil.post(HttpConstant.addCallRecord, parmater, handler);
+        }
+
+        public void deleteCallRecord(int id, JsonHttpResponseHandler handler) {
+            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
+            HttpUtil.post(HttpConstant.deleteInfo, parmater, handler);
+        }
+
+        /**
+         * 拨打电话
+         *
+         * @param context
+         */
+        public static void dialNumber(final Activity context, final CallRecord record) {
+            final String number = record.getPhone_num();
+            if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return;
+            DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+                            context.startActivity(intent);
+                            new CallRecordManager(context).addCallRecord(record, new JsonHttpResponseHandler());
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            dialog.dismiss();
+                            break;
+                    }
+                }
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("拨打电话")
+                    .setMessage("是否拨打" + number + "?")
+                    .setPositiveButton("拨打", l)
+                    .setNegativeButton("取消", l)
+                    .show();
         }
     }
 }

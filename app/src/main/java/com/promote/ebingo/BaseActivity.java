@@ -17,7 +17,7 @@ public class BaseActivity extends Activity implements View.OnClickListener {
         try {
             ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
         }catch (NullPointerException e){
-            throw new IllegalStateException("Activity which extends BaseActivity, must include a TextView with id:common_title_tv");
+            throw new IllegalStateException("BaseActivity must include a TextView with id:common_title_tv");
         }
     }
 

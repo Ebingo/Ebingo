@@ -312,39 +312,6 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         return (myCode & code) != 0;
     }
 
-    public void startPublish(EbingoRequestParmater parmater) {
-
-        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
-        HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                ContextUtil.toast(response);
-                try {
-                    JSONObject result = response.getJSONObject("response");
-                    if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
-                        Intent intent = new Intent(getActivity(), MySupplyActivity.class);
-                        startActivity(intent);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                ContextUtil.toast(responseString);
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                dialog.dismiss();
-            }
-        });
-    }
-
     public static class Error {
 
         public static final int CATEGORY_EMPTY = 1;

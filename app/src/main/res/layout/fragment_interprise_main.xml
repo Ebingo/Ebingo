@@ -82,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_gray_12"
-                    android:text="义乌市松鼠路199号" />
+                    android:text="www.baidu.com" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_gray_12"
-                    android:text="义乌市松鼠路199号" />
+                    android:text="13355578946" />
             </LinearLayout>
 
             <LinearLayout
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/font_gray_12"
-                    android:text="义乌市松鼠路199号" />
+                    android:text="方暮云" />
             </LinearLayout>
 
         </LinearLayout>
@@ -150,7 +150,7 @@
             android:id="@+id/frag_interprise_main_range_tv"
             android:layout_width="match_parent"
             style="@style/font_gray_14"
-            android:text="你好哦哦，傻帽吧，被坑了吧。"
+            android:text="服装定制，鞋子定制。"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
@@ -175,7 +175,7 @@
             android:layout_width="match_parent"
             android:paddingLeft="5dp"
             style="@style/font_gray_14"
-            android:text="傻帽，騙的就是你。"
+            android:text="华为是全球领先的信息与通信解决方案供应商。我们围绕客户的需求持续创新，与合作伙伴开放合作，在电信网络、企业网络、消费者和云计算等领域构筑了端到端的解决方案优势。"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -198,7 +198,7 @@
             android:layout_width="match_parent"
             android:layout_marginTop="5dp"
             android:scrollbars="none"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>

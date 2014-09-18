@@ -13,6 +13,7 @@ import android.graphics.Xfermode;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.jch.lib.util.DialogUtil;
@@ -22,6 +23,17 @@ import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 
 import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +43,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by acer on 2014/9/9.
@@ -45,6 +61,7 @@ public class ImageUtil {
      * 保存方法
      */
     public static Uri saveBitmap(Bitmap bm, String picName) {
+        if (TextUtils.isEmpty(picName)||bm==null)return null;
         File f = new File(getImageFile(), picName);
         if (f.exists()) {
             f.delete();
@@ -94,43 +111,64 @@ public class ImageUtil {
 
     /**
      * 以一个bitmap的中心为圆点，以radius为半径，去截取
+     *
      * @param src
      * @param radius
      * @return
      */
     public static Bitmap roundBitmap(Bitmap src, int radius) {
 
-        int src_w=src.getWidth();
-        int src_h=src.getHeight();
-        int result_length=radius*2;
-        LogCat.i("--->","src_w="+src_w+" src_h="+src_h);
+        int src_w = src.getWidth();
+        int src_h = src.getHeight();
+        int result_length = radius * 2;
+        LogCat.i("--->", "src_w=" + src_w + " src_h=" + src_h);
         float scale;
-        if(src_w>src_h){
-            scale=result_length/(float)src_h;
-        }else{
-            scale=result_length/(float)src_w;
+        if (src_w > src_h) {
+            scale = result_length / (float) src_h;
+        } else {
+            scale = result_length / (float) src_w;
         }
-        src_w*=scale;
-        src_h*=scale;
-        LogCat.i("--->","src_w="+src_w+" src_h="+src_h+" scale="+scale+" radius="+radius);
-        Bitmap resizeSrc=Bitmap.createScaledBitmap(src,src_w,src_h,false);//缩放后的Bitmap
+        src_w *= scale;
+        src_h *= scale;
+        LogCat.i("--->", "src_w=" + src_w + " src_h=" + src_h + " scale=" + scale + " radius=" + radius);
+        Bitmap resizeSrc = Bitmap.createScaledBitmap(src, src_w, src_h, false);//缩放后的Bitmap
 
-        final Paint paint=new Paint();
+        final Paint paint = new Paint();
         paint.setAntiAlias(true);
-        Bitmap result=Bitmap.createBitmap(result_length,result_length, Bitmap.Config.ARGB_8888);
-        Canvas canvas=new Canvas(result);
+        Bitmap result = Bitmap.createBitmap(result_length, result_length, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(result);
 //        canvas.drawARGB(0,0,0,0);//背景透明效果
-        canvas.drawCircle(radius,radius,radius,paint);
+        canvas.drawCircle(radius, radius, radius, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
-        float translate_x=(result.getWidth()-resizeSrc.getWidth())/2;
-        float translate_y=(result.getHeight()-resizeSrc.getHeight())/2;
+        float translate_x = (result.getWidth() - resizeSrc.getWidth()) / 2;
+        float translate_y = (result.getHeight() - resizeSrc.getHeight()) / 2;
 
         canvas.save();
-        canvas.translate(translate_x,translate_y);
-        canvas.drawBitmap(resizeSrc,0,0,paint);
+        canvas.translate(translate_x, translate_y);
+        canvas.drawBitmap(resizeSrc, 0, 0, paint);
         canvas.restore();
 
         return result;
+    }
+
+    /**
+     * 耗时方法，不可放在UI线程上
+     * @param path
+     * @return
+     */
+    public static Bitmap getImageFromWeb(String path) {
+        try {
+            URL url = new URL(path);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            InputStream is = connection.getInputStream();
+            return BitmapFactory.decodeStream(is);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

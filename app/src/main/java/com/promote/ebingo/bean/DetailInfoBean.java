@@ -9,6 +9,7 @@ public class DetailInfoBean {
      * 信息 id *
      */
     private int info_id;
+
     /**
      * 标题 *
      */

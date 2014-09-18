@@ -33,7 +33,6 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interprise_info);
-
         initialize();
     }
 
@@ -44,12 +43,9 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
         interpriseinfovp = (ViewPager) findViewById(R.id.interprise_info_vp);
 
         tabStr = getResources().getStringArray(R.array.interprise_info_tab);
-
-
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         interpriseinfovp.setAdapter(myPagerAdapter);
         interpriseinfotab.setViewPager(interpriseinfovp);
-
         commonbackbtn.setOnClickListener(this);
 
     }

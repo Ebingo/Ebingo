@@ -5,12 +5,31 @@ package com.promote.ebingo.bean;
  */
 public class CallRecord {
 
-    Integer infoId;
-    String name;
-    String type;//关联信息类型1求2供
-    String call_time;//上次拨打时间
-    String phone_num;//被叫电话号码
-    String contacts;
+    private Integer infoId;
+    private String name;
+    private String type;//关联信息类型1求2供
+    private String call_time;//上次拨打时间
+    private String phone_num;//被叫电话号码
+    private String contacts;
+    private Integer call_id;//主叫
+    private Integer to_id;//被叫
+
+    public Integer getTo_id() {
+        return to_id;
+    }
+
+    public void setTo_id(Integer to_id) {
+        this.to_id = to_id;
+    }
+
+    public Integer getCall_id() {
+        return call_id;
+    }
+
+    public void setCall_id(Integer call_id) {
+        this.call_id = call_id;
+    }
+
 
     public String getContacts() {
         return contacts;

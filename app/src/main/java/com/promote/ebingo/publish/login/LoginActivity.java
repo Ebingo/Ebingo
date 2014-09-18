@@ -14,6 +14,7 @@ import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.TextUtil;
 import com.jch.lib.util.VaildUtil;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.EbingoApp;
 
 /**
  * Created by acer on 2014/9/3.
@@ -49,6 +50,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getResources().getString(R.string.login_));
         btndone.setOnClickListener(this);
+        editusername.setText(((EbingoApp) getApplicationContext()).getCurCompanyName());
+        editpassword.setText(((EbingoApp) getApplicationContext()).getCurCompanyPwd());
     }
 
     @Override
@@ -102,7 +105,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void onSuccess() {
                 dialog.dismiss();
-                onBackPressed();
                 LoginActivity.this.finish();
             }
 
