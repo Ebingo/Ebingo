@@ -2,10 +2,12 @@ package com.promote.ebingo.InformationActivity;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,7 +37,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  * 公司首页。
  */
-public class InterpriseMainFragment extends InterpriseBaseFragment {
+public class InterpriseMainFragment extends InterpriseBaseFragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -87,6 +89,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment {
                 .showImageOnLoading(R.drawable.loading)
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
+        getDataInfo();
 
     }
 
@@ -97,7 +100,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment {
         View containerView = inflater.inflate(R.layout.fragment_interprise_main, container, false);
 
         initialize(containerView);
-        getDataInfo();
+
         return containerView;
     }
 
@@ -116,7 +119,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment {
 
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
-
+        interpisemainsupdemlv.setOnItemClickListener(this);
     }
 
     /**
@@ -182,10 +185,26 @@ public class InterpriseMainFragment extends InterpriseBaseFragment {
         myAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        CurrentSupplyBean currentSupply = currentSupplyBeans.get(position);
+        Intent intent = null;
+        if (currentSupply.getType() == 1) {
+            intent = new Intent(getActivity(), ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID, currentSupply.getId());
+        } else {
+            intent = new Intent(getActivity(), BuyInfoActivity.class);
+            intent.putExtra(BuyInfoActivity.DEMAND_ID, currentSupply.getId());
+        }
+
+        startActivity(intent);
+    }
+
     /**
      * BaseAdapter.
      */
-    public class MyAdapter extends BaseAdapter {
+    private class MyAdapter extends BaseAdapter {
 
 
         private DisplayImageOptions options = null;
@@ -252,4 +271,6 @@ public class InterpriseMainFragment extends InterpriseBaseFragment {
         TextView describe;
         TextView time;
     }
+
+
 }

@@ -1,9 +1,7 @@
 package com.promote.ebingo.bean;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -14,21 +12,23 @@ public class GetIndexBeanTools {
     private GetIndexBean response;
 
 
-    public static GetIndexBean getIndexBeanJson(String json){
+    public static GetIndexBean getIndexBeanJson(String json) {
 
 //        Type type = new TypeToken<GetIndexBeanTools>(){}.getType();
-        return  ((GetIndexBeanTools)(new Gson()).fromJson(json, GetIndexBeanTools.class)).getIndexBean();
+        return ((GetIndexBeanTools) (new Gson()).fromJson(json, GetIndexBeanTools.class)).getIndexBean();
 
     }
 
-    public GetIndexBean getIndexBean(){
+    public GetIndexBean getIndexBean() {
         return response;
     }
 
 
-    public class GetIndexBean{
+    public class GetIndexBean {
 
-        /** 公告条. **/
+        /**
+         * 公告条. *
+         */
 
         private ArrayList<Adv> ads = null;
 
