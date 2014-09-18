@@ -16,7 +16,6 @@ import android.widget.ImageView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
-import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -24,9 +23,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.PreviewActivity;
 import com.promote.ebingo.publish.PublishBaseActivity;
-import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
-import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -36,8 +33,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-
-import static com.promote.ebingo.publish.login.RegisterActivity.REQUEST_CODE;
 
 /**
  * Created by acer on 2014/9/9.
@@ -76,7 +71,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         edit_enterprise_address.setText(company.getRegion());
         edit_enterprise_site.setText(company.getWebsite());
         edit_enterprise_email.setText(company.getEmail());
-        edit_enterprise_phone.setText(company.getHeadPhone());
+        edit_enterprise_phone.setText(company.getCompanyTel());
         image_enterprise.setContentDescription(company.getImage());
         setHeadImage(Company.getInstance().getImageUri());
     }
@@ -98,7 +93,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_done:
+            case R.id.common_title_done:
                 EbingoRequestParmater parmater = new EbingoRequestParmater(this);
                 final Integer company_id = 6;
                 final String image_url = image_enterprise.getContentDescription()+"";
@@ -224,13 +219,6 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
      * 从相册中选择一张图片
      */
     private void goToAlbum() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "EbingooPics");
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                LogCat.d("--->", "failed to create directory");
-                return;
-            }
-        }
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
@@ -247,7 +235,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     private Uri getImageCacheUri() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "enterprise_image");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "EbingooPics");
         if (!file.exists()) {
             if (!file.mkdirs()) {
                 LogCat.e("--->", "create Image File failed!!");
@@ -259,13 +247,16 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) return;
+        if (data == null) return;
+        Uri uri = data.getData();
         switch (requestCode) {
             case PICK_CAMERA:
-                toPreviewActivity(getImageCacheUri());
+                LogCat.i("--->", uri.toString());
+                if (uri != null) {
+                    toPreviewActivity(uri);
+                }
                 break;
             case PICK_IMAGE:
-                if (data == null) return;
-                Uri uri = data.getData();
                 LogCat.i("--->", uri.toString());
                 if (uri != null) {
                     toPreviewActivity(uri);

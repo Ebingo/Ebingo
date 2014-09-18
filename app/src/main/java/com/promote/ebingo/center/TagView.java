@@ -7,25 +7,31 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.promote.ebingo.R;
+import com.promote.ebingo.util.LogCat;
 
 /**
  * TODO: document your custom view class.
  */
 public class TagView extends View {
-    private String text; // TODO: use a default from R.string...
-    private int textColor = Color.RED; // TODO: use a default from R.color...
-    private float mExampleDimension = 0; // TODO: use a default from R.dimen...
+    private String text;
+    private int baseColor = Color.RED;
+    private int numberColor = Color.WHITE;
+    private float textSize;
 
     private TextPaint mPaint;
+    private TextPaint mNumberPaint;
     private float mTextWidth;
     private float mTextHeight;
     private float radius;
     private int DEFAULT_RADIUS = 20;
     private float horizontal_spacing;
     private float vertical_spacing;
+    private int number;
+    private boolean inDeleteState = false;
 
     public TagView(Context context) {
         super(context);
@@ -42,24 +48,75 @@ public class TagView extends View {
         init(attrs, defStyle);
     }
 
+    public boolean isInDeleteState() {
+        return inDeleteState;
+    }
+
+    public void setInDeleteState(boolean inDeleteState) {
+        this.inDeleteState = inDeleteState;
+        invalidateTextPaintAndMeasurements();
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+        invalidateTextPaintAndMeasurements();
+    }
+
+    public float getVertical_spacing() {
+        return vertical_spacing;
+    }
+
+    public void setVertical_spacing(float vertical_spacing) {
+        this.vertical_spacing = vertical_spacing;
+        invalidateTextPaintAndMeasurements();
+    }
+
+    public float getHorizontal_spacing() {
+        return horizontal_spacing;
+    }
+
+    public void setHorizontal_spacing(float horizontal_spacing) {
+        this.horizontal_spacing = horizontal_spacing;
+        invalidateTextPaintAndMeasurements();
+    }
+
+    public float getTextSize() {
+        return textSize;
+    }
+
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
+        invalidateTextPaintAndMeasurements();
+    }
+
+
+    public int getBaseColor() {
+        return baseColor;
+    }
+
+    public void setBaseColor(int baseColor) {
+        this.baseColor = baseColor;
+        invalidateTextPaintAndMeasurements();
+    }
+
     private void init(AttributeSet attrs, int defStyle) {
         // Load attributes
-        final TypedArray a = getContext().obtainStyledAttributes(
-                attrs, R.styleable.TagView, defStyle, 0);
+        final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.TagView, defStyle, 0);
 
-        text = a.getString(
-                R.styleable.TagView_text);
+        text = a.getString(R.styleable.TagView_text);
         if (text == null) text = "";
-        textColor = a.getColor(
-                R.styleable.TagView_tagColor,
-                textColor);
+        baseColor = a.getColor(R.styleable.TagView_tagColor, baseColor);
         horizontal_spacing = a.getDimension(R.styleable.TagView_horizontal_spacing, 0);
         vertical_spacing = a.getDimension(R.styleable.TagView_vertical_spacing, 0);
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
         // values that should fall on pixel boundaries.
-        mExampleDimension = a.getDimension(
+        textSize = a.getDimension(
                 R.styleable.TagView_textSize,
-                mExampleDimension);
+                textSize);
 
 
         a.recycle();
@@ -68,18 +125,27 @@ public class TagView extends View {
         mPaint = new TextPaint();
         mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextAlign(Paint.Align.LEFT);
+
+        mNumberPaint = new TextPaint();
+        mNumberPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        mNumberPaint.setTextAlign(Paint.Align.LEFT);
+
         radius = getResources().getDisplayMetrics().densityDpi * DEFAULT_RADIUS + 0.5f;
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
     }
 
     private void invalidateTextPaintAndMeasurements() {
-        mPaint.setTextSize(mExampleDimension);
-        mPaint.setColor(textColor);
+        mPaint.setTextSize(textSize);
+        mPaint.setColor(baseColor);
         mTextWidth = mPaint.measureText(text);
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         mTextHeight = fontMetrics.descent - fontMetrics.ascent;
         radius = (int) (mTextHeight / 2.5);
+
+        mNumberPaint.setTextSize(textSize - 2);
+        mNumberPaint.setColor(numberColor);
+        invalidate();
     }
 
     @Override
@@ -108,83 +174,82 @@ public class TagView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         // TODO: consider storing these as member variables to reduce
-
         int rect_w = (int) (getWidth() - radius);
         int rect_h = (int) (getHeight() - radius);
-
-
         mPaint.setStyle(Paint.Style.STROKE);
         canvas.drawRect(0, radius, rect_w, getHeight() - 2, mPaint);
         // Draw the text.
-        float offset_y=mTextHeight/2+rect_h/2;
-        float textBaseY = (rect_h-mTextHeight)/2+radius;
-        canvas.drawText(text,
-                (rect_w - mTextWidth) / 2,
-                textBaseY ,
-                mPaint);
+        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+        canvas.drawText(text, (rect_w - mTextWidth) / 2, radius + rect_h / 2 - getBaseLineOffset(mPaint), mPaint);
+
         mPaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(rect_w, radius, radius, mPaint);
-        // Draw the example drawable on top of the text.
+        if (inDeleteState) {//画叉叉
+            canvas.drawCircle(rect_w, radius, radius, mPaint);
+            float rate = (float) Math.sqrt(2);
+            float startX = rect_w - radius / rate + 1;
+            float startY = radius + radius / rate - 1;
+            float length = (radius * 2) / rate - 2;
+//            LogCat.i("--->", "rectX=" + rect_w + " startX=" + startX + " startY=" + startY + " length=" + length);
+            canvas.drawLine(startX, startY, startX + length, startY - length, mNumberPaint);
+            canvas.drawLine(startX, startY - length, startX + length, startY, mNumberPaint);
+        } else if (number > 0) {//画数字
+            canvas.drawCircle(rect_w, radius, radius, mPaint);
+            float x = rect_w - mPaint.measureText(number + "") / 2;
+            canvas.drawText(number + "", x, radius - getBaseLineOffset(mNumberPaint), mNumberPaint);
+        }
     }
 
-    /**
-     * Gets the example string attribute value.
-     *
-     * @return The example string attribute value.
-     */
+    private float getBaseLineOffset(Paint paint) {
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        return (fm.ascent + fm.descent) / 2;
+    }
+
     public String getText() {
         return text;
     }
 
-    /**
-     * Sets the view's example string attribute value. In the example view, this string
-     * is the text to draw.
-     *
-     * @param exampleString The example string attribute value to use.
-     */
+
     public void setText(String exampleString) {
         text = exampleString;
         invalidateTextPaintAndMeasurements();
     }
 
-    /**
-     * Gets the example color attribute value.
-     *
-     * @return The example color attribute value.
-     */
-    public int getExampleColor() {
-        return textColor;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                return true;
+            case MotionEvent.ACTION_UP:
+                return performClick();
+        }
+        return super.onTouchEvent(event);
+    }
+
+    public OnTagClickListener getOnTagClickListener() {
+        return onTagClickListener;
+    }
+
+    public void setOnTagClickListener(OnTagClickListener onTagClickListener) {
+        this.onTagClickListener = onTagClickListener;
+    }
+
+    private OnTagClickListener onTagClickListener;
+
+    public boolean performClick() {
+        if (onTagClickListener != null) {
+            if (inDeleteState) onTagClickListener.onDelete(this);
+            else onTagClickListener.onTagClick(this);
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Sets the view's example color attribute value. In the example view, this color
-     * is the font color.
-     *
-     * @param exampleColor The example color attribute value to use.
+     * 删除接口
      */
-    public void setExampleColor(int exampleColor) {
-        textColor = exampleColor;
-        invalidateTextPaintAndMeasurements();
-    }
+    public interface OnTagClickListener {
+        public void onDelete(TagView v);
 
-    /**
-     * Gets the example dimension attribute value.
-     *
-     * @return The example dimension attribute value.
-     */
-    public float getExampleDimension() {
-        return mExampleDimension;
+        public void onTagClick(TagView v);
     }
-
-    /**
-     * Sets the view's example dimension attribute value. In the example view, this dimension
-     * is the font size.
-     *
-     * @param exampleDimension The example dimension attribute value to use.
-     */
-    public void setExampleDimension(float exampleDimension) {
-        mExampleDimension = exampleDimension;
-        invalidateTextPaintAndMeasurements();
-    }
-
 }

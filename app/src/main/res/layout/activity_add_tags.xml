@@ -18,7 +18,7 @@
             style="@style/font_blue_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="热门标签(069dd4 24点)" />
+            android:text="热门标签" />
 
         <com.promote.ebingo.publish.AutoLineLayout
             android:id="@+id/tags_container"
@@ -30,7 +30,7 @@
             style="@style/font_blue_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="新增标签(069dd4 24点)" />
+            android:text="新增标签" />
 
         <LinearLayout
             android:layout_width="match_parent"

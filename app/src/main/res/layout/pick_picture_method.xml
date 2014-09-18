@@ -16,20 +16,20 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_upload_normal_pic"
+            android:id="@+id/btn_album"
             style="@style/blue_button"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:text="上传普通图片" />
+            android:text="相册" />
 
         <Button
-            android:id="@+id/btn_upload_3d_pic"
+            android:id="@+id/btn_camera"
             style="@style/blue_button"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:text="上传3D图片" />
+            android:text="拍照" />
 
         <Button
             android:id="@+id/btn_cancel"

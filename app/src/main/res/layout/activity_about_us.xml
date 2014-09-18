@@ -74,7 +74,7 @@
 
                 <TextView
                     style="@style/publish_edit"
-                    android:text="@string/about_number" />
+                    android:text="@string/customer_service_number" />
             </TableRow>
 
             <View style="@style/divider_horizontal" />

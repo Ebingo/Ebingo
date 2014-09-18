@@ -12,6 +12,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
+
     <application
         android:name=".application.EbingoApp"
         android:allowBackup="true"
@@ -72,15 +73,15 @@
             android:name=".publish.PickCategoryActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.login.RegisterActivity"
-            android:label="@string/app_name"
+            android:label="@string/reg"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.login.RegisterInputYzm"
-            android:label="@string/app_name"
+            android:label="@string/reg"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
@@ -137,77 +138,84 @@
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.MySupplyActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/my_supply"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.MyDemandActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
+            android:label="@string/my_demand"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.MyCollectionActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name"
+            android:label="@string/my_collect"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.MyBookActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_my_book"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.MyPrivilegeActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_my_privilege"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.CallRecordActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_call_record"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.MyEnterPriseInfoActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_company_data"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.settings.SettingActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.settings.AboutUsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_about"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
             android:name=".center.settings.SuggestionActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_suggestion"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
+        <activity
+            android:name=".center.TagInfoListActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/title_suggestion"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateUnspecified|adjustPan"/>
     </application>
 
 </manifest>

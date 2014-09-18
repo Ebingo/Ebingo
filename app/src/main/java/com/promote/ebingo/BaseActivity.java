@@ -16,7 +16,7 @@ public class BaseActivity extends Activity implements View.OnClickListener {
         super.setContentView(layoutResID);
         try {
             ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new IllegalStateException("BaseActivity must include a TextView with id:common_title_tv");
         }
     }
@@ -38,5 +38,15 @@ public class BaseActivity extends Activity implements View.OnClickListener {
     protected String getText(TextView textView) {
         if (textView == null) return null;
         return textView.getText().toString().trim();
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        ((TextView) findViewById(R.id.common_title_tv)).setText(title);
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        ((TextView) findViewById(R.id.common_title_tv)).setText(titleId);
     }
 }

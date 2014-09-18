@@ -85,6 +85,10 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
      * 预览
      */
     public static final int PREVIEW = 1 << 6;
+   /**
+     * 选择3d
+     */
+    public static final int APPLY_3D = 1 << 7;
 
     /**
      * 标记由发布求购页面发出的选择

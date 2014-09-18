@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_head_layout" />
+
+    <LinearLayout
+        style="@style/info_content_pad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:background="@drawable/corner_frame"
+            android:id="@+id/textView"
+            style="@style/font_black_15"
+            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notice_3d" />
+
+        <Button
+            android:id="@+id/btn_apply_online"
+            android:layout_marginTop="18dp"
+            style="@style/yellow_button"
+            android:layout_width="match_parent"
+            android:text="在线申请" />
+
+        <Button
+            android:id="@+id/btn_consult"
+            android:layout_marginTop="16dp"
+            style="@style/blue_button"
+            android:layout_width="match_parent"
+            android:text="电话咨询" />
+    </LinearLayout>
+</LinearLayout>

@@ -18,9 +18,11 @@ import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.bean.DetailInfoBeanTools;
+import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
 
@@ -93,8 +95,12 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             case R.id.buy_info_contact_phone_tv: {
 
                 if (mDetailInfoBean != null) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mDetailInfoBean.getContacts()));
-                    startActivity(intent);
+                    CallRecord record=new CallRecord();
+                    record.setPhone_num( mDetailInfoBean.getPhone_num());
+                    record.setTo_id( mDetailInfoBean.getCompany_id());
+                    record.setCall_id(Company.getInstance().getCompanyId());
+                    record.setInfoId(mDetailInfoBean.getInfo_id());
+                    CallRecordActivity.CallRecordManager.dialNumber(this,record);
                 }
 
                 break;

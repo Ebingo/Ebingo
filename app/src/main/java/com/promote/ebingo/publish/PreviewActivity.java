@@ -52,7 +52,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
             case R.id.common_back_btn:
                 finish();
                 break;
-            case R.id.btn_done:
+            case R.id.common_title_done:
                 Intent data = new Intent();
                 data.setData(savedUri);
                 setResult(RESULT_OK, data);

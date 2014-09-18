@@ -2,6 +2,7 @@ package com.promote.ebingo.publish.login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -43,10 +44,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
         editusername = (EditText) findViewById(R.id.edit_user_name);
         editpassword = (EditText) findViewById(R.id.edit_password);
-        btndone = (Button) findViewById(R.id.btn_done);
+        btndone = (Button) findViewById(R.id.common_title_done);
         tvforgetpassword = (TextView) findViewById(R.id.tv_forget_password);
         tvreg = (TextView) findViewById(R.id.tv_reg);
-
+        tvreg.setOnClickListener(this);
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getResources().getString(R.string.login_));
         btndone.setOnClickListener(this);
@@ -66,7 +67,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             }
-            case R.id.btn_done: {
+            case R.id.common_title_done: {
                 String message = null;
                 String name = editusername.getText().toString().trim();
                 String pwd = editpassword.getText().toString().trim();
@@ -85,6 +86,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 break;
             }
 
+            case R.id.tv_reg: {
+                Intent intent = new Intent(this, RegisterActivity.class);
+                startActivity(intent);
+                break;
+
+            }
             default: {
 
             }
