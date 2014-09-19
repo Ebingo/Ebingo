@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.promote.ebingo.InformationActivity.InterpriseDemandInfo">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ListView
+        android:id="@+id/entpr_demand_lv"
+        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent"></ListView>
 
 </FrameLayout>

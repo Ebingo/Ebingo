@@ -5,12 +5,14 @@
     android:orientation="vertical"
     tools:context="com.promote.ebingo.InformationActivity.SupplyDemandInfoFragment">
 
-    <ListView
+    <FrameLayout
+        android:id="@+id/frag_s_d_fram"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:layout_weight="1"></FrameLayout>
 
     <RadioGroup
+        android:id="@+id/frag_iprise_s_d_cg"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
