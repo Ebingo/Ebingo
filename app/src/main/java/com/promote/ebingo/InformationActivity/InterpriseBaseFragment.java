@@ -9,13 +9,13 @@ public class InterpriseBaseFragment extends Fragment {
     /**
      * 企业id. *
      */
-    protected int interprsetId = -1;
+    private int interprsetId = -1;
 
     public int getInterprsetId() {
         return interprsetId;
     }
 
-    protected void setInterprsetId(int interprsetId) {
+    public void setInterprsetId(int interprsetId) {
         this.interprsetId = interprsetId;
     }
 

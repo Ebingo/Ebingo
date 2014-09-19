@@ -23,7 +23,7 @@ public class ComanyNewsListBeanTools {
 
     public static ArrayList<CompanyNewListBean> getCompanyNewsListBeans(String json) {
 
-        Type type = new TypeToken<InterpriseInfoBeanTools>() {
+        Type type = new TypeToken<ComanyNewsListBeanTools>() {
         }.getType();
 
         return ((ComanyNewsListBeanTools) new Gson().fromJson(json, type)).getResponse();

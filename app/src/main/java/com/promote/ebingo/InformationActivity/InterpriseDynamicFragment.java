@@ -71,7 +71,7 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
-        getCompanyNewsList();
+        getCompanyNewsList(0);
 
     }
 
@@ -108,10 +108,6 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
      */
     private class MyAdapter extends BaseAdapter {
 
-
-        private TextView ipriseinfodynamicdatetv;
-        private TextView ipriseinfodyanmicnametv;
-        private TextView ipriseinfodynamiccontenttv;
 
         @Override
         public int getCount() {
@@ -166,14 +162,17 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
     /**
      * 获取网络数据。
      */
-    private void getCompanyNewsList() {
+    private void getCompanyNewsList(int last_id) {
 
         String urlStr = HttpConstant.getCompanyNewsList;
 
-        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
+        EbingoRequestParmater param = new EbingoRequestParmater(getActivity().getApplicationContext());
+        param.put("company_id", getInterprsetId());
+        param.put("last_id", last_id);
+        param.put("pagesize", 20);
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
 
-        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("utf-8") {
+        HttpUtil.post(urlStr, param, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 

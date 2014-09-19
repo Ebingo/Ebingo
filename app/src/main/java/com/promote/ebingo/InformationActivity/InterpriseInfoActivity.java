@@ -17,7 +17,7 @@ import com.promote.ebingo.R;
 /**
  * 企业详情.
  */
-public class InterpriseInfoActivity extends FragmentActivity implements View.OnClickListener {
+public class InterpriseInfoActivity extends FragmentActivity implements View.OnClickListener, InterpriseMainFragment.OnFragmentInteractionListener {
 
     public static final String ARG_ID = "id";
     public static final String ARG_NAME = "name";
@@ -83,6 +83,11 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
             }
 
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(String name) {
+        commontitletv.setText(name);
     }
 
 

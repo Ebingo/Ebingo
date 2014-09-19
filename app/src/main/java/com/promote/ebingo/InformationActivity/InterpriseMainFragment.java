@@ -1,6 +1,7 @@
 package com.promote.ebingo.InformationActivity;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
+import com.jch.lib.view.PagerScrollView;
 import com.jch.lib.view.ScrollListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link InterpriseMainFragment#newInstance} factory method to
+ * Use the {@link com.promote.ebingo.InformationActivity.InterpriseMainFragment#newInstance} factory method to
  * create an instance of this fragment.
  * 公司首页。
  */
@@ -57,7 +59,10 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
     private ArrayList<CurrentSupplyBean> currentSupplyBeans = new ArrayList<CurrentSupplyBean>();
     private MyAdapter myAdapter = null;
 
+    private OnFragmentInteractionListener mListener;
+
     private DisplayImageOptions mOptions;
+    private PagerScrollView enterpriseinfopsv;
 
     /**
      * Use this factory method to create a new instance of
@@ -78,6 +83,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
     public InterpriseMainFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,7 +122,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
         fraginterprisemainrangetv = (TextView) containerView.findViewById(R.id.frag_interprise_main_range_tv);
         fraginterprisemainabstracttv = (TextView) containerView.findViewById(R.id.frag_interprise_main_abstract_tv);
         interpisemainsupdemlv = (ScrollListView) containerView.findViewById(R.id.interpise_main_sup_dem_lv);
-
+        enterpriseinfopsv = (PagerScrollView) containerView.findViewById(R.id.enterprise_info_psv);
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
         interpisemainsupdemlv.setOnItemClickListener(this);
@@ -142,6 +148,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
                 InterpriseInfoBean interpriseInfoBean = InterpriseInfoBeanTools.getInterpriseInfo(response.toString());
                 if (interpriseInfoBean != null) {
                     initData(interpriseInfoBean);
+                    mListener.onFragmentInteraction(interpriseInfoBean.getName());
                 }
 
                 dialog.dismiss();
@@ -200,6 +207,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
 
         startActivity(intent);
     }
+
 
     /**
      * BaseAdapter.
@@ -265,11 +273,42 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
 
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
     private static class ViewHolder {
         ImageView img;
         TextView describe;
         TextView time;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(String name);
     }
 
 

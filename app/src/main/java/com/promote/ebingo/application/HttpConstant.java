@@ -88,11 +88,17 @@ public class HttpConstant {
      * 获取信息详情接口. *
      */
     public static final String getInfoDetail = getRootUrl() + "getInfoDetail";
-    /** 上传图片接口. **/
+    /**
+     * 上传图片接口. *
+     */
     public static final String uploadImage = getRootUrl() + "uploadImage";
-    /** 更新企业信息. **/
+    /**
+     * 更新企业信息. *
+     */
     public static final String updateCompanyInfo = getRootUrl() + "updateCompanyInfo";
-    /** 获取当前登录公司的基本参数. **/
+    /**
+     * 获取当前登录公司的基本参数. *
+     */
     public static final String getCurrentCompanyBaseNum = getRootUrl() + "getCurrentCompanyBaseNum";
     /**
      * 删除供求信息. *
@@ -109,25 +115,21 @@ public class HttpConstant {
     /**
      * 申请vip
      */
-    public static final String applyVip=getRootUrl()+"applyVip";
+    public static final String applyVip = getRootUrl() + "applyVip";
     /**
      * 获取拨号纪录接口
      */
-    public static final String getCallRecord=getRootUrl()+"getCallRecord";
+    public static final String getCallRecord = getRootUrl() + "getCallRecord";
     /**
      * 意见反馈
      */
-    public static final String addAdvice=getRootUrl()+"addAdvice";
+    public static final String addAdvice = getRootUrl() + "addAdvice";
 
     /**
      * 添加收藏
      */
-    public static final String addToWishlist=getRootUrl()+"addToWishlist";
+    public static final String addToWishlist = getRootUrl() + "addToWishlist";
 
-    /**
-     * 添加通话记录
-     */
-    public static final String addCallRecord = getRootUrl() + "addCallRecord";
     /**
      * 获取用户的订阅标签
      */
@@ -135,11 +137,11 @@ public class HttpConstant {
     /**
      * 保存订阅标签
      */
-    public static final String saveTagList= getRootUrl() + "saveTagList";
+    public static final String saveTagList = getRootUrl() + "saveTagList";
     /**
-     *获取标签对应列表信息
+     * 获取标签对应列表信息
      */
-    public static final String getTagInfoList= getRootUrl() + "getTagInfoList";
+    public static final String getTagInfoList = getRootUrl() + "getTagInfoList";
 
     public static final String addCallRecord = getRootUrl() + "addCallRecord";
 
