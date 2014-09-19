@@ -27,7 +27,7 @@ import java.io.IOException;
  */
 public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
-    public static final String VVIP = "vvip";
+    public static final String SHOW_VVIP = "vvip";
     private PrivilegeInfoFragment[] fragments;
     private int cur = 0;
     private TextView tv_vipType;
@@ -91,7 +91,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         fragments[3].setDisplayVipType(VipType.VVIP);
         getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[0]).commit();
         String vipType = Company.getInstance().getVipType();
-        boolean beVVip=getIntent().getBooleanExtra(VVIP,false);
+        boolean beVVip=getIntent().getBooleanExtra(SHOW_VVIP,false);
         if (!TextUtils.isEmpty(vipType)&&!beVVip){
             for (int i = 0; i < fragments.length; i++) {
                 if (fragments[i].getDisplayVipType().code.equals(vipType)) {

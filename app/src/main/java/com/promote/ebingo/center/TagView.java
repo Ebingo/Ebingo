@@ -11,19 +11,30 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.promote.ebingo.R;
-import com.promote.ebingo.util.LogCat;
 
 /**
  * TODO: document your custom view class.
  */
 public class TagView extends View {
     private String text;
-    private int baseColor = Color.RED;
-    private int numberColor = Color.WHITE;
+    /**
+     * 选中颜色
+     */
+    private int checkedColor = Color.RED;
+    /**
+     * 指示内容颜色
+     */
+    private int indicateColor = Color.WHITE;
+    /**
+     * 未选中状态颜色
+     */
+    private int defaultColor;
     private float textSize;
-
+    private float indicateTextSize;
+    private float indicateWidth;
+    private float indicateHeight;
     private TextPaint mPaint;
-    private TextPaint mNumberPaint;
+    private TextPaint topRightPaint;
     private float mTextWidth;
     private float mTextHeight;
     private float radius;
@@ -31,6 +42,7 @@ public class TagView extends View {
     private float horizontal_spacing;
     private float vertical_spacing;
     private int number;
+    private String numberStr;
     private boolean inDeleteState = false;
 
     public TagView(Context context) {
@@ -94,12 +106,12 @@ public class TagView extends View {
     }
 
 
-    public int getBaseColor() {
-        return baseColor;
+    public int getCheckedColor() {
+        return checkedColor;
     }
 
-    public void setBaseColor(int baseColor) {
-        this.baseColor = baseColor;
+    public void setCheckedColor(int checkedColor) {
+        this.checkedColor = checkedColor;
         invalidateTextPaintAndMeasurements();
     }
 
@@ -109,7 +121,7 @@ public class TagView extends View {
 
         text = a.getString(R.styleable.TagView_text);
         if (text == null) text = "";
-        baseColor = a.getColor(R.styleable.TagView_tagColor, baseColor);
+        checkedColor = a.getColor(R.styleable.TagView_tagColor, checkedColor);
         horizontal_spacing = a.getDimension(R.styleable.TagView_horizontal_spacing, 0);
         vertical_spacing = a.getDimension(R.styleable.TagView_vertical_spacing, 0);
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
@@ -117,8 +129,15 @@ public class TagView extends View {
         textSize = a.getDimension(
                 R.styleable.TagView_textSize,
                 textSize);
-
-
+        indicateTextSize = a.getDimension(
+                R.styleable.TagView_indicateTextSize,
+                textSize);
+        indicateHeight= a.getDimension(
+                R.styleable.TagView_indicateHeight,
+                textSize);
+        number = a.getInteger(R.styleable.TagView_number, 0);
+        inDeleteState = a.getBoolean(R.styleable.TagView_deleteState, false);
+        defaultColor = a.getColor(R.styleable.TagView_defaultColor, Color.GRAY);
         a.recycle();
 
         // Set up a default TextPaint object
@@ -126,9 +145,9 @@ public class TagView extends View {
         mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextAlign(Paint.Align.LEFT);
 
-        mNumberPaint = new TextPaint();
-        mNumberPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mNumberPaint.setTextAlign(Paint.Align.LEFT);
+        topRightPaint = new TextPaint();
+        topRightPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        topRightPaint.setTextAlign(Paint.Align.LEFT);
 
         radius = getResources().getDisplayMetrics().densityDpi * DEFAULT_RADIUS + 0.5f;
         // Update TextPaint and text measurements from attributes
@@ -137,68 +156,93 @@ public class TagView extends View {
 
     private void invalidateTextPaintAndMeasurements() {
         mPaint.setTextSize(textSize);
-        mPaint.setColor(baseColor);
+        mPaint.setColor(checkedColor);
         mTextWidth = mPaint.measureText(text);
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         mTextHeight = fontMetrics.descent - fontMetrics.ascent;
-        radius = (int) (mTextHeight / 2.5);
 
-        mNumberPaint.setTextSize(textSize - 2);
-        mNumberPaint.setColor(numberColor);
+        topRightPaint.setTextSize(indicateTextSize);
+        if (number>100){
+            numberStr="99+";
+        }else{
+            numberStr=number+"";
+        }
+        indicateWidth=topRightPaint.measureText(numberStr)*1.6f;
+        if(indicateWidth<indicateHeight)indicateWidth=indicateHeight;
+        topRightPaint.setColor(indicateColor);
         invalidate();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = (int) (getSize(widthMeasureSpec, (int) mTextWidth) + horizontal_spacing);
-        int height = (int) (getSize(heightMeasureSpec, (int) mTextHeight) + vertical_spacing);
-        setMeasuredDimension(width, height);
-    }
-
-    private int getSize(int measureSpec, int contentSize) {
-        int size = MeasureSpec.getSize(measureSpec);
-        int mode = MeasureSpec.getMode(measureSpec);
-        switch (mode) {
-            case MeasureSpec.UNSPECIFIED:
-                size = (int) (contentSize + radius);
-                break;
-            case MeasureSpec.AT_MOST:
-                size = (int) (contentSize + radius);
-                break;
-            case MeasureSpec.EXACTLY:
-                break;
+        int width=MeasureSpec.getSize(widthMeasureSpec);
+        int height=MeasureSpec.getSize(heightMeasureSpec);
+        int widthMode=MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode=MeasureSpec.getMode(heightMeasureSpec);
+        if (widthMode!=MeasureSpec.EXACTLY){
+            width= (int) (mTextWidth+horizontal_spacing+indicateWidth/2);
         }
-        return size;
+        if (heightMode!=MeasureSpec.EXACTLY){
+            height= (int) (mTextHeight+vertical_spacing+indicateHeight/2);
+        }
+
+        setMeasuredDimension(width, height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         // TODO: consider storing these as member variables to reduce
-        int rect_w = (int) (getWidth() - radius);
-        int rect_h = (int) (getHeight() - radius);
-        mPaint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(0, radius, rect_w, getHeight() - 2, mPaint);
+        float indicate_width_half=indicateWidth/2;
+        float height_offset_half=indicateHeight/2;
+        int content_width = (int) (getWidth() - indicate_width_half);
+        int content_height = (int) (getHeight() - height_offset_half);
         // Draw the text.
-        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-        canvas.drawText(text, (rect_w - mTextWidth) / 2, radius + rect_h / 2 - getBaseLineOffset(mPaint), mPaint);
+        if (inDeleteState) {//删除状态
+            mPaint.setStyle(Paint.Style.STROKE);
+            mPaint.setColor(checkedColor);
+            //绘制矩形框
+            canvas.drawRect(0, height_offset_half, content_width, getHeight() - 2, mPaint);
+            //绘制文字内容
+            canvas.drawText(text, (content_width - mTextWidth) / 2, height_offset_half + content_height / 2 - getBaseLineOffset(mPaint), mPaint);
 
-        mPaint.setStyle(Paint.Style.FILL);
-        if (inDeleteState) {//画叉叉
-            canvas.drawCircle(rect_w, radius, radius, mPaint);
-            float rate = (float) Math.sqrt(2);
-            float startX = rect_w - radius / rate + 1;
-            float startY = radius + radius / rate - 1;
-            float length = (radius * 2) / rate - 2;
+            mPaint.setStyle(Paint.Style.FILL);
+            //绘制叉叉背景
+            canvas.drawCircle(content_width, height_offset_half, height_offset_half, mPaint);
+            float rate = (float) Math.sqrt(2);//根号2
+            float startX = content_width - height_offset_half / rate + 1;
+            float startY = height_offset_half + height_offset_half / rate - 1;
+            float length = (height_offset_half * 2) / rate - 2;
 //            LogCat.i("--->", "rectX=" + rect_w + " startX=" + startX + " startY=" + startY + " length=" + length);
-            canvas.drawLine(startX, startY, startX + length, startY - length, mNumberPaint);
-            canvas.drawLine(startX, startY - length, startX + length, startY, mNumberPaint);
-        } else if (number > 0) {//画数字
-            canvas.drawCircle(rect_w, radius, radius, mPaint);
-            float x = rect_w - mPaint.measureText(number + "") / 2;
-            canvas.drawText(number + "", x, radius - getBaseLineOffset(mNumberPaint), mNumberPaint);
+            //绘制叉叉，两条线段
+            canvas.drawLine(startX, startY, startX + length, startY - length, topRightPaint);
+            canvas.drawLine(startX, startY - length, startX + length, startY, topRightPaint);
+        } else {//画数字
+            mPaint.setColor(defaultColor);
+            mPaint.setStyle(Paint.Style.STROKE);
+            //绘制大矩形框
+            canvas.drawRect(0, height_offset_half, content_width, getHeight() - 2, mPaint);
+            //绘制文字内容
+            canvas.drawText(text, (content_width - mTextWidth) / 2, height_offset_half + content_height / 2 - getBaseLineOffset(mPaint), mPaint);
+            if (number > 0) {//绘制新消息数
+                topRightPaint.setStyle(Paint.Style.FILL);
+                topRightPaint.setColor(checkedColor);
+                //绘制右上角矩形框
+                canvas.drawRect(content_width - indicate_width_half, 0, content_width + indicate_width_half, 2 * height_offset_half, topRightPaint);
+
+                topRightPaint.setStyle(Paint.Style.STROKE);
+                topRightPaint.setColor(Color.BLACK);
+                canvas.drawRect(content_width - indicate_width_half, 0, content_width + indicate_width_half, 2 * height_offset_half, topRightPaint);
+//              canvas.drawCircle(rect_w, radius, radius, mPaint);
+                float x = content_width - topRightPaint.measureText(numberStr) / 2;
+                topRightPaint.setColor(indicateColor);
+                canvas.drawText(numberStr, x, height_offset_half - getBaseLineOffset(topRightPaint), topRightPaint);
+            }
         }
     }
 
+    /**
+     * 获取Paint的baseLine偏移量
+     */
     private float getBaseLineOffset(Paint paint) {
         Paint.FontMetrics fm = paint.getFontMetrics();
         return (fm.ascent + fm.descent) / 2;

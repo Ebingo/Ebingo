@@ -1,18 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray_bg"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/main_content_fl"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View style="@style/divider_horizontal" android:layout_height="1dp"/>
 
     <RadioGroup
         android:id="@+id/main_rg"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        android:paddingTop="3dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content">
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingTop="3dp">
 
         <RadioButton
             android:id="@+id/main_rb"
@@ -36,10 +45,5 @@
             android:drawableTop="@drawable/center_tab" />
     </RadioGroup>
 
-    <FrameLayout
-        android:id="@+id/main_content_fl"
-        android:layout_above="@id/main_rg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-</RelativeLayout>
+</LinearLayout>

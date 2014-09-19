@@ -38,7 +38,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
     private void initWidgets() {
         edit_phone = (EditText) findViewById(R.id.edit_user_name);
         edit_password = (EditText) findViewById(R.id.edit_password);
-        edit_phone.setText(((EbingoApp) getContext()).getCurCompanyName());
+        edit_phone.setText(((EbingoApp) getContext().getApplicationContext()).getCurCompanyName());
         edit_password.setText(((EbingoApp) getContext().getApplicationContext()).getCurCompanyPwd());
         findViewById(R.id.common_title_done).setOnClickListener(this);
         findViewById(R.id.tv_reg).setOnClickListener(this);

@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme">
         <item name="android:windowNoTitle">true</item>
-        <item name="android:textColorHint">#d4d9db</item>
+        <item name="android:textColorHint">#b7b7b7</item>
     </style>
 
     <style name="tab_btn" parent="font_gray_12">
@@ -133,10 +133,10 @@
 
 
     <style name="info_content_pad">
-        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">10dp</item>
-        <item name="android:paddingLeft">18dp</item>
-        <item name="android:paddingRight">18dp</item>
+        <item name="android:paddingLeft">22dp</item>
+        <item name="android:paddingRight">22dp</item>
     </style>
 
     <style name="center_divide">
@@ -151,9 +151,8 @@
         <item name="android:paddingRight">20dp</item>
         <item name="android:clickable">true</item>
         <item name="android:onClick">onClick</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@drawable/center_item_bg</item>
         <item name="android:drawableRight">@drawable/right_arro</item>
-        <item name="android:layout_marginTop">1dp</item>
         <item name="android:drawablePadding">15dp</item>
     </style>
 
@@ -197,6 +196,7 @@
 
     <style name="frame_bg_login" parent="frame_bg_layout">
         <item name="android:layout_marginTop">0dp</item>
+        <item name="android:background">@drawable/corner_frame_light</item>
     </style>
 
     <style name="frame_row_login">
@@ -213,9 +213,9 @@
     </style>
 
     <style name="divider_horizontal">
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">1px</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@color/publish_base_color</item>
+        <item name="android:background">@color/center_divider</item>
     </style>
 
     <style name="publish_text_style">

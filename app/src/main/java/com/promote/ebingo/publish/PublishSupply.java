@@ -1,11 +1,9 @@
 package com.promote.ebingo.publish;
 
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -66,6 +66,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     private TextView tv_pick_image;
 
     private ImageView picked_image;
+    private CheckBox upload_3d_cb;
 
     private final String CAMERA_PICTURE_NAME = "publish_upload.png";
 
@@ -84,12 +85,14 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         tv_pick_image = (TextView) v.findViewById(R.id.tv_pick_image);
 
         picked_image = (ImageView) v.findViewById(R.id.picked_image);
+        upload_3d_cb=(CheckBox)v.findViewById(R.id.upload_3d_cb);
 
         tv_pick_category.setOnClickListener(this);
         tv_pick_description.setOnClickListener(this);
         tv_pick_region.setOnClickListener(this);
         tv_pick_image.setOnClickListener(this);
         picked_image.setOnClickListener(this);
+        upload_3d_cb.setOnClickListener(this);
         v.findViewById(R.id.btn_publish).setOnClickListener(this);
         return v;
     }
@@ -124,6 +127,10 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 if (parmater != null) {
                     startPublish(parmater);
                 }
+                break;
+            }
+            case R.id.upload_3d_cb:{
+                check();
                 break;
             }
         }
@@ -311,7 +318,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     private void check() {
         if (VipType.parse(Company.getInstance().getVipType()).compareTo(VipType.VVIP) < 0) {
             Intent intent=new Intent(getActivity(), MyPrivilegeActivity.class);
-            intent.putExtra(MyPrivilegeActivity.VVIP,true);
+            intent.putExtra(MyPrivilegeActivity.SHOW_VVIP,true);
+            startActivity(intent);
         } else {
         }
 

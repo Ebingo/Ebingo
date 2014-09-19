@@ -20,6 +20,5 @@
         style="@style/blue_button"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="立即升级" />
 </LinearLayout>

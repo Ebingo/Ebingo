@@ -128,7 +128,7 @@
 
         <Button
             android:id="@+id/common_title_done"
-            style="@style/yellow_button"
+            style="@style/blue_button"
             android:layout_width="match_parent"
             android:layout_marginTop="15dp"
             android:onClick="onClick"

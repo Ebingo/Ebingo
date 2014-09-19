@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TableLayout style="@style/frame_bg_layout">
+        <TableLayout style="@style/frame_bg_layout"
+            android:layout_marginTop="5dp">
 
             <TableRow
                 android:id="@+id/pick_category"
@@ -138,8 +139,8 @@
 
         <Button
             android:id="@+id/btn_publish"
-            style="@style/yellow_button"
-            android:layout_marginTop="15dp"
+            style="@style/blue_button"
+            android:layout_marginTop="20dp"
             android:text="@string/btn_publish" />
     </LinearLayout>
 </ScrollView>

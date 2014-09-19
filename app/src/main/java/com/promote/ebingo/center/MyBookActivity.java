@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * 订阅标签、热门标签等
  */
-public class MyBookActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener,TagView.OnTagClickListener {
+public class MyBookActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener, TagView.OnTagClickListener {
 
     private LinearLayout tagContent;
     private MultiAutoCompleteTextView edit_tag;
@@ -78,7 +78,6 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 LogCat.i("--->", response + ":onSuccess");
-                ContextUtil.toast("" + response);
                 ArrayList<BookBean> books = new ArrayList<BookBean>();
                 try {
                     JsonUtil.getArray(response.getJSONArray("data"), BookBean.class, books);
@@ -112,13 +111,17 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         HttpUtil.post(HttpConstant.saveTagList, parmater, new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
-                LogCat.i("--->", response + ":onSuccess");
-                ContextUtil.toast("" + response);
+                ContextUtil.toast("保存成功！");
             }
 
             @Override
             public void onFail(int statusCode, String msg) {
-                LogCat.i("--->", msg + "::fail");
+                try {
+                    JSONObject fail = new JSONObject(msg);
+                    if (!"102".equals(fail.getString("code"))) ContextUtil.toast("保存失败！");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -140,9 +143,9 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     }
 
     private void addTag(BookBean bookBean) {
-        String name=bookBean.getName();
-        if (TextUtils.isEmpty(name)){
-            ContextUtil.toast("请输入标签！");
+        String name = bookBean.getName();
+        if (TextUtils.isEmpty(name)) {
+//            ContextUtil.toast("请输入标签！");
             return;
         }
         TagView tagView = (TagView) View.inflate(this, R.layout.sample_tag_view, null);
@@ -155,7 +158,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        toggleTagViewState(!isChecked);
+        toggleTagViewState(isChecked);
 
     }
 
@@ -174,10 +177,10 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     @Override
     public void onTagClick(TagView v) {
 //        if (v.getNumber()<=0)return;
-        Intent intent=new Intent(this,TagInfoListActivity.class);
-        BookBean bookBean= (BookBean) v.getTag();
-        intent.putExtra(TagInfoListActivity.ID,bookBean.getId());
-        intent.putExtra(TagInfoListActivity.NAME,bookBean.getName());
+        Intent intent = new Intent(this, TagInfoListActivity.class);
+        BookBean bookBean = (BookBean) v.getTag();
+        intent.putExtra(TagInfoListActivity.ID, bookBean.getId());
+        intent.putExtra(TagInfoListActivity.NAME, bookBean.getName());
         startActivity(intent);
     }
 }

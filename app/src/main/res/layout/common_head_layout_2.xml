@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/common_title_tv"
-        android:text="标题"
+        android:text="标 题"
         android:gravity="center"
         style="@style/font_white_18"
         android:layout_width="match_parent"
@@ -31,5 +31,5 @@
         android:clickable="true"
         android:onClick="onClick"
         style="@style/font_white_18"
-        android:text="完成" />
+        android:text="完 成" />
 </FrameLayout>

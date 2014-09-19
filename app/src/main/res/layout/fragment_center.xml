@@ -2,40 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray_bg"
     android:clickable="true"
     android:orientation="vertical"
     tools:context="com.promote.ebingo.center.CenterFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="center"
+        android:layout_height="@dimen/title_height"
         android:background="@color/title_blue"
-        android:layout_height="@dimen/title_height">
+        android:gravity="center">
 
         <TextView
             style="@style/font_white_20"
-            android:text="@string/tab_center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/tab_center" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:scrollbars="none"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:background="@color/gray_bg"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/gray_bg"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:gravity="center_horizontal"
-                android:background="@drawable/center_top_bg"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="200dp"
+                android:background="@drawable/center_top_bg"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -43,28 +44,28 @@
                     android:layout_weight="1" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/cent_top_img_ll"
-                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center_horizontal"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/center_head_iv"
                         android:layout_width="wrap_content"
-                        android:src="@drawable/center_head"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/center_head" />
 
                     <TextView
                         android:id="@+id/center_login_btn"
-                        android:text="@string/login"
-                        android:padding="5dp"
-                        android:background="@drawable/login_btn_shape"
-                        android:layout_marginTop="10dp"
                         style="@style/font_gray_18"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/login_btn_shape"
+                        android:padding="5dp"
+                        android:text="@string/login" />
 
                 </LinearLayout>
 
@@ -75,74 +76,74 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:weightSum="4"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:layout_below="@id/cent_top_img_ll"
                     android:background="@color/trans_black"
-                    android:layout_alignParentBottom="true"
-                    android:layout_height="wrap_content">
+                    android:weightSum="4">
 
                     <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_supply_num_tv"
-                            android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="0"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
 
                         <TextView
-                            android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="@string/supply"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/supply" />
                     </LinearLayout>
 
                     <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_demand_num_tv"
-                            android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="0"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
 
                         <TextView
                             style="@style/font_white_15"
                             android:layout_width="wrap_content"
-                            android:text="@string/buy"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@string/buy" />
                     </LinearLayout>
 
                     <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_collect_num_tv"
-                            android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="0"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
 
                         <TextView
-                            android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="@string/collect"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/collect" />
                     </LinearLayout>
 
                     <LinearLayout style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_msg_num_tv"
-                            android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="0"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
 
                         <TextView
-                            android:layout_width="wrap_content"
                             style="@style/font_white_15"
-                            android:text="@string/message"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/message" />
                     </LinearLayout>
 
 
@@ -151,85 +152,120 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
 
             <TextView
                 android:id="@+id/cent_supply_tv"
                 style="@style/cent_item"
-                android:drawableLeft="@drawable/center_supply"
-                android:text="@string/my_supply"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/center_supply"
+                android:text="@string/my_supply" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <TextView
                 android:id="@+id/cent_demand_tv"
                 style="@style/cent_item"
-                android:drawableLeft="@drawable/center_demand"
-                android:text="@string/my_demand"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/center_demand"
+                android:text="@string/my_demand" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <TextView
                 android:id="@+id/cent_collet_tv"
                 style="@style/cent_item"
-                android:drawableLeft="@drawable/center_collect"
-                android:text="@string/my_collect"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/center_collect"
+                android:text="@string/my_collect" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <TextView
                 android:id="@+id/cent_book_tv"
                 style="@style/cent_item"
-                android:drawableLeft="@drawable/center_book"
-                android:text="@string/my_book"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:drawableLeft="@drawable/center_book"
+                android:text="@string/my_book" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <TextView
                 android:id="@+id/cent_privilege_tv"
                 style="@style/cent_item"
-                android:drawableLeft="@drawable/center_privilege"
-                android:text="@string/title_my_privilege"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/center_privilege"
+                android:text="@string/title_my_privilege" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <TextView
                 android:id="@+id/cent_tell_history_tv"
                 style="@style/cent_item"
-                android:drawableLeft="@drawable/center_tell"
-                android:text="@string/my_tell_hostory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/center_tell"
+                android:text="@string/my_tell_hostory" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
 
-            <TextView
-                android:id="@+id/cent_setting_tv"
-                style="@style/cent_item"
-                android:drawableLeft="@drawable/center_setting"
-                android:text="@string/my_setting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
 
             <TextView
                 android:id="@+id/cent_profile_tv"
                 style="@style/cent_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
                 android:drawableLeft="@drawable/center_profile"
-                android:text="@string/my_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:text="@string/my_profile" />
 
-            <LinearLayout
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
+
+            <TextView
+                android:id="@+id/cent_setting_tv"
+                style="@style/cent_item"
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/center_setting"
+                android:text="@string/my_setting" />
+
+            <View
+                style="@style/divider_horizontal"
+                android:background="@color/center_divider" />
         </LinearLayout>
 
     </ScrollView>

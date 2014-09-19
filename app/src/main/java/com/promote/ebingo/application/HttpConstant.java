@@ -141,9 +141,6 @@ public class HttpConstant {
      */
     public static final String getTagInfoList= getRootUrl() + "getTagInfoList";
 
-    public static final String addCallRecord = getRootUrl() + "addCallRecord";
-
-
     /**
      * 获取公司详细信息
      */
