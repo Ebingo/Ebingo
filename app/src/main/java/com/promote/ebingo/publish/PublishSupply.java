@@ -322,7 +322,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
             EbingoDialog dialog = new EbingoDialog(getActivity());
             dialog.setTitle("尊敬的" + VipType.nameOf(vipCode));
             dialog.setMessage("您目前所属等级没有权限上传3D图片，请先升级");
-            dialog.setPositiveButton("升级", new DialogInterface.OnClickListener() {
+            dialog.setPositiveButton("升 级", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
@@ -331,7 +331,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                     startActivity(intent);
                 }
             });
-            dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton("取 消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     upload_3d_cb.setChecked(false);
