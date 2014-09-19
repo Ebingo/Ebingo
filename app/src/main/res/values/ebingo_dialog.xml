@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--EbingoDialog类相关的属性 -->
+    <color name="ebingo_dialog_background">#f5f5f5</color>
+
+    <color name="ebingo_dialog_title_color">#33b5e5</color>
+    <dimen name="ebingo_dialog_title_textSize">19sp</dimen>
+
+    <color name="ebingo_message_color">#565656</color>
+    <dimen name="ebingo_message_textSize">15sp</dimen>
+
+    <color name="ebingo_button_divider">#efeded</color>
+    <dimen name="ebingo_button_textSize">17sp</dimen>
+    <color name="ebingo_button_textColor">#000000</color>
+
+    <dimen name="text_padding_left">10dp</dimen>
+    <drawable name="ebingo_btn_pressed">#8FDCF7</drawable>
+    <drawable name="ebingo_btn_normal">#0000</drawable>
+</resources>

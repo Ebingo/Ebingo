@@ -20,6 +20,8 @@
             android:layout_height="wrap_content"
             android:text="企业设置" />
 
+        <View style="@style/divider_horizontal" />
+
         <TextView
             android:id="@+id/about_us"
             style="@style/cent_item"
@@ -42,6 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="清除缓存" />
+
+        <View style="@style/divider_horizontal" />
 
         <TextView
             android:id="@+id/suggestion"

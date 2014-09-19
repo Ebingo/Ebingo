@@ -4,6 +4,7 @@ package com.promote.ebingo.publish;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -85,7 +86,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         tv_pick_image = (TextView) v.findViewById(R.id.tv_pick_image);
 
         picked_image = (ImageView) v.findViewById(R.id.picked_image);
-        upload_3d_cb=(CheckBox)v.findViewById(R.id.upload_3d_cb);
+        upload_3d_cb = (CheckBox) v.findViewById(R.id.upload_3d_cb);
 
         tv_pick_category.setOnClickListener(this);
         tv_pick_description.setOnClickListener(this);
@@ -129,7 +130,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 }
                 break;
             }
-            case R.id.upload_3d_cb:{
+            case R.id.upload_3d_cb: {
                 check();
                 break;
             }
@@ -316,10 +317,28 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     };
 
     private void check() {
-        if (VipType.parse(Company.getInstance().getVipType()).compareTo(VipType.VVIP) < 0) {
-            Intent intent=new Intent(getActivity(), MyPrivilegeActivity.class);
-            intent.putExtra(MyPrivilegeActivity.SHOW_VVIP,true);
-            startActivity(intent);
+        String vipCode = Company.getInstance().getVipType();
+        if (VipType.parse(vipCode).compareTo(VipType.VVIP) < 0) {
+            EbingoDialog dialog = new EbingoDialog(getActivity());
+            dialog.setTitle("尊敬的" + VipType.nameOf(vipCode));
+            dialog.setMessage("您目前所属等级没有权限上传3D图片，请先升级");
+            dialog.setPositiveButton("升级", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
+                    intent.putExtra(MyPrivilegeActivity.SHOW_VVIP, true);
+                    upload_3d_cb.setChecked(false);
+                    startActivity(intent);
+                }
+            });
+            dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    upload_3d_cb.setChecked(false);
+                }
+            });
+            dialog.show();
+
         } else {
         }
 
