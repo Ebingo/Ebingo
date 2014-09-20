@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -85,7 +86,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
         final String yzm = edit_yzm.getText().toString().trim();
         String password = edit_password.getText().toString().trim();
 
-        if (!verify_image.getContentDescription().equals(yzm)) {
+        if (!checkVerify(yzm)) {
             ContextUtil.toast("验证码错误！");
             return;
         }
@@ -117,6 +118,11 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
 
             }
         });
+    }
+
+    private boolean checkVerify(String input){
+        String code=verify_image.getContentDescription().toString().toLowerCase();
+        return code.equals(input.toLowerCase());
     }
 
     /**

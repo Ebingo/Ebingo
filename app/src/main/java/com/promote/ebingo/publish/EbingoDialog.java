@@ -63,7 +63,7 @@ public class EbingoDialog extends AlertDialog {
     protected void onStart() {
         super.onStart();
         if (P.title != null) mTitleView.setText(P.title);
-        if (P.message != null) mMessage.setText(P.title);
+        if (P.message != null) mMessage.setText(P.message);
         if (P.textPositive != null)
             mPositiveButton.setText(P.textPositive);
 
@@ -72,11 +72,10 @@ public class EbingoDialog extends AlertDialog {
 
         if (P.mPositiveListener != null) {
             mPositiveButton.setOnClickListener(new CustomListener(this, P.mPositiveListener, BUTTON_POSITIVE));
-
         }
 
         if (P.mNativeListener != null) {
-            mPositiveButton.setOnClickListener(new CustomListener(this, P.mNativeListener, BUTTON_POSITIVE));
+            mNegativeButton.setOnClickListener(new CustomListener(this, P.mNativeListener, BUTTON_NEGATIVE));
         }
         if (P.mPositiveListener == null || P.mNativeListener == null)
             btn_divider.setVisibility(View.GONE);

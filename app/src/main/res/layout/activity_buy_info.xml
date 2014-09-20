@@ -74,8 +74,6 @@
                         <TextView
                             android:id="@+id/buy_info_name_tv"
                             style="@style/blue_15_tv"
-
-                            android:text="放大法是否撒發生的份上"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -95,7 +93,6 @@
                             <TextView
                                 android:id="@+id/buy_num_tv"
                                 style="@style/orange_14_tv"
-                                android:text="10000"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -116,8 +113,7 @@
                                 android:id="@+id/buy_info_publish_time_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                style="@style/gray_11_tv"
-                                android:text="2014-08-15 16:20" />
+                                style="@style/gray_11_tv" />
 
                             <TextView
                                 android:layout_marginLeft="30dp"
@@ -132,7 +128,7 @@
                                 android:layout_marginLeft="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1024" />
+                               />
 
                             <TextView
                                 android:text="@string/search_time"

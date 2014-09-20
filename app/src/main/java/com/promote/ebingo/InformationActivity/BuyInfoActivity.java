@@ -75,6 +75,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getString(R.string.title_buy_detail));
         buyInfocontactphonetv.setOnClickListener(this);
+        buyinfointocompanytv.setOnClickListener(this);
         getInfoDetail();
 
     }
@@ -116,7 +117,14 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
                 break;
 
             }
+            case R.id.buy_info_into_company_tv:{
 
+                Intent intent=new Intent(this,InterpriseInfoActivity.class);
+                intent.putExtra(InterpriseInfoActivity.ARG_ID,mDetailInfoBean.getCompany_id());
+                intent.putExtra(InterpriseInfoActivity.ARG_NAME,mDetailInfoBean.getCompany_name());
+                startActivity(intent);
+                break;
+            }
             default: {
 
             }

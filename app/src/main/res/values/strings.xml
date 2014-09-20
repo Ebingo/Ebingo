@@ -186,4 +186,6 @@
     <string name="hint_edit_phone">请输入手机号</string>
     <string name="hint_edit_psw">请输入密码</string>
     <string name="hint_edit_verify">请输入验证码</string>
+    <string name="title_activity_find_password">找回密码</string>
+
 </resources>

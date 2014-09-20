@@ -149,7 +149,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
         if (data != null) {
             result = data.getStringExtra("result");
         }
-        requestCode = requestCode & (0xfff);
+        requestCode = requestCode & (PublishFragment.REQUEST_MASK);
         if (result != null) {
             switch (requestCode) {
                 case PICK_CATEGORY:

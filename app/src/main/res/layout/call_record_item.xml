@@ -2,11 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/gray_bg"
-    android:paddingBottom="9dp"
-    android:paddingLeft="11dp"
-    android:paddingRight="11dp"
-    android:paddingTop="8dp">
+    android:background="@color/white"
+    style="@style/list_item_pad">
 
     <ImageView
         android:id="@+id/dial"

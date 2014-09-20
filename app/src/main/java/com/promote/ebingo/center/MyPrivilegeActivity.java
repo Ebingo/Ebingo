@@ -102,6 +102,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
             }
         }else {
             changeFrag(3);
+            ((RadioButton) ((RadioGroup) findViewById(R.id.rb_group)).getChildAt(3)).setChecked(true);
         }
     }
 

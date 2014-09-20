@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_head_layout" />
+
+    <LinearLayout
+        style="@style/info_content_pad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="找回密码的手机号" />
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_marginTop="16dp"
+            style="@style/blue_button"
+            android:text="下 一 步" />
+    </LinearLayout>
+</LinearLayout>

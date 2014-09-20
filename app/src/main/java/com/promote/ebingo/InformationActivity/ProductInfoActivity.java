@@ -143,11 +143,14 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 finish();
                 break;
             }
-            case R.id.prd_info_into_company_tv:
+            case R.id.buy_info_into_company_tv:{
+
                 Intent intent=new Intent(this,InterpriseInfoActivity.class);
                 intent.putExtra(InterpriseInfoActivity.ARG_ID,mDetailInfoBean.getCompany_id());
+                intent.putExtra(InterpriseInfoActivity.ARG_NAME,mDetailInfoBean.getCompany_name());
                 startActivity(intent);
                 break;
+            }
             case R.id.product_info_tel_cb:
                 CallRecord record=new CallRecord();
                 record.setCall_id(Company.getInstance().getCompanyId());

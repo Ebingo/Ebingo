@@ -78,7 +78,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         parama.put("pagesize ", 50);
         parama.put("company_id", Company.getInstance().getCompanyId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(MyCollectionActivity.this);
-
+        LogCat.i("--->", parama+"");
         HttpUtil.post(urlStr, parama, new JsonHttpResponseHandler("utf-8") {
 
             @Override
@@ -159,8 +159,8 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
             ImageManager.load(collectBean.getImg(), viewHolder.imgIv, mOptions);
             viewHolder.nameTv.setText(collectBean.getTitle());
             viewHolder.priceTv.setText(collectBean.getPrice());
-            viewHolder.timesTv.setText(collectBean.getCollectTimes());
-            viewHolder.timeTv.setText(collectBean.getTime());
+            viewHolder.timesTv.setText(collectBean.getCollect_num()+"");
+            viewHolder.timeTv.setText(collectBean.getCollectTimes());
 
             return convertView;
         }

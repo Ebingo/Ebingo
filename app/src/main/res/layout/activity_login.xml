@@ -72,7 +72,7 @@
 
             <TextView
                 android:id="@+id/tv_forget_password"
-                style="@style/font_black_15"
+                style="@style/font_gray_15"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -81,7 +81,7 @@
 
             <TextView
                 android:id="@+id/tv_reg"
-                style="@style/font_black_15"
+                style="@style/font_gray_15"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

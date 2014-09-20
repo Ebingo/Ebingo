@@ -22,7 +22,7 @@
     <dimen name="sub_tab_pad_b_t">8dp</dimen>
     <dimen name="category_tab_pad_right">50dp</dimen>
 
-    <dimen name="list_item_title_img_size">40dp</dimen>
+    <dimen name="list_item_title_img_size">50dp</dimen>
 
     <dimen name="cate_pop_widht">150dp</dimen>
 

@@ -39,7 +39,6 @@
                 android:layout_toLeftOf="@id/buy_info_into_company_tv"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
-                android:text="南京普爾么網絡技術有限公司"
                 android:layout_height="wrap_content" />
 
         </RelativeLayout>
@@ -117,7 +116,6 @@
                             style="@style/font_gray_15"
                             android:layout_alignParentLeft="true"
                             android:layout_gravity="left"
-                            android:text="水晶特價 感恩大回饋 水晶珠寶首飾"
                             android:layout_height="wrap_content" />
 
 
@@ -147,7 +145,6 @@
                                     android:id="@+id/product_info_price_tv"
                                     style="@style/orange_15_tv"
                                     android:textStyle="bold"
-                                    android:text="269"
                                     android:layout_width="wrap_content"
                                     android:layout_marginRight="10dp"
                                     android:layout_height="wrap_content" />
@@ -156,7 +153,6 @@
                                     android:id="@+id/product_info_start_num_tv"
                                     android:layout_width="wrap_content"
                                     style="@style/gray_11_tv"
-                                    android:text="10"
                                     android:layout_height="wrap_content" />
 
                                 <TextView
@@ -186,7 +182,6 @@
                                 <TextView
                                     android:id="@+id/product_info_look_num_tv"
                                     style="@style/gray_11_tv"
-                                    android:text="1000"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
 
@@ -203,7 +198,6 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignBottom="@id/product_info_price_ll"
                                 style="@style/gray_11_tv"
-                                android:text="深圳"
                                 android:layout_height="wrap_content" />
 
                         </RelativeLayout>

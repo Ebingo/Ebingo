@@ -156,5 +156,5 @@ public class HttpConstant {
      */
     public static final String getNewsWapUrl = getRootUrl() + "getNewsWapUrl";
 
-
+    public static final String addCallRecord=getRootUrl() +"addCallRecord";
 }

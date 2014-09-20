@@ -99,6 +99,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
      */
     public static final int PICK_FOR_SUPPLY = 1 << 14;
 
+    public static final int REQUEST_MASK=0xfff;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";

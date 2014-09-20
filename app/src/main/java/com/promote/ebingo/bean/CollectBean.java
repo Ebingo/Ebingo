@@ -35,10 +35,19 @@ public class CollectBean {
      * 搜藏次数. *
      */
     private String collectTimes;
+    private int collect_num;
     /**
      * 图片路径. *
      */
     private String img;
+
+    public int getCollect_num() {
+        return collect_num;
+    }
+
+    public void setCollect_num(int collect_num) {
+        this.collect_num = collect_num;
+    }
 
     public int getId() {
         return id;

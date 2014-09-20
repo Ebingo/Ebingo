@@ -80,6 +80,7 @@
         <item name="android:layout_height">@dimen/widget_height</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:onClick">onClick</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
@@ -137,7 +138,12 @@
         <item name="android:paddingLeft">22dp</item>
         <item name="android:paddingRight">22dp</item>
     </style>
-
+    <style name="list_item_pad">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
     <style name="center_divide">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">15dp</item>
@@ -303,7 +309,7 @@
         <item name="android:button">@null</item>
     </style>
 
-    <style name="tv_no_data" parent="font_black_18">
+    <style name="tv_no_data" parent="font_gray_20">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>

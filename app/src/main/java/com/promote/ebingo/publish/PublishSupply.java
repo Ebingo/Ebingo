@@ -13,14 +13,17 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -69,6 +72,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     private ImageView picked_image;
     private CheckBox upload_3d_cb;
 
+    private TextView tv_3d_notice;
     private final String CAMERA_PICTURE_NAME = "publish_upload.png";
 
     @Override
@@ -84,10 +88,10 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         tv_pick_description = (TextView) v.findViewById(R.id.tv_pick_description);
         tv_pick_region = (TextView) v.findViewById(R.id.tv_pick_region);
         tv_pick_image = (TextView) v.findViewById(R.id.tv_pick_image);
+        tv_3d_notice = (TextView) v.findViewById(R.id.tv_3d_notice);
 
         picked_image = (ImageView) v.findViewById(R.id.picked_image);
         upload_3d_cb = (CheckBox) v.findViewById(R.id.upload_3d_cb);
-
         tv_pick_category.setOnClickListener(this);
         tv_pick_description.setOnClickListener(this);
         tv_pick_region.setOnClickListener(this);
@@ -96,6 +100,54 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         upload_3d_cb.setOnClickListener(this);
         v.findViewById(R.id.btn_publish).setOnClickListener(this);
         return v;
+    }
+
+    private void show3dNotice(boolean show) {
+        if (!show) {
+            tv_3d_notice.setVisibility(View.GONE);
+            return;
+        }
+        String prefix = "上传3D图片需要大量素材，发布成功后请等待我们与您联系，或现在";
+        String link = "联系我们";
+        String content = prefix + link;
+        SpannableString ss = new SpannableString(content);
+        ss.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                callService();
+            }
+        }, prefix.length(), content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_3d_notice.setVisibility(View.VISIBLE);
+        tv_3d_notice.setText(ss);
+        tv_3d_notice.setMovementMethod(LinkMovementMethod.getInstance());
+
+    }
+
+    /**
+     * 拨打客服电话
+     */
+    private void callService() {
+        final String mNumber = getString(R.string.customer_service_number);
+        DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mNumber));
+                        getActivity().startActivity(intent);
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+        EbingoDialog dialog = new EbingoDialog(getActivity());
+        dialog.setTitle("拨打电话");
+        dialog.setMessage("是否拨打客服电话?");
+        dialog.setPositiveButton("拨打", l);
+        dialog.setNegativeButton("取消", l);
+        dialog.show();
     }
 
     @Override
@@ -131,10 +183,42 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.upload_3d_cb: {
-                check();
+                if (has3dPermission()) show3dNotice(upload_3d_cb.isChecked());
                 break;
             }
         }
+    }
+
+    /**
+     * 判断用户是否具有上传3D图片权限
+     *
+     * @return
+     */
+    private boolean has3dPermission() {
+        String vipCode = Company.getInstance().getVipType();
+        if (VipType.parse(vipCode).compareTo(VipType.VVIP) < 0) {
+            EbingoDialog dialog = new EbingoDialog(getActivity());
+            dialog.setTitle("尊敬的" + VipType.nameOf(vipCode));
+            dialog.setMessage("您目前所属等级没有权限上传3D图片，请先升级");
+            dialog.setPositiveButton("升 级", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
+                    intent.putExtra(MyPrivilegeActivity.SHOW_VVIP, true);
+                    upload_3d_cb.setChecked(false);
+                    startActivity(intent);
+                }
+            });
+            dialog.setNegativeButton("取 消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    upload_3d_cb.setChecked(false);
+                }
+            });
+            dialog.show();
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -201,7 +285,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         if (data != null) {
             result = data.getStringExtra("result");
         }
-        requestCode = requestCode & (0xfff);
+        requestCode = requestCode & (PublishFragment.REQUEST_MASK);
         LogCat.i("--->", "requestCode:" + Integer.toBinaryString(requestCode));
         switch (requestCode) {
             case PICK_CATEGORY:
@@ -316,33 +400,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         }
     };
 
-    private void check() {
-        String vipCode = Company.getInstance().getVipType();
-        if (VipType.parse(vipCode).compareTo(VipType.VVIP) < 0) {
-            EbingoDialog dialog = new EbingoDialog(getActivity());
-            dialog.setTitle("尊敬的" + VipType.nameOf(vipCode));
-            dialog.setMessage("您目前所属等级没有权限上传3D图片，请先升级");
-            dialog.setPositiveButton("升 级", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
-                    intent.putExtra(MyPrivilegeActivity.SHOW_VVIP, true);
-                    upload_3d_cb.setChecked(false);
-                    startActivity(intent);
-                }
-            });
-            dialog.setNegativeButton("取 消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    upload_3d_cb.setChecked(false);
-                }
-            });
-            dialog.show();
-
-        } else {
-        }
-
-    }
 
 //    /**
 //     * 选择获取图片的方式
@@ -465,6 +522,19 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 dialog.dismiss();
             }
         });
+    }
+
+    private static class TextClick extends ClickableSpan {
+        String span;
+
+        private TextClick(String span) {
+            this.span = span;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            ContextUtil.toast(span);
+        }
     }
 
 }

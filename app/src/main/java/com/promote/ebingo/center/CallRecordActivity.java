@@ -270,7 +270,7 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
                             context.startActivity(intent);
                             new CallRecordManager(context).addCallRecord(record, new JsonHttpResponseHandler());
                             break;
