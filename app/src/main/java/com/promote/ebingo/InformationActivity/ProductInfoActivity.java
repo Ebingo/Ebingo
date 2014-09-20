@@ -1,18 +1,13 @@
 package com.promote.ebingo.InformationActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,14 +15,12 @@ import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
-import com.jch.lib.util.TextUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
-import com.promote.ebingo.center.MyCollectionActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
@@ -144,12 +137,12 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 break;
             }
             case R.id.prd_info_into_company_tv:
-                Intent intent=new Intent(this,InterpriseInfoActivity.class);
-                intent.putExtra(InterpriseInfoActivity.ARG_ID,mDetailInfoBean.getCompany_id());
+                Intent intent = new Intent(this, InterpriseInfoActivity.class);
+                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
                 startActivity(intent);
                 break;
             case R.id.product_info_tel_cb:
-                CallRecord record=new CallRecord();
+                CallRecord record = new CallRecord();
                 record.setCall_id(Company.getInstance().getCompanyId());
                 record.setInfoId(mDetailInfoBean.getInfo_id());
                 record.setTo_id(mDetailInfoBean.getCompany_id());
@@ -157,7 +150,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 CallRecordActivity.CallRecordManager.dialNumber(this, record);
                 break;
             case R.id.product_info_collect_cb:
-                if (productinfocollectcb.isChecked()){
+                if (productinfocollectcb.isChecked()) {
                     addCollection(mDetailInfoBean.getInfo_id());
                 } else {
                     cancelCollection(collectId);
@@ -170,12 +163,13 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
     /**
      * 添加收藏
+     *
      * @param id
      */
-    private void addCollection(int id){
+    private void addCollection(int id) {
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("company_id", Company.getInstance().getCompanyId());
-        parmater.put("info_id",id);
+        parmater.put("info_id", id);
         HttpUtil.post(HttpConstant.addToWishlist, parmater, new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
@@ -189,7 +183,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
             @Override
             public void onFail(int statusCode, String msg) {
-                ContextUtil.toast("添加收藏失败！"+msg);
+                ContextUtil.toast("添加收藏失败！" + msg);
                 productinfocollectcb.setChecked(false);
             }
 
@@ -202,12 +196,13 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
     /**
      * 取消收藏
+     *
      * @param id
      */
-    private void cancelCollection(int id){
+    private void cancelCollection(int id) {
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("company_id", Company.getInstance().getCompanyId());
-        parmater.put("wishlistid",id);
+        parmater.put("wishlistid", id);
         HttpUtil.post(HttpConstant.cancleWishlist, parmater, new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
@@ -216,7 +211,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
             @Override
             public void onFail(int statusCode, String msg) {
-                ContextUtil.toast("取消收藏失败！"+msg);
+                ContextUtil.toast("取消收藏失败！" + msg);
                 productinfocollectcb.setChecked(true);
             }
 

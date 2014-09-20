@@ -2,6 +2,7 @@ package com.promote.ebingo.InformationActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.impl.EbingoRequest;
 import com.promote.ebingo.util.LogCat;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link com.promote.ebingo.InformationActivity.InterpriseDemandInfo#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InterpriseDemandInfo extends InterpriseBaseFragment implements AdapterView.OnItemClickListener {
+public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -65,6 +67,7 @@ public class InterpriseDemandInfo extends InterpriseBaseFragment implements Adap
             enterprise_id = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        adapter = new MyAdapter();
 
         EbingoRequest.getDemandInfoList(getActivity(), 0, enterprise_id, 20, new EbingoRequest.RequestCallBack<ArrayList<SearchDemandBean>>() {
             @Override
@@ -78,6 +81,7 @@ public class InterpriseDemandInfo extends InterpriseBaseFragment implements Adap
                 if (resultObj != null) {
                     mSearchDemands.addAll(resultObj);
                 }
+
                 if (adapter != null)
                     adapter.notifyDataSetChanged();
             }
@@ -105,9 +109,11 @@ public class InterpriseDemandInfo extends InterpriseBaseFragment implements Adap
     private void initialize(View view) {
 
         entprdemandlv = (ListView) view.findViewById(R.id.entpr_demand_lv);
-        adapter = new MyAdapter();
+        entprdemandlv.setAdapter(adapter);
+
         entprdemandlv.setOnItemClickListener(this);
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -168,5 +174,22 @@ public class InterpriseDemandInfo extends InterpriseBaseFragment implements Adap
         TextView describTv;
 
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
 }

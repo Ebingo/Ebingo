@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/gray_bg"
     tools:context="com.promote.ebingo.InformationActivity.SupplyDemandInfoFragment">
 
     <FrameLayout
@@ -16,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
+        android:background="@color/white"
         android:layout_height="@dimen/title_height">
 
         <RadioButton

@@ -2,6 +2,7 @@ package com.promote.ebingo.InformationActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.impl.EbingoRequest;
 import com.promote.ebingo.util.LogCat;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -29,7 +31,7 @@ import java.util.ArrayList;
  * Use the {@link com.promote.ebingo.InformationActivity.InterpriseSupplyInfo#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InterpriseSupplyInfo extends InterpriseBaseFragment implements AdapterView.OnItemClickListener {
+public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -77,7 +79,8 @@ public class InterpriseSupplyInfo extends InterpriseBaseFragment implements Adap
                 .showImageOnLoading(R.drawable.loading)
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
-        EbingoRequest.getSupplyInfoList(getActivity(), 0, getInterprsetId(), 20, new MyRequest());  //网络请求.
+        myAdapter = new MyAdapter();
+        EbingoRequest.getSupplyInfoList(getActivity(), 0, enterprise_id, 20, new MyRequest());  //网络请求.
     }
 
     @Override
@@ -93,7 +96,6 @@ public class InterpriseSupplyInfo extends InterpriseBaseFragment implements Adap
     private void initialize(View view) {
 
         enterprisesupplyitemlv = (ListView) view.findViewById(R.id.enterprise_supply_item_lv);
-        myAdapter = new MyAdapter();
         enterprisesupplyitemlv.setAdapter(myAdapter);
         enterprisesupplyitemlv.setOnItemClickListener(this);
 
@@ -110,6 +112,7 @@ public class InterpriseSupplyInfo extends InterpriseBaseFragment implements Adap
      * 请求网络.
      */
     private class MyRequest implements EbingoRequest.RequestCallBack<ArrayList<SearchSupplyBean>> {
+
 
         @Override
         public void onFaild(int resultCode, String msg) {
@@ -156,6 +159,8 @@ public class InterpriseSupplyInfo extends InterpriseBaseFragment implements Adap
                 viewHolder.priceTv = (TextView) convertView.findViewById(R.id.iprise_info_s_item_price_tv);
                 viewHolder.lookTimeTv = (TextView) convertView.findViewById(R.id.iprise_info_s_item_item_look_num_tvs);
                 viewHolder.startTv = (TextView) convertView.findViewById(R.id.iprise_info_s_item_num);
+
+                convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
@@ -172,8 +177,8 @@ public class InterpriseSupplyInfo extends InterpriseBaseFragment implements Adap
 
             return convertView;
         }
-
     }
+
 
     private static class ViewHolder {
         ImageView img;
@@ -183,5 +188,28 @@ public class InterpriseSupplyInfo extends InterpriseBaseFragment implements Adap
         TextView startTv;
         TextView timeTv;
     }
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
 }

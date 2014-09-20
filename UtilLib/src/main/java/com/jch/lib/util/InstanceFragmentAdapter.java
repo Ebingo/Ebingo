@@ -3,6 +3,7 @@ package com.jch.lib.util;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 /**
  * 利用此类添加fragment，可以避免fragment重执行oncreat().
@@ -65,11 +66,12 @@ public class InstanceFragmentAdapter {
         Fragment newFragment = mFragmentManager.findFragmentByTag(newFmName);
         if (newFragment != null) {
             ft.attach(newFragment);
+            Log.d("ebingo", newFmName + "attack");
         } else {
             newFragment = ff.createFragment();
+            Log.d("ebingo", newFmName + "add");
             ft.add(containerId, newFragment, newFmName);
         }
-
 
         ft.commitAllowingStateLoss();
         ft = null;

@@ -33,7 +33,7 @@ public class EbingoRequest {
 
     /**
      * 從網絡獲取求购信息列表.
-     *
+     *http://218.244.149.129/eb/index.php?s=/Home/Api/getDemandInfoList?condition=%7B%22company_id%22%3A%224%22%7D&pagesize=20&lastid=0&os=android&secret=77509d84ef8f40f374fb89f35e09b516&uuid=990003109238541&time=1411191259183
      * @param activity
      * @param lastId
      * @param companyId
@@ -113,7 +113,7 @@ public class EbingoRequest {
 
     /**
      * 從網絡获取供应信息列表。
-     *
+     *http://218.244.149.129/eb/index.php?s=/Home/Api/getSupplyInfoList?condition=%7B%22company_id%22%3A%22-1%22%7D&pagesize=20&lastid=0&os=android&secret=5cab4ffb3c00730b53eaad20a22bb201&uuid=000000000000000&time=1411200220872
      * @param activity
      * @param lastId
      * @param company_id
@@ -155,7 +155,7 @@ public class EbingoRequest {
 //                    hasData(false);
 //                }
 //                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
-                dialog.dismiss();
+                                dialog.dismiss();
 
             }
 

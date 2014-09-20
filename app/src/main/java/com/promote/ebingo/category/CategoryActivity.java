@@ -277,6 +277,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         return rankType;
     }
 
+    //price 价格筛选
+
     /**
      * 從網絡獲取求购信息列表.
      *
