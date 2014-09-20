@@ -9,6 +9,6 @@
         android:id="@+id/enterprise_supply_item_lv"
         android:layout_width="match_parent"
         android:scrollbars="none"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent" />
 
 </FrameLayout>

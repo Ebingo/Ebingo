@@ -4,6 +4,7 @@ package com.promote.ebingo.InformationActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,9 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.jch.lib.util.InstanceFragmentAdapter;
 import com.promote.ebingo.R;
+
+import java.lang.reflect.Field;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -36,6 +38,13 @@ public class SupplyDemandInfoFragment extends InterpriseBaseFragment implements 
     private RadioGroup fragiprisesdcg;
     private String mSupplyFragmentName = "supplyFragmentName";
     private String mDemandFragmentName = "demandFragmentName";
+    private InterpriseDemandInfo demandInfo = null;
+    private InterpriseSupplyInfo supplyInfo = null;
+
+    /**
+     * 本activity是否已经运行过. *
+     */
+    private boolean isRunned = false;
 
 
     /**
@@ -65,7 +74,10 @@ public class SupplyDemandInfoFragment extends InterpriseBaseFragment implements 
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
 
+        addFragment();
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,46 +97,66 @@ public class SupplyDemandInfoFragment extends InterpriseBaseFragment implements 
         fragiprisedemandll = (RadioButton) view.findViewById(R.id.frag_iprise_demand_ll);
 
         fragiprisesdcg.setOnCheckedChangeListener(this);
-        InstanceFragmentAdapter ifa = InstanceFragmentAdapter.newInstance(getChildFragmentManager());
-        ifa.replaceFramgent(R.id.frag_s_d_fram, mDemandFragmentName, mSupplyFragmentName, new InstanceFragmentAdapter.FragmentFactory() {
-            @Override
-            public Fragment createFragment() {
-                return InterpriseSupplyInfo.newInstance(getInterprsetId(), null);
-
-            }
-        });
+        displayFragmentByChecked(fragiprisesdcg.getCheckedRadioButtonId());
     }
 
+    /**
+     * 将供应和求购的fragment添加到view中.
+     */
+    private void addFragment() {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        supplyInfo = InterpriseSupplyInfo.newInstance(getInterprsetId(), null);
+        demandInfo = InterpriseDemandInfo.newInstance(getInterprsetId(), null);
+        fragmentTransaction.add(R.id.frag_s_d_fram, demandInfo, mSupplyFragmentName);
+        fragmentTransaction.add(R.id.frag_s_d_fram, supplyInfo, mDemandFragmentName);
+        fragmentTransaction.hide(supplyInfo);
+        fragmentTransaction.hide(demandInfo);
+        fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction = null;
+        fragmentManager.executePendingTransactions();
+    }
+
+    /**
+     * 显示隐藏fragment。
+     *
+     * @param hidFramgent
+     * @param showFragment
+     */
+    private void displayFramgent(Fragment hidFramgent, Fragment showFragment) {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.hide(hidFramgent);
+        ft.show(showFragment);
+        ft.commitAllowingStateLoss();
+        ft = null;
+        fragmentManager.executePendingTransactions();
+
+    }
+
+
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
+    public void onResume() {
+        super.onResume();
+    }
 
+    /**
+     * 根据单选按钮显示供应或求购.
+     *
+     * @param checkId
+     */
+    private void displayFragmentByChecked(int checkId) {
         FragmentManager fm = getChildFragmentManager();
-        switch (checkedId) {
+        switch (checkId) {
             case R.id.frag_iprise_supply_ll: {
-
-
-                InstanceFragmentAdapter ifa = InstanceFragmentAdapter.newInstance(fm);
-                ifa.replaceFramgent(R.id.frag_s_d_fram, mDemandFragmentName, mSupplyFragmentName, new InstanceFragmentAdapter.FragmentFactory() {
-                    @Override
-                    public Fragment createFragment() {
-                        return InterpriseSupplyInfo.newInstance(getInterprsetId(), null);
-
-                    }
-                });
+                displayFramgent(demandInfo, supplyInfo);
 
                 break;
             }
 
             case R.id.frag_iprise_demand_ll: {
 
-                InstanceFragmentAdapter ifa = InstanceFragmentAdapter.newInstance(fm);
-                ifa.replaceFramgent(R.id.frag_s_d_fram, mSupplyFragmentName, mDemandFragmentName, new InstanceFragmentAdapter.FragmentFactory() {
-                    @Override
-                    public Fragment createFragment() {
-                        return InterpriseDemandInfo.newInstance(getInterprsetId(), null);
-
-                    }
-                });
+                displayFramgent(supplyInfo, demandInfo);
 
                 break;
             }
@@ -132,8 +164,28 @@ public class SupplyDemandInfoFragment extends InterpriseBaseFragment implements 
 
             }
         }
+    }
 
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+        displayFragmentByChecked(checkedId);
     }
 
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
