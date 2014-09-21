@@ -31,15 +31,15 @@
     <string name="buy_info">求购信息</string>
     <string name="supply_info">供应信息</string>
     <string name="clear_history">清空历史记录</string>
-    <string name="rmb_signe">￥</string>
-    <string name="search_start">起批发</string>
-    <string name="search_look">浏览</string>
-    <string name="search_time">次</string>
-    <string name="look_num">浏览量</string>
-    <string name="price">价格</string>
-    <string name="start_supply">条起供应</string>
-    <string name="supply_company">供应商:</string>
-    <string name="enter_company">进入公司</string>
+<string name="rmb_signe">￥</string>
+<string name="search_start">起批发</string>
+<string name="search_look">浏览</string>
+<string name="search_time">次</string>
+<string name="look_num">浏览量</string>
+<string name="price">价格</string>
+<string name="start_supply">条起供应</string>
+<string name="supply_company">供应商:</string>
+    <string name="enter_company">进入企业</string>
     <string name="title_product_info">产品详情</string>
     <string name="produt_info">【产品详情】</string>
     <string name="buy_detail">【求购详情】</string>
@@ -109,6 +109,7 @@
     <string name="no_data">没有数据！</string>
     <string name="delete">删除</string>
     <string name="yuan">元</string>
+    <string name="enterprise_news">企业新闻</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
