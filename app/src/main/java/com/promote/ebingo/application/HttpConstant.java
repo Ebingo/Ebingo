@@ -142,10 +142,10 @@ public class HttpConstant {
      * 获取标签对应列表信息
      */
     public static final String getTagInfoList = getRootUrl() + "getTagInfoList";
-
+    /**
+     * 添加通话记录
+     */
     public static final String addCallRecord = getRootUrl() + "addCallRecord";
-
-
     /**
      * 获取公司详细信息
      */
@@ -158,6 +158,9 @@ public class HttpConstant {
      * 获取新闻详情 *
      */
     public static final String getNewsWapUrl = getRootUrl() + "getNewsWapUrl";
+    /**
+     * 发送修改密码邮件
+     */
+    public static final String sendChangePasswordEmail = getRootUrl() + "sendChangePasswordEmail";
 
-    public static final String addCallRecord=getRootUrl() +"addCallRecord";
 }

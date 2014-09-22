@@ -1,6 +1,5 @@
 package com.promote.ebingo.center;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +22,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -32,7 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MyDemandActivity extends BaseListActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
+public class MyDemandActivity extends BaseListActivity implements View.OnClickListener {
 
     private ArrayList<SearchDemandBean> mDemandBeans = new ArrayList<SearchDemandBean>();
     private MyAdapter adapter;
@@ -65,27 +64,37 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         parma.put("lastid", lastId);
         parma.put("pagesize", 20);
         try {
-            parma.put("condition", URLEncoder.encode(appendKeyworld(Company.getInstance().getCompanyId()), "utf-8"));
+            StringBuilder sb = new StringBuilder();
+            sb.append("{")
+                    .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
+                    .append(",")
+                    .append(makeCondition("sort", "time"))
+                    .append("}");
+
+            parma.put("condition", URLEncoder.encode(sb.toString(), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        HttpUtil.post(urlStr, parma, new JsonHttpResponseHandler() {
+        HttpUtil.post(urlStr, parma, new JsonHttpResponseHandler("utf-8") {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                LogCat.i("--->", response.toString());
                 ArrayList<SearchDemandBean> demandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
-
-                mDemandBeans.clear();
-                mDemandBeans.addAll(demandBeans);
-                adapter.notifyDataSetChanged();
+                if (demandBeans != null && demandBeans.size() > 0) {
+                    mDemandBeans.clear();
+                    mDemandBeans.addAll(demandBeans);
+                    adapter.notifyDataSetChanged();
+                }
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                LogCat.i("--->", errorResponse.toString());
                 dialog.dismiss();
             }
 
@@ -93,6 +102,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 dialog.dismiss();
+                LogCat.i("--->", responseString);
             }
         });
     }
@@ -138,19 +148,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         });
     }
 
-    /**
-     * 拼接赛选条件参数。
-     *
-     * @param companyId
-     * @return
-     */
-    private String appendKeyworld(int companyId) {
-        StringBuffer sb = new StringBuffer("{\"company_id\":\"");
-        sb.append(companyId);
-        sb.append("\"}");
-        return sb.toString();
-    }
-
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(MyDemandActivity.this, BuyInfoActivity.class);
@@ -163,7 +160,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         mDelDemandBean = mDemandBeans.get(position);
         mItemDeleteDialog.show();
         mItemDeleteDialog.setItemText(mDelDemandBean.getName(), mDelDemandBean.getId());
-
         return true;
     }
 
@@ -175,7 +171,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
      */
     @Override
     public void onItemDelete(View view, int itemId) {
-
         deleteInfo(itemId);
     }
 

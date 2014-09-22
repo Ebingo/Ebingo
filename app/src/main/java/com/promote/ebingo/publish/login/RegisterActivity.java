@@ -23,7 +23,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_get_yzm);
         edit_phone = (EditText) findViewById(R.id.edit_phone);
-        ((TextView) findViewById(R.id.common_title_done)).setText(R.string.login_);
+        ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.login_);
     }
 
     public void onClick(View v) {
@@ -49,7 +49,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
                 break;
             }
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 break;

@@ -1,6 +1,7 @@
 package com.promote.ebingo.publish;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -99,6 +100,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         picked_image.setOnClickListener(this);
         upload_3d_cb.setOnClickListener(this);
         v.findViewById(R.id.btn_publish).setOnClickListener(this);
+//        test();
         return v;
     }
 
@@ -232,7 +234,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         Integer category_id = (Integer) tv_pick_category.getTag();
         String region_name = tv_pick_region.getText().toString().trim();
         String price = edit_price.getText().toString().trim();
-        String image_url = edit_price.getText().toString().trim();
+        String image_url = picked_image.getContentDescription()+"";
         String description = tv_pick_description.getText().toString().trim();
         String title = edit_title.getText().toString().trim();
         String contacts = edit_contact.getText().toString().trim();
@@ -244,17 +246,15 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         else if (TextUtils.isEmpty(region_name))
             Error.showError(tv_pick_region, Error.REGION_EMPTY);
         else if (TextUtils.isEmpty(title)) Error.showError(edit_title, Error.TITLE_EMPTY);
-
         else if (TextUtils.isEmpty(price)) Error.showError(edit_price, Error.PRICE_EMPTY);
         else if (TextUtils.isEmpty(image_url)) Error.showError(tv_pick_image, Error.IMAGE_EMPTY);
         else if (TextUtils.isEmpty(description))
             Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
-
         else if (TextUtils.isEmpty(min_sell_num))
             Error.showError(edit_min_sell_num, Error.MIN_SELL_NUM_EMPTY);
         else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
         else if (TextUtils.isEmpty(contacts_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
-        else if (LoginManager.isMobile(contacts_phone))
+        else if (!LoginManager.isMobile(contacts_phone))
             Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
         else {
             parmater = new EbingoRequestParmater(getActivity());
@@ -294,7 +294,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 LogCat.i("--->", "categoryId:" + tv_pick_category.getTag());
                 break;
             case PICK_DESCRIPTION:
-                tv_pick_description.setText(result);
+                if (resultCode == Activity.RESULT_OK)
+                    tv_pick_description.setText(result);
                 break;
             case PICK_REGION:
                 tv_pick_region.setText(result);
@@ -351,12 +352,12 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                LogCat.i("--->", response+"");
                 try {
                     JSONObject result = response.getJSONObject("response");
                     String image_url = result.getString("data");
-                    LogCat.i("--->", image_url);
                     if (HttpConstant.CODE_OK.equals(result.getString("code")))
-                        tv_pick_image.setTag(image_url);
+                        picked_image.setContentDescription(image_url);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -480,7 +481,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         edit_price.setText(null);
 
         tv_pick_description.setText(null);
-        edit_contact.setText(null);
         edit_title.setText(null);
 
         edit_min_sell_num.setText(null);
@@ -488,6 +488,18 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         edit_phone.setText(null);
         picked_image.setVisibility(View.GONE);
         picked_image.setImageBitmap(null);
+        picked_image.setContentDescription(null);
+    }
+    private void test() {
+        tv_pick_region.setText("广州");
+        edit_price.setText("123123");
+
+        tv_pick_description.setText("真好吃，不骗你，一般人我不告诉他！！");
+        edit_title.setText("大郎炊饼");
+
+        edit_min_sell_num.setText("100个");
+        edit_contact.setText("朱先生");
+        edit_phone.setText("18761844602");
     }
 
     public void startPublish(EbingoRequestParmater parmater) {
@@ -503,7 +515,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         Intent intent = new Intent(getActivity(), MySupplyActivity.class);
                         startActivity(intent);
-                        clearText();
+//                        clearText();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -523,18 +535,4 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
             }
         });
     }
-
-    private static class TextClick extends ClickableSpan {
-        String span;
-
-        private TextClick(String span) {
-            this.span = span;
-        }
-
-        @Override
-        public void onClick(View widget) {
-            ContextUtil.toast(span);
-        }
-    }
-
 }

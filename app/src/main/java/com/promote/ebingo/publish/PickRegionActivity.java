@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.LogCat;
@@ -26,37 +27,24 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 /**
  * Created by acer on 2014/9/9.
  */
-public class PickRegionActivity extends Activity implements AdapterView.OnItemClickListener,View.OnClickListener {
+public class PickRegionActivity extends BaseListActivity {
 
-    ListView listView;
+    private final String[] regions = new String[]{"江苏", "浙江", "北京", "上海", "天津", "重庆", "四川", "山西", "安徽"};
+    private List<String> regionList = Arrays.asList(regions);
 
-    private final String[] regions=new String[]{"江苏","浙江","北京","上海","天津","重庆","四川","山西","安徽"};
-    private List<String> regionList=  Arrays.asList(regions);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.choose_trade);
-        listView = (ListView) findViewById(R.id.category_list);
-        listView.setOnItemClickListener(this);
-        listView.setAdapter(new RegionAdapter(this));
-        ((TextView) findViewById(R.id.common_title_tv)).setText("选择区域");
-        findViewById(R.id.common_back_btn).setOnClickListener(this);
+        setListAdapter(new RegionAdapter(this));
     }
 
+
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent data = new Intent();
-        data.putExtra("result",regionList.get(position));
+        data.putExtra("result", regionList.get(position));
         setResult(RESULT_OK, data);
         finish();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.common_back_btn) {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
     }
 
     class RegionAdapter extends BaseAdapter {

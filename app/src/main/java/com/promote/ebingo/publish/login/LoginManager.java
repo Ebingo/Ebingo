@@ -121,6 +121,7 @@ public class LoginManager {
                         LogCat.i(response + "");
                         JSONObject data = result.getJSONObject("data");
                         final Company company = Company.getInstance();
+//
                         company.setName(data.getString("company_name"));
                         company.setCompanyId(data.getInt("company_id"));
                         company.setVipType(data.getString("viptype"));
@@ -129,6 +130,7 @@ public class LoginManager {
                         company.setRegion(data.getString("region"));
                         company.setImage(data.getString("image"));
                         company.setRegion(data.getString("region"));
+                        company.setEmail(data.getString("email"));
                         ((EbingoApp) ContextUtil.getContext()).saveCurCompanyName(phone);
                         ((EbingoApp) ContextUtil.getContext()).saveCurCompanyPwd(password);
                         if (company.getImage() != null)loadHeadImage(company.getImage(), new Handler(new Handler.Callback() {

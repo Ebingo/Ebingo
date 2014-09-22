@@ -19,7 +19,7 @@ import com.promote.ebingo.application.EbingoApp;
  */
 public class LoginDialog extends Dialog implements View.OnClickListener {
     private final String LOG_TAG = getClass().getSimpleName();
-    public static final int REQUEST_CODE=1001;
+    public static final int REQUEST_CODE = 1001;
     private EditText edit_phone;
     private EditText edit_password;
 
@@ -40,14 +40,15 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
         edit_password = (EditText) findViewById(R.id.edit_password);
         edit_phone.setText(((EbingoApp) getContext().getApplicationContext()).getCurCompanyName());
         edit_password.setText(((EbingoApp) getContext().getApplicationContext()).getCurCompanyPwd());
-        findViewById(R.id.common_title_done).setOnClickListener(this);
+        findViewById(R.id.commit_title_done).setOnClickListener(this);
         findViewById(R.id.tv_reg).setOnClickListener(this);
+        findViewById(R.id.tv_forget_password).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
                 final ProgressDialog dialog = DialogUtil.waitingDialog(getContext());
                 new LoginManager().doLogin(edit_phone.getText().toString().trim(), edit_password.getText().toString().trim(), new LoginManager.Callback() {
                     @Override
@@ -65,16 +66,23 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
                 break;
             case R.id.tv_reg:
 
-                if (getOwnerActivity()!=null) {
-                    getOwnerActivity().startActivityForResult(new Intent(getContext(),RegisterActivity.class),REQUEST_CODE);
+                if (getOwnerActivity() != null) {
+                    getOwnerActivity().startActivityForResult(new Intent(getContext(), RegisterActivity.class), REQUEST_CODE);
                 }
                 dismiss();
                 break;
+            case R.id.tv_forget_password:
+                if (getOwnerActivity() != null) {
+                    getOwnerActivity().startActivity(new Intent(getContext(), FindPasswordActivity.class));
+                }
+                dismiss();
+                break;
+
         }
     }
 
     @Override
     public void onBackPressed() {
-       dismiss();
+        dismiss();
     }
 }

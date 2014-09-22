@@ -44,10 +44,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
         editusername = (EditText) findViewById(R.id.edit_user_name);
         editpassword = (EditText) findViewById(R.id.edit_password);
-        btndone = (Button) findViewById(R.id.common_title_done);
+        btndone = (Button) findViewById(R.id.commit_title_done);
         tvforgetpassword = (TextView) findViewById(R.id.tv_forget_password);
         tvreg = (TextView) findViewById(R.id.tv_reg);
         tvreg.setOnClickListener(this);
+        findViewById(R.id.tv_forget_password).setOnClickListener(this);
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getResources().getString(R.string.login_));
         btndone.setOnClickListener(this);
@@ -67,7 +68,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             }
-            case R.id.common_title_done: {
+            case R.id.commit_title_done: {
                 String message = null;
                 String name = editusername.getText().toString().trim();
                 String pwd = editpassword.getText().toString().trim();
@@ -92,6 +93,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 break;
 
             }
+            case R.id.tv_forget_password:
+                startActivity(new Intent(this,FindPasswordActivity.class));
+                break;
             default: {
 
             }

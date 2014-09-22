@@ -23,6 +23,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.settings.EnterpriseSettingActivity;
 import com.promote.ebingo.center.settings.SettingActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginActivity;
@@ -125,11 +126,20 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         setHeadImage(Company.getInstance().getImageUri());
         String companyName = Company.getInstance().getName();
-        if (!TextUtils.isEmpty(companyName)) {
+        if (companyName == null) {
+            centerloginbtn.setText(R.string.login);
+        } else if ("".equals(companyName)) {
+            centerloginbtn.setText("未设置公司名");
+            centerloginbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), EnterpriseSettingActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
             centerloginbtn.setText(companyName);
             centerloginbtn.setClickable(false);
-        } else {
-            centerloginbtn.setClickable(true);
         }
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -212,9 +222,9 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public void setHeadImage(Uri uri) {
         if (uri == null) {
             LogCat.e("--->", "setHeadImage uriError uri=" + uri);
+            centerheadiv.setImageResource(R.drawable.center_head);
             return;
         }
-
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
             centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bm, (int) Dimension.dp(48)));
@@ -228,6 +238,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         int id = v.getId();
+        //除了"我的特权"以外，所有选项都必须在登录状态下，才可以使用
+        if (id != R.id.cent_privilege_tv && !isLogined()) gotoLogin();
         switch (id) {
             case R.id.center_head_iv: {
 
@@ -241,10 +253,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             }
 
             case R.id.center_login_btn: {
-
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
-
                 break;
             }
 
@@ -270,40 +280,31 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.cent_supply_tv: {
-                if (isLogined()) {
-                    Intent intent = new Intent(getActivity(), MySupplyActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), MySupplyActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.cent_demand_tv: {
-                if (isLogined()) {
-                    Intent intent = new Intent(getActivity(), MyDemandActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), MyDemandActivity.class);
+                startActivity(intent);
 
                 break;
             }
             case R.id.cent_collet_tv: {
-                if (isLogined()) {
-                    Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
+                startActivity(intent);
 
                 break;
             }
             case R.id.cent_book_tv: {
-                if (isLogined()) {
-                    Intent intent = new Intent(getActivity(), MyBookActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), MyBookActivity.class);
+                startActivity(intent);
 
                 break;
             }
             case R.id.cent_privilege_tv: {
                 Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
                 startActivity(intent);
-
                 break;
             }
             case R.id.cent_profile_tv: {

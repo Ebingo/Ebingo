@@ -90,22 +90,6 @@
                     android:textColor="@color/publish_base_color" />
             </TableRow>
 
-            <TextView style="@style/divider_horizontal" />
-
-            <TableRow style="@style/frame_table_row">
-
-                <TextView
-                    style="@style/publish_text_style"
-                    android:text="@string/picture_spaced" />
-
-                <View style="@style/vertical_divider_20" />
-
-                <TextView
-                    android:id="@+id/tv_pick_image"
-                    style="@style/publish_edit"
-                    android:drawableRight="@drawable/right_arro"
-                    android:hint="1张" />
-            </TableRow>
 
             <TextView style="@style/divider_horizontal" />
 
@@ -174,6 +158,22 @@
                     android:inputType="phone" />
             </TableRow>
 
+            <TextView style="@style/divider_horizontal" />
+
+            <TableRow style="@style/frame_table_row">
+
+                <TextView
+                    style="@style/publish_text_style"
+                    android:text="@string/picture_spaced" />
+
+                <View style="@style/vertical_divider_20" />
+
+                <TextView
+                    android:id="@+id/tv_pick_image"
+                    style="@style/publish_edit"
+                    android:drawableRight="@drawable/right_arro"
+                    android:hint="1张" />
+            </TableRow>
         </TableLayout>
 
         <LinearLayout
@@ -202,9 +202,9 @@
 
         <TextView
             android:id="@+id/tv_3d_notice"
-            android:layout_marginBottom="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
             android:textColor="@color/light_gray"
             android:visibility="gone" />
 
@@ -225,8 +225,8 @@
             android:id="@+id/btn_publish"
             style="@style/blue_button"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="29dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginTop="29dp"
             android:text="@string/btn_publish" />
     </LinearLayout>
 </ScrollView>

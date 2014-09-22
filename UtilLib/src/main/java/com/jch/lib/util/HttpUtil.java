@@ -3,6 +3,7 @@ package com.jch.lib.util;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -81,7 +82,6 @@ public class HttpUtil {
 	 * 下载数据时，不带参的获取json对象或数组的get方法。
 	 * 
 	 * @param urlStr
-	 * @param res
 	 */
 	public static void get(String urlStr, BinaryHttpResponseHandler bHandler) {
 		client.get(urlStr, bHandler);
@@ -138,7 +138,8 @@ public class HttpUtil {
 	 * @param res
 	 */
 	public static void post(String urlStr, RequestParams params, JsonHttpResponseHandler res) {
-		client.post(urlStr, params, res);
+        Log.i("--->",params.toString());
+        client.post(urlStr, params, res);
 	}
 
 	/**

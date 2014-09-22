@@ -17,7 +17,7 @@ public class EditDescription extends PublishBaseActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_description);
         setBackTitle("产品描述");
-        findViewById(R.id.common_title_done).setOnClickListener(this);
+        findViewById(R.id.commit_title_done).setOnClickListener(this);
         edit_description= ((EditText)findViewById(R.id.edit_description));
         edit_description.setText(getIntent().getStringExtra("description"));
         edit_description.setSelection(edit_description.length());
@@ -29,7 +29,7 @@ public class EditDescription extends PublishBaseActivity implements View.OnClick
             case R.id.common_back_btn:
                 finish();
                 break;
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
             case R.id.commit:
                 Intent result=new Intent();
                 result.putExtra("result",edit_description.getText().toString().trim());

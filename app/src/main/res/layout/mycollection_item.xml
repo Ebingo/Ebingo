@@ -24,7 +24,7 @@
             style="@style/font_black_15"
             android:lines="2"
             android:gravity="center_vertical"
-            android:text="静里欧尼你哦粉色发额发的说法"
+            android:text="静里欧尼你哦粉色发额发的说法色发额发的说法色发额发的说法"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -65,7 +65,8 @@
 
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:gravity="right"
                     android:layout_height="wrap_content">
 
                     <TextView

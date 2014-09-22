@@ -72,11 +72,12 @@ public class EbingoDialog extends AlertDialog {
 
         if (P.mPositiveListener != null) {
             mPositiveButton.setOnClickListener(new CustomListener(this, P.mPositiveListener, BUTTON_POSITIVE));
-        }
+        } else mPositiveButton.setVisibility(View.GONE);
 
         if (P.mNativeListener != null) {
             mNegativeButton.setOnClickListener(new CustomListener(this, P.mNativeListener, BUTTON_NEGATIVE));
-        }
+        } else mNegativeButton.setVisibility(View.GONE);
+
         if (P.mPositiveListener == null || P.mNativeListener == null)
             btn_divider.setVisibility(View.GONE);
     }

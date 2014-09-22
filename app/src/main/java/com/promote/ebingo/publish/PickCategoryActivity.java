@@ -17,9 +17,11 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CategoryBeen;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
@@ -38,16 +40,12 @@ import static android.view.ViewGroup.LayoutParams.*;
 /**
  * Created by acer on 2014/9/2.
  */
-public class PickCategoryActivity extends Activity implements AdapterView.OnItemClickListener, View.OnClickListener {
-    ListView categoryList;
+public class PickCategoryActivity extends BaseListActivity {
     List<CategoryBeen> categories = new ArrayList<CategoryBeen>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.choose_trade);
-        categoryList = (ListView) findViewById(R.id.category_list);
-        categoryList.setOnItemClickListener(this);
         initData();
     }
 
@@ -72,7 +70,7 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
                         categoryBeen.setId(object.getInt("id"));
                         categories.add(categoryBeen);
                     }
-                    categoryList.setAdapter(new CategoryAdapter(PickCategoryActivity.this));
+                    setListAdapter(new CategoryAdapter(PickCategoryActivity.this));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -94,7 +92,7 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent data = new Intent();
         CategoryBeen selectCategory = categories.get(position);
         data.putExtra("categoryId", selectCategory.getId());
@@ -104,13 +102,6 @@ public class PickCategoryActivity extends Activity implements AdapterView.OnItem
         finish();
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.common_back_btn) {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-    }
 
     class CategoryAdapter extends BaseAdapter {
         private Activity context;
