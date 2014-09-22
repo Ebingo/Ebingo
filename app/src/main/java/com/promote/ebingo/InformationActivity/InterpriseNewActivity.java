@@ -44,6 +44,8 @@ public class InterpriseNewActivity extends Activity {
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
         iprisenewsdiswv = (WebView) findViewById(R.id.iprise_news_dis_wv);
+
+        commontitletv.setText(getString(R.string.enterprise_news));
         // 设置支持JavaScript等
         WebSettings mWebSettings = iprisenewsdiswv.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
