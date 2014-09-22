@@ -5,12 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
@@ -50,6 +49,20 @@ public class DisplayUtil {
         }
     }
 
+    public static int getCentWidthByView(View view) {
+
+        final int mMeasuredWidth = View.MeasureSpec.getSize(view.getMeasuredWidth());
+
+        Log.i("width", "mywidth--" + mMeasuredWidth);
+
+        final int mWidth = View.MeasureSpec.getSize(view.getWidth());
+
+        Log.i("width", "mywidth--" + mWidth);
+
+        return 0;
+
+    }
+
     /**
      * @param wm
      * @param baseY
@@ -70,25 +83,23 @@ public class DisplayUtil {
     }
 
     /**
-     *
-     *
      * @param windowManager
      * @param baseY
      * @param basex
-     * @param exceptDis 去除的宽度。
+     * @param exceptDis     去除的宽度。
      * @return
      */
-    public static float sizeYByX(WindowManager windowManager,  float baseY, float basex, int exceptDis){
+    public static float sizeYByX(WindowManager windowManager, float baseY, float basex, int exceptDis) {
 
-        final  Display display = windowManager.getDefaultDisplay();
+        final Display display = windowManager.getDefaultDisplay();
         Point mPoint = new Point();
         getSize(display, mPoint);
-        if (exceptDis > mPoint.x){
+        if (exceptDis > mPoint.x) {
             return 0.0f;
         }
 
         float displayWidth = mPoint.x - exceptDis;
-        float scaleX = displayWidth /basex;
+        float scaleX = displayWidth / basex;
 
         return baseY * scaleX;
 
@@ -116,11 +127,12 @@ public class DisplayUtil {
 
     /**
      * 根据屏幕宽度设置view的大小.
-     * @param view   要改變尺寸的view。
-     * @param baseWidth   viwe的基准宽.
-     * @param baseHeight    view的基准高。
+     *
+     * @param view       要改變尺寸的view。
+     * @param baseWidth  viwe的基准宽.
+     * @param baseHeight view的基准高。
      */
-    public static void reSizeViewByScreenWidth(View view, int baseWidth,int baseHeight, Activity activity){
+    public static void reSizeViewByScreenWidth(View view, int baseWidth, int baseHeight, Activity activity) {
 
         ViewGroup.LayoutParams pagerParams = (ViewGroup.LayoutParams) view
                 .getLayoutParams();

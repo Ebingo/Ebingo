@@ -20,8 +20,7 @@
             android:paddingRight="15dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-             />
+            android:layout_alignParentLeft="true" />
 
 
         <ImageButton
@@ -63,7 +62,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_height="wrap_content"
                     android:background="@drawable/search_clear_btn" />
-              </LinearLayout>
+            </LinearLayout>
 
 
             <LinearLayout
@@ -106,7 +105,6 @@
         </RelativeLayout>
 
 
-
     </RelativeLayout>
 
     <LinearLayout
@@ -132,10 +130,11 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/divide_gray" />
+        android:background="@color/center_divider" />
 
     <LinearLayout
         android:id="@+id/search_content_ll"
@@ -144,34 +143,60 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <!--<com.jch.lib.view.PullToRefreshView-->
-            <!--android:id="@+id/search_freshview"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_height="match_parent">-->
-
-
-        <ListView
-            android:id="@+id/search_lv"
-            android:dividerHeight="1dp"
-            android:divider="@color/divide_gray"
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/search_content_history_ll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/search_lv"
+                android:dividerHeight="0dp"
+                android:divider="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/search_clear_btn"
-                android:padding="3dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/clear_history_btn_selector"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/clear_history"
                 android:layout_width="wrap_content"
-                style="@style/font_gray_18"
+                android:textSize="@dimen/font_18"
+                android:textColor="@drawable/gray_white_selector"
                 android:layout_height="wrap_content" />
 
-        <!--</com.jch.lib.view.PullToRefreshView>-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/search_content_result_ll"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent">
+
+            <com.jch.lib.view.PullToRefreshView
+                android:id="@+id/search_freshview"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/search_result_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></ListView>
+
+
+            </com.jch.lib.view.PullToRefreshView>
+        </LinearLayout>
 
     </LinearLayout>
+
     <TextView
         android:id="@+id/search_no_history_tv"
         android:layout_width="match_parent"
@@ -179,8 +204,7 @@
         style="@style/font_gray_18"
         android:visibility="gone"
         android:layout_height="match_parent"
-        android:text="@string/no_history"/>
-
+        android:text="@string/no_history" />
 
 
 </LinearLayout>

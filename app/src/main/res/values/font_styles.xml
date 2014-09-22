@@ -60,9 +60,11 @@
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
     <style name="text_deep_gray_style" parent="font_black_15">
         <item name="android:textColor">@color/text_black</item>
     </style>
+
     <style name="font_white_15">
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@color/white</item>
@@ -74,6 +76,11 @@
     </style>
 
     <style name="font_gray_15">
+        <item name="android:textSize">@dimen/font_15</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="item_font_gray_15" parent="@style/info_content_pad">
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@color/gray</item>
     </style>

@@ -40,7 +40,7 @@ public class GetInfoDetail {
                     LogCat.i("--->",response+"");
                     if (HttpConstant.CODE_OK.equals(response.getString("code"))){
                         LogCat.i("--->", response.getJSONObject("data").toString());
-                        detailInfo = JsonUtil.get(response.getJSONObject("data").toString(), DetailInfoBean.class);
+                        detailInfo = JsonUtil.get(response.getJSONObject("data").toString(), DetailInfoBean.class);     //
                         if (detailInfo != null) {
                             callBack.onSuccess(detailInfo);
                         } else {

@@ -13,7 +13,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.SearchDemandBean;
-import com.promote.ebingo.bean.SearchHistoryBean;
 import com.promote.ebingo.bean.SearchInterpriseBean;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchTypeBean;
@@ -21,39 +20,23 @@ import com.promote.ebingo.bean.SearchTypeBean;
 import java.util.ArrayList;
 
 /**
- * Created by ACER on 2014/9/2.
+ * Created by jch on 2014/9/22.
+ * <p/>
+ * 搜索结果数据
  */
-public class SearchListAdapter extends BaseAdapter {
+public class SearchResultAdapter extends BaseAdapter {
 
     private Context mContext;
     private SearchType mType;
-    /** 是否应该执行getview（）。 **/
-    private DisplayImageOptions mOptions;
 
-    public boolean isViewFreshable() {
-        return viewFreshable;
-    }
-
-    public void setViewFreshable(boolean viewFreshable) {
-        this.viewFreshable = viewFreshable;
-    }
-
-    private boolean viewFreshable = true;
-
-    private ArrayList<SearchTypeBean> mSearchTypeBeans = new ArrayList<SearchTypeBean>();
+    private ArrayList<SearchTypeBean> mSearchTypeBeans = null;
 
     /**
-     * @param context
-     * @param type
-     * @param searchTypeBeans
+     * 是否应该执行getview（）。 *
      */
-    public SearchListAdapter(Context context, SearchType type, ArrayList<SearchTypeBean> searchTypeBeans) {
+    private DisplayImageOptions mOptions;
 
-        this.mContext = context;
-        this.mType = type;
-        if (searchTypeBeans != null) {
-            this.mSearchTypeBeans = searchTypeBeans;
-        }
+    public SearchResultAdapter(Context context, SearchType type, ArrayList<SearchTypeBean> searchTypeBeans) {
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         mOptions = new DisplayImageOptions.Builder()
@@ -62,6 +45,9 @@ public class SearchListAdapter extends BaseAdapter {
                 .showImageOnLoading(R.drawable.loading)
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
+        this.mContext = context;
+        mSearchTypeBeans = searchTypeBeans;
+        mType = type;
     }
 
     @Override
@@ -82,12 +68,7 @@ public class SearchListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-//        if (!viewFreshable){            //当外部获取数据点击事件时，getView不可执行。
-//            return convertView;
-//        }
-//        mType = getSearchType();
-
-        SearchTypeBean searchTypeBean =  mSearchTypeBeans.get(position);
+        SearchTypeBean searchTypeBean = mSearchTypeBeans.get(position);
         if (searchTypeBean instanceof SearchInterpriseBean) {
 
             InterpriseViewHolder viewHolder = null;
@@ -101,7 +82,7 @@ public class SearchListAdapter extends BaseAdapter {
                 convertView.setTag(viewHolder);
 
             } else {
-                    viewHolder = (InterpriseViewHolder) convertView.getTag();
+                viewHolder = (InterpriseViewHolder) convertView.getTag();
             }
 
             SearchInterpriseBean interpriseBean = (SearchInterpriseBean) mSearchTypeBeans.get(position);
@@ -161,23 +142,7 @@ public class SearchListAdapter extends BaseAdapter {
             viewHolder.introduction.setText(demandBean.getIntroduction());
 
 
-        } else {    //搜索记录.
-
-            ViewHolder viewHolder = null;
-            if (convertView == null || !(convertView.getTag() instanceof ViewHolder)) {
-                viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.search_history_item, null);
-                viewHolder.name = (TextView) convertView.findViewById(R.id.search_history_item_tv);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            SearchHistoryBean searchHistoryBean = (SearchHistoryBean) mSearchTypeBeans.get(position);
-            viewHolder.name.setText(searchHistoryBean.getHistory());
         }
-
-
         return convertView;
     }
 
@@ -195,24 +160,17 @@ public class SearchListAdapter extends BaseAdapter {
                 mType = SearchType.DEMAND;
             } else if (searchTypeBean instanceof SearchSupplyBean) {
                 mType = SearchType.SUPPLY;
-            } else {
-                mType = SearchType.HISTORY;
             }
         }
-
 
     }
 
     public void notifyDataSetChanged(ArrayList<SearchTypeBean> searchTypeBeans) {
 
+        this.mSearchTypeBeans = null;
         this.mSearchTypeBeans = searchTypeBeans;
         getSearchType();
-        viewFreshable = true;
         super.notifyDataSetChanged();
-    }
-
-    class ViewHolder {
-        TextView name;
     }
 
     class SupplyViewHolder {
@@ -237,6 +195,4 @@ public class SearchListAdapter extends BaseAdapter {
         TextView region;//地區。
         TextView Business; //主营业务。
     }
-
-
 }

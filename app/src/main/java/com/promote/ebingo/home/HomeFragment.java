@@ -33,6 +33,7 @@ import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Adv;
 import com.promote.ebingo.bean.GetIndexBeanTools;
 import com.promote.ebingo.bean.GetIndexBeanTools.GetIndexBean;
@@ -41,7 +42,6 @@ import com.promote.ebingo.bean.HotCategory;
 import com.promote.ebingo.bean.TodayNum;
 import com.promote.ebingo.category.CategoryActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
-import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.search.SearchActivity;
 import com.promote.ebingo.util.LogCat;
 
@@ -54,7 +54,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class HomeFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener{
+public class HomeFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PARAM1 = "param1";
@@ -63,9 +63,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    /** banner viewpager. **/
+    /**
+     * banner viewpager. *
+     */
     private ViewPager mainfragvp;
-    /** banner viewpager indicator.**/
+    /**
+     * banner viewpager indicator.*
+     */
     private PagerIndicator mainfragpi;
     private BannerVagerAdapter mBannerPagerAdapter = null;
     private TextView mainSearchBarTv;
@@ -74,29 +78,47 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private TextView mainpricenumtv;
     private GridView mHotMarketGv;
     private HotMarketAdapter hotMarketAdapter;
-    /** banner條滾動schedule. **/
+    /**
+     * banner條滾動schedule. *
+     */
     private ScheduledExecutorService scheduledExecutorService;
 
     private GetIndexBean mIndexBean = null;
-    /** 热门市场. **/
+    /**
+     * 热门市场. *
+     */
     private ArrayList<HotCategory> hot_category = new ArrayList<HotCategory>();
-    /** 熱門供應. **/
+    /**
+     * 熱門供應. *
+     */
     private ArrayList<HotBean> hot_supply = new ArrayList<HotBean>();
-    /** 热门需求. **/
+    /**
+     * 热门需求. *
+     */
     private ArrayList<HotBean> hot_demand = new ArrayList<HotBean>();
 
-    /** 廣告大圖的緩存機制. **/
+    /**
+     * 廣告大圖的緩存機制. *
+     */
     private DisplayImageOptions mOptions;
-    /** 圓形小圖片的緩存機制。 **/
+    /**
+     * 圓形小圖片的緩存機制。 *
+     */
     private DisplayImageOptions mCircleImageOptions;
-    /** 公告条. **/
+    /**
+     * 公告条. *
+     */
     ArrayList<Adv> mAds = new ArrayList<Adv>();
-    /** 热门求购 **/
+    /**
+     * 热门求购 *
+     */
     private HoteBeanAdapter mHotBuyAdapter = null;
-    /** 热门供应 **/
+    /**
+     * 热门供应 *
+     */
     private HoteBeanAdapter mHotSupplyAdapter = null;
     //test data.
-    private int imgsRes[] = {R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2,R.drawable.test_main_1, R.drawable.test_main_2};
+    private int imgsRes[] = {R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2};
 
     private Point imageSize = new Point(720, 258);
     private TextView mainhote8sttv;
@@ -172,12 +194,12 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private void initialize(View view) {
         mainSearchBarTv = (TextView) view.findViewById(R.id.search_bar_tv);
         mainfragvp = (ViewPager) view.findViewById(R.id.main_frag_vp);
-        mainfragpi = (PagerIndicator)  view.findViewById(R.id.main_frag_pi);
+        mainfragpi = (PagerIndicator) view.findViewById(R.id.main_frag_pi);
         mainfragpi.setCurrentResource(R.drawable.indicator_cur);
         mainfragpi.setDefaultResource(R.drawable.indicator_nomal);
-        maingetnum = (TextView)  view.findViewById(R.id.main_get_num);
-        mainsptnumtv = (TextView)  view.findViewById(R.id.main_spt_num_tv);
-        mainpricenumtv = (TextView)  view.findViewById(R.id.main_price_num_tv);
+        maingetnum = (TextView) view.findViewById(R.id.main_get_num);
+        mainsptnumtv = (TextView) view.findViewById(R.id.main_spt_num_tv);
+        mainpricenumtv = (TextView) view.findViewById(R.id.main_price_num_tv);
         homesv = (PagerScrollView) view.findViewById(R.id.home_sv);
         mHotMarketGv = (GridView) view.findViewById(R.id.main_hotmarket_gv);
 
@@ -214,7 +236,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 配置圖片緩存。
      */
-    private void initImgOperation(){
+    private void initImgOperation() {
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         mOptions = new DisplayImageOptions.Builder()
@@ -236,7 +258,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 自动循环播放banner viewPager.
      */
-    private void loopPager(){
+    private void loopPager() {
 
         // 指定两秒钟切花一张图片
         scheduledExecutorService.scheduleAtFixedRate(
@@ -248,8 +270,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     public void onClick(View v) {
 
         int id = v.getId();
-        switch (id){
-            case R.id.search_bar_tv:{
+        switch (id) {
+            case R.id.search_bar_tv: {
 
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
@@ -257,7 +279,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 break;
             }
 
-            default:{
+            default: {
 
             }
 
@@ -269,7 +291,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 定时滚动banner的Task.
      */
-    private class LooperPagerTask implements  Runnable{
+    private class LooperPagerTask implements Runnable {
 
         @Override
         public void run() {
@@ -293,7 +315,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         @Override
         public void handleMessage(Message msg) {
 
-            if (msg.what == LOOPERAGR){
+            if (msg.what == LOOPERAGR) {
 
                 int curItem = msg.arg1;
                 mainfragvp.setCurrentItem(curItem);
@@ -313,7 +335,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     @Override
     public void onPageSelected(int i) {
         mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(i));
-        LogCat.d("org Position--:"+ i+"--- loop position--:"+mBannerPagerAdapter.getCurPosition(i));
     }
 
     @Override
@@ -324,23 +345,25 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 頂部循環滾動banner條viewPager適配器。
      */
-    class BannerVagerAdapter extends PagerAdapter{
+    class BannerVagerAdapter extends PagerAdapter {
 
-        /** 循环滚动的基本起始项。 **/
+        /**
+         * 循环滚动的基本起始项。 *
+         */
         private static final int STARTPOIONT = 300;
 
-//        private ArrayList<String> imgsUrls = new ArrayList<String>();
+        //        private ArrayList<String> imgsUrls = new ArrayList<String>();
         private Context mContext = null;
         private ArrayList<ImageView> imgs = new ArrayList<ImageView>();
 
-        public BannerVagerAdapter(Context context){
+        public BannerVagerAdapter(Context context) {
             this.mContext = context;
 
-                ImageView imgView = new ImageView(context);
-                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imgView.setBackgroundResource(R.drawable.loading);
-                imgs.add(imgView);
-            }
+            ImageView imgView = new ImageView(context);
+            imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imgView.setBackgroundResource(R.drawable.loading);
+            imgs.add(imgView);
+        }
 
 
         @Override
@@ -359,17 +382,18 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         /**
          * 给每一个imageView添加点击事件。
+         *
          * @param imgView
-         * @param AdvType   点击事件类别。
+         * @param AdvType 点击事件类别。
          */
-        private void setImageViewListner(ImageView imgView,final int AdvType,final String content){
+        private void setImageViewListner(ImageView imgView, final int AdvType, final String content) {
 
             imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    switch (AdvType){
-                        case 1:{            //go 產品詳情頁
+                    switch (AdvType) {
+                        case 1: {            //go 產品詳情頁
 
                             Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
                             imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
@@ -377,13 +401,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                             break;
                         }
 
-                        case 2:{        //go 分類詳情頁
+                        case 2: {        //go 分類詳情頁
 
 
                             break;
                         }
 
-                        case 3:{        //go 企業詳情
+                        case 3: {        //go 企業詳情
 
                             Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
                             intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
@@ -391,10 +415,11 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                             break;
                         }
 
-                        case 4:{        //外聯web頁面.
+                        case 4: {        //外聯web頁面.
 
                             break;
-                        }default:{
+                        }
+                        default: {
 
                         }
                     }
@@ -404,10 +429,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             });
 
 
-
-
         }
-
 
 
         @Override
@@ -415,7 +437,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
             return Integer.MAX_VALUE;
         }
-
 
 
         @Override
@@ -430,8 +451,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
             int loopPosition = getCurPosition(position);
             ImageView imgView = imgs.get(loopPosition);
-            ViewGroup parent = (ViewGroup)imgView.getParent();
-            if (parent != null){
+            ViewGroup parent = (ViewGroup) imgView.getParent();
+            if (parent != null) {
                 parent.removeView(imgView);
             }
 
@@ -451,39 +472,41 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         /**
          * 獲得循環中第幾項。
+         *
          * @param position 循环中总的下标.
          * @return
          */
-         public int getCurPosition(int position){
+        public int getCurPosition(int position) {
 
-             int imgsize = imgs.size();
-             if (imgsize == 0){
-                 return 0;
-             }
-             int loopPosition = position % imgs.size();
-             return loopPosition;
-         }
+            int imgsize = imgs.size();
+            if (imgsize == 0) {
+                return 0;
+            }
+            int loopPosition = position % imgs.size();
+            return loopPosition;
+        }
 
         /**
          * 獲得循環listView的起始項。
+         *
          * @return
          */
-         public int getStartpoiont(){
-             return STARTPOIONT;
-         }
+        public int getStartpoiont() {
+            return STARTPOIONT;
+        }
 
     }
 
     /**
      * 從服務器獲取首頁信息。
      */
-    private void getIndex(){
+    private void getIndex() {
 
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         EbingoRequestParmater parma = new EbingoRequestParmater(getActivity().getApplicationContext());
         parma.put("company_id", 0);
 
-        HttpUtil.post(HttpConstant.getIndex, parma, new JsonHttpResponseHandler("utf-8"){
+        HttpUtil.post(HttpConstant.getIndex, parma, new JsonHttpResponseHandler("utf-8") {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -491,28 +514,28 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
                 LogCat.d("home data -- : " + response.toString());
 
-                GetIndexBean indexBean=  GetIndexBeanTools.getIndexBeanJson(response.toString());
+                GetIndexBean indexBean = GetIndexBeanTools.getIndexBeanJson(response.toString());
                 ArrayList<Adv> advs = indexBean.getAds();
-                if (advs != null){
+                if (advs != null) {
                     mAds.addAll(advs);
                 }
 
                 ArrayList<HotCategory> hotCategories = indexBean.getHot_category();
-                if(hotCategories != null){
+                if (hotCategories != null) {
                     hot_category.addAll(hotCategories);
                 }
 
                 ArrayList<HotBean> hotDemands = indexBean.getHot_demand();
-                if (hotDemands != null){
+                if (hotDemands != null) {
                     hot_demand.addAll(hotDemands);
                     mHotBuyAdapter.notifyDataSetChanged();
                 }
 
                 ArrayList<HotBean> hotSupplys = indexBean.getHot_supply();
-               if (hotSupplys != null){
-                   hot_supply.addAll(hotSupplys);
-                   mHotSupplyAdapter.notifyDataSetChanged();
-               }
+                if (hotSupplys != null) {
+                    hot_supply.addAll(hotSupplys);
+                    mHotSupplyAdapter.notifyDataSetChanged();
+                }
 
                 mIndexBean = indexBean;
                 initTodayData();
@@ -542,7 +565,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 设置滚动广告图片.
      */
-    private void setAdvPager(){
+    private void setAdvPager() {
         mainfragvp.removeAllViews();
         mBannerPagerAdapter.notifyDataSetChanged();
         mainfragpi.setTotalPage(mAds.size());
@@ -554,7 +577,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 初始化今日数据。
      */
-    private void initTodayData(){
+    private void initTodayData() {
         TodayNum todayNum = mIndexBean.getToday_num();
         maingetnum.setText(String.valueOf(todayNum.getDemand_num()));
         mainsptnumtv.setText(String.valueOf(todayNum.getSupply_num()));
@@ -564,7 +587,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 初始化热门市场。
      */
-    private void initHotMarket(){
+    private void initHotMarket() {
 
         hotMarketAdapter.notifyDataSetChanged();
     }
@@ -572,7 +595,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 這門市場監聽。
      */
-    public class HotMarketOCL implements AdapterView.OnItemClickListener{
+    public class HotMarketOCL implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -589,13 +612,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 熱門需求監聽。
      */
-    public class HotBuyOCL implements AdapterView.OnItemClickListener{
+    public class HotBuyOCL implements AdapterView.OnItemClickListener {
 
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            HotBean hotBean =  hot_demand.get(position);
+            HotBean hotBean = hot_demand.get(position);
             Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
             intent.putExtra(BuyInfoActivity.DEMAND_ID, hotBean.getId());
             startActivity(intent);
@@ -605,7 +628,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     /**
      * 热门供应监听
      */
-    public class HotSupplyOCL implements AdapterView.OnItemClickListener{
+    public class HotSupplyOCL implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -614,9 +637,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             Intent intent = new Intent(getActivity(), ProductInfoActivity.class);
             intent.putExtra(ProductInfoActivity.ARG_ID, hotBean.getId());
             startActivity(intent);
+        }
     }
-    }
-
 
 
 }

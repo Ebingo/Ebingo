@@ -8,6 +8,8 @@
     <ListView
         android:id="@+id/entpr_demand_lv"
         android:scrollbars="none"
+        android:divider="@color/divide_gray"
+        android:dividerHeight="0.5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

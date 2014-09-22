@@ -72,8 +72,10 @@ public class DetailInfoBean {
     /**
      * 求购数量. *
      */
-    private int buy_num;
-    /** 公司名称. **/
+    private String buy_num;
+    /**
+     * 公司名称. *
+     */
     private String company_name;
 
     public String getDescription() {
@@ -91,8 +93,6 @@ public class DetailInfoBean {
     public void setCompany_name(String company_name) {
         this.company_name = company_name;
     }
-
-
 
 
     public int getInfo_id() {
@@ -215,13 +215,14 @@ public class DetailInfoBean {
         this.inwishlist = inwishlist;
     }
 
-    public int getBuy_num() {
+    public String getBuy_num() {
         return buy_num;
     }
 
-    public void setBuy_num(int buy_num) {
+    public void setBuy_num(String buy_num) {
         this.buy_num = buy_num;
     }
+
     @Override
     public String toString() {
         return "DetailInfoBean{" +

@@ -1,54 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-    android:paddingTop="@dimen/main_item_pad_t_b"
-    android:paddingBottom="@dimen/main_item_pad_t_b"
-
-    android:paddingLeft="@dimen/main_tb_marg_l_r"
-    android:paddingRight="@dimen/main_tb_marg_l_r"
+    android:layout_width="match_parent"
     android:gravity="center_vertical"
+    style="@style/home_item_style"
     android:layout_height="wrap_content">
 
 
     <LinearLayout
-    android:layout_width="wrap_content"
-    android:orientation="vertical"
-    android:layout_centerVertical="true"
-    android:layout_height="wrap_content">
-    <LinearLayout
-    android:layout_width="wrap_content"
-    android:orientation="horizontal"
-    android:layout_height="wrap_content">
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
 
-    <TextView
-    android:id="@+id/main_hote_1get_titel_tv"
-    style="@style/gray_14_tv"
-    android:text="@string/main_hote_spt_titel"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/main_hote_1get_titel_tv"
+                style="@style/gray_14_tv"
+                android:text="@string/main_hote_spt_titel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp">
+
+            <TextView
+                android:id="@+id/main_hote_get_1subtitle_tv"
+                android:layout_width="wrap_content"
+                style="@style/gray_11_tv"
+                android:text="選禮物，尚金梅"
+                android:layout_height="wrap_content" />
+            style="@style/gray_11_tv"/>
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    >
-
-    <TextView
-    android:id="@+id/main_hote_get_1subtitle_tv"
-    android:layout_width="wrap_content"
-    style="@style/gray_11_tv"
-    android:text="選禮物，尚金梅"
-    android:layout_height="wrap_content" />
-    style="@style/gray_11_tv"/>
-    </LinearLayout>
-    </LinearLayout>
     <ImageView
-    android:id="@+id/main_hot_1get_img"
-    android:src="@drawable/circle_img"
-    android:layout_alignParentRight="true"
-    android:layout_width="@dimen/common_circl_img_size"
-    android:layout_height="@dimen/common_circl_img_size" />
+        android:id="@+id/main_hot_1get_img"
+        android:src="@drawable/circle_img"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/common_circl_img_size"
+        android:layout_height="@dimen/common_circl_img_size" />
 
 </RelativeLayout>

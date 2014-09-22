@@ -187,8 +187,9 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
         } else {
             fraginterprisemainvipimg.setVisibility(View.GONE);
         }
-
-        currentSupplyBeans.addAll(infoBean.getInfoarray());
+        if (infoBean.getInfoarray() != null) {
+            currentSupplyBeans.addAll(infoBean.getInfoarray());
+        }
         myAdapter.notifyDataSetChanged();
     }
 
