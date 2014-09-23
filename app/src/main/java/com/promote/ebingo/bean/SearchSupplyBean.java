@@ -17,12 +17,21 @@ public class SearchSupplyBean extends SearchTypeBean implements Serializable{
 
     private String price;
 
+    private String unit;
     /**起购标准**/
     private String min_supply_num;
     /**查看次数**/
     private int read_num;
     /**企业等级**/
     private String company_rank;
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
     public String getCompany() {
         return company;
