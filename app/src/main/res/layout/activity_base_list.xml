@@ -15,16 +15,11 @@
 
         <TextView style="@style/tv_no_data" />
 
-        <com.jch.lib.view.PullToRefreshView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:id="@android:id/list"
-                style="@style/list_has_data"
-                android:divider="@color/center_divider"
-                android:dividerHeight="1dp" />
-        </com.jch.lib.view.PullToRefreshView>
+        <ListView
+            android:id="@android:id/list"
+            style="@style/list_has_data"
+            android:divider="@color/center_divider"
+            android:dividerHeight="1dp" />
 
     </LinearLayout>
 </LinearLayout>
