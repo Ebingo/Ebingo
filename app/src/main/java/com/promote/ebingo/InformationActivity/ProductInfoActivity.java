@@ -40,6 +40,7 @@ import org.json.JSONObject;
 
 public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
+    public static final String ARG_COLLECT_ID = "collectId";
     private ImageView commonbackbtn;
     private TextView commontitletv;
     private TextView prdinfointocompanytv;
@@ -68,9 +69,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         initialize();
     }
 
-
     private void initialize() {
-        collectId = getIntent().getIntExtra("collectId", -1);
+        collectId = getIntent().getIntExtra(ARG_COLLECT_ID, -1);
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
 
@@ -99,8 +99,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfotelcb.setOnClickListener(this);
         prdinfointocompanytv.setOnClickListener(this);
         productinfocollectcb.setOnClickListener(this);
-        productinfoiweb.getSettings().setJavaScriptEnabled(true);
-        productinfoiweb.loadUrl("http://218.244.149.129/3d/wai/index.html");
     }
 
     private void setData(DetailInfoBean infoBean) {
@@ -110,7 +108,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
         productinfolooknumtv.setText(infoBean.getRead_num() + "");
         if (infoBean.getType() == 1) {
-            pi_min_sell_num.setText(infoBean.getMin_sell_num() + "");
+            pi_min_sell_num.setText(infoBean.getMin_sell_num() + ""+infoBean.getUnit());
         } else {
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "");
         }
@@ -118,12 +116,17 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfocitytv.setText(infoBean.getRegion());
 
         if (!TextUtils.isEmpty(infoBean.getUrl_3d())) {
-            productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
-            productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
-        }else{
-            ImageManager.load(infoBean.getImage(),productinfoimg);
+            productinfoiweb.setVisibility(View.VISIBLE);
+            productinfoimg.setVisibility(View.GONE);
+            productinfoiweb.getSettings().setJavaScriptEnabled(true);
+            productinfoiweb.loadUrl(infoBean.getUrl_3d());
+        } else {
+            productinfoimg.setVisibility(View.VISIBLE);
+            productinfoiweb.setVisibility(View.GONE);
+            ImageManager.load(infoBean.getImage(), productinfoimg);
         }
-
+        productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
+        productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
     }
 
     @Override
@@ -138,7 +141,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 finish();
                 break;
             }
-            case R.id.buy_info_into_company_tv: {
+            case R.id.prd_info_into_company_tv: {
 
                 Intent intent = new Intent(this, InterpriseInfoActivity.class);
                 intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
