@@ -164,7 +164,7 @@
 
                 <TextView
                     style="@style/publish_text_style"
-                    android:text="@string/picture_spaced" />
+                    android:text="图      片" />
 
                 <View style="@style/vertical_divider_20" />
 
