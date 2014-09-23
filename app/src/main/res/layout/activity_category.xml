@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="com.promote.ebingo.category.CategoryActivity">
 
-    <include layout="@layout/common_head_layout"/>
+    <include layout="@layout/common_head_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:text="@string/supply_info"
             android:layout_weight="1"
             android:drawableRight="@drawable/category_orange_indicator"
-            style="@style/font_orange_15"/>
+            style="@style/font_orange_15" />
 
         <CheckBox
             android:id="@+id/category_right_cb"
@@ -47,15 +47,20 @@
             android:gravity="center"
             android:layout_weight="1"
             android:text="@string/look_num"
-            style="@style/font_orange_15"/>
+            style="@style/font_orange_15" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/category_lv"
+    <com.jch.lib.view.PullToRefreshView
         android:layout_width="match_parent"
-        style="@style/listview_style"
-        android:scrollbars="none"
-        android:layout_height="match_parent" />
+        android:orientation="vertical"
+        android:layout_height="match_parent">
 
+        <ListView
+            android:id="@+id/category_lv"
+            android:layout_width="match_parent"
+            style="@style/listview_style"
+            android:scrollbars="none"
+            android:layout_height="match_parent" />
+    </com.jch.lib.view.PullToRefreshView>
 </LinearLayout>
