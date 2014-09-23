@@ -9,9 +9,7 @@
         android:id="@+id/hote_buy_supplly_top_img"
         android:layout_width="match_parent"
         android:scaleType="centerCrop"
-        android:layout_marginLeft="@dimen/main_tb_marg_l_r"
-        android:layout_marginRight="@dimen/main_tb_marg_l_r"
         android:layout_height="wrap_content"
-        android:src="@drawable/test_main_1"/>
+        android:src="@drawable/test_main_1" />
 
 </LinearLayout>

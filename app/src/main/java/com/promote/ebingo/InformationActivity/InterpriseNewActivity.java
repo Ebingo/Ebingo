@@ -3,6 +3,7 @@ package com.promote.ebingo.InformationActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-public class InterpriseNewActivity extends Activity {
+public class InterpriseNewActivity extends Activity implements View.OnClickListener {
 
     public final static String ARG_ID = "news_id";
     private ImageView commonbackbtn;
@@ -45,6 +46,7 @@ public class InterpriseNewActivity extends Activity {
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
         iprisenewsdiswv = (WebView) findViewById(R.id.iprise_news_dis_wv);
 
+        commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getString(R.string.enterprise_news));
         // 设置支持JavaScript等
         WebSettings mWebSettings = iprisenewsdiswv.getSettings();
@@ -100,4 +102,21 @@ public class InterpriseNewActivity extends Activity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+
+            case R.id.common_back_btn:{
+
+                onBackPressed();
+                this.finish();
+                break;
+            }
+            default: {
+
+            }
+        }
+    }
 }

@@ -12,6 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"></FrameLayout>
 
+    <View
+        style="@style/divider_horizontal"
+        android:layout_height="1dp" />
+
     <RadioGroup
         android:id="@+id/frag_iprise_s_d_cg"
         android:layout_width="match_parent"
@@ -24,11 +28,13 @@
             android:id="@+id/frag_iprise_supply_ll"
             android:text="@string/supply_info"
             android:checked="true"
+            android:background="@color/gray_bg"
             style="@style/iprise_s_d_tab_style" />
 
         <RadioButton
             android:id="@+id/frag_iprise_demand_ll"
             android:text="@string/buy_info"
+            android:background="@color/gray_bg"
             style="@style/iprise_s_d_tab_style" />
     </RadioGroup>
 

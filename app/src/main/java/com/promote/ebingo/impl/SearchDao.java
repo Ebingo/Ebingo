@@ -14,10 +14,10 @@ import java.util.ArrayList;
  */
 public class SearchDao {
 
-    private static DbOpenHelper mHelper ;
+    private static DbOpenHelper mHelper;
     private Context mContext;
 
-    public SearchDao(Context context){
+    public SearchDao(Context context) {
 
         this.mContext = context;
         mHelper = new DbOpenHelper(context);
@@ -25,9 +25,10 @@ public class SearchDao {
 
     /**
      * 保存历史记录。
+     *
      * @param history
      */
-    public synchronized void addHistory(String history){
+    public synchronized void addHistory(String history) {
 
 
         SQLiteDatabase db = mHelper.getWritableDatabase();
@@ -39,15 +40,16 @@ public class SearchDao {
 
     /**
      * 获取历史记录。
+     *
      * @return ArrayList<SearchHistoryBean>
      */
-    public ArrayList<SearchHistoryBean> getHistorys(){
+    public synchronized ArrayList<SearchHistoryBean> getHistorys() {
 
         SQLiteDatabase db = mHelper.getWritableDatabase();
         Cursor cursor = db.query(true, DbOpenHelper.SEARCH_HISTORY, new String[]{"history"}, null, null, null, null, "id desc", String.valueOf(7));
         ArrayList<SearchHistoryBean> histories = new ArrayList<SearchHistoryBean>();
 
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             SearchHistoryBean historyBean = new SearchHistoryBean();
             historyBean.setHistory(cursor.getString(cursor.getColumnIndex("history")));
             histories.add(historyBean);
@@ -61,9 +63,9 @@ public class SearchDao {
     /**
      * 清空历史记录。
      */
-    public synchronized void clearHistory(){
+    public synchronized void clearHistory() {
         SQLiteDatabase db = mHelper.getWritableDatabase();
-        String sqlStr = "delete from " +DbOpenHelper.SEARCH_HISTORY;
+        String sqlStr = "delete from " + DbOpenHelper.SEARCH_HISTORY;
         db.execSQL(sqlStr);
         db.close();
     }

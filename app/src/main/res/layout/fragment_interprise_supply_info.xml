@@ -9,6 +9,8 @@
         android:id="@+id/enterprise_supply_item_lv"
         android:layout_width="match_parent"
         android:scrollbars="none"
+        android:dividerHeight="0.5dp"
+        android:divider="@color/divide_gray"
         android:layout_height="match_parent" />
 
 </FrameLayout>

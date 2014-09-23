@@ -12,7 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/test_search_item_img"/>
+        android:src="@drawable/test_search_item_img" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -50,8 +50,9 @@
             android:id="@+id/search_result_describe_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:lines="2"
             android:text="發年遼寧鬧死您哦iPhone跑哪裡里弄理髮wional9發你"
-            style="@style/font_gray_12"/>
+            style="@style/font_gray_12" />
 
     </LinearLayout>
 

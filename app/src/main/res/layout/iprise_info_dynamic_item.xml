@@ -27,7 +27,6 @@
             style="@style/black_15_tv"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/iprise_info_dynamic_date_tv"
-            android:textStyle="bold"
             android:text="公司與浙江省信用合作社的合作往來"
             android:layout_height="wrap_content" />
 
