@@ -16,6 +16,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
 
     private int delete_position = -1;
     private ItemDelteDialog delteDialog;
+    protected TextView tv_no_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         setContentView(R.layout.activity_base_list);
         setTitle(getTitle());
         delteDialog = new ItemDelteDialog(this, this);
+        tv_no_data = (TextView) findViewById(android.R.id.empty);
     }
 
     @Override
@@ -32,6 +34,10 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
                 finish();
                 break;
         }
+    }
+
+    public void showNoData() {
+        tv_no_data.setText(R.string.no_data);
     }
 
     /**

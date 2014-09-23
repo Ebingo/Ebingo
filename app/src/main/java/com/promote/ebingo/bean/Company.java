@@ -4,10 +4,12 @@ import android.net.Uri;
 
 import com.promote.ebingo.publish.VipType;
 
+import java.io.Serializable;
+
 /**
  * Created by acer on 2014/9/3.
  */
-public class Company {
+public class Company implements Serializable{
     private Integer companyId;//公司Id
     private String image;//公司图片url
     private String name;//公司名
@@ -19,7 +21,7 @@ public class Company {
     private String vipType= VipType.VISITOR.code;//会员类型，默认是游客
     private String isLock;
     private String email;
-    private Uri imageUri;//公司图片在手机中的位置
+    private transient Uri imageUri;//公司图片在手机中的位置
 
     private static Company mCompany = null;
 
@@ -38,6 +40,10 @@ public class Company {
 //            mCompany.setCompanyId(6);
         }
         return mCompany;
+    }
+
+    public static void loadInstance(Company company){
+        mCompany=company;
     }
 
     public String getEmail() {

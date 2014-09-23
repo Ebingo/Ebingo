@@ -93,6 +93,8 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                     mCollections.clear();
                     mCollections.addAll(collectBeans);
                     myAdapter.notifyDataSetChanged();
+                }else{
+                    showNoData();
                 }
                 dialog.dismiss();
             }

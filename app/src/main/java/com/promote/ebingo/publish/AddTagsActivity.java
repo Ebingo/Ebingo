@@ -17,6 +17,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.HotTag;
+import com.promote.ebingo.center.TagView;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.JsonUtil;
@@ -31,8 +32,10 @@ import java.util.LinkedList;
 /**
  * Created by acer on 2014/9/4.
  */
-public class AddTagsActivity extends PublishBaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class AddTagsActivity extends PublishBaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TagView.OnTagClickListener {
     MultiAutoCompleteTextView edit_add_tab;
+    private int tag_select_color;
+    private int tag_unSelect_color;
     private LinkedList<HotTag> tagList = new LinkedList<HotTag>();
     private AutoLineLayout tagContainer;
 
@@ -40,6 +43,8 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tags);
+        tag_unSelect_color = getResources().getColor(R.color.tag_default_color);
+        tag_select_color = getResources().getColor(R.color.tag_color);
         init();
     }
 
@@ -138,13 +143,20 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
      */
     private void addTagToView(HotTag tag) {
         if (tag == null) return;
-        CheckBox checkBox = (CheckBox) View.inflate(this, R.layout.tag, null);
-        checkBox.setTag(tag);
-        checkBox.setText(tag.getName());
-        checkBox.setChecked(tag.isSelect());
-        checkBox.setSingleLine(false);
-        checkBox.setOnCheckedChangeListener(this);
-        tagContainer.addView(checkBox);
+        TagView tagView = (TagView) View.inflate(this, R.layout.sample_tag_view, null);
+        tagView.setTag(tag);
+        tagView.setNumber(0);
+        tagView.setText(tag.getName());
+        tagView.setOnTagClickListener(this);
+        if (tag.isSelect()) tagView.setDefaultColor(tag_select_color);
+        else tagView.setDefaultColor(tag_unSelect_color);
+//        CheckBox checkBox = (CheckBox) View.inflate(this, R.layout.tag, null);
+//        checkBox.setTag(tag);
+//        checkBox.setText(tag.getName());
+//        checkBox.setChecked(tag.isSelect());
+//        checkBox.setSingleLine(false);
+//        checkBox.setOnCheckedChangeListener(this);
+        tagContainer.addView(tagView);
     }
 
     /**
@@ -182,4 +194,22 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
         ContextUtil.toast("最多只能添加10个标签");
     }
 
+    @Override
+    public void onDelete(TagView v) {
+
+    }
+
+    @Override
+    public void onTagClick(TagView v) {
+        HotTag hotTag = (HotTag) v.getTag();
+        if (hotTag.isSelect()) {//如果hotTag是选中状态，则点击后颜色更改为未选中状态
+            v.setDefaultColor(tag_unSelect_color);
+            hotTag.setSelect(false);
+        } else if (isTagsMax()) {//如果hotTag是未选中状态，则要先判断是否超出标签数
+            toastTagIsMax();
+        } else {//没有超出最大标签数
+            hotTag.setSelect(true);
+            v.setDefaultColor(tag_select_color);
+        }
+    }
 }

@@ -69,9 +69,7 @@ public class MyEnterPriseInfoActivity extends BaseActivity {
         tv_region.setText(company.getRegion());
         tv_website.setText(company.getWebsite());
         tv_email.setText(company.getEmail());
-        tv_phone.setText(company.getHeadPhone());
+        tv_phone.setText(company.getCompanyTel());
         if (!TextUtils.isEmpty(company.getImage())) ImageManager.load(company.getImage(), image);
     }
-
-
 }

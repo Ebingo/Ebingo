@@ -13,6 +13,7 @@ import com.jch.lib.util.DialogUtil;
 
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.EbingoApp;
+import com.promote.ebingo.center.CenterFragment;
 
 /**
  * Created by acer on 2014/9/2.
@@ -55,6 +56,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
                     public void onSuccess() {
                         dialog.dismiss();
                         dismiss();
+                        getContext().sendBroadcast(new Intent(CenterFragment.ACTION_INVALIDATE));
                     }
 
                     @Override

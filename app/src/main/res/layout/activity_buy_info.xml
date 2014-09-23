@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.promote.ebingo.InformationActivity.BuyInfoActivity">
 
     <include layout="@layout/common_head_layout"></include>
@@ -13,63 +13,63 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:orientation="horizontal"
             android:id="@+id/buy_info_btm_ll"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
             style="@style/info_content_pad"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
             android:background="@color/into_enter_bg"
-            android:layout_height="48dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/buy_info_into_company_tv"
                 style="@style/font_gray_15"
-                android:text="进入企业"
-                android:layout_alignParentRight="true"
-                android:drawableRight="@drawable/right_arro"
-                android:drawablePadding="5dp"
-                android:gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:drawablePadding="5dp"
+                android:drawableRight="@drawable/right_arro"
+                android:gravity="center_vertical"
+                android:text="进入企业" />
 
             <TextView
                 android:id="@+id/buy_info_company_tv"
                 style="@style/orange_15_tv"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/buy_info_into_company_tv"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
-                android:text="南京普爾么網絡技術有限公司"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/buy_info_into_company_tv"
+                android:text="南京普爾么網絡技術有限公司" />
 
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
             android:layout_above="@id/buy_info_btm_ll"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
-            android:layout_height="match_parent">
+            android:orientation="vertical">
 
             <ScrollView
 
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_weight="1">
 
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         style="@style/info_content_pad"
                         android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/buy_info_name_tv"
@@ -78,16 +78,16 @@
                             android:layout_height="wrap_content" />
 
                         <LinearLayout
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal">
 
                             <TextView
                                 style="@style/orange_14_tv"
-                                android:text="@string/buy_num"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:text="@string/buy_num" />
 
 
                             <TextView
@@ -98,72 +98,81 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:text="@string/publish_time"
                                 style="@style/gray_11_tv"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:text="@string/publish_time" />
 
                             <TextView
                                 android:id="@+id/buy_info_publish_time_tv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/gray_11_tv" />
-
-                            <TextView
-                                android:layout_marginLeft="30dp"
                                 style="@style/gray_11_tv"
-                                android:text="@string/buy_look"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
 
-                            <TextView
-                                android:id="@+id/publish_look_num_tv"
-                                style="@style/gray_11_tv"
-                                android:layout_marginLeft="5dp"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:gravity="right"
                                 android:layout_height="wrap_content"
-                               />
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:text="@string/search_time"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/gray_11_tv" />
+                                <TextView
+                                    style="@style/gray_11_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="30dp"
+                                    android:text="@string/buy_look" />
 
+                                <TextView
+                                    android:id="@+id/publish_look_num_tv"
+                                    style="@style/gray_11_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="1" />
+
+                                <TextView
+                                    style="@style/gray_11_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/search_time" />
+                            </LinearLayout>
                         </LinearLayout>
 
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:background="@color/divide_gray"
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp" />
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="7dp"
+                        android:background="@color/center_divider" />
 
                     <LinearLayout
+                        style="@style/info_content_pad"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        style="@style/info_content_pad">
+                        android:orientation="vertical">
 
 
                         <TextView
-                            android:layout_width="wrap_content"
                             style="@style/blue_15_tv"
-                            android:text="@string/buy_detail"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/buy_detail" />
 
                         <WebView
                             android:id="@+id/buy_info_detail_tv"
                             android:layout_width="match_parent"
-                            android:layout_marginTop="5dp"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp" />
 
                     </LinearLayout>
 
@@ -174,14 +183,14 @@
 
             <Button
                 android:id="@+id/buy_info_contact_phone_tv"
+                style="@style/font_white_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/font_white_15"
-                android:paddingLeft="20dp"
-                android:drawableLeft="@drawable/tell"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/contact_buy"
-                android:background="@drawable/contact_btn_bg" />
+                android:background="@drawable/contact_btn_bg"
+                android:drawableLeft="@drawable/tell"
+                android:paddingLeft="20dp"
+                android:text="@string/contact_buy" />
 
         </LinearLayout>
     </RelativeLayout>

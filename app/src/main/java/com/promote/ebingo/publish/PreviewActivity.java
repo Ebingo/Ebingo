@@ -72,7 +72,8 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
      * 根据Uri来加载一个图片，并压缩
      */
     private class LoadImageTask extends AsyncTask<Uri, Void, Bitmap> {
-
+        private int width=640;
+        private int height=236;
         private final int max_size = 600 * 1024;
         private ProgressDialog dialog;
 

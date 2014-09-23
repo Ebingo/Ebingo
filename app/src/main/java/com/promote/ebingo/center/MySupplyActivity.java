@@ -105,7 +105,6 @@ public class MySupplyActivity extends BaseListActivity  {
     }
 
     private void getMySupply(int lastId) {
-
         String urlStr = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater param = new EbingoRequestParmater(getApplicationContext());
         final ProgressDialog dialog = DialogUtil.waitingDialog(MySupplyActivity.this);
@@ -133,6 +132,8 @@ public class MySupplyActivity extends BaseListActivity  {
                     mSupplyBeans.clear();
                     mSupplyBeans.addAll(searchSupplyBeans);
                     adapter.notifyDataSetChanged();
+                }else{
+                    showNoData();
                 }
                 dialog.dismiss();
 
@@ -187,9 +188,7 @@ public class MySupplyActivity extends BaseListActivity  {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
             ViewHolder viewHolder = null;
-
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.mysupply_item, null);
                 viewHolder = new ViewHolder();
@@ -204,11 +203,10 @@ public class MySupplyActivity extends BaseListActivity  {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-
             SearchSupplyBean supplyBean = mSupplyBeans.get(position);
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
             viewHolder.nameTv.setText(supplyBean.getName());
-            viewHolder.priceTv.setText(supplyBean.getPrice());
+            viewHolder.priceTv.setText(supplyBean.getPrice()+"/"+supplyBean.getUnit());
             viewHolder.timeTv.setText(supplyBean.getDate());
             viewHolder.startTv.setText(supplyBean.getMin_supply_num());
 

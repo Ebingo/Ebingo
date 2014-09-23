@@ -149,8 +149,8 @@ public class ImageUtil {
         canvas.drawBitmap(resizeSrc, 0, 0, paint);
         canvas.restore();
 
-        if (!resizeSrc.isRecycled())resizeSrc.recycle();
-        if (!src.isRecycled())src.recycle();
+        if (result!=resizeSrc&&!resizeSrc.isRecycled())resizeSrc.recycle();
+        if (result!=src&&!src.isRecycled())src.recycle();
 
         return result;
     }

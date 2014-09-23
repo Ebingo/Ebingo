@@ -189,6 +189,15 @@ public class TagView extends View {
         setMeasuredDimension(width, height);
     }
 
+    public int getDefaultColor() {
+        return defaultColor;
+    }
+
+    public void setDefaultColor(int defaultColor) {
+        this.defaultColor = defaultColor;
+        invalidateTextPaintAndMeasurements();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         // TODO: consider storing these as member variables to reduce

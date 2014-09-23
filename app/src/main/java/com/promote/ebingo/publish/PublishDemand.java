@@ -50,10 +50,10 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
     EditText edit_phone;
     EditText edit_demand_num;
 
+    EditText edit_unit;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.publish_demand, container, false);
         init(view);
         return view;
@@ -68,6 +68,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
         edit_contact = (EditText) view.findViewById(R.id.edit_contact);
         edit_phone = (EditText) view.findViewById(R.id.edit_mobile);
         edit_demand_num = (EditText) view.findViewById(R.id.edit_demand_num);
+        edit_unit = (EditText) view.findViewById(R.id.edit_unit);
 
         view.findViewById(R.id.pick_category).setOnClickListener(this);
         view.findViewById(R.id.pick_description).setOnClickListener(this);
@@ -103,6 +104,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
                 String contacts = edit_contact.getText().toString().trim();
                 String contact_phone = edit_phone.getText().toString().trim();
                 String demand_num = edit_demand_num.getText().toString().trim();
+                String unit = edit_unit.getText().toString().trim();
                 Integer company_id = Company.getInstance().getCompanyId();
 
                 if (company_id == null) ContextUtil.toast("请重新登录！");
@@ -114,6 +116,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
                 else if (getChineseNum(contacts)<2||getChineseNum(contacts)>4) Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
                 else if (TextUtils.isEmpty(contact_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
                 else if (!LoginManager.isMobile(contact_phone)) Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
+                else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
                 else {
                     EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
                     parmater.put("type", TYPE_DEMAND);
@@ -125,6 +128,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
                     parmater.put("contacts", contacts);
                     parmater.put("contacts_phone", contact_phone);
                     parmater.put("buy_num", demand_num);
+                    parmater.put("unit", unit);
                     startPublish(parmater);
                 }
 
@@ -136,10 +140,6 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
     private int getChineseNum(String input){
         LogCat.i("--->","input:"+input.length());
         return input.length();
-    }
-
-    private void toastEmpty(String param) {
-        ContextUtil.toast("请输入" + param);
     }
 
     @Override
@@ -203,7 +203,6 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
         });
     }
 
-
     /**
      * 清空文字
      */
@@ -214,16 +213,5 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
         edit_contact.setText(null);
         edit_phone.setText(null);
         tv_tags.setText(null);
-    }
-
-    /**
-     * 判断所传参数是否有空字段
-     */
-    private boolean isEmptyParamExists(Object... params) {
-        for (Object param : params) {
-            if (param == null) return false;
-            if (param instanceof String && "".equals(param)) return false;
-        }
-        return true;
     }
 }

@@ -334,6 +334,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         public static final int DESCRIPTION_LENGTH_ERROR = 13;
         public static final int CONTACT_LENGTH_ERROR = 14;
         public static final int PHONE_FORMAT_ERROR = 15;
+        public static final int NULL_UNIT = 16;
         private static Map<Integer, String> errorMap = new HashMap<Integer, String>();
 
         static {
@@ -352,6 +353,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             errorMap.put(PHONE_FORMAT_ERROR, "手机格式不正确");
             errorMap.put(PRICE_EMPTY, "请输入价格");
             errorMap.put(MIN_SELL_NUM_EMPTY, "请输入起订标准");
+            errorMap.put(NULL_UNIT, "单位不能为空");
         }
 
         public static String get(int code) {

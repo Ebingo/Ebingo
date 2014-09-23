@@ -87,6 +87,8 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                     mDemandBeans.clear();
                     mDemandBeans.addAll(demandBeans);
                     adapter.notifyDataSetChanged();
+                }else{
+                    showNoData();
                 }
                 dialog.dismiss();
             }

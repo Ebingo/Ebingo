@@ -33,7 +33,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.check_update:
                 new AlertDialog.Builder(SettingActivity.this)
                         .setMessage("已经是最新版本了！")
-                        .setPositiveButton("我知道了",new DialogInterface.OnClickListener() {
+                        .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -52,7 +52,8 @@ public class SettingActivity extends BaseActivity {
                 toActivity(LoginActivity.class);
                 finish();
                 break;
-            default:super.onClick(v);
+            default:
+                super.onClick(v);
         }
     }
 }

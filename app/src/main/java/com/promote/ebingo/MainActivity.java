@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.jch.lib.util.DialogUtil;
+import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
@@ -52,6 +53,20 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         initialize();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        LogCat.i("--->","onRestoreInstanceState");
+        Company.loadInstance((Company) savedInstanceState.getSerializable("company"));
+        sendBroadcast(new Intent(CenterFragment.ACTION_INVALIDATE));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("company", Company.getInstance());
+        LogCat.i("--->","onSaveInstanceState");
+    }
 
     private void initialize() {
 

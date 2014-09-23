@@ -20,8 +20,8 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="7dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:paddingTop="7dp">
 
             <ImageView
@@ -33,7 +33,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="9dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -44,6 +44,7 @@
                     android:text="公司名" />
 
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_region_top"
                     style="@style/font_gray_12"
                     android:layout_width="wrap_content"
@@ -51,6 +52,7 @@
                     android:text="公司地区" />
 
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_vipType"
                     style="@style/font_gray_12"
                     android:layout_width="wrap_content"
@@ -112,7 +114,7 @@
 
                 <TextView
                     style="@style/publish_text_style"
-                    android:text="电话号码" />
+                    android:text="企业电话" />
 
                 <View style="@style/vertical_divider_20" />
 

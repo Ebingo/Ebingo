@@ -54,6 +54,8 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
                 android:layout_height="match_parent">
 
                 <WebView
@@ -62,8 +64,9 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:id="@+id/product_info_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="350dp"
+                    android:scaleType="centerCrop"
+                    android:layout_height="225dp" />
                 <RelativeLayout
                     android:layout_width="match_parent"
                     style="@style/info_content_pad"
@@ -211,8 +214,10 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:background="@color/divide_gray"
+                    android:background="@color/center_divider"
                     android:layout_width="match_parent"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="7dp"
                     android:layout_height="0.5dp" />
 
                 <LinearLayout

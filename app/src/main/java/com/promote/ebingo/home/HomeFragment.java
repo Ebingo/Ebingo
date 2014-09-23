@@ -169,7 +169,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         initialize(view);
-
+        LogCat.i("--->","home onCreateView");
         return view;
     }
 

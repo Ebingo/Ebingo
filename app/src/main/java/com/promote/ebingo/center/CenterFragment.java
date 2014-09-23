@@ -2,12 +2,16 @@ package com.promote.ebingo.center;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,6 +30,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.settings.EnterpriseSettingActivity;
 import com.promote.ebingo.center.settings.SettingActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
@@ -50,7 +55,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static final String ACTION_INVALIDATE="com.promote.ebingo.center.ACTION_INVALIDATE";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -101,6 +106,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -111,7 +117,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         initialize(view);
         return view;
     }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -119,10 +124,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onResume() {
-
-        setHeadImage(Company.getInstance().getImageUri());
+    private void invalidateData(){
         String companyName = Company.getInstance().getName();
         if (companyName == null) {
             centerloginbtn.setText(R.string.login);
@@ -142,10 +144,10 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                setHeadImage(Company.getInstance().getImageUri());
                 getCurrentCompanyBaseNum();
             }
         }, 100);
-        super.onResume();
     }
 
     @Override
@@ -157,13 +159,18 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        getActivity().registerReceiver(invalidateReceiver,new IntentFilter(ACTION_INVALIDATE));
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-
+        try {
+            getActivity().unregisterReceiver(invalidateReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -211,6 +218,11 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centsettingtv.setOnClickListener(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        invalidateData();
+    }
 
     /**
      * 设置头像
@@ -218,18 +230,24 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
      * @param uri
      */
     public void setHeadImage(Uri uri) {
-        if (uri == null) {
-            LogCat.e("--->", "setHeadImage uriError uri=" + uri);
-            centerheadiv.setImageResource(R.drawable.center_head);
-            return;
+        ImageDownloadTask task=new ImageDownloadTask(){
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if (bitmap != null)
+                    centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
+            }
+        };
+        if (uri != null) {//本地没有头像
+            task.loadBY(uri);
+        }else{
+            final String imageUrl = Company.getInstance().getImage();
+            if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
+                LogCat.e("--->", "setHeadImage uriError uri=" + uri);
+                centerheadiv.setImageResource(R.drawable.center_head);
+            } else {//有远程头像URL
+                task.loadBy(imageUrl);
+            }
         }
-        try {
-            Bitmap bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-            centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bm, (int) Dimension.dp(48)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -237,7 +255,11 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         int id = v.getId();
         //除了"我的特权"以外，所有选项都必须在登录状态下，才可以使用
-        if (id != R.id.cent_privilege_tv && !isLogined()) gotoLogin();
+        if (id != R.id.cent_privilege_tv && Company.getInstance().getCompanyId()==null) {
+            gotoLogin();
+            return;
+        }
+
         switch (id) {
             case R.id.center_head_iv: {
 
@@ -297,7 +319,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             case R.id.cent_book_tv: {
                 Intent intent = new Intent(getActivity(), MyBookActivity.class);
                 startActivity(intent);
-
                 break;
             }
             case R.id.cent_privilege_tv: {
@@ -408,4 +429,10 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
+    private BroadcastReceiver invalidateReceiver=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            invalidateData();
+        }
+    };
 }

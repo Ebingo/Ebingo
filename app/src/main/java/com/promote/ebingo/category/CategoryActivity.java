@@ -121,7 +121,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         switch (id) {
             case R.id.common_back_btn: {
 
-                onBackPressed();
+//                onBackPressed();
                 this.finish();
                 break;
 

@@ -22,9 +22,11 @@ import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.PreviewActivity;
 import com.promote.ebingo.publish.PublishBaseActivity;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -78,14 +80,27 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     public void setHeadImage(Uri uri) {
-        if (uri == null) {
-            LogCat.e("--->", "setHeadImage uriError uri=" + uri);
+        if (uri == null) {//本地没有头像
+            final String imageUrl = Company.getInstance().getImage();
+            if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
+                LogCat.e("--->", "setHeadImage uriError uri=" + uri);
+                image_enterprise.setImageResource(R.drawable.center_head);
+            } else {//有远程头像URL
+                new ImageDownloadTask() {
+                    @Override
+                    protected void onPostExecute(Bitmap bitmap) {
+                        if (bitmap != null)
+                            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
+                    }
+                }.execute(imageUrl);
+            }
+
             return;
         }
 
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            image_enterprise.setImageBitmap(bm);
+            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bm, (int) Dimension.dp(48)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,6 +140,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                         company.setWebsite(website);
                         company.setEmail(email);
                         setResult(RESULT_OK, new Intent());
+                        ContextUtil.toast("修改成功！");
                         finish();
                     }
 
@@ -160,6 +176,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
      * @param uri
      */
     private void uploadImage(Uri uri) {
+        if (uri==null)return;
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在上传图片...");
         Bitmap bitmap = null;
         try {

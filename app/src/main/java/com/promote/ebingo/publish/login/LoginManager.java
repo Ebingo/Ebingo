@@ -131,6 +131,7 @@ public class LoginManager {
                         company.setImage(data.getString("image"));
                         company.setRegion(data.getString("region"));
                         company.setEmail(data.getString("email"));
+                        company.setCompanyTel(data.getString("company_tel"));
                         ((EbingoApp) ContextUtil.getContext()).saveCurCompanyName(phone);
                         ((EbingoApp) ContextUtil.getContext()).saveCurCompanyPwd(password);
                         if (company.getImage() != null)loadHeadImage(company.getImage(), new Handler(new Handler.Callback() {
@@ -156,7 +157,6 @@ public class LoginManager {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 callback.onFail(errorResponse + "");
             }
-
         });
     }
 
