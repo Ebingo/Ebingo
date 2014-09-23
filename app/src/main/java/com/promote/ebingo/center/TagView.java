@@ -180,7 +180,7 @@ public class TagView extends View {
         int widthMode=MeasureSpec.getMode(widthMeasureSpec);
         int heightMode=MeasureSpec.getMode(heightMeasureSpec);
         if (widthMode!=MeasureSpec.EXACTLY){
-            width= (int) (mTextWidth+horizontal_spacing+indicateWidth/2);
+            width= (int) (mTextWidth+horizontal_spacing+indicateWidth/2)+1;
         }
         if (heightMode!=MeasureSpec.EXACTLY){
             height= (int) (mTextHeight+vertical_spacing+indicateHeight/2);
@@ -229,7 +229,7 @@ public class TagView extends View {
             mPaint.setColor(defaultColor);
             mPaint.setStyle(Paint.Style.STROKE);
             //绘制大矩形框
-            canvas.drawRect(0, height_offset_half, content_width, getHeight() - 2, mPaint);
+            canvas.drawRect(1, height_offset_half, content_width, getHeight() - 2, mPaint);
             //绘制文字内容
             canvas.drawText(text, (content_width - mTextWidth) / 2, height_offset_half + content_height / 2 - getBaseLineOffset(mPaint), mPaint);
             if (number > 0) {//绘制新消息数

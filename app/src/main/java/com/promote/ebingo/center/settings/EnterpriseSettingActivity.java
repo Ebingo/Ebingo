@@ -68,6 +68,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         image_enterprise.setOnClickListener(this);
         setData();
     }
+
     private void setData() {
         Company company = Company.getInstance();
         if (!TextUtils.isEmpty(company.getName())) edit_enterprise_name.setText(company.getName());
@@ -112,7 +113,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
             case R.id.commit_title_done:
                 EbingoRequestParmater parmater = new EbingoRequestParmater(this);
                 final Integer company_id = Company.getInstance().getCompanyId();
-                final String image_url = image_enterprise.getContentDescription()+"";
+                final String image_url = image_enterprise.getContentDescription() + "";
                 final String name = edit_enterprise_name.getText().toString().trim();
                 final String company_tel = edit_enterprise_phone.getText().toString().trim();
                 final String region = edit_enterprise_address.getText().toString().trim();
@@ -127,8 +128,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 parmater.put("website", website);
                 parmater.put("email", email);
                 LogCat.i("--->" + parmater);
-                final Dialog dialog=DialogUtil.waitingDialog(this,"正在更新数据...");
-                HttpUtil.post(HttpConstant.updateCompanyInfo, parmater,new EbingoHandler() {
+                final Dialog dialog = DialogUtil.waitingDialog(this, "正在更新数据...");
+                HttpUtil.post(HttpConstant.updateCompanyInfo, parmater, new EbingoHandler() {
                     @Override
                     public void onSuccess(int statusCode, JSONObject response) {
                         Company company = Company.getInstance();
@@ -147,7 +148,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     @Override
                     public void onFail(int statusCode, String msg) {
                         try {
-                            JSONObject error=new JSONObject(msg);
+                            JSONObject error = new JSONObject(msg);
                             ContextUtil.toast(error.getString("msg"));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -176,7 +177,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
      * @param uri
      */
     private void uploadImage(Uri uri) {
-        if (uri==null)return;
+        if (uri == null) return;
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在上传图片...");
         Bitmap bitmap = null;
         try {

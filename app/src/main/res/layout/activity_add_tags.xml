@@ -18,7 +18,8 @@
             style="@style/text_deep_gray_style"
             android:layout_width="wrap_content"
             android:drawableLeft="@drawable/ic_hot_tag"
-            android:drawablePadding="10dp"
+            android:drawablePadding="@dimen/ic_padding"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content"
             android:text="热门标签" />
 
@@ -26,11 +27,11 @@
             android:id="@+id/tags_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginTop="16dp"/>
 
         <TextView
-            android:layout_marginTop="12dp"
             style="@style/text_deep_gray_style"
+            android:layout_marginTop="22dp"
             android:layout_width="wrap_content"
             android:drawableLeft="@drawable/ic_new_tag"
             android:drawablePadding="@dimen/ic_padding"
@@ -54,13 +55,13 @@
 
             <Button
                 android:id="@+id/btn_add"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="25dp"
                 style="@style/blue_button"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/widget_height"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:text="添加" />
+                android:text="添 加" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
