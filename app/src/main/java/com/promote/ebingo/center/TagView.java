@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -101,7 +102,7 @@ public class TagView extends View {
     }
 
     public void setTextSize(float textSize) {
-        this.textSize = textSize;
+        this.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,textSize,getResources().getDisplayMetrics());
         invalidateTextPaintAndMeasurements();
     }
 

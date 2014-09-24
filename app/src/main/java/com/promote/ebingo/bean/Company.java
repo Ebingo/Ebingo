@@ -18,6 +18,8 @@ public class Company implements Serializable{
     private String companyTel;//公司电话
     private String region;//公司地区
     private String website; //公司网址
+    private Integer province_id;//省份
+    private Integer city_id;//地址
     private String vipType= VipType.VISITOR.code;//会员类型，默认是游客
     private String isLock;
     private String email;
@@ -40,6 +42,22 @@ public class Company implements Serializable{
 //            mCompany.setCompanyId(6);
         }
         return mCompany;
+    }
+
+    public Integer getProvince_id() {
+        return province_id;
+    }
+
+    public void setProvince_id(Integer province_id) {
+        this.province_id = province_id;
+    }
+
+    public Integer getCity_id() {
+        return city_id;
+    }
+
+    public void setCity_id(Integer city_id) {
+        this.city_id = city_id;
     }
 
     public static void loadInstance(Company company){

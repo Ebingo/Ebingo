@@ -76,6 +76,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private TextView centtellhistorytv;
     private TextView centsettingtv;
     private TextView centprofiletv;
+    private TextView centShare;
 
     /**
      * Use this factory method to create a new instance of
@@ -206,6 +207,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centtellhistorytv = (TextView) view.findViewById(R.id.cent_tell_history_tv);
         centsettingtv = (TextView) view.findViewById(R.id.cent_setting_tv);
         centprofiletv = (TextView) view.findViewById(R.id.cent_profile_tv);
+        centShare = (TextView) view.findViewById(R.id.cent_share);
 
         centerloginbtn.setOnClickListener(this);
         centprivilegetv.setOnClickListener(this);
@@ -216,6 +218,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centprofiletv.setOnClickListener(this);
         centtellhistorytv.setOnClickListener(this);
         centsettingtv.setOnClickListener(this);
+        centsettingtv.setOnClickListener(this);
+        centShare.setOnClickListener(this);
     }
 
     @Override
@@ -340,6 +344,14 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             case R.id.cent_tell_history_tv: {
                 Intent intent = new Intent(getActivity(), CallRecordActivity.class);
                 startActivity(intent);
+                break;
+            }
+            case R.id.cent_share:{
+                Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
+                intent.setType("text/plain"); // 分享发送的数据类型
+                intent.putExtra(Intent.EXTRA_SUBJECT, "分享Ebingoo"); // 分享的主题
+                intent.putExtra(Intent.EXTRA_TEXT, "Ebingoo--指尖商机 用手指做生意.打造全新电商平台。网址：www.ebingoo.com"); // 分享的内容
+                startActivity(Intent.createChooser(intent, "选择分享"));
                 break;
             }
             default: {

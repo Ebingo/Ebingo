@@ -21,6 +21,8 @@ import com.promote.ebingo.util.ContextUtil;
 
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+
 public class FindPasswordActivity extends BaseActivity {
     private EditText edit_phone;
 
@@ -28,6 +30,8 @@ public class FindPasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_passord);
+        LinkedList a;
+
         edit_phone = (EditText) findViewById(R.id.edit_phone);
     }
 
@@ -42,15 +46,15 @@ public class FindPasswordActivity extends BaseActivity {
                     @Override
                     public void onSuccess(int statusCode, JSONObject response) {
                         EbingoDialog dialog=new EbingoDialog(FindPasswordActivity.this);
-                        dialog.setTitle("发送成功");
-                        dialog.setMessage("我们已发送修改密码的链接到您的注册邮箱中，请您注意查收!");
-                        dialog.setPositiveButton("我知道了",dialog.DEFAULT_LISTENER);
+                        dialog.setTitle(R.string.find_password_dialog_title);
+                        dialog.setMessage(getString(R.string.find_password_dialog_message));
+                        dialog.setPositiveButton(getString(R.string.i_know),dialog.DEFAULT_LISTENER);
                         dialog.show();
                     }
 
                     @Override
                     public void onFail(int statusCode, String msg) {
-
+                        ContextUtil.toast(msg);
                     }
 
                     @Override

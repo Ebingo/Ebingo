@@ -6,7 +6,7 @@
 
     <include layout="@layout/common_head_layout" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -15,11 +15,18 @@
 
         <TextView style="@style/tv_no_data" />
 
-        <ListView
-            android:id="@android:id/list"
-            style="@style/list_has_data"
-            android:divider="@color/center_divider"
-            android:dividerHeight="1dp" />
+        <com.jch.lib.view.PullToRefreshView
+            android:id="@+id/list_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </LinearLayout>
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/center_divider"
+                android:dividerHeight="1dp" />
+        </com.jch.lib.view.PullToRefreshView>
+    </FrameLayout>
 </LinearLayout>

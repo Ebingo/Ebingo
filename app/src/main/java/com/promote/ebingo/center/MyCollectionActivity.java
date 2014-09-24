@@ -51,7 +51,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
     }
 
     private void initialize() {
-
+        setUpRefreshable(true);
         mOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .showImageForEmptyUri(R.drawable.loading)
@@ -77,7 +77,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         String urlStr = HttpConstant.getWishlist;
         EbingoRequestParmater parama = new EbingoRequestParmater(getApplicationContext());
         parama.put("lastid", lastId);
-        parama.put("pagesize ", 50);
+        parama.put("pagesize", pageSize);
         parama.put("company_id", Company.getInstance().getCompanyId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(MyCollectionActivity.this);
         LogCat.i("--->", parama + "");
@@ -90,11 +90,11 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 ArrayList<CollectBean> collectBeans = CollectBeanTools.getCollections(response.toString());
 
                 if (collectBeans != null && collectBeans.size() > 0) {
-                    mCollections.clear();
                     mCollections.addAll(collectBeans);
                     myAdapter.notifyDataSetChanged();
-                }else{
-                    showNoData();
+                    onLoadMoreFinish(true);
+                } else {
+                    onLoadMoreFinish(false);
                 }
                 dialog.dismiss();
             }
@@ -204,13 +204,15 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
     }
 
     private static class ViewHolder {
-
         ImageView imgIv;
         TextView priceTv;
         TextView nameTv;
         TextView timesTv;
         TextView timeTv;
-
     }
 
+    @Override
+    protected void onLoadMore(int lastId) {
+        getWishlist(lastId);
+    }
 }

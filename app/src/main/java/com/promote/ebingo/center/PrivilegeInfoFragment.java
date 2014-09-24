@@ -93,16 +93,11 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     private void addItem(LinearLayout content, String[] items, LayoutInflater inflater) {
         if (items == null) return;
         for (String str : items) {
-            CheckBox item = (CheckBox) inflater.inflate(R.layout.tag, null);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (int) getResources().getDimension(R.dimen.widget_height));
-            lp.setMargins(dp(3), dp(5), dp(3), dp(5));
-            item.setLayoutParams(lp);
-            item.setEnabled(false);
-            item.setTextSize(13);
-            item.setSingleLine(false);
-            item.setText(str);
-            item.setGravity(Gravity.CENTER_VERTICAL);
-            content.addView(item);
+            TagView tagView = (TagView) inflater.inflate(R.layout.sample_tag_view, null);
+            tagView.setNumber(0);
+            tagView.setText(str);
+            tagView.setTextSize(13);
+            content.addView(tagView);
         }
     }
 

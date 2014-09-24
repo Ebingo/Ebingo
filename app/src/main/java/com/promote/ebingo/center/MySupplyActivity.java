@@ -1,31 +1,25 @@
 package com.promote.ebingo.center;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.ContextMenu;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
+import com.jch.lib.view.PullToRefreshView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.BaseListActivity;
-import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -44,7 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MySupplyActivity extends BaseListActivity  {
+public class MySupplyActivity extends BaseListActivity {
 
     private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
     private DisplayImageOptions mOptions;
@@ -63,6 +57,7 @@ public class MySupplyActivity extends BaseListActivity  {
     }
 
     private void initialize() {
+        setUpRefreshable(true);
         mOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .showImageForEmptyUri(R.drawable.loading)
@@ -109,7 +104,7 @@ public class MySupplyActivity extends BaseListActivity  {
         EbingoRequestParmater param = new EbingoRequestParmater(getApplicationContext());
         final ProgressDialog dialog = DialogUtil.waitingDialog(MySupplyActivity.this);
         param.put("lastid", lastId);
-        param.put("pagesize", 20);
+        param.put("pagesize", pageSize);
         try {
             StringBuilder sb = new StringBuilder();
             sb.append("{")
@@ -129,11 +124,11 @@ public class MySupplyActivity extends BaseListActivity  {
                 LogCat.i("--->", response.toString());
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
                 if (searchSupplyBeans != null && searchSupplyBeans.size() > 0) {
-                    mSupplyBeans.clear();
                     mSupplyBeans.addAll(searchSupplyBeans);
                     adapter.notifyDataSetChanged();
+                    onLoadMoreFinish(true);
                 }else{
-                    showNoData();
+                    onLoadMoreFinish(false);
                 }
                 dialog.dismiss();
 
@@ -206,7 +201,9 @@ public class MySupplyActivity extends BaseListActivity  {
             SearchSupplyBean supplyBean = mSupplyBeans.get(position);
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
             viewHolder.nameTv.setText(supplyBean.getName());
-            viewHolder.priceTv.setText(supplyBean.getPrice()+"/"+supplyBean.getUnit());
+            viewHolder.priceTv.setText(supplyBean.getPrice());
+            if (!TextUtils.isEmpty(supplyBean.getUnit()))
+                viewHolder.priceTv.append("/" + supplyBean.getUnit());
             viewHolder.timeTv.setText(supplyBean.getDate());
             viewHolder.startTv.setText(supplyBean.getMin_supply_num());
 
@@ -224,5 +221,8 @@ public class MySupplyActivity extends BaseListActivity  {
         TextView timeTv;
     }
 
-
+    @Override
+    protected void onLoadMore(int lastId) {
+        getMySupply(lastId);
+    }
 }

@@ -6,17 +6,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.jch.lib.view.PullToRefreshView;
 import com.promote.ebingo.center.ItemDelteDialog;
+import com.promote.ebingo.util.ContextUtil;
+
+import static com.jch.lib.view.PullToRefreshView.*;
 
 /**
  * 用于展示列表的Activity，有一个默认的布局文件R.layout.activity_base_list，子类不需要设定布局文件。标题是在manifest中对应Activity的label值
  * zhuchao on 2014/9/18.
  */
 public class BaseListActivity extends ListActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
-
+    protected int lastId = 0;
+    protected int pageSize = 20;
     private int delete_position = -1;
     private ItemDelteDialog delteDialog;
     protected TextView tv_no_data;
+    private PullToRefreshView mPullToRefreshView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,10 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         setTitle(getTitle());
         delteDialog = new ItemDelteDialog(this, this);
         tv_no_data = (TextView) findViewById(android.R.id.empty);
+        mPullToRefreshView = (PullToRefreshView) findViewById(R.id.list_content);
+        mPullToRefreshView.setFootViewVisibility(View.GONE);//先把FooterView隐藏，上来就显示很不美观
+        setUpRefreshable(false);
+        setDownRefreshable(false);
     }
 
     @Override
@@ -34,6 +44,31 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
                 finish();
                 break;
         }
+    }
+
+    /**
+     * @param refreshable true可以下拉刷新，false反之
+     */
+    public void setUpRefreshable(boolean refreshable) {
+        if (refreshable) {
+            mPullToRefreshView.setOnFooterRefreshListener(footerRefreshListener);
+        } else {
+            mPullToRefreshView.setOnFooterRefreshListener(null);
+        }
+        mPullToRefreshView.setUpRefreshable(refreshable);
+
+    }
+
+    /**
+     * @param refreshable true可以上拉加载更多，false反之
+     */
+    public void setDownRefreshable(boolean refreshable) {
+        if (refreshable) {
+            mPullToRefreshView.setOnHeaderRefreshListener(headerRefreshListener);
+        } else {
+            mPullToRefreshView.setOnHeaderRefreshListener(null);
+        }
+        mPullToRefreshView.setDownRefreshable(refreshable);
     }
 
     public void showNoData() {
@@ -106,5 +141,56 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
     @Override
     public void onItemDelete(View view, int itemId) {
         onDelete(delete_position);
+    }
+
+    /**
+     * 如果listView已经加载了所有的数据，就应该隐藏上拉加载更多功能
+     *
+     * @param hasMoreData true 如果还有更多数据 false 数据已经加载完毕
+     */
+    protected void onLoadMoreFinish(boolean hasMoreData) {
+        mPullToRefreshView.onFooterRefreshComplete();
+        if (!hasMoreData) {
+            mPullToRefreshView.setUpRefreshable(false);
+            lastId = getListView().getChildCount();//
+            ContextUtil.toast("数据已经加载完毕！");
+        } else {
+            mPullToRefreshView.setUpRefreshable(true);
+        }
+    }
+
+
+    /**
+     * 下拉刷新监听
+     */
+    private OnHeaderRefreshListener headerRefreshListener = new OnHeaderRefreshListener() {
+        @Override
+        public void onHeaderRefresh(PullToRefreshView view) {
+            onRefresh();
+        }
+    };
+    /**
+     * 上拉加载更多监听
+     */
+    private OnFooterRefreshListener footerRefreshListener = new OnFooterRefreshListener() {
+        @Override
+        public void onFooterRefresh(PullToRefreshView view) {
+            view.setFootViewVisibility(View.VISIBLE);
+            onLoadMore(lastId += pageSize);
+        }
+    };
+
+    /**
+     * 加载更多
+     */
+    protected void onLoadMore(int lastId) {
+
+    }
+
+    /**
+     *
+     */
+    protected void onRefresh() {
+
     }
 }

@@ -48,7 +48,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
     }
 
     private void initialize() {
-
+        setUpRefreshable(true);
         adapter = new MyAdapter();
         setListAdapter(adapter);
         getListView().setOnItemLongClickListener(this);
@@ -62,7 +62,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         final EbingoRequestParmater parma = new EbingoRequestParmater(getApplicationContext());
         final ProgressDialog dialog = new ProgressDialog(MyDemandActivity.this);
         parma.put("lastid", lastId);
-        parma.put("pagesize", 20);
+        parma.put("pagesize", pageSize);
         try {
             StringBuilder sb = new StringBuilder();
             sb.append("{")
@@ -84,11 +84,11 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 LogCat.i("--->", response.toString());
                 ArrayList<SearchDemandBean> demandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
                 if (demandBeans != null && demandBeans.size() > 0) {
-                    mDemandBeans.clear();
                     mDemandBeans.addAll(demandBeans);
                     adapter.notifyDataSetChanged();
-                }else{
-                    showNoData();
+                    onLoadMoreFinish(true);
+                } else {
+                    onLoadMoreFinish(false);
                 }
                 dialog.dismiss();
             }
@@ -229,5 +229,8 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
 
     }
 
-
+    @Override
+    protected void onLoadMore(int lastId) {
+        getMyDemandList(lastId);
+    }
 }
