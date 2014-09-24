@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.promote.ebingo">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,8 +14,8 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
-
     <application
+        tools:replace="android:icon"
         android:name=".application.EbingoApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -61,7 +62,7 @@
         <activity
             android:name=".InformationActivity.InterpriseInfoActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/title_activity_interprise_info"
+            android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
@@ -118,7 +119,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".InformationActivity.InterpriseNewActivity"
-            android:label="@string/title_activity_interprise_new"
+            android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:parentActivityName=".BaseActivity"
             android:screenOrientation="portrait"

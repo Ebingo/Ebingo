@@ -16,7 +16,7 @@
 
     <ProgressBar
         android:id="@android:id/progress"
-        android:progressDrawable="@drawable/ic_launcher"
+        android:progressDrawable="@drawable/launcher"
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
