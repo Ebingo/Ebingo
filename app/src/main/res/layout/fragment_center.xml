@@ -10,15 +10,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_height"
-        android:background="@color/title_blue"
+        android:background="@color/title_color"
         android:gravity="center">
 
         <TextView
-            style="@style/font_white_20"
+            style="@style/font_black_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tab_center" />
+            android:text="@string/tab_center"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/title_divider_color" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -263,9 +268,6 @@
                 android:drawableLeft="@drawable/center_setting"
                 android:text="@string/my_setting" />
 
-            <View
-                style="@style/divider_horizontal"
-                android:background="@color/center_divider" />
         </LinearLayout>
 
     </ScrollView>

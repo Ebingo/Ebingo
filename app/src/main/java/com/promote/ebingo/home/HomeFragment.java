@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
@@ -120,7 +121,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     //test data.
     private int imgsRes[] = {R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2};
 
-    private Point imageSize = new Point(720, 258);
+    private Point imageSize = new Point(720, 256);
     private TextView mainhote8sttv;
     private TextView mainhote7sttv;
 
@@ -360,7 +361,9 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             this.mContext = context;
 
             ImageView imgView = new ImageView(context);
-            imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            LinearLayout.LayoutParams imgLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            imgView.setLayoutParams(imgLayoutParam);
+            imgView.setScaleType(ImageView.ScaleType.FIT_XY);
             imgView.setBackgroundResource(R.drawable.loading);
             imgs.add(imgView);
         }

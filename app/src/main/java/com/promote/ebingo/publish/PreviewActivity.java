@@ -52,7 +52,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
             case R.id.common_back_btn:
                 finish();
                 break;
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
                 Intent data = new Intent();
                 data.setData(savedUri);
                 setResult(RESULT_OK, data);
@@ -89,20 +89,24 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
         @Override
         protected Bitmap doInBackground(Uri... params) {
             ContentResolver resolver = getContentResolver();
-            Bitmap bitmap = null;
+            Bitmap src = null;
+            Bitmap result = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(resolver, params[0]);
+                src = MediaStore.Images.Media.getBitmap(resolver, params[0]);
                 ByteArrayOutputStream bao = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bao);
+                src.compress(Bitmap.CompressFormat.PNG, 100, bao);
                 int size = bao.toByteArray().length;
                 if (size > max_size) {
                     float scale = size / (float) max_size;
-                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() / scale), (int) (bitmap.getHeight() / scale), false);
+                    result = Bitmap.createScaledBitmap(src, (int) (src.getWidth() / scale), (int) (src.getHeight() / scale), false);
+//                    if (src != result && !src.isRecycled()) src.recycle();
+                } else {
+                    result = src;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return bitmap;
+            return result;
         }
 
         @Override
@@ -112,6 +116,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
                 picked_image.requestFocus();
                 dialog.dismiss();
                 savedUri = ImageUtil.saveBitmap(result, PIC_NAME);
+//                if (!result.isRecycled()) result.recycle();
             } catch (Exception e) {
                 e.printStackTrace();
             }

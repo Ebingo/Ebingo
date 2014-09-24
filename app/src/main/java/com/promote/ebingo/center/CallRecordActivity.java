@@ -25,6 +25,7 @@ import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.VaildUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
@@ -46,7 +47,7 @@ import java.util.List;
 /**
  * 通话记录
  */
-public class CallRecordActivity extends ListActivity implements View.OnClickListener {
+public class CallRecordActivity extends BaseListActivity implements View.OnClickListener {
     private final static int ITEM_DELETE_ID = 2;
     private final static int ITEM_CANCEL_ID = 3;
     private ArrayList<CallRecord> records;
@@ -56,21 +57,10 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_call_record);
-        ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
-        findViewById(R.id.common_back_btn).setOnClickListener(this);
         manager = new CallRecordManager(getApplicationContext());
         getCallRecord();
         registerForContextMenu(getListView());
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.common_back_btn:
-                finish();
-                break;
-        }
+        enableDelete(true);
     }
 
     private void getCallRecord() {
@@ -105,55 +95,40 @@ public class CallRecordActivity extends ListActivity implements View.OnClickList
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        ListView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        CallRecord record = records.get(info.position);
-        menu.setHeaderTitle(record.getName());
-        menu.add(0, ITEM_DELETE_ID, 1, "删除");
-        menu.add(0, ITEM_CANCEL_ID, 2, "取消");
+    protected CharSequence onPrepareDelete(int position) {
+        return records.get(position).getName();
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case ITEM_CANCEL_ID:
-
-                break;
-            case ITEM_DELETE_ID: {
-                final ListView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                EbingoRequestParmater parmater = new EbingoRequestParmater(this);
-                parmater.put("company_id", Company.getInstance().getCompanyId());
-                parmater.put("infoid", records.get(info.position).getInfoId());
-                final Dialog dialog = DialogUtil.waitingDialog(this, "操作中...");
-                HttpUtil.post(HttpConstant.deleteInfo, parmater, new JsonHttpResponseHandler("utf-8") {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        try {
-                            response = response.getJSONObject("response");
-                            if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
-                                ContextUtil.toast("操作成功!");
-                                records.remove(info.position);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                ContextUtil.toast("操作失败!");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+    protected void onDelete(final int position) {
+        EbingoRequestParmater parmater = new EbingoRequestParmater(this);
+        parmater.put("company_id", Company.getInstance().getCompanyId());
+        parmater.put("infoid", records.get(position).getInfoId());
+        final Dialog dialog = DialogUtil.waitingDialog(this, "操作中...");
+        HttpUtil.post(HttpConstant.deleteInfo, parmater, new JsonHttpResponseHandler("utf-8") {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                try {
+                    response = response.getJSONObject("response");
+                    if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
+                        ContextUtil.toast("操作成功!");
+                        records.remove(position);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        ContextUtil.toast("操作失败!");
                     }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        dialog.dismiss();
-                    }
-                });
-                ContextUtil.toast("delete");
-                break;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-        return true;
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
+        });
     }
 
     class RecordAdapter extends BaseAdapter {

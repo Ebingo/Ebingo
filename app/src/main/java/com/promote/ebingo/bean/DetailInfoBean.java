@@ -20,6 +20,8 @@ public class DetailInfoBean {
      * 创建时间 *
      */
     private String create_time;
+    private String unit;
+    private Integer collect_id;
     /**
      * 发布公司 id *
      */
@@ -77,6 +79,22 @@ public class DetailInfoBean {
      * 公司名称. *
      */
     private String company_name;
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public Integer getCollect_id() {
+        return collect_id;
+    }
+
+    public void setCollect_id(Integer collect_id) {
+        this.collect_id = collect_id;
+    }
 
     public String getDescription() {
         return description;

@@ -21,10 +21,9 @@ public class Company {
     private String email;
     private Uri imageUri;//公司图片在手机中的位置
 
-
     private static Company mCompany = null;
 
-    public Company() {
+    private Company() {
 
     }
 
@@ -140,18 +139,8 @@ public class Company {
     /**
      * 清空公司。
      */
-    public void clearCompany() {
-
-        companyId = -1;//公司Id
-        image = null;  //公司图片url
-        name = null;   //公司名
-        head = null;   //负责人名称
-        headPhone = null;  //负责人电话
-        companyTel = null;  //公司电话
-        region = null;    //公司地区
-        website = null;   //公司网址
-        vipType = null;    //会员类型
-        isLock = null;
+    public static void clearInstance() {
+        mCompany=null;
     }
 
 }

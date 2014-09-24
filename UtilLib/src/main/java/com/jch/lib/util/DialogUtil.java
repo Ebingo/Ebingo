@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.widget.TextView;
 
 import com.jch.lib.R;
 
@@ -41,7 +43,11 @@ public class DialogUtil {
     }
 
     public static ProgressDialog waitingDialog(Context context, String msg) {
-        return ProgressDialog.show(context, "", msg, true);
+        LoadingDialog dialog=new LoadingDialog(context);
+        dialog.setMessage(msg);
+        dialog.setCancelable(true);
+        dialog.show();
+        return dialog;
     }
 
     public static AlertDialog msgSinglBtnAlertDialog(Context context, String msg) {
@@ -64,5 +70,35 @@ public class DialogUtil {
 
     public static void showDeleteDialog(Context context,OnClickListener l){
         showListDialog(context,l,context.getString(R.string.delete),context.getString(R.string.cancel));
+    }
+    public static class LoadingDialog extends ProgressDialog{
+        private TextView tv_message;
+        private CharSequence message;
+        public LoadingDialog(Context context) {
+            super(context);
+        }
+
+        public LoadingDialog(Context context, int theme) {
+            super(context, theme);
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.loading_dialog);
+            tv_message=(TextView)findViewById(R.id.message);
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            tv_message.setText(message);
+        }
+
+        @Override
+        public void setMessage(CharSequence message) {
+            this.message=message;
+           if (tv_message!=null)tv_message.setText(message);
+        }
     }
 }

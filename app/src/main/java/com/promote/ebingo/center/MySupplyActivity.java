@@ -34,6 +34,7 @@ import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -43,16 +44,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MySupplyActivity extends BaseListActivity implements AdapterView.OnItemLongClickListener {
+public class MySupplyActivity extends BaseListActivity  {
 
     private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
     private DisplayImageOptions mOptions;
     private MyAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initialize();
     }
 
@@ -64,7 +63,6 @@ public class MySupplyActivity extends BaseListActivity implements AdapterView.On
     }
 
     private void initialize() {
-
         mOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .showImageForEmptyUri(R.drawable.loading)
@@ -77,25 +75,26 @@ public class MySupplyActivity extends BaseListActivity implements AdapterView.On
 
         adapter = new MyAdapter();
         setListAdapter(adapter);
-        getListView().setOnItemLongClickListener(this);
         getMySupply(0);
+        enableDelete(true);
     }
 
-    private void delete(final int id) {
+    private void delete(final int posotion) {
         EbingoRequestParmater param = new EbingoRequestParmater(this);
         param.put("company_id", Company.getInstance().getCompanyId());
-        param.put("infoid", id);
+        param.put("infoid", mSupplyBeans.get(posotion).getId());
 
         HttpUtil.post(HttpConstant.deleteInfo, param, new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
-                mSupplyBeans.remove(id);
+                mSupplyBeans.remove(posotion);
                 adapter.notifyDataSetChanged();
+                ContextUtil.toast("删除成功！");
             }
 
             @Override
             public void onFail(int statusCode, String msg) {
-
+                ContextUtil.toast("删除失败！");
             }
 
             @Override
@@ -113,7 +112,13 @@ public class MySupplyActivity extends BaseListActivity implements AdapterView.On
         param.put("lastid", lastId);
         param.put("pagesize", 20);
         try {
-            param.put("condition", URLEncoder.encode(appendKeyworld(Company.getInstance().getCompanyId()), "utf-8"));
+            StringBuilder sb = new StringBuilder();
+            sb.append("{")
+                    .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
+                    .append(",")
+                    .append(makeCondition("sort", "time"))
+                    .append("}");
+            param.put("condition", URLEncoder.encode(sb.toString(), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -122,12 +127,13 @@ public class MySupplyActivity extends BaseListActivity implements AdapterView.On
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-
+                LogCat.i("--->", response.toString());
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
-                mSupplyBeans.clear();
-                mSupplyBeans.addAll(searchSupplyBeans);
-                adapter.notifyDataSetChanged();
-
+                if (searchSupplyBeans != null && searchSupplyBeans.size() > 0) {
+                    mSupplyBeans.clear();
+                    mSupplyBeans.addAll(searchSupplyBeans);
+                    adapter.notifyDataSetChanged();
+                }
                 dialog.dismiss();
 
             }
@@ -136,45 +142,27 @@ public class MySupplyActivity extends BaseListActivity implements AdapterView.On
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 dialog.dismiss();
+                LogCat.i("--->", errorResponse.toString());
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 dialog.dismiss();
+                LogCat.i("--->", responseString);
             }
         });
 
-    }
-
-    /**
-     * 拼接赛选条件参数。
-     *
-     * @param companyId
-     * @return
-     */
-    private String appendKeyworld(int companyId) {
-        StringBuffer sb = new StringBuffer("{\"company_id\":\"");
-        sb.append(companyId);
-        sb.append("\"}");
-        return sb.toString();
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        DialogUtil.showDeleteDialog(this, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        delete(position);
-                        break;
-                    case 1:
-                        break;
-                }
-            }
-        });
-        return false;
+    protected CharSequence onPrepareDelete(int position) {
+        return mSupplyBeans.get(position).getName();
+    }
+
+    @Override
+    protected void onDelete(int position) {
+        delete(position);
     }
 
     /**

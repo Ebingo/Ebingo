@@ -57,10 +57,13 @@
                 android:layout_height="match_parent">
 
                 <WebView
+                    android:id="@+id/product_info_web"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <ImageView
                     android:id="@+id/product_info_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     style="@style/info_content_pad"

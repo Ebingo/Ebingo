@@ -29,6 +29,7 @@
             android:layout_marginTop="15dp"/>
 
         <TextView
+            android:layout_marginTop="12dp"
             style="@style/text_deep_gray_style"
             android:layout_width="wrap_content"
             android:drawableLeft="@drawable/ic_new_tag"
@@ -46,7 +47,7 @@
                 android:id="@+id/edit_add_tags"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/widget_height"
-                android:hint="tetetet"
+                android:hint="请输入标签名称"
                 android:background="@drawable/corner_frame_light"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp" />

@@ -113,7 +113,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
                 else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
                 else if (getChineseNum(contacts)<2||getChineseNum(contacts)>4) Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
                 else if (TextUtils.isEmpty(contact_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
-                else if (LoginManager.isMobile(contact_phone)) Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
+                else if (!LoginManager.isMobile(contact_phone)) Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
                 else {
                     EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
                     parmater.put("type", TYPE_DEMAND);
@@ -134,7 +134,8 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
     }
 
     private int getChineseNum(String input){
-        return input.length()/2;
+        LogCat.i("--->","input:"+input.length());
+        return input.length();
     }
 
     private void toastEmpty(String param) {

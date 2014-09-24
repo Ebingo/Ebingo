@@ -11,47 +11,39 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:background="@color/title_blue"
+        android:background="@color/pop_bg_gray"
         android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
 
         <CheckBox
             android:id="@+id/category_left_cb"
-            android:layout_width="0dp"
-            android:gravity="center"
-            android:background="@color/white"
-            android:layout_height="wrap_content"
-            android:button="@null"
-            android:paddingTop="@dimen/sub_tab_pad_b_t"
-            android:paddingBottom="@dimen/sub_tab_pad_b_t"
-            android:paddingRight="@dimen/category_tab_pad_right"
-            android:layout_marginBottom="1dp"
-            android:checked="false"
-            android:text="@string/supply_info"
-            android:layout_weight="1"
-            android:drawableRight="@drawable/category_orange_indicator"
-            style="@style/font_orange_15" />
+            style="@style/category_check_style"
+            android:text="@string/supply_info" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_weight="2" />
 
         <CheckBox
             android:id="@+id/category_right_cb"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_marginLeft="1dp"
-            android:paddingTop="@dimen/sub_tab_pad_b_t"
-            android:paddingBottom="@dimen/sub_tab_pad_b_t"
-            android:paddingRight="@dimen/category_tab_pad_right"
-            android:drawableRight="@drawable/category_orange_indicator"
-            android:layout_marginBottom="1dp"
-            android:button="@null"
-            android:checked="false"
-            android:gravity="center"
-            android:layout_weight="1"
+            android:drawableRight="@drawable/blue_arro_check"
             android:text="@string/look_num"
-            style="@style/font_orange_15" />
+            style="@style/category_check_style" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
     <com.jch.lib.view.PullToRefreshView
+        android:id="@+id/category_refresh_view"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
@@ -60,7 +52,6 @@
             android:id="@+id/category_lv"
             android:layout_width="match_parent"
             style="@style/listview_style"
-            android:scrollbars="none"
             android:layout_height="match_parent" />
     </com.jch.lib.view.PullToRefreshView>
 </LinearLayout>

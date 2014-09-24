@@ -40,7 +40,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_book);
         tagContent = (LinearLayout) findViewById(R.id.tag_content);
-        TextView save = (TextView) findViewById(R.id.common_title_done);
+        TextView save = (TextView) findViewById(R.id.commit_title_done);
         edit_tag = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
         save.setText("保存");
         save.setOnClickListener(this);
@@ -52,7 +52,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
                 saveData();
                 break;
             case R.id.btn_add:

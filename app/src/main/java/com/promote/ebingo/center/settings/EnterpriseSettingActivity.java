@@ -20,6 +20,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.PreviewActivity;
 import com.promote.ebingo.publish.PublishBaseActivity;
@@ -93,9 +94,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
                 EbingoRequestParmater parmater = new EbingoRequestParmater(this);
-                final Integer company_id = 6;
+                final Integer company_id = Company.getInstance().getCompanyId();
                 final String image_url = image_enterprise.getContentDescription()+"";
                 final String name = edit_enterprise_name.getText().toString().trim();
                 final String company_tel = edit_enterprise_phone.getText().toString().trim();
@@ -111,41 +112,38 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 parmater.put("website", website);
                 parmater.put("email", email);
                 LogCat.i("--->" + parmater);
-                HttpUtil.post(HttpConstant.updateCompanyInfo, parmater, new JsonHttpResponseHandler("utf-8") {
+                final Dialog dialog=DialogUtil.waitingDialog(this,"正在更新数据...");
+                HttpUtil.post(HttpConstant.updateCompanyInfo, parmater,new EbingoHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
+                    public void onSuccess(int statusCode, JSONObject response) {
+                        Company company = Company.getInstance();
+                        company.setCompanyId(company_id);
+                        company.setImage(image_url);
+                        company.setName(name);
+                        company.setCompanyTel(company_tel);
+                        company.setRegion(region);
+                        company.setWebsite(website);
+                        company.setEmail(email);
+                        setResult(RESULT_OK, new Intent());
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(int statusCode, String msg) {
                         try {
-                            JSONObject result = response.getJSONObject("response");
-                            if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
-                                Company company = Company.getInstance();
-                                company.setCompanyId(company_id);
-                                company.setImage(image_url);
-                                company.setName(name);
-                                company.setCompanyTel(company_tel);
-                                company.setRegion(region);
-                                company.setWebsite(website);
-                                company.setEmail(email);
-                                setResult(RESULT_OK, new Intent());
-                                finish();
-                            } else {
-                                ContextUtil.toast(response);
-                            }
+                            JSONObject error=new JSONObject(msg);
+                            ContextUtil.toast(error.getString("msg"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        super.onFailure(statusCode, headers, responseString, throwable);
-                    }
-
-                    @Override
                     public void onFinish() {
-                        super.onFinish();
+                        dialog.dismiss();
                     }
                 });
+
                 break;
             case R.id.image_enterprise:
                 showPickDialog();
@@ -177,7 +175,6 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                ContextUtil.toast(response);
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code")))

@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.EbingoApp;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.ContextUtil;
@@ -42,14 +41,13 @@ public class SettingActivity extends BaseActivity {
                         }).show();
                 break;
             case R.id.clear_cache:
-
                 ContextUtil.toast("清除成功！");
                 break;
             case R.id.suggestion:
                 toActivity(SuggestionActivity.class);
                 break;
             case R.id.logout:
-                Company.getInstance().clearCompany();
+                Company.clearInstance();
 //                ((EbingoApp)getApplicationContext()).cleanCurComany();
                 toActivity(LoginActivity.class);
                 finish();

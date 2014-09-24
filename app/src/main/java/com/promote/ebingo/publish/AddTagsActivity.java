@@ -44,7 +44,7 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
     }
 
     private void init() {
-        findViewById(R.id.common_title_done).setOnClickListener(this);
+        findViewById(R.id.commit_title_done).setOnClickListener(this);
         tagContainer = (AutoLineLayout) findViewById(R.id.tags_container);
         setBackTitle(getString(R.string.title_add_tag));
         edit_add_tab = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
@@ -112,7 +112,7 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
                     toastTagIsMax();
                 }
                 break;
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
 
                 StringBuilder selectTags = new StringBuilder();
                 for (int i = 0; i < tagList.size(); i++) {

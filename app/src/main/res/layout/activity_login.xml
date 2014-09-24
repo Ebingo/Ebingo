@@ -54,7 +54,7 @@
 
 
         <Button
-            android:id="@+id/common_title_done"
+            android:id="@+id/commit_title_done"
             style="@style/blue_button"
             android:layout_height="@dimen/login_widget_height"
             android:layout_marginBottom="8dp"

@@ -5,24 +5,47 @@ import java.io.Serializable;
 /**
  * Created by ACER on 2014/9/2.
  */
-public class SearchSupplyBean extends SearchTypeBean implements Serializable{
-    /**公司名称**/
+public class SearchSupplyBean extends SearchTypeBean implements Serializable {
+    /**
+     * 公司名称*
+     */
     private String company;
-    /**地区**/
+    /**
+     * 地区*
+     */
     private String region;
-    /**图片**/
+    /**
+     * 图片*
+     */
     private String image;
-    /** 主营业务**/
+    /**
+     * 主营业务*
+     */
     private String date;
 
     private String price;
 
-    /**起购标准**/
+    private String unit;
+    /**
+     * 起购标准*
+     */
     private String min_supply_num;
-    /**查看次数**/
+    /**
+     * 查看次数*
+     */
     private int read_num;
-    /**企业等级**/
+    /**
+     * 企业等级*
+     */
     private String company_rank;
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
     public String getCompany() {
         return company;
@@ -100,5 +123,10 @@ public class SearchSupplyBean extends SearchTypeBean implements Serializable{
                 ", read_num=" + read_num +
                 ", company_rank='" + company_rank + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 }

@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -26,6 +25,7 @@ import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.VerifyCreator;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,7 +70,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
         findViewById(R.id.btn_next).setOnClickListener(this);
         startTimer2InvalidateButton();
         invalidateVerify();
-        ((TextView)findViewById(R.id.common_title_done)).setText(R.string.login_);
+        ((TextView)findViewById(R.id.commit_title_done)).setText(R.string.login_);
     }
 
     private void invalidateVerify() {
@@ -122,7 +122,9 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
 
     private boolean checkVerify(String input){
         String code=verify_image.getContentDescription().toString().toLowerCase();
-        return code.equals(input.toLowerCase());
+        String input_code=input.toLowerCase();
+        LogCat.i("--->","input="+input_code+" code:"+code);
+        return code.equals(input_code);
     }
 
     /**
@@ -201,7 +203,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             case R.id.image_verify:
                 invalidateVerify();
                 break;
-            case R.id.common_title_done:
+            case R.id.commit_title_done:
                 Intent intent=new Intent(this,LoginActivity.class);
                 startActivity(intent);
                 break;

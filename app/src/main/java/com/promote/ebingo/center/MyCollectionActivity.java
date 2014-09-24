@@ -26,7 +26,9 @@ import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CollectBean;
 import com.promote.ebingo.bean.CollectBeanTools;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -48,7 +50,6 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         initialize();
     }
 
-
     private void initialize() {
 
         mOptions = new DisplayImageOptions.Builder()
@@ -62,6 +63,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         myAdapter = new MyAdapter();
         setListAdapter(myAdapter);
         getWishlist(0);
+        enableDelete(true);
     }
 
 
@@ -78,7 +80,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         parama.put("pagesize ", 50);
         parama.put("company_id", Company.getInstance().getCompanyId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(MyCollectionActivity.this);
-        LogCat.i("--->", parama+"");
+        LogCat.i("--->", parama + "");
         HttpUtil.post(urlStr, parama, new JsonHttpResponseHandler("utf-8") {
 
             @Override
@@ -87,9 +89,11 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 LogCat.i("--->", response.toString());
                 ArrayList<CollectBean> collectBeans = CollectBeanTools.getCollections(response.toString());
 
-                mCollections.clear();
-                mCollections.addAll(collectBeans);
-                myAdapter.notifyDataSetChanged();
+                if (collectBeans != null && collectBeans.size() > 0) {
+                    mCollections.clear();
+                    mCollections.addAll(collectBeans);
+                    myAdapter.notifyDataSetChanged();
+                }
                 dialog.dismiss();
             }
 
@@ -113,6 +117,36 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         intent.putExtra(ProductInfoActivity.ARG_ID, mCollections.get(position).getInfo_id());
         intent.putExtra("collectId", mCollections.get(position).getId());
         startActivity(intent);
+    }
+
+    @Override
+    protected CharSequence onPrepareDelete(int position) {
+        return mCollections.get(position).getTitle();
+    }
+
+    @Override
+    protected void onDelete(final int position) {
+        EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
+        parmater.put("company_id", Company.getInstance().getCompanyId());
+        parmater.put("wishlistid", mCollections.get(position).getId());
+        HttpUtil.post(HttpConstant.cancleWishlist, parmater, new EbingoHandler() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                ContextUtil.toast("删除收藏成功！");
+                mCollections.remove(position);
+                myAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFail(int statusCode, String msg) {
+                ContextUtil.toast("删除收藏失败！" + msg);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
     }
 
     /**
@@ -159,7 +193,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
             ImageManager.load(collectBean.getImg(), viewHolder.imgIv, mOptions);
             viewHolder.nameTv.setText(collectBean.getTitle());
             viewHolder.priceTv.setText(collectBean.getPrice());
-            viewHolder.timesTv.setText(collectBean.getCollect_num()+"");
+            viewHolder.timesTv.setText(collectBean.getCollect_num() + "");
             viewHolder.timeTv.setText(collectBean.getCollectTimes());
 
             return convertView;

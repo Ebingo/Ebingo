@@ -25,6 +25,7 @@ public class ItemDelteDialog extends Dialog {
     private TextView centerdeldeltetv;
     private TextView centerdelcanceltv;
     private DeleteItemListener mDeleteItemListener;
+    private CharSequence title;
     /**
      * 所要删除条的id. *
      */
@@ -47,6 +48,11 @@ public class ItemDelteDialog extends Dialog {
         initialize();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        centerdelnametv.setText(title);
+    }
 
     private void initialize() {
 
@@ -70,9 +76,11 @@ public class ItemDelteDialog extends Dialog {
         });
     }
 
-    public void setItemText(String itemText, int id) {
-        centerdelnametv.setText(itemText);
-        this.mId = id;
+    public void setItemText(CharSequence itemText, int id) {
+        title = itemText;
+        if (centerdelnametv != null)
+            centerdelnametv.setText(itemText);
 
+        this.mId = id;
     }
 }

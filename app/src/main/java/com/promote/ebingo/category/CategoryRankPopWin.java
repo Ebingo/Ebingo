@@ -1,7 +1,6 @@
 package com.promote.ebingo.category;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,7 @@ public class CategoryRankPopWin extends PopupWindow {
 
         categoryrightitembuy = (TextView) mContentView.findViewById(R.id.category_right_item_look);
         categoryrightiteminterpises = (TextView) mContentView.findViewById(R.id.category_right_item_price);
-        contentLl = (LinearLayout)mContentView.findViewById(R.id.cate_right_pop_content);
+        contentLl = (LinearLayout) mContentView.findViewById(R.id.cate_right_pop_content);
         categoryrightitembuy.setOnClickListener(listener);
         categoryrightiteminterpises.setOnClickListener(listener);
 
@@ -59,6 +58,16 @@ public class CategoryRankPopWin extends PopupWindow {
     public int getContentSizeWidth() {
 
         return contentLl.getWidth();
+    }
+
+    /**
+     * 设置按时间或价格排序.
+     *
+     * @param typeStr
+     */
+    public void setPriceTimeSortType(String typeStr) {
+
+        categoryrightiteminterpises.setText(typeStr);
     }
 
 
