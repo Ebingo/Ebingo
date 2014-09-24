@@ -103,8 +103,10 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        LogCat.i("--->", infoBean + "");
-        if (mDetailInfoBean.getCompany_id()==Company.getInstance().getCompanyId())productinforlll.setVisibility(View.GONE);
+        LogCat.i("--->"," infoBean.getCompany_id="+infoBean.getCompany_id());
+        LogCat.i("--->"," Company.getInstance().getCompanyId()="+Company.getInstance().getCompanyId());
+        LogCat.i("--->"," productinforlll="+productinforlll);
+        if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))productinforlll.setVisibility(View.GONE);
         else productinforlll.setVisibility(View.VISIBLE);
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
