@@ -162,5 +162,13 @@ public class HttpConstant {
      * 发送修改密码邮件
      */
     public static final String sendChangePasswordEmail = getRootUrl() + "sendChangePasswordEmail";
+    /**
+     * 获取城市列表
+     */
+    public static final String getCityList = getRootUrl() + "getCityList";
+    /**
+     * 获取全国省份列表
+     */
+    public static final String getProvinceList = getRootUrl() + "getProvinceList";
 
 }

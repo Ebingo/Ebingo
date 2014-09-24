@@ -82,6 +82,7 @@
     <string name="my_book">我的订阅</string>
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
+    <string name="my_share">分享</string>
     <string name="my_profile">企业资料</string>
     <string name="make_call">拨 打</string>
 
@@ -192,6 +193,8 @@
     <string name="hint_edit_phone">请输入手机号</string>
     <string name="hint_edit_psw">请输入密码</string>
     <string name="hint_edit_verify">请输入验证码</string>
-    <string name="title_activity_find_password">找回密码</string>
+    <string name="find_password_dialog_title">发送成功</string>
+    <string name="find_password_dialog_message">我们已发送修改密码的链接到您的注册邮箱中，请您注意查收!</string>
+    <string name="i_know">我知道了</string>
 
 </resources>

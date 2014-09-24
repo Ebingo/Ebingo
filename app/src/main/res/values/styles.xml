@@ -316,6 +316,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:id">@android:id/empty</item>
+        <item name="android:text">@string/no_data</item>
     </style>
 
     <style name="list_has_data">

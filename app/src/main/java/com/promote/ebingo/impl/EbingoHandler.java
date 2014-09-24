@@ -26,7 +26,7 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
             if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
                 onSuccess(statusCode, response);
             } else {
-                onFail(statusCode, response + "");
+                onFail(statusCode, response.getString("msg"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -48,10 +48,12 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
 
     @Override
     final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+        onFail(statusCode, errorResponse+"");
     }
 
     @Override
     final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+        onFail(statusCode,errorResponse+"");
     }
 
     public abstract void onSuccess(int statusCode, JSONObject response);
