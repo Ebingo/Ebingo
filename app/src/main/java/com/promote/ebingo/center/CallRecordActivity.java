@@ -1,24 +1,16 @@
 package com.promote.ebingo.center;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
@@ -26,11 +18,11 @@ import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.VaildUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.BaseListActivity;
+import com.promote.ebingo.InformationActivity.CallDialog;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
-import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.JsonUtil;
@@ -234,33 +226,36 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
 
         /**
          * 拨打电话，并添加通话记录
+         *
          * @param context
-         * @param record record中必须包含 phone_number,call_id,to_id,info_id
+         * @param record  record中必须包含 phone_number,call_id,to_id,info_id
          */
         public static void dialNumber(final Activity context, final CallRecord record) {
             final String number = record.getPhone_num();
             if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return;
-            DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+            CallDialog.PhoneCallBack phoneCallBack = new CallDialog.PhoneCallBack() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
-                            context.startActivity(intent);
-                            new CallRecordManager(context).addCallRecord(record, new JsonHttpResponseHandler());
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            dialog.dismiss();
-                            break;
-                    }
+                public void call(CallDialog dialog, String phoneNum) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+                    context.startActivity(intent);
+                    new CallRecordManager(context).addCallRecord(record, new JsonHttpResponseHandler());
+                    dialog.dismiss();
                 }
             };
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("拨打电话")
-                    .setMessage("是否拨打" + number + "?")
-                    .setPositiveButton("拨打", l)
-                    .setNegativeButton("取消", l)
-                    .show();
+            CallDialog callDialog = new CallDialog(context, phoneCallBack);
+            callDialog.setCallphone(number);
+            callDialog.show();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//            builder.setTitle("拨打电话")
+//                    .setMessage("是否拨打" + number + "?")
+//                    .setPositiveButton("拨打", l)
+//                    .setNegativeButton("取消", l)
+//                    .show();
+
+
         }
+
     }
+
+
 }

@@ -105,6 +105,27 @@ public class DisplayUtil {
     }
 
     /**
+     * 获得去除的给定的宽度.
+     *
+     * @param windowManager
+     * @param baseY
+     * @param basex
+     * @param exceptDis
+     * @return
+     */
+    public static float getScaledWidth(WindowManager windowManager, float baseY, float basex, int exceptDis) {
+
+        final Display display = windowManager.getDefaultDisplay();
+        Point mPoint = new Point();
+        getSize(display, mPoint);
+        if (exceptDis > mPoint.x) {
+            return 0.0f;
+        }
+
+        return mPoint.x - exceptDis;
+    }
+
+    /**
      * 根据屏幕宽度设置view的大小.(去除view的margin。
      *
      * @param view       要改變尺寸的view。
@@ -116,12 +137,30 @@ public class DisplayUtil {
         LinearLayout.LayoutParams pagerParams = (LinearLayout.LayoutParams) view
                 .getLayoutParams();
 
-
         int marginDis = pagerParams.leftMargin + pagerParams.rightMargin;
         pagerParams.height = (int) DisplayUtil.sizeYByX(activity
                 .getWindowManager(), baseHeight, baseWidth, marginDis);
         pagerParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         view.setLayoutParams(pagerParams);
+    }
+
+    /**
+     * 根据屏幕宽度设置view的大小,(出去给定的widht)
+     *
+     * @param view
+     * @param baseWidth
+     * @param baseHeight
+     * @param exceptWidth
+     * @param activity
+     */
+    public static void resizeViewByScreenWidth(View view, int baseWidth, int baseHeight, int exceptWidth, Activity activity) {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view
+                .getLayoutParams();
+        params.height = (int) DisplayUtil.sizeYByX(activity
+                .getWindowManager(), baseHeight, baseWidth, exceptWidth);
+        params.width = (int) getScaledWidth(activity
+                .getWindowManager(), baseHeight, baseWidth, exceptWidth);
+        view.setLayoutParams(params);
     }
 
     /**

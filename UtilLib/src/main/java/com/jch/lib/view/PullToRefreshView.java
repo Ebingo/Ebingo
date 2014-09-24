@@ -601,24 +601,6 @@ public class PullToRefreshView extends LinearLayout {
         return params.topMargin;
     }
 
-    // /**
-    // * lock
-    // *
-    // * @description hylin 2012-7-27下午6:52:25
-    // */
-    // private void lock() {
-    // mLock = true;
-    // }
-    //
-    // /**
-    // * unlock
-    // *
-    // * @description hylin 2012-7-27下午6:53:18
-    // */
-    // private void unlock() {
-    // mLock = false;
-    // }
-
     /**
      * set headerRefreshListener
      *

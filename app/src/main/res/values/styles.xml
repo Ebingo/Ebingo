@@ -363,4 +363,5 @@
         <item name="android:checked">false</item>
         <item name="android:drawableRight">@drawable/blue_arro_check</item>
     </style>
+
 </resources>

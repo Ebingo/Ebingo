@@ -2,7 +2,6 @@ package com.promote.ebingo.home;
 
 import android.app.Activity;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +39,10 @@ public class HoteBeanAdapter extends BaseAdapter {
     private TextView mainhote1gettiteltv;
     private TextView mainhoteget1subtitletv;
     private ImageView mainhot1getimg;
+    /**
+     * listview的margin *
+     */
+    private int itemMargin = 0;
 
     /**
      * @param context
@@ -52,6 +55,7 @@ public class HoteBeanAdapter extends BaseAdapter {
         this.mCircleImageOptions = circlOptions;
         this.mHotBeans = buyBeans;
         this.mPoint = point;
+        itemMargin = (int) context.getResources().getDimension(R.dimen.main_subtitle_marg_left) * 2;
     }
 
     @Override
@@ -77,7 +81,7 @@ public class HoteBeanAdapter extends BaseAdapter {
             ViewHolder1 viewHolder = null;
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.hote_buy_supply_top_item, null);
-                convertView.setBackgroundDrawable(new BitmapDrawable());
+                convertView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
                 viewHolder = new ViewHolder1();
                 viewHolder.img = (ImageView) convertView.findViewById(R.id.hote_buy_supplly_top_img);
                 convertView.setTag(viewHolder);
@@ -93,14 +97,14 @@ public class HoteBeanAdapter extends BaseAdapter {
                 }
 
             }
-            DisplayUtil.reSizeViewByWidth(viewHolder.img, mPoint.x, mPoint.y, mContext);//设置img的大小
+            DisplayUtil.resizeViewByScreenWidth(viewHolder.img, mPoint.x, mPoint.y, itemMargin, mContext);//设置img的大小
             ImageManager.load(mHotBeans.get(position).getImage(), viewHolder.img, mOptions);
 
         } else {
             ViewHolder2 viewHolder2 = null;
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.hote_buy_supply_item, null);
-                convertView.setBackgroundDrawable(new BitmapDrawable());
+                convertView.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
                 viewHolder2 = new ViewHolder2();
                 viewHolder2.img = (ImageView) convertView.findViewById(R.id.main_hot_1get_img);
                 viewHolder2.nameTv = (TextView) convertView.findViewById(R.id.main_hote_1get_titel_tv);

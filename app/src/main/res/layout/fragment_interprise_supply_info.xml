@@ -4,13 +4,20 @@
     android:layout_height="match_parent"
     tools:context="com.promote.ebingo.InformationActivity.InterpriseSupplyInfo">
 
-
-    <ListView
-        android:id="@+id/enterprise_supply_item_lv"
+    <com.jch.lib.view.PullToRefreshView
+        android:id="@+id/itpr_supply_pulltorefresh"
         android:layout_width="match_parent"
-        android:scrollbars="none"
-        android:dividerHeight="0.5dp"
-        android:divider="@color/divide_gray"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/enterprise_supply_item_lv"
+            android:layout_width="match_parent"
+            android:scrollbars="none"
+            android:dividerHeight="0.5dp"
+            android:divider="@color/divide_gray"
+            android:layout_height="match_parent" />
+
+    </com.jch.lib.view.PullToRefreshView>
 
 </FrameLayout>

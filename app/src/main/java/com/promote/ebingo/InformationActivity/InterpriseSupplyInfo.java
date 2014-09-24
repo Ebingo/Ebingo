@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jch.lib.util.ImageManager;
+import com.jch.lib.view.PullToRefreshView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
@@ -28,10 +29,10 @@ import java.util.ArrayList;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link com.promote.ebingo.InformationActivity.InterpriseSupplyInfo#newInstance} factory method to
+ * Use the {@link InterpriseSupplyInfo#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItemClickListener {
+public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,6 +46,7 @@ public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItem
     private ListView enterprisesupplyitemlv;
     private MyAdapter myAdapter = null;
     private DisplayImageOptions mOptions;
+    private PullToRefreshView itprsupplypulltorefresh;
 
     /**
      * Use this factory method to create a new instance of
@@ -80,7 +82,7 @@ public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItem
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
         myAdapter = new MyAdapter();
-        EbingoRequest.getSupplyInfoList(getActivity(), 0, enterprise_id, 20, new MyRequest());  //网络请求.
+        getData(0);
     }
 
     @Override
@@ -93,9 +95,17 @@ public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItem
         return view;
     }
 
+    private void getData(int lastId) {
+        EbingoRequest.getSupplyInfoList(getActivity(), lastId, enterprise_id, 20, new MyRequest());  //网络请求.
+    }
+
     private void initialize(View view) {
 
         enterprisesupplyitemlv = (ListView) view.findViewById(R.id.enterprise_supply_item_lv);
+        itprsupplypulltorefresh = (PullToRefreshView) view.findViewById(R.id.itpr_supply_pulltorefresh);
+        itprsupplypulltorefresh.setUpRefreshable(true);
+        itprsupplypulltorefresh.setDownRefreshable(false);
+        itprsupplypulltorefresh.setOnFooterRefreshListener(this);
         enterprisesupplyitemlv.setAdapter(myAdapter);
         enterprisesupplyitemlv.setOnItemClickListener(this);
 
@@ -108,6 +118,11 @@ public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItem
         startActivity(intent);
     }
 
+    @Override
+    public void onFooterRefresh(PullToRefreshView view) {
+        getData(mSearchSupplys.size());
+    }
+
     /**
      * 请求网络.
      */
@@ -116,11 +131,12 @@ public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItem
 
         @Override
         public void onFaild(int resultCode, String msg) {
-
+            itprsupplypulltorefresh.onFooterRefreshComplete();
         }
 
         @Override
         public void onSuccess(ArrayList<SearchSupplyBean> resultObj) {
+            itprsupplypulltorefresh.onFooterRefreshComplete();
             if (resultObj != null) {
                 mSearchSupplys.addAll(resultObj);
                 myAdapter.notifyDataSetChanged();

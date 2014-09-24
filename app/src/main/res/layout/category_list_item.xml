@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                style="@style/list_item_style"
-                android:background="@color/white"
-                android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    style="@style/list_item_style"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
 
 
     <ImageView
         android:id="@+id/category_lv_item_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:scaleType="centerCrop"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/circle_img"
-        />
+        android:src="@drawable/circle_img" />
 
     <LinearLayout
         android:id="@+id/category_right_ll"
@@ -26,19 +26,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/font_gray_12"
-            android:text="@string/search_look"/>
+            android:text="@string/search_look" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/font_gray_12"
-            android:text="2000"/>
+            android:text="2000" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/font_gray_12"
-            android:text="@string/search_time"/>
+            android:text="@string/search_time" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,7 +53,7 @@
             style="@style/gray_15_tv"
             android:text="水晶特价 感恩大回馈 水晶珠宝首饰"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -64,14 +64,14 @@
                 style="@style/font_orange_15"
                 android:text="@string/rmb_signe"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/category_item_price"
                 style="@style/font_orange_15"
                 android:text="200"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/category_item_start_num"
@@ -79,13 +79,13 @@
                 style="@style/font_gray_12"
                 android:text="10"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:layout_width="wrap_content"
                 style="@style/font_gray_12"
                 android:text="@string/start_supply"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -101,7 +101,7 @@
                 android:text="@string/supply_company"
                 style="@style/font_gray_12"
                 android:singleLine="true"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/category_item_company_tv"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 style="@style/gray_11_tv"
                 android:layout_marginLeft="3dp"
-                android:text="深圳市范德薩范德薩發生"/>
+                android:text="深圳市范德薩范德薩發生" />
         </LinearLayout>
     </LinearLayout>
 

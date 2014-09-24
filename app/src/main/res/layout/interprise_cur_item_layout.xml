@@ -10,6 +10,7 @@
     <ImageView
         android:id="@+id/interprise_cur_item_img"
         android:layout_width="@dimen/intpr_info_img_width"
+        android:scaleType="centerInside"
         android:layout_height="@dimen/intpr_info_img_heiht" />
 
 

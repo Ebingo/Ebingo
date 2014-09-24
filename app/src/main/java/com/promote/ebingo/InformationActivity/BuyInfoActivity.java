@@ -2,9 +2,7 @@ package com.promote.ebingo.InformationActivity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -14,20 +12,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
-import com.jch.lib.util.HttpUtil;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
-import com.promote.ebingo.bean.DetailInfoBeanTools;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
+import com.promote.ebingo.publish.VipType;
+import com.promote.ebingo.publish.login.LoginDialog;
 
 /**
  * 求购信息详情。
@@ -96,12 +90,27 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             case R.id.buy_info_contact_phone_tv: {
 
                 if (mDetailInfoBean != null) {
-                    CallRecord record=new CallRecord();
-                    record.setPhone_num( mDetailInfoBean.getPhone_num());
-                    record.setTo_id( mDetailInfoBean.getCompany_id());
-                    record.setCall_id(Company.getInstance().getCompanyId());
-                    record.setInfoId(mDetailInfoBean.getInfo_id());
-                    CallRecordActivity.CallRecordManager.dialNumber(this,record);
+
+                    Company company = Company.getInstance();
+                    if (company == null || company.getCompanyId() == null) {//用户没有登录。
+
+                        LoginDialog loginDialog = new LoginDialog(BuyInfoActivity.this);
+                        loginDialog.setOwnerActivity(this);
+                        loginDialog.setCanceledOnTouchOutside(true);
+                        loginDialog.setCancelable(true);
+                        loginDialog.show();
+
+                    } else if (isVip(company.getVipType())) {       //vip会员.
+                        CallRecord record = new CallRecord();
+                        record.setPhone_num(mDetailInfoBean.getPhone_num());
+                        record.setTo_id(mDetailInfoBean.getCompany_id());
+                        record.setCall_id(Company.getInstance().getCompanyId());
+                        record.setInfoId(mDetailInfoBean.getInfo_id());
+                        CallRecordActivity.CallRecordManager.dialNumber(this, record);
+                    } else {        //不是vip会员.
+                        VipDialog vipDialog = new VipDialog(BuyInfoActivity.this);
+                        vipDialog.show();
+                    }
                 }
 
                 break;
@@ -117,11 +126,11 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
                 break;
 
             }
-            case R.id.buy_info_into_company_tv:{
+            case R.id.buy_info_into_company_tv: {
 
-                Intent intent=new Intent(this,InterpriseInfoActivity.class);
-                intent.putExtra(InterpriseInfoActivity.ARG_ID,mDetailInfoBean.getCompany_id());
-                intent.putExtra(InterpriseInfoActivity.ARG_NAME,mDetailInfoBean.getCompany_name());
+                Intent intent = new Intent(this, InterpriseInfoActivity.class);
+                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
                 startActivity(intent);
                 break;
             }
@@ -130,6 +139,19 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             }
 
         }
+
+    }
+
+    /**
+     * 判断是否为vip会员.
+     *
+     * @param vipType
+     * @return true 是vip会员.
+     */
+    public boolean isVip(String vipType) {
+
+        assert vipType == null;
+        return VipType.parse(vipType).compareTo(VipType.NORMAL_VIP) > 0;
 
     }
 
@@ -146,8 +168,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             parmater.put("company_id", "0");    //游客
         }
 
-        parmater.put("info_id", getIntent().getIntExtra(DEMAND_ID,-1));
-        final Dialog dialog=DialogUtil.waitingDialog(this);
+        parmater.put("info_id", getIntent().getIntExtra(DEMAND_ID, -1));
+        final Dialog dialog = DialogUtil.waitingDialog(this);
         GetInfoDetail.getInfoDetail(parmater, new GetInfoDetail.CallBack() {
             @Override
             public void onFailed(String msg) {
