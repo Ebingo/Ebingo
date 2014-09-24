@@ -50,7 +50,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:paddingRight="10dp"
-                android:layout_height="30dp">
+                android:layout_height="35dp">
 
                 <!--<ImageButton
                     android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:background="@drawable/search_bar_shape"
-                android:layout_height="30dp">
+                android:layout_height="35dp">
 
                 <CheckBox
                     android:id="@+id/search_categry_cb"

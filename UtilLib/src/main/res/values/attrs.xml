@@ -2,7 +2,7 @@
 <resources>
 
     <declare-styleable name="pagerindicator">
-        <attr name="nomal_icon" format = "color|reference"></attr>
+        <attr name="nomal_icon" format="color|reference"></attr>
         <attr name="cur_icon" format="color|reference"></attr>
         <attr name="imgBackground" format="color|reference"></attr>
     </declare-styleable>
@@ -10,9 +10,11 @@
     <declare-styleable name="PagerSlidingTabStrip">
         <attr name="indicatorColor" format="color" />
         <attr name="underlineColor" format="color" />
-        <attr name="dividerColor" format="color" />
-        <attr name="tabtextColor" format="color" />
+        <attr name="dividerColor" format="color|reference" />
+        <attr name="tabtextColor" format="color|reference" />
+        <attr name="curTabtextColor" format="color|reference" />
         <attr name="tabtextSize" format="dimension" />
+        <attr name="curTabtextSize" format="dimension" />
         <attr name="indicatorHeight" format="dimension" />
         <attr name="underlineHeight" format="dimension" />
         <attr name="tabdividerPadding" format="dimension" />
@@ -21,6 +23,7 @@
         <attr name="tabBackground" format="reference" />
         <attr name="shouldExpand" format="boolean" />
         <attr name="tabtextAllCaps" format="boolean" />
+
     </declare-styleable>
 
 </resources>
