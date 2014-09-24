@@ -120,9 +120,6 @@
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
     <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_category">ebingo</string>
-    <string name="title_activity_product_info">ebingo</string>
-    <string name="title_activity_buy_info">ebingo</string>
 
     <string-array name="category_data">
         <item>电子</item>
@@ -147,8 +144,6 @@
         <item>包裝</item>
     </string-array>
 
-    <string name="title_activity_interprise_info">Ebingo</string>
-    <string name="title_activity_interprise_new">Ebingo</string>
     <string name="enterprise_image">企业形象</string>
     <string name="enterprise_address">企业地址</string>
     <string name="enterprise_name">企业名称</string>
@@ -156,9 +151,6 @@
     <string name="enterprise_site">企业网址</string>
     <string name="enterprise_email">企业邮箱</string>
     <string name="title_activity_my_supply">MySupplyActivity</string>
-    <string name="title_activity_my_demand">Ebingo</string>
-    <string name="title_activity_my_cellection">Ebingo</string>
-    <string name="title_activity_my_book">Ebingo</string>
 
     <string-array name="privilege_info_visitor">
         <item>查看企业供求信息</item>
