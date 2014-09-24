@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:id="@+id/enterprise_info_psv"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.promote.ebingo.InformationActivity.InterpriseMainFragment">
 
     <LinearLayout
@@ -187,6 +189,7 @@
                 android:layout_marginTop="5dp"
                 android:scrollbars="none"
                 android:layout_height="match_parent" />
+
         </LinearLayout>
 
     </LinearLayout>

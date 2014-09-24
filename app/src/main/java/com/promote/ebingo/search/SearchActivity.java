@@ -380,8 +380,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         int id = buttonView.getId();
         if (id == R.id.search_categry_cb) {
             if (isChecked) {
+                buttonView.getWidth();
                 DisplayUtil.getCentWidthByView(buttonView);
-                mCategoryPop.showAsDropDown(buttonView, 0, DisplayUtil.px2dip(getApplicationContext(), 3));
+                mCategoryPop.showAsDropDown(buttonView, DisplayUtil.getCentWidthByView(buttonView) - DisplayUtil.dip2px(getApplicationContext(), 50), DisplayUtil.px2dip(getApplicationContext(), 3));
             }
         }
 
@@ -391,7 +392,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     public void onFooterRefresh(PullToRefreshView view) {
         String key = searchbaret.getText().toString();
 
-        int search_id = mSearchTypeBeans.get(mSearchTypeBeans.size() - 1).getId();
+        int search_id = mSearchTypeBeans.size() - 1;
 
         if (mCurSearchType == SearchType.SUPPLY) {
             getSupplyInfoList(search_id, key);
@@ -500,23 +501,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
                 ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
 
-                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
-                    mSearchTypeBeans.clear();
-                    if (searchDemandBeans == null || searchDemandBeans.size() == 0) {
-                        noData(getString(R.string.no_search_data));
-                    } else {
-                        mSearchTypeBeans.addAll(searchDemandBeans);
-                        hasData(false);
-                    }
-                } else {            //刷新完成.
-                    mRefreshView.onFooterRefreshComplete();
-                    if (searchDemandBeans != null)
-                        mSearchTypeBeans.addAll(searchDemandBeans);
-                }
                 mCurSearchType = SearchType.DEMAND;
+                displayData(searchDemandBeans, lastId);
 
-
-                mResultAdatper.notifyDataSetChanged(mSearchTypeBeans);
                 dialog.dismiss();
 
             }
@@ -533,6 +520,12 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 super.onFailure(statusCode, headers, responseString, throwable);
                 getDataFailed();
                 dialog.dismiss();
+            }
+
+            @Override
+            public void onFinish() {
+                mRefreshView.onFooterRefreshComplete();
+                super.onFinish();
             }
         });
 
@@ -566,25 +559,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
-                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
-                    mSearchTypeBeans.clear();
-                    if (searchSupplyBeans == null || searchSupplyBeans.size() == 0) {
-
-                        noData(getString(R.string.no_search_data));
-                    } else {
-                        if (searchSupplyBeans != null)
-                            mSearchTypeBeans.addAll(searchSupplyBeans);
-                        hasData(false);
-                    }
-
-                } else {            //刷新完成.
-                    mRefreshView.onFooterRefreshComplete();
-                    if (searchSupplyBeans != null)
-                        mSearchTypeBeans.addAll(searchSupplyBeans);
-                }
                 mCurSearchType = SearchType.SUPPLY;
-
-                mResultAdatper.notifyDataSetChanged(mSearchTypeBeans);
+                displayData(searchSupplyBeans, lastId);
+//                mResultAdatper.notifyDataSetChanged(mSearchTypeBeans);
                 dialog.dismiss();
 
             }
@@ -602,7 +579,36 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 getDataFailed();
                 dialog.dismiss();
             }
+
+            @Override
+            public void onFinish() {
+                mRefreshView.onFooterRefreshComplete();
+                super.onFinish();
+            }
         });
+
+    }
+
+    /**
+     * 展示数据.
+     *
+     * @param searchTypeBeans
+     * @param lastId
+     */
+    private void displayData(ArrayList<? extends SearchTypeBean> searchTypeBeans, int lastId) {
+        if (lastId == 0) {   //第一次加载清空数据
+            mSearchTypeBeans.clear();
+        }
+        if (searchTypeBeans == null || searchTypeBeans.size() == 0) {       //加载数据失败或没有加载没有数据
+            if (lastId == 0) {       //首次没有加载数据.
+//                        noData(getString(R.string.no_search_data));
+                noData(getString(R.string.no_search_data));
+            }
+        } else {     //加载数据，显示.
+            hasData(false);
+            mSearchTypeBeans.addAll(searchTypeBeans);
+            mResultAdatper.notifyDataSetChanged();
+        }
 
     }
 
@@ -632,23 +638,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchInterpriseBean> searchInterpriseBeans = SearchInterpriseBeanTools.getSearchTypeBeans(response.toString());
-                if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
-                    mSearchTypeBeans.clear();
-                    mCurSearchType = SearchType.INTERPRISE;
-                    if (searchInterpriseBeans == null || searchInterpriseBeans.size() == 0) {
-                        noData(getString(R.string.no_search_data));
-                    } else {
-                        mSearchTypeBeans.addAll(searchInterpriseBeans);
-                        hasData(false);
-                    }
-                } else {            //刷新完成.
-                    mRefreshView.onFooterRefreshComplete();
-                    if (searchInterpriseBeans != null)
-                        mSearchTypeBeans.addAll(searchInterpriseBeans);
-                }
-
-
-                mResultAdatper.notifyDataSetChanged(mSearchTypeBeans);
+                mSearchType = SearchType.INTERPRISE;
+                displayData(searchInterpriseBeans, lastId);
                 dialog.dismiss();
 
             }
@@ -666,6 +657,12 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 super.onFailure(statusCode, headers, responseString, throwable);
                 getDataFailed();
                 dialog.dismiss();
+            }
+
+            @Override
+            public void onFinish() {
+                mRefreshView.onFooterRefreshComplete();
+                super.onFinish();
             }
         });
 

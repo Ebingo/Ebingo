@@ -30,6 +30,7 @@
             android:layout_marginTop="16dp"/>
 
         <TextView
+            android:layout_marginTop="12dp"
             style="@style/text_deep_gray_style"
             android:layout_marginTop="22dp"
             android:layout_width="wrap_content"

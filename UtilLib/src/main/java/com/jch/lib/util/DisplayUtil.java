@@ -59,7 +59,7 @@ public class DisplayUtil {
 
         Log.i("width", "mywidth--" + mWidth);
 
-        return 0;
+        return (int) ((float) mWidth / 2 + 0.5f);
 
     }
 
@@ -78,8 +78,7 @@ public class DisplayUtil {
 
         float scaleX = displayWidth / baseX;
 
-//        return baseY * scaleX + 0.5f;
-        return baseY * scaleX;
+        return baseY * scaleX + 0.5f;
     }
 
     /**

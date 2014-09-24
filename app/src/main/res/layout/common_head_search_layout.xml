@@ -30,17 +30,13 @@
             android:layout_weight="4"
             android:background="@drawable/main_search_bar"
             android:paddingLeft="10dp" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom"
-        android:background="@color/title_divider_color" />
 </FrameLayout>
 
 

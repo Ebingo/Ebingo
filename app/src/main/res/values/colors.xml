@@ -5,6 +5,7 @@
     <color name="gray">#615F60</color>
     <color name="light_gray">#c4c9cb</color>
     <color name="into_enter_bg">#DDDDDD</color>
+    <color name="pop_bg_gray">#e1e9e9</color>
     <color name="info_name_gray">#8d9695</color>
     <color name="info_list_div">#efeded</color>
     <color name="orange_my">#ff7300</color>

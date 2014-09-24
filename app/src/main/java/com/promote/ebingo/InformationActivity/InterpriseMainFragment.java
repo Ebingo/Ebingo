@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link com.promote.ebingo.InformationActivity.InterpriseMainFragment#newInstance} factory method to
+ * Use the {@link InterpriseMainFragment#newInstance} factory method to
  * create an instance of this fragment.
  * 公司首页。
  */
@@ -58,6 +58,8 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
     private ScrollListView interpisemainsupdemlv;
     private ArrayList<CurrentSupplyBean> currentSupplyBeans = new ArrayList<CurrentSupplyBean>();
     private MyAdapter myAdapter = null;
+    private InterpriseInfoBean mInterpriseInfoBean = null;
+    private boolean mScrollAble = true;     //viewpager 防止滑动时重绘view
 
     private OnFragmentInteractionListener mListener;
 
@@ -96,6 +98,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
         getDataInfo();
+        mScrollAble = true;
 
     }
 
@@ -104,6 +107,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
                              Bundle savedInstanceState) {
 
         View containerView = inflater.inflate(R.layout.fragment_interprise_main, container, false);
+
 
         initialize(containerView);
 
@@ -126,6 +130,16 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
         interpisemainsupdemlv.setOnItemClickListener(this);
+        if (mInterpriseInfoBean != null) {    //只有当首次加载界面时加载listView。
+            initData(mInterpriseInfoBean);
+        }
+//        interpisemainsupdemlv.smoothScrollByOffset(0);
+        enterpriseinfopsv.smoothScrollTo(0, 0);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     /**
@@ -145,10 +159,10 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
 
-                InterpriseInfoBean interpriseInfoBean = InterpriseInfoBeanTools.getInterpriseInfo(response.toString());
-                if (interpriseInfoBean != null) {
-                    initData(interpriseInfoBean);
-                    mListener.onFragmentInteraction(interpriseInfoBean.getName());
+                mInterpriseInfoBean = InterpriseInfoBeanTools.getInterpriseInfo(response.toString());
+                if (mInterpriseInfoBean != null) {
+                    initData(mInterpriseInfoBean);
+                    mListener.onFragmentInteraction(mInterpriseInfoBean.getName());
                 }
 
                 dialog.dismiss();
@@ -188,9 +202,11 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
             fraginterprisemainvipimg.setVisibility(View.GONE);
         }
         if (infoBean.getInfoarray() != null) {
+            currentSupplyBeans.clear();
             currentSupplyBeans.addAll(infoBean.getInfoarray());
         }
         myAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -208,7 +224,6 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
 
         startActivity(intent);
     }
-
 
     /**
      * BaseAdapter.

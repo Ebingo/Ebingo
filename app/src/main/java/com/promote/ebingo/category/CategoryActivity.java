@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.view.PullToRefreshView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 /**
  * 行业分类列表。
  */
-public class CategoryActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class CategoryActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
 
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
@@ -72,6 +73,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
      * 供應。 *
      */
     private ArrayList<SearchTypeBean> mCategoryBean = new ArrayList<SearchTypeBean>();
+    private PullToRefreshView categoryrefreshview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         categorylv = (ListView) findViewById(R.id.category_lv);
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
+        categoryrefreshview = (PullToRefreshView) findViewById(R.id.category_refresh_view);
 
         mTypePop = new CategoryTypePop(getApplicationContext(), this);
         mTypePop.setOnDismissListener(new TypePopDismissLSNER());
@@ -101,6 +104,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         commontitletv.setText(category_name + "分类");
         categoryleftcb.setOnCheckedChangeListener(new CategoryTypeCheckedCL());
         categoryrightcb.setOnCheckedChangeListener(new CategoryRankCheckedCL());
+
+        categoryrefreshview.setUpRefreshable(true);
+        categoryrefreshview.setDownRefreshable(false);
+        categoryrefreshview.setOnFooterRefreshListener(this);
 
         mListAdapter = new CategoryListAdapter(getApplicationContext(), mCategoryBean);
         categorylv.setAdapter(mListAdapter);
@@ -130,6 +137,11 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             case R.id.category_item_buy: {       //求购
                 categoryleftcb.setText(((TextView) v).getText());
                 mCurType = CategoryType.DEMAND;
+                if (mCurRankType == CategoryRankType.PRICE) {       //将按价格排序改成按浏览量排序.
+                    categoryrightcb.setText(getResources().getString(R.string.look_num));
+                    mCurRankType = CategoryRankType.LOOKNUM;
+                }
+
                 mTypePop.dismiss();
                 getDemandInfoList(0);
 
@@ -138,6 +150,11 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             case R.id.category_item_supply: {    //供應
                 categoryleftcb.setText(((TextView) v).getText());
                 mCurType = CategoryType.SUPPLY;
+                if (mCurRankType == CategoryRankType.TIME) {
+                    categoryrightcb.setText(getResources().getString(R.string.look_num));      //将按时间排序改成按价格排序
+                    mCurRankType = CategoryRankType.LOOKNUM;
+                }
+
                 mTypePop.dismiss();
                 getSupplyInfoList(0);
                 break;
@@ -156,9 +173,16 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 break;
             }
-            case R.id.category_right_item_price: {      //价格
-                categoryrightcb.setText(((TextView) v).getText());
-                mCurRankType = CategoryRankType.PRICE;
+            case R.id.category_right_item_price: {      //价格, 时间
+
+                String sortStr = ((TextView) v).getText().toString();
+                categoryrightcb.setText(sortStr);
+
+                if (getResources().getString(R.string.time).equals(sortStr)) {     //按时间排序。
+                    mCurRankType = CategoryRankType.TIME;
+                } else {
+                    mCurRankType = CategoryRankType.PRICE;
+                }
                 mRankPop.dismiss();
                 if (mCurType == CategoryType.DEMAND) {
                     getDemandInfoList(0);
@@ -196,6 +220,18 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
     }
 
+    @Override
+    public void onFooterRefresh(PullToRefreshView view) {
+
+        int lastId = mCategoryBean.size();
+        if (mCurType == CategoryType.DEMAND) {
+            getDemandInfoList(lastId);
+        } else {
+            getSupplyInfoList(lastId);
+        }
+
+    }
+
     /**
      * 行業種類選擇監聽.
      */
@@ -205,7 +241,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
 
-                mTypePop.showAsDropDown(categoryleftcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
+                mTypePop.showAsDropDown(categoryleftcb, DisplayUtil.getCentWidthByView(buttonView) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
             }
 
         }
@@ -220,7 +256,12 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
 
-                mRankPop.showAsDropDown(categoryrightcb, getPopOffsetX(0.25f) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
+                if (mCurType == CategoryType.DEMAND) {
+                    mRankPop.setPriceTimeSortType(getResources().getString(R.string.time));
+                } else {
+                    mRankPop.setPriceTimeSortType(getResources().getString(R.string.price));
+                }
+                mRankPop.showAsDropDown(categoryrightcb, DisplayUtil.getCentWidthByView(buttonView) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
             }
         }
     }
@@ -271,8 +312,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         String rankType = null;
         if (mCurRankType == CategoryRankType.LOOKNUM) {
             rankType = "hot";
-        } else {
+        } else if (mCurRankType == CategoryRankType.TIME) {
             rankType = "time";
+        } else {
+            rankType = "price";
         }
         return rankType;
     }
@@ -305,19 +348,23 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
-                if (searchDemandBeans == null || searchDemandBeans.size() == 0) {
+                if (lastId == 0) {   //第一次加载清空数据
                     mCategoryBean.clear();
-//                    noData(getString(R.string.no_search_data));
-                } else if (lastId == 0) { //如果第一次请求，即不是加载更多时。
-
-                    mCategoryBean.clear();
+                }
+                if (searchDemandBeans == null || searchDemandBeans.size() == 0) {       //加载数据失败或没有加载没有数据
+                    if (lastId == 0) {       //首次没有加载数据.
+//                        noData(getString(R.string.no_search_data));
+                    }
+                } else {     //加载数据，显示.
                     mCategoryBean.addAll(searchDemandBeans);
-                } else {
-                    mCategoryBean.addAll(searchDemandBeans);
-//                    hasData(false);
+                    mListAdapter.notifyDataSetChanged();
                 }
 
+                dialog.dismiss();
+
+
                 mListAdapter.notifyDataSetChanged();
+
                 dialog.dismiss();
 
             }
@@ -334,6 +381,12 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 super.onFailure(statusCode, headers, responseString, throwable);
 //                getDataFailed();
                 dialog.dismiss();
+            }
+
+            @Override
+            public void onFinish() {
+                categoryrefreshview.onFooterRefreshComplete();
+                super.onFinish();
             }
         });
 
@@ -367,18 +420,19 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
 
-                if (searchSupplyBeans == null || searchSupplyBeans.size() == 0) {
-                    mCategoryBean.clear();
-//                    noData(getString(R.string.no_search_data));
 
-                } else if (lastId == 0) {           //如果第一次请求，即不是加载更多时。
+                if (lastId == 0) {   //第一次加载清空数据
                     mCategoryBean.clear();
-                    mCategoryBean.addAll(searchSupplyBeans);
-                } else {
-                    mCategoryBean.addAll(searchSupplyBeans);
-//                    hasData(false);
                 }
-                mListAdapter.notifyDataSetChanged();
+                if (searchSupplyBeans == null || searchSupplyBeans.size() == 0) {       //加载数据失败或没有加载没有数据
+                    if (lastId == 0) {       //首次没有加载数据.
+//                        noData(getString(R.string.no_search_data));
+                    }
+                } else {     //加载数据，显示.
+                    mCategoryBean.addAll(searchSupplyBeans);
+                    mListAdapter.notifyDataSetChanged();
+                }
+
                 dialog.dismiss();
 
             }
@@ -395,6 +449,12 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 super.onFailure(statusCode, headers, responseString, throwable);
 //                getDataFailed();
                 dialog.dismiss();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                categoryrefreshview.onFooterRefreshComplete();
             }
         });
 
@@ -425,5 +485,5 @@ enum CategoryType {
 
 enum CategoryRankType {
 
-    PRICE, LOOKNUM;
+    TIME, PRICE, LOOKNUM;
 }

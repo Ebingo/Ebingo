@@ -2,8 +2,8 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/white_search_btn_selected" android:state_pressed="true"></item>
+    <item android:drawable="@drawable/search_btn_selected" android:state_pressed="true"></item>
 
-    <item android:drawable="@drawable/white_search_btn_nomal"></item>
+    <item android:drawable="@drawable/search_btn_nomal"></item>
 
 </selector>
