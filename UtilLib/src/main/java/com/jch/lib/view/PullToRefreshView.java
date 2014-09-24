@@ -365,13 +365,13 @@ public class PullToRefreshView extends LinearLayout {
                     // 如果mAdapterView中没有数据,不拦截
                     return false;
                 }
-                if (mAdapterView.getFirstVisiblePosition() == 0 && child.getTop() == 0) {
+                if (mAdapterView.getFirstVisiblePosition() == 0 && child.getTop() == 0 && mDownRefreshable) {
                     mPullState = PULL_DOWN_STATE;
                     return true;
                 }
                 int top = child.getTop();
                 int padding = mAdapterView.getPaddingTop();
-                if (mAdapterView.getFirstVisiblePosition() == 0 && Math.abs(top - padding) <= 8) {// 这里之前用3可以判断,但现在不行,还没找到原因
+                if (mAdapterView.getFirstVisiblePosition() == 0 && Math.abs(top - padding) <= 8 && mDownRefreshable) {// 这里之前用3可以判断,但现在不行,还没找到原因
                     mPullState = PULL_DOWN_STATE;
                     return true;
                 }
@@ -385,7 +385,8 @@ public class PullToRefreshView extends LinearLayout {
                 // 最后一个子view的Bottom小于父View的高度说明mAdapterView的数据没有填满父view,
                 // 等于父View的高度说明mAdapterView已经滑动到最后
                 if (lastChild.getBottom() <= getHeight()
-                        && mAdapterView.getLastVisiblePosition() == mAdapterView.getCount() - 1) {
+                        && mAdapterView.getLastVisiblePosition() == mAdapterView.getCount() - 1
+                        && mUpRefreshable) {
                     mPullState = PULL_UP_STATE;
                     return true;
                 }
@@ -478,12 +479,11 @@ public class PullToRefreshView extends LinearLayout {
     }
 
     /**
-     *
      * set footView visbility.
      *
      * @param visibility
      */
-    public void setFootViewVisibility(int visibility){
+    public void setFootViewVisibility(int visibility) {
         mFooterView.setVisibility(visibility);
     }
 
