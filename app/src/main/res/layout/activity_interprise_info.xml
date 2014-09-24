@@ -29,13 +29,16 @@
     <com.jch.lib.view.PagerSlidingTabStrip
         android:layout_width="match_parent"
         android:id="@+id/interprise_info_tab"
-        app:indicatorColor="@color/orange_my"
+        app:indicatorColor="@color/base_blue"
         app:indicatorHeight="2dp"
         app:tabtextSize="@dimen/font_15"
+        app:curTabtextSize="@dimen/font_15"
         app:tabtextAllCaps="false"
-        app:underlineColor="@color/info_name_gray"
+        app:underlineColor="@color/divide_gray"
         app:tabtextColor="@color/info_name_gray"
+        app:curTabtextColor="@color/base_blue"
         app:underlineHeight="1dp"
+        android:background="@color/tab_gray_bg"
         android:layout_height="@dimen/sliding_tab_height" />
 
 

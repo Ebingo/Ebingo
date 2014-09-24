@@ -137,6 +137,13 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
         enterpriseinfopsv.smoothScrollTo(0, 0);
     }
 
+    /**
+     * 计算公司图片的size.
+     */
+    private void reSizeImage() {
+
+    }
+
     @Override
     public void onStart() {
         super.onStart();
