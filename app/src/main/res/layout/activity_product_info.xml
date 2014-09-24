@@ -18,7 +18,7 @@
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             style="@style/info_content_pad"
-            android:background="@color/into_enter_bg"
+            android:background="@color/info_list_div"
             android:layout_height="48dp">
 
             <TextView
@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/prd_info_company_tv"
-                style="@style/orange_15_tv"
+                style="@style/gray_15_tv"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/buy_info_into_company_tv"
                 android:layout_centerVertical="true"
@@ -43,6 +43,10 @@
 
         </RelativeLayout>
 
+        <View
+            android:layout_above="@id/prd_info_btm_ll"
+            style="@style/divider_horizontal"
+            android:layout_height="1dp" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -62,11 +66,13 @@
                     android:id="@+id/product_info_web"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
                 <ImageView
                     android:id="@+id/product_info_img"
                     android:layout_width="350dp"
                     android:scaleType="centerCrop"
                     android:layout_height="225dp" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     style="@style/info_content_pad"

@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jch.lib.view.PullToRefreshView;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.impl.EbingoRequest;
@@ -23,10 +24,10 @@ import java.util.ArrayList;
  * 企业详情的求购列表.
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * to handle interaction events.
- * Use the {@link com.promote.ebingo.InformationActivity.InterpriseDemandInfo#newInstance} factory method to
+ * Use the {@link InterpriseDemandInfo#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItemClickListener {
+public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,6 +39,7 @@ public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItem
     private ListView entprdemandlv;
     private ArrayList<SearchDemandBean> mSearchDemands = new ArrayList<SearchDemandBean>();
     private MyAdapter adapter = null;
+    private PullToRefreshView itprdemandpulltorefresh;
 
     /**
      * Use this factory method to create a new instance of
@@ -69,15 +71,21 @@ public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItem
         }
         adapter = new MyAdapter();
 
-        EbingoRequest.getDemandInfoList(getActivity(), 0, enterprise_id, 20, new EbingoRequest.RequestCallBack<ArrayList<SearchDemandBean>>() {
+        getData(0);
+    }
+
+    private void getData(int lastId) {
+
+        EbingoRequest.getDemandInfoList(getActivity(), lastId, enterprise_id, 20, new EbingoRequest.RequestCallBack<ArrayList<SearchDemandBean>>() {
             @Override
             public void onFaild(int resultCode, String msg) {
-
+                itprdemandpulltorefresh.onFooterRefreshComplete();
             }
 
             @Override
             public void onSuccess(ArrayList<SearchDemandBean> resultObj) {
 
+                itprdemandpulltorefresh.onFooterRefreshComplete();
                 if (resultObj != null) {
                     mSearchDemands.addAll(resultObj);
                 }
@@ -109,6 +117,11 @@ public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItem
     private void initialize(View view) {
 
         entprdemandlv = (ListView) view.findViewById(R.id.entpr_demand_lv);
+        itprdemandpulltorefresh = (PullToRefreshView) view.findViewById(R.id.itpr_demand_pulltorefresh);
+
+        itprdemandpulltorefresh.setOnFooterRefreshListener(this);
+        itprdemandpulltorefresh.setUpRefreshable(true);
+        itprdemandpulltorefresh.setDownRefreshable(false);
         entprdemandlv.setAdapter(adapter);
 
         entprdemandlv.setOnItemClickListener(this);
@@ -122,6 +135,12 @@ public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItem
         intent.putExtra(BuyInfoActivity.DEMAND_ID, mSearchDemands.get(position).getId());
         startActivity(intent);
     }
+
+    @Override
+    public void onFooterRefresh(PullToRefreshView view) {
+        getData(mSearchDemands.size());
+    }
+
 
     private class MyAdapter extends BaseAdapter {
 

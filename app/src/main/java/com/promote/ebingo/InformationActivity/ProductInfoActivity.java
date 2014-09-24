@@ -1,18 +1,13 @@
 package com.promote.ebingo.InformationActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,14 +16,12 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
-import com.jch.lib.util.TextUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
-import com.promote.ebingo.center.MyCollectionActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
@@ -103,17 +96,18 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        LogCat.i("--->"," infoBean.getCompany_id="+infoBean.getCompany_id());
-        LogCat.i("--->"," Company.getInstance().getCompanyId()="+Company.getInstance().getCompanyId());
-        LogCat.i("--->"," productinforlll="+productinforlll);
-        if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))productinforlll.setVisibility(View.GONE);
+        LogCat.i("--->", " infoBean.getCompany_id=" + infoBean.getCompany_id());
+        LogCat.i("--->", " Company.getInstance().getCompanyId()=" + Company.getInstance().getCompanyId());
+        LogCat.i("--->", " productinforlll=" + productinforlll);
+        if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
+            productinforlll.setVisibility(View.GONE);
         else productinforlll.setVisibility(View.VISIBLE);
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
         pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
         productinfolooknumtv.setText(infoBean.getRead_num() + "");
         if (infoBean.getType() == 1) {
-            pi_min_sell_num.setText(infoBean.getMin_sell_num() + ""+infoBean.getUnit());
+            pi_min_sell_num.setText(infoBean.getMin_sell_num() + "" + infoBean.getUnit());
         } else {
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "");
         }

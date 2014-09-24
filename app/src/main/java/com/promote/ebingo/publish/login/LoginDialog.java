@@ -10,7 +10,6 @@ import android.view.Window;
 import android.widget.EditText;
 
 import com.jch.lib.util.DialogUtil;
-
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.EbingoApp;
 import com.promote.ebingo.center.CenterFragment;

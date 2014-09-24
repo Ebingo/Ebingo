@@ -84,6 +84,7 @@
     <string name="my_setting">设置</string>
     <string name="my_share">分享</string>
     <string name="my_profile">企业资料</string>
+    <string name="make_call">拨 打</string>
 
     <string-array name="interprise_info_tab">
         <item>公司首页</item>
@@ -113,6 +114,8 @@
     <string name="enterprise_news">企业新闻</string>
     <string name="home_newsadd">今日新增</string>
     <string name="time">时间</string>
+    <string name="promote">提示</string>
+    <string name="vip_promote">目前只有VIP及已上用户可以一键拨号，请升级。</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -193,6 +196,5 @@
     <string name="find_password_dialog_title">发送成功</string>
     <string name="find_password_dialog_message">我们已发送修改密码的链接到您的注册邮箱中，请您注意查收!</string>
     <string name="i_know">我知道了</string>
-    <string name="title_activity_guide">GuideActivity</string>
 
 </resources>

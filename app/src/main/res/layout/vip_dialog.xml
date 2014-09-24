@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        style="@style/info_content_pad"
+        android:text="@string/promote"
+        android:textColor="@color/right_blue"
+        android:textSize="@dimen/font_18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/right_blue"></LinearLayout>
+
+    <TextView
+        android:id="@+id/call_dialog_phone_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/info_content_pad"
+        android:gravity="center"
+        android:textSize="@dimen/font_15"
+        android:drawablePadding="5dp"
+        android:text="@string/vip_promote"
+        android:textColor="@color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/divide_gray">
+
+        <TextView
+            android:id="@+id/vip_dialog_ok"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/font_15"
+            android:textColor="@color/black"
+            android:text="@string/ok"
+            android:layout_marginTop="0.5dp"
+            android:gravity="center"
+            android:background="@drawable/blue_selector"
+            style="@style/info_content_pad"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

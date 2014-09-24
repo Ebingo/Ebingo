@@ -4,13 +4,18 @@
     android:layout_height="match_parent"
     tools:context="com.promote.ebingo.InformationActivity.InterpriseDemandInfo">
 
-
-    <ListView
-        android:id="@+id/entpr_demand_lv"
-        android:scrollbars="none"
-        android:divider="@color/divide_gray"
-        android:dividerHeight="0.5dp"
+    <com.jch.lib.view.PullToRefreshView
+        android:id="@+id/itpr_demand_pulltorefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <ListView
+            android:id="@+id/entpr_demand_lv"
+            android:scrollbars="none"
+            android:divider="@color/divide_gray"
+            android:dividerHeight="0.5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.jch.lib.view.PullToRefreshView>
 </FrameLayout>
