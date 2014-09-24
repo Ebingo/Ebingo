@@ -25,7 +25,7 @@ public class DetailInfoBean {
     /**
      * 发布公司 id *
      */
-    private int company_id;
+    private Integer company_id;
     /**
      * 查看次数 *
      */
@@ -137,7 +137,7 @@ public class DetailInfoBean {
         this.create_time = create_time;
     }
 
-    public int getCompany_id() {
+    public Integer getCompany_id() {
         return company_id;
     }
 
