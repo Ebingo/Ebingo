@@ -52,11 +52,6 @@
                 android:paddingRight="10dp"
                 android:layout_height="35dp">
 
-                <!--<ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/search_clear_btn" />-->
             </LinearLayout>
 
 
@@ -99,6 +94,9 @@
 
         </RelativeLayout>
 
+        <View
+            android:layout_alignParentBottom="true"
+            style="@style/divider_horizontal" />
     </RelativeLayout>
 
     <LinearLayout
@@ -143,27 +141,48 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <LinearLayout
+                android:id="@+id/search_history_click_ll"
+                android:padding="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/search_history_clock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    style="@style/font_black_15" />
+            </LinearLayout>
+
+            <View
+                style="@style/divider_horizontal"
+                android:layout_marginLeft="@dimen/list_pad_r_l"
+                android:layout_marginRight="@dimen/list_pad_r_l" />
+
             <ListView
                 android:id="@+id/search_lv"
                 android:dividerHeight="0dp"
                 android:divider="@null"
+                style="@style/list_pad_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/search_clear_btn"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/clear_history_btn_selector"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:text="@string/clear_history"
-                android:layout_width="wrap_content"
+                style="@style/long_btn_styl"
                 android:textSize="@dimen/font_18"
-                android:textColor="@drawable/gray_white_selector"
-                android:layout_height="wrap_content" />
+                android:textColor="@drawable/gray_white_selector" />
 
         </LinearLayout>
 
@@ -182,6 +201,7 @@
 
                 <ListView
                     android:id="@+id/search_result_lv"
+                    style="@style/listview_style"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"></ListView>
 

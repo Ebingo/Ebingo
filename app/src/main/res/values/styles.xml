@@ -69,6 +69,11 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="list_pad_style">
+        <item name="android:scrollbars">none</item>
+        <item name="android:paddingLeft">@dimen/list_pad_r_l</item>
+        <item name="android:paddingRight">@dimen/list_pad_r_l</item>
+    </style>
 
     <style name="red_15_tv" parent="font_red_15">
         <item name="android:ellipsize">end</item>
@@ -126,9 +131,9 @@
         <item name="android:paddingRight">10dp</item>
     </style>
 
-    <style name="listview_style">
-        <item name="android:dividerHeight">1dp</item>
-        <item name="android:divider">@color/divide_gray</item>
+    <style name="listview_style" parent="list_pad_style">
+        <item name="android:dividerHeight">1px</item>
+        <item name="android:divider">@color/center_divider</item>
     </style>
 
 
@@ -365,4 +370,10 @@
         <item name="android:drawableRight">@drawable/blue_arro_check</item>
     </style>
 
+    <style name="long_btn_styl">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+    </style>
 </resources>

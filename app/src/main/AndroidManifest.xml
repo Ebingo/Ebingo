@@ -15,7 +15,7 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
     <application
-        tools:replace="android:icon"
+        tools:replace="android:icon,name"
         android:name=".application.EbingoApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"

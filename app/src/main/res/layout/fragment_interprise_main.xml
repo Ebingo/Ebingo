@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/gray_bg">
+        android:background="@color/ipr_gray_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,8 +45,9 @@
                         android:layout_width="wrap_content"
                         style="@style/font_black_15"
                         android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
+                        android:text="哦你规定"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="12dp"
                         android:layout_height="wrap_content" />
 
                     <ImageView
