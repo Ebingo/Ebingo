@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.promote.ebingo.application.Constant;
+import com.promote.ebingo.util.LogCat;
 
 import java.util.ArrayList;
 
@@ -31,9 +32,6 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
             views.add(getImage(R.drawable.guide2));
             views.add(getImage(R.drawable.guide3));
             views.add(getImage(R.drawable.guide4));
-            ImageView imageView = new ImageView(this);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            views.add(imageView);
             pager.setAdapter(new GuideAdapter());
             pager.setOnPageChangeListener(this);
         } else {
@@ -51,19 +49,22 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+        LogCat.i("page:" + position);
     }
 
     @Override
     public void onPageSelected(int position) {
-        if (position == 4) {
+        if (position == 3) {
             Constant.savefirstStart(getApplicationContext());
             setLoading();
         }
     }
 
+
     @Override
     public void onPageScrollStateChanged(int state) {
+
+
     }
 
     class GuideAdapter extends PagerAdapter {

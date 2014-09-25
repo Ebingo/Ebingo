@@ -24,7 +24,12 @@
             android:layout_height="wrap_content"
             android:text="電子行業"></TextView>
 
+
     </LinearLayout>
+
+    <View
+        android:layout_alignParentBottom="true"
+        style="@style/divider_horizontal" />
 
     <com.jch.lib.view.PagerSlidingTabStrip
         android:layout_width="match_parent"

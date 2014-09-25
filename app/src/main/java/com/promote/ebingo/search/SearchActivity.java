@@ -90,8 +90,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         initialize();
-
-        initialize();
     }
 
 
@@ -215,6 +213,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchresultkeyll.setVisibility(View.VISIBLE);
         searchkeytv.setText(key);
     }
+
 
     /**
      * 隱藏關鍵字項。
@@ -411,6 +410,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             mSearchTypeBeans.clear();       //清空搜索结果.
             displayHistory();
 //                mRefreshView.setVisibility(View.GONE);
+        } else {     //隐藏键盘.
+            DisplayUtil.hideSystemKeyBoard(SearchActivity.this, v);
+
         }
 
     }
