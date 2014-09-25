@@ -64,7 +64,7 @@ public class MyEnterPriseInfoActivity extends BaseActivity {
     private void setData() {
         Company company = Company.getInstance();
         if (!TextUtils.isEmpty(company.getName())) tv_companyName.setText(company.getName());
-        tv_region_top.setText(company.getRegion());
+        tv_region_top.setText(company.getProvince_name()+" "+company.getCity_name());
         tv_vipType.setText(VipType.nameOf(company.getVipType()));
         tv_region.setText(company.getRegion());
         tv_website.setText(company.getWebsite());
