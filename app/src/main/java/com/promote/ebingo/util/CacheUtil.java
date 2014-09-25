@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 public class CacheUtil {
 
     public static final String FILE_PROVINCE_LIST ="province_list";
+    public static final String FILE_CITY_LIST ="city_list";
 
     public void save(Context context,String name, Object o) {
         FileOutputStream os = null;

@@ -64,7 +64,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     private TextView tv_pick_province;
     private TextView tv_pick_city;
     private Map<String, ArrayList> cityMap = null;
-    private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();
+    private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();//省份列表
+    private ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();//城市列表
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,12 +145,12 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 break;
             }
             case R.id.pick_city: {
-                RegionBeen province = (RegionBeen) tv_pick_province.getTag();
-                if (province == null) {
+                Integer province_id = (Integer) tv_pick_province.getTag();
+                if (province_id == null) {
                     ContextUtil.toast("请先选择省份！");
                     return;
                 }
-                getCityList(province.getId());
+                getCityList(province_id);
                 break;
             }
             default:
@@ -160,6 +161,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     private void getProvinceList() {
         provinceList = (ArrayList<RegionBeen>) ContextUtil.read(CacheUtil.FILE_PROVINCE_LIST);
         if (provinceList != null) {
+            showProvinceDialog();
             return;
         }else{
             provinceList=new ArrayList<RegionBeen>();
@@ -174,7 +176,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     JSONArray array = response.getJSONArray("data");
                     JsonUtil.getArray(array, RegionBeen.class, provinceList);
                     showProvinceDialog();
-
+                    ContextUtil.save(CacheUtil.FILE_PROVINCE_LIST, provinceList);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -210,11 +212,19 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         }).show();
     }
 
+    /**
+     * 获取城市列表
+     * @param province_id
+     */
     private void getCityList(int province_id) {
-
+        cityList= (ArrayList<RegionBeen>) ContextUtil.read(CacheUtil.FILE_CITY_LIST);
+        if (cityList!=null){
+            showCityDialog(cityList);
+            return;
+        }
         EbingoRequestParmater params = new EbingoRequestParmater(this);
         params.put("province", province_id);
-
+        final Dialog dialog = DialogUtil.waitingDialog(this, "正在加载城市列表...");
         HttpUtil.post(HttpConstant.getCityList, params, new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
@@ -222,20 +232,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     JSONArray array = response.getJSONArray("data");
                     final ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();
                     JsonUtil.getArray(array, RegionBeen.class, cityList);
-                    int length = cityList.size();
-                    final String[] cities = new String[length];
-                    for (int i = 0; i < length; i++) {
-                        cities[i] = cityList.get(i).getName();
-                    }
-
-                    new AlertDialog.Builder(EnterpriseSettingActivity.this).setItems(cities, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            RegionBeen city=cityList.get(which);
-                            tv_pick_city.setText(city.getName());
-                            tv_pick_city.setTag(city.getId());
-                        }
-                    }).show();
+                    showCityDialog(cityList);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -249,9 +246,26 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
 
             @Override
             public void onFinish() {
-
+                dialog.dismiss();
             }
         });
+    }
+
+    private void showCityDialog(final ArrayList<RegionBeen> cityList) {
+        int length = cityList.size();
+        final String[] cities = new String[length];
+        for (int i = 0; i < length; i++) {
+            cities[i] = cityList.get(i).getName();
+        }
+
+        new AlertDialog.Builder(this).setItems(cities, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                RegionBeen city=cityList.get(which);
+                tv_pick_city.setText(city.getName());
+                tv_pick_city.setTag(city.getId());
+            }
+        }).show();
     }
 
     private String getString(TextView tv) {
