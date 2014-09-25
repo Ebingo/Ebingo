@@ -60,40 +60,13 @@ public class ContextUtil {
 
     public static void save(String name, Object o) {
         if (mCacheUtil == null) mCacheUtil = new CacheUtil();
-        mCacheUtil.save(name, o);
+        mCacheUtil.save(mContext, name, o);
     }
 
     public static Object read(String name) {
         if (mCacheUtil == null) mCacheUtil = new CacheUtil();
-        return mCacheUtil.read(name);
+        return mCacheUtil.read(mContext, name);
     }
 
-    private static class CacheUtil {
-        public void save(String name, Object o) {
-            FileOutputStream os = null;
-            try {
-                os = mContext.openFileOutput(name, Context.MODE_PRIVATE);
-                ObjectOutputStream oos = new ObjectOutputStream(os);
-                oos.writeObject(o);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-        }
-
-        public Object read(String name) {
-            Object obj = null;
-            try {
-                FileInputStream is = mContext.openFileInput(name);
-                ObjectInputStream ois = new ObjectInputStream(is);
-                obj = ois.readObject();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return obj;
-        }
-    }
 }

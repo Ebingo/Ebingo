@@ -28,6 +28,7 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.PreviewActivity;
 import com.promote.ebingo.publish.PublishBaseActivity;
+import com.promote.ebingo.util.CacheUtil;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
@@ -62,7 +63,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     private EditText edit_enterprise_email;
     private TextView tv_pick_province;
     private TextView tv_pick_city;
-    private Map<String, ArrayList> cityMap = new HashMap<String, ArrayList>();
+    private Map<String, ArrayList> cityMap = null;
     private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();
 
     @Override
@@ -70,7 +71,6 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enterprise_setting);
         setBackTitle("企业设置");
-//        getCities();
         image_enterprise = findImage(R.id.image_enterprise);
 
         edit_enterprise_name = findEdit(R.id.edit_enterprise_name);
@@ -85,18 +85,21 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         tv_pick_province.setOnClickListener(this);
         tv_pick_city.setOnClickListener(this);
         image_enterprise.setOnClickListener(this);
-        setData();
-        getProvinceList();
+        initData();
     }
 
-    private void setData() {
+    private void initData() {
         Company company = Company.getInstance();
         if (!TextUtils.isEmpty(company.getName())) edit_enterprise_name.setText(company.getName());
-        edit_enterprise_address.setText(company.getRegion());
+        edit_enterprise_address.setText(company.getAddress());
         edit_enterprise_site.setText(company.getWebsite());
         edit_enterprise_email.setText(company.getEmail());
         edit_enterprise_phone.setText(company.getCompanyTel());
         image_enterprise.setContentDescription(company.getImage());
+
+        tv_pick_province.setText(company.getProvince_name());
+        tv_pick_city.setText(company.getCity_name());
+
         setHeadImage(Company.getInstance().getImageUri());
     }
 
@@ -141,8 +144,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 break;
             }
             case R.id.pick_city: {
-                RegionBeen province= (RegionBeen) tv_pick_province.getTag();
-                if (province==null){
+                RegionBeen province = (RegionBeen) tv_pick_province.getTag();
+                if (province == null) {
                     ContextUtil.toast("请先选择省份！");
                     return;
                 }
@@ -155,6 +158,12 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     private void getProvinceList() {
+        provinceList = (ArrayList<RegionBeen>) ContextUtil.read(CacheUtil.FILE_PROVINCE_LIST);
+        if (provinceList != null) {
+            return;
+        }else{
+            provinceList=new ArrayList<RegionBeen>();
+        }
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在加载省份列表...");
         EbingoRequestParmater params = new EbingoRequestParmater(this);
 
@@ -164,21 +173,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 try {
                     JSONArray array = response.getJSONArray("data");
                     JsonUtil.getArray(array, RegionBeen.class, provinceList);
-                    int length=provinceList.size();
-                    final String[] provinces = new String[length];
-                    for (int i=0;i<length;i++){
-                        provinces[i]=provinceList.get(i).getName();
-                    }
-                    new AlertDialog.Builder(EnterpriseSettingActivity.this).setItems(provinces, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (!provinces[which].equals(tv_pick_province.getText().toString())) {
-                                tv_pick_city.setText(null);
-                                tv_pick_province.setText(provinces[which]);
-                                tv_pick_province.setTag(provinceList.get(which));
-                            }
-                        }
-                    }).show();
+                    showProvinceDialog();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -197,6 +192,24 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         });
     }
 
+    private void showProvinceDialog() {
+        int length = provinceList.size();
+        final String[] provinces = new String[length];
+        for (int i = 0; i < length; i++) {
+            provinces[i] = provinceList.get(i).getName();
+        }
+        new AlertDialog.Builder(EnterpriseSettingActivity.this).setItems(provinces, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (!provinces[which].equals(tv_pick_province.getText().toString())) {
+                    tv_pick_city.setText(null);
+                    tv_pick_province.setText(provinces[which]);
+                    tv_pick_province.setTag(provinceList.get(which).getId());
+                }
+            }
+        }).show();
+    }
+
     private void getCityList(int province_id) {
 
         EbingoRequestParmater params = new EbingoRequestParmater(this);
@@ -206,19 +219,21 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 try {
-                    JSONArray array=response.getJSONArray("data");
-                    ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();
-                    JsonUtil.getArray(array,RegionBeen.class,cityList);
-                    int length=cityList.size();
+                    JSONArray array = response.getJSONArray("data");
+                    final ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();
+                    JsonUtil.getArray(array, RegionBeen.class, cityList);
+                    int length = cityList.size();
                     final String[] cities = new String[length];
-                    for (int i=0;i<length;i++){
-                        cities[i]=cityList.get(i).getName();
+                    for (int i = 0; i < length; i++) {
+                        cities[i] = cityList.get(i).getName();
                     }
 
                     new AlertDialog.Builder(EnterpriseSettingActivity.this).setItems(cities, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            tv_pick_city.setText(cities[which]);
+                            RegionBeen city=cityList.get(which);
+                            tv_pick_city.setText(city.getName());
+                            tv_pick_city.setTag(city.getId());
                         }
                     }).show();
                 } catch (JSONException e) {
@@ -243,6 +258,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         return tv.getText().toString();
     }
 
+    /**
+     * 点击提交按钮执行事件
+     */
     private void commit() {
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
         final Integer company_id = Company.getInstance().getCompanyId();
@@ -253,14 +271,15 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         final String address = getString(edit_enterprise_address);
         final String website = getString(edit_enterprise_site);
         final String email = getString(edit_enterprise_email);
-        final String province = getString(edit_enterprise_email);
+        final String province = getString(tv_pick_province);
         final String city = getString(tv_pick_city);
 
         parmater.put("company_id", company_id);
         parmater.put("image", image_url);
         parmater.put("name", name);
         parmater.put("company_tel", company_tel);
-        parmater.put("region", province + "," + city);
+        parmater.put("province", tv_pick_province.getTag());
+        parmater.put("city", tv_pick_city.getTag());
         parmater.put("address", address);
         parmater.put("website", website);
         parmater.put("email", email);
@@ -274,7 +293,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 company.setImage(image_url);
                 company.setName(name);
                 company.setCompanyTel(company_tel);
-                company.setRegion(province + city + address);
+                company.setProvince_name(province);
+                company.setCity_name(city);
+                company.setAddress(address);
                 company.setWebsite(website);
                 company.setEmail(email);
                 setResult(RESULT_OK, new Intent());
@@ -426,8 +447,14 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         startActivityForResult(intent, PREVIEW);
     }
 
+    /**
+     * 从xml中加载城市列表
+     *
+     * @deprecated
+     */
     private void getCities() {
         XmlResourceParser parser = getResources().getXml(R.xml.cities);
+        cityMap = new HashMap<String, ArrayList>();
         try {
             int eventType = parser.getEventType();
             String province = null;

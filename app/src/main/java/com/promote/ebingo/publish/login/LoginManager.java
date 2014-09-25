@@ -25,6 +25,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.ImageUtil;
+import com.promote.ebingo.util.JsonUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -120,24 +121,14 @@ public class LoginManager {
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         LogCat.i(response + "");
                         JSONObject data = result.getJSONObject("data");
-                        final Company company = Company.getInstance();
-//
-                        company.setName(data.getString("company_name"));
-                        company.setCompanyId(data.getInt("company_id"));
-                        company.setVipType(data.getString("viptype"));
-                        company.setIsLock(data.getString("is_lock"));
-                        company.setWebsite(data.getString("website"));
-                        company.setRegion(data.getString("region"));
-                        company.setImage(data.getString("image"));
-                        company.setRegion(data.getString("region"));
-                        company.setEmail(data.getString("email"));
-                        company.setCompanyTel(data.getString("company_tel"));
+                        Company company= JsonUtil.get(data.toString(),Company.class);
+                        Company.loadInstance(company);
                         ((EbingoApp) ContextUtil.getContext()).saveCurCompanyName(phone);
                         ((EbingoApp) ContextUtil.getContext()).saveCurCompanyPwd(password);
                         if (company.getImage() != null)loadHeadImage(company.getImage(), new Handler(new Handler.Callback() {
                                 @Override
                                 public boolean handleMessage(Message msg) {
-                                    company.setImageUri((Uri) msg.obj);
+                                    Company.getInstance().setImageUri((Uri) msg.obj);
                                     callback.onSuccess();
                                     return false;
                                 }

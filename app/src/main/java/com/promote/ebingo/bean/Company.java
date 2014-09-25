@@ -10,18 +10,20 @@ import java.io.Serializable;
  * Created by acer on 2014/9/3.
  */
 public class Company implements Serializable{
-    private Integer companyId;//公司Id
+    private Integer company_id;//公司Id
     private String image;//公司图片url
-    private String name;//公司名
+    private String company_name;//公司名
     private String head;//负责人名称
     private String headPhone;//负责人电话
-    private String companyTel;//公司电话
-    private String region;//公司地区
+    private String company_tel;//公司电话
+    private String address;//地址
     private String website; //公司网址
-    private Integer province_id;//省份
-    private Integer city_id;//地址
-    private String vipType= VipType.VISITOR.code;//会员类型，默认是游客
-    private String isLock;
+    private Integer province_id;//省份id
+    private String province_name;//省份名
+    private String city_name;//城市名
+    private Integer city_id;//城市id
+    private String viptype= VipType.VISITOR.code;//会员类型，默认是游客
+    private String is_lock;
     private String email;
     private transient Uri imageUri;//公司图片在手机中的位置
 
@@ -42,6 +44,46 @@ public class Company implements Serializable{
 //            mCompany.setCompanyId(6);
         }
         return mCompany;
+    }
+
+    public String getCompany_name() {
+        return company_name;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
+
+    public String getCompany_tel() {
+        return company_tel;
+    }
+
+    public void setCompany_tel(String company_tel) {
+        this.company_tel = company_tel;
+    }
+
+    public String getProvince_name() {
+        return province_name==null?"":province_name;
+    }
+
+    public void setProvince_name(String province_name) {
+        this.province_name = province_name;
+    }
+
+    public String getCity_name() {
+        return city_name==null?"":city_name;
+    }
+
+    /**
+     * 获得完整地址 将 Province city address拼接起来
+     * @return
+     */
+    public String getRegion(){
+        return getProvince_name()+getCity_name()+getAddress();
+    }
+
+    public void setCity_name(String city_name) {
+        this.city_name = city_name;
     }
 
     public Integer getProvince_id() {
@@ -81,27 +123,27 @@ public class Company implements Serializable{
     }
 
     public String getVipType() {
-        return vipType;
+        return viptype;
     }
 
     public void setVipType(String vipType) {
-        this.vipType = vipType;
+        this.viptype = vipType;
     }
 
     public String getIsLock() {
-        return isLock;
+        return is_lock;
     }
 
     public void setIsLock(String isLock) {
-        this.isLock = isLock;
+        this.is_lock = isLock;
     }
 
     public Integer getCompanyId() {
-        return companyId;
+        return company_id;
     }
 
     public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+        this.company_id = companyId;
     }
 
     public String getImage() {
@@ -113,11 +155,11 @@ public class Company implements Serializable{
     }
 
     public String getName() {
-        return name;
+        return company_name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.company_name = name;
     }
 
     public String getHead() {
@@ -137,19 +179,19 @@ public class Company implements Serializable{
     }
 
     public String getCompanyTel() {
-        return companyTel;
+        return company_tel;
     }
 
     public void setCompanyTel(String companyTel) {
-        this.companyTel = companyTel;
+        this.company_tel = companyTel;
     }
 
-    public String getRegion() {
-        return region;
+    public String getAddress() {
+        return address==null?"":address;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getWebsite() {
