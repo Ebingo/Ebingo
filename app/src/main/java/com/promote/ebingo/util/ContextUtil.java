@@ -1,30 +1,14 @@
 package com.promote.ebingo.util;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.text.TextUtils;
 import android.widget.Toast;
-
-import com.jch.lib.util.VaildUtil;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
 /**
  * Created by acer on 2014/9/3.
  */
 public class ContextUtil {
     private static Context mContext;
-    private static CacheUtil mCacheUtil;
+    private static FileUtil mFileUtil;
 
     public static void init(Context context) {
         mContext = context;
@@ -58,14 +42,24 @@ public class ContextUtil {
         return mContext.getString(resId);
     }
 
-    public static void save(String name, Object o) {
-        if (mCacheUtil == null) mCacheUtil = new CacheUtil();
-        mCacheUtil.save(mContext, name, o);
+    /**
+     * 将一个对象写入到缓存文件中
+     * @param name
+     * @param o
+     */
+    public static void saveCache(String name, Object o) {
+        if (mFileUtil == null) mFileUtil = new FileUtil();
+        mFileUtil.saveCache(mContext,name,o);
     }
 
+    /**
+     * 从缓存中读取一个object
+     * @param name
+     * @return
+     */
     public static Object read(String name) {
-        if (mCacheUtil == null) mCacheUtil = new CacheUtil();
-        return mCacheUtil.read(mContext, name);
+        if (mFileUtil == null) mFileUtil = new FileUtil();
+        return mFileUtil.readCache(mContext,name);
     }
 
 

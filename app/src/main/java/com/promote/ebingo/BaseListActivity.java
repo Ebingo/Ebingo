@@ -3,12 +3,18 @@ package com.promote.ebingo;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jch.lib.view.PullToRefreshView;
 import com.promote.ebingo.center.ItemDelteDialog;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.jch.lib.view.PullToRefreshView.*;
 
@@ -23,6 +29,8 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
     private ItemDelteDialog delteDialog;
     protected TextView tv_no_data;
     private PullToRefreshView mPullToRefreshView;
+    protected String mCacheName;
+    protected List mCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,38 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
             case R.id.common_back_btn:
                 finish();
                 break;
+        }
+    }
+
+    /**
+     * 是否使用缓存，如果cacheName！=null 就使用缓存.
+     * 使用缓存后，lastId等于列表的size,在Activity 进入onStop()时自动保存列表里的数据。
+     *
+     * @param cacheName 缓存文件的名称
+     * @param data      要用来作为缓存数据的对象
+     */
+    public void enableCache(String cacheName, List data) {
+        mCacheName = cacheName;
+        mCache = data;
+        if (mCache != null) {//读取缓存
+            mCache.clear();
+            List temp= (List) ContextUtil.read(mCacheName);
+            if(temp!=null){
+                mCache.addAll(temp);
+                BaseAdapter adapter = (BaseAdapter) getListAdapter();
+                if (adapter != null) adapter.notifyDataSetChanged();
+                lastId = mCache.size();
+            }
+
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //写入缓存
+        if (mCacheName != null && mCache != null) {
+            ContextUtil.saveCache(mCacheName, mCache);
         }
     }
 
@@ -90,7 +130,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
 
     @Override
     public void setTitle(int titleId) {
-        ((TextView) findViewById(R.id.common_title_tv)).setText(titleId);
+        setTitle(getString(titleId));
     }
 
     /**
@@ -157,6 +197,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         } else {
             mPullToRefreshView.setUpRefreshable(true);
         }
+        mPullToRefreshView.onHeaderRefreshComplete();
     }
 
 
@@ -166,6 +207,8 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
     private OnHeaderRefreshListener headerRefreshListener = new OnHeaderRefreshListener() {
         @Override
         public void onHeaderRefresh(PullToRefreshView view) {
+            lastId=0;
+            mPullToRefreshView.setUpRefreshable(true);
             onRefresh();
         }
     };

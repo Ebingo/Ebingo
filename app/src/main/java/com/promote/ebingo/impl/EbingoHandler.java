@@ -1,7 +1,9 @@
 package com.promote.ebingo.impl;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -19,7 +21,7 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
     }
 
     @Override
-   final public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+    final public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
         LogCat.i("--->", response + "");
         try {
             response = response.getJSONObject("response");
@@ -43,21 +45,39 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
 
     @Override
     final public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.String s, java.lang.Throwable throwable) {
-        onFail(statusCode, s);
+        showError(statusCode);
     }
 
     @Override
     final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-        onFail(statusCode, errorResponse+"");
+        showError(statusCode);
     }
 
     @Override
     final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-        onFail(statusCode,errorResponse+"");
+        showError(statusCode);
     }
 
+    private void showError(int statusCode) {
+        String net_error = ContextUtil.getString(R.string.net_error);
+        onFail(statusCode, net_error);
+        ContextUtil.toast(net_error);
+    }
+
+    /**
+     * 当返回code=100时，调用此方法
+     *
+     * @param statusCode
+     * @param response
+     */
     public abstract void onSuccess(int statusCode, JSONObject response);
 
+    /**
+     * 当code!=100时，调用此方法
+     *
+     * @param statusCode
+     * @param msg
+     */
     public abstract void onFail(int statusCode, String msg);
 
     @Override

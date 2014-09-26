@@ -5,11 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +29,7 @@ import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -60,6 +65,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         initialize();
+
     }
 
     private void initialize() {
@@ -97,9 +103,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        LogCat.i("--->", " infoBean.getCompany_id=" + infoBean.getCompany_id());
-        LogCat.i("--->", " Company.getInstance().getCompanyId()=" + Company.getInstance().getCompanyId());
-        LogCat.i("--->", " productinforlll=" + productinforlll);
+        popError();
         if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
             productinforlll.setVisibility(View.GONE);
         else productinforlll.setVisibility(View.VISIBLE);
@@ -164,6 +168,12 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     cancelCollection(collectId);
                 }
                 break;
+            case R.id.tv_warn: {
+                Intent intent = new Intent(this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.TYPE, PublishEditActivity.TYPE_SUPPLY);
+                startActivity(intent);
+                break;
+            }
             default: {
             }
         }
@@ -263,5 +273,17 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
     }
 
+    private void popError() {
+        final View contentView = View.inflate(this, R.layout.error_pop_window, null);
+        final TextView tv_warn = (TextView) contentView.findViewById(R.id.tv_warn);
+        final PopupWindow window = new PopupWindow(contentView, 0, 0, false);
+        tv_warn.setOnClickListener(this);
+        window.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        window.setAnimationStyle(android.R.style.Animation_Toast);
+        int[] location=new int[2];
+        productinfoimg.getLocationOnScreen(location);
+        window.showAtLocation(productinfoimg, Gravity.TOP, 0, location[1]);
+    }
 
 }
