@@ -1,15 +1,17 @@
 package com.promote.ebingo;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
 /**
  * Created by jch. on 2014/8/27.
  */
-public class BaseActivity extends Activity implements View.OnClickListener {
+public class BaseActivity extends FragmentActivity implements View.OnClickListener {
 
     @Override
     public void setContentView(int layoutResID) {

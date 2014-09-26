@@ -29,6 +29,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -62,7 +63,8 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
 
         myAdapter = new MyAdapter();
         setListAdapter(myAdapter);
-        getWishlist(0);
+        enableCache(FileUtil.FILE_WISH_LIST, mCollections);
+        if(mCollections.size()==0)getWishlist(0);
         enableDelete(true);
     }
 

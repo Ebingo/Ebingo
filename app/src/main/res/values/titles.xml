@@ -13,5 +13,6 @@
     <string name="title_my_book">我的订阅</string>
     <string name="title_pick_region">选择区域</string>
     <string name="title_activity_find_password">找回密码</string>
+    <string name="title_activity_publish_edit">编辑发布信息</string>
 
 </resources>

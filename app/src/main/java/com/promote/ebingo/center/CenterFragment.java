@@ -241,7 +241,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                     centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
             }
         };
-        if (uri != null) {//本地没有头像
+        if (uri != null) {//本地有头像
             task.loadBY(uri);
         }else{
             final String imageUrl = Company.getInstance().getImage();

@@ -22,6 +22,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -35,11 +36,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
 
     private ArrayList<SearchDemandBean> mDemandBeans = new ArrayList<SearchDemandBean>();
     private MyAdapter adapter;
-    private ItemDelteDialog mItemDeleteDialog = null;
-    /**
-     * 要删除的求购信息.
-     */
-    private SearchDemandBean mDelDemandBean = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +48,10 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         adapter = new MyAdapter();
         setListAdapter(adapter);
         getListView().setOnItemLongClickListener(this);
-        mItemDeleteDialog = new ItemDelteDialog(this, this);
-        getMyDemandList(0);
+        enableDelete(true);
+        enableCache(FileUtil.FILE_DEMAND_LIST, mDemandBeans);
+        LogCat.i("--->", mDemandBeans.size() + "");
+        if (mDemandBeans.size() == 0) getMyDemandList(lastId);
     }
 
     private void getMyDemandList(int lastId) {
@@ -63,18 +61,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         final ProgressDialog dialog = new ProgressDialog(MyDemandActivity.this);
         parma.put("lastid", lastId);
         parma.put("pagesize", pageSize);
-        try {
-            StringBuilder sb = new StringBuilder();
-            sb.append("{")
-                    .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
-                    .append(",")
-                    .append(makeCondition("sort", "time"))
-                    .append("}");
-
-            parma.put("condition", URLEncoder.encode(sb.toString(), "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        parma.put("condition", getCondition());
 
         HttpUtil.post(urlStr, parma, new JsonHttpResponseHandler("utf-8") {
 
@@ -96,7 +83,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                LogCat.i("--->", errorResponse.toString());
                 dialog.dismiss();
             }
 
@@ -104,23 +90,46 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 dialog.dismiss();
-                LogCat.i("--->", responseString);
             }
         });
     }
 
-    /**
-     * 删除供求信息
-     *
-     * @param id 所要删除的求购信息id.
-     */
-    private void deleteInfo(int id) {
+    private String getCondition() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{")
+                .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
+                .append(",")
+                .append(makeCondition("sort", "time"));
 
+        try {
+            return URLEncoder.encode(sb.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent = new Intent(MyDemandActivity.this, BuyInfoActivity.class);
+        intent.putExtra(BuyInfoActivity.DEMAND_ID, mDemandBeans.get(position).getId());
+        startActivity(intent);
+    }
+
+
+    @Override
+    protected CharSequence onPrepareDelete(int position) {
+        return mDemandBeans.get(position).getName();
+    }
+
+    @Override
+    protected void onDelete(final int position) {
         String urlStr = HttpConstant.deleteInfo;
         final ProgressDialog dialog = DialogUtil.waitingDialog(MyDemandActivity.this);
         EbingoRequestParmater param = new EbingoRequestParmater(getApplicationContext());
 
-        param.put("infoid", id);
+        param.put("infoid", mDemandBeans.get(position).getId());
         param.put("company_id", Company.getInstance().getCompanyId());
 
         HttpUtil.post(urlStr, param, new JsonHttpResponseHandler("utf-8") {
@@ -128,7 +137,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                mDemandBeans.remove(mDelDemandBean);
+                mDemandBeans.remove(position);
                 adapter.notifyDataSetChanged();
                 dialog.dismiss();
                 super.onSuccess(statusCode, headers, response);
@@ -149,33 +158,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
             }
         });
     }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(MyDemandActivity.this, BuyInfoActivity.class);
-        intent.putExtra(BuyInfoActivity.DEMAND_ID, mDemandBeans.get(position).getId());
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        mDelDemandBean = mDemandBeans.get(position);
-        mItemDeleteDialog.show();
-        mItemDeleteDialog.setItemText(mDelDemandBean.getName(), mDelDemandBean.getId());
-        return true;
-    }
-
-    /**
-     * 所删除条的id.
-     *
-     * @param view
-     * @param itemId
-     */
-    @Override
-    public void onItemDelete(View view, int itemId) {
-        deleteInfo(itemId);
-    }
-
 
     private class MyAdapter extends BaseAdapter {
 

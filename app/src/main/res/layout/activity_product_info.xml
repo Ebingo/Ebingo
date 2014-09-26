@@ -65,11 +65,13 @@
                 <WebView
                     android:id="@+id/product_info_web"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="wrap_content" />
 
                 <ImageView
                     android:id="@+id/product_info_img"
                     android:layout_width="350dp"
+                    android:layout_gravity="center_horizontal"
                     android:scaleType="centerCrop"
                     android:layout_height="225dp" />
 

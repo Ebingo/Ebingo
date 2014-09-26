@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="23dp"
+    android:paddingRight="23dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_warn"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_warn"
+        android:drawablePadding="@dimen/ic_padding"
+        android:text="错误提示：审核未通过，请重新上传"
+        android:drawableRight="@drawable/ic_edit"
+        style="@style/font_orange_15"/>
+
+</LinearLayout>

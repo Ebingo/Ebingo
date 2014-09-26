@@ -20,6 +20,7 @@ import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
 import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.publish.login.RegisterActivity;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 
@@ -197,5 +198,18 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     public void onLoginCancel() {
         mainrb.setChecked(true);
+    }
+    private long lastTime=0;
+    @Override
+    public void onBackPressed() {
+
+        long curTime=System.currentTimeMillis();
+        if ( curTime -lastTime < 1500) {
+            super.onBackPressed();
+        }else{
+            ContextUtil.toast("再按一次退出！");
+            lastTime=curTime;
+        }
+
     }
 }
