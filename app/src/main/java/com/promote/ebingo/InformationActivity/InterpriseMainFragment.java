@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  * 公司首页。
  */
-public class InterpriseMainFragment extends InterpriseBaseFragment implements AdapterView.OnItemClickListener {
+public class InterpriseMainFragment extends Fragment implements AdapterView.OnItemClickListener, InterpriseBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -230,6 +231,16 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
         }
 
         startActivity(intent);
+    }
+
+    @Override
+    public int getInterprsetId() {
+        return 0;
+    }
+
+    @Override
+    public void setInterprsetId(int interprsetId) {
+
     }
 
     /**

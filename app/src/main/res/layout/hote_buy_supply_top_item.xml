@@ -9,7 +9,6 @@
         android:id="@+id/hote_buy_supplly_top_img"
         android:layout_width="match_parent"
         android:scaleType="centerCrop"
-        android:layout_height="wrap_content"
-        android:src="@drawable/test_main_1" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

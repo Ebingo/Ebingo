@@ -41,9 +41,9 @@ public class SearchResultAdapter extends BaseAdapter {
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         mOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.img_big_failed)
+                .showImageOnLoading(R.drawable.loading_waite)
+                .showImageOnFail(R.drawable.img_big_failed)
                 .cacheInMemory(true).cacheOnDisc(true).build();
         this.mContext = context;
         mSearchTypeBeans = searchTypeBeans;

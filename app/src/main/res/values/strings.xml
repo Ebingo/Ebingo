@@ -86,6 +86,7 @@
     <string name="my_profile">企业资料</string>
     <string name="make_call">拨 打</string>
     <string name="search_history">搜索历史</string>
+    <string name="load_data_complete">加载数据完成.</string>
 
     <string-array name="interprise_info_tab">
         <item>公司首页</item>

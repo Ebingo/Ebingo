@@ -158,13 +158,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:text="@string/search_history"
                     style="@style/font_black_15" />
             </LinearLayout>
 
-            <View
-                style="@style/divider_horizontal"
-                android:layout_marginLeft="@dimen/list_pad_r_l"
-                android:layout_marginRight="@dimen/list_pad_r_l" />
+            <View style="@style/divider_horizontal" />
 
             <ListView
                 android:id="@+id/search_lv"

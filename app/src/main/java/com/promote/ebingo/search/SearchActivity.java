@@ -40,6 +40,7 @@ import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.bean.SearchTypeBean;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.SearchDao;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -270,6 +271,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case R.id.search_btn_ib: {      //搜索按鈕。
                 mHistoryBeans.clear();  //清空历史数据.
                 showSearchData();
+                mRefreshView.setUpRefreshable(true);
 
                 String key = searchbaret.getText().toString();
                 getCurSearchType(searchcategrycb.getText().toString());      //设置当前搜索类型.
@@ -605,6 +607,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             if (lastId == 0) {       //首次没有加载数据.
 //                        noData(getString(R.string.no_search_data));
                 noData(getString(R.string.no_search_data));
+            } else {
+                mRefreshView.setUpRefreshable(false);
+                loadDataComplete();
             }
         } else {     //加载数据，显示.
             hasData(false);
@@ -612,6 +617,11 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             mResultAdatper.notifyDataSetChanged();
         }
 
+    }
+
+    private void loadDataComplete() {
+        mRefreshView.setUpRefreshable(false);
+        ContextUtil.toast(getResources().getString(R.string.load_data_complete));
     }
 
     /**

@@ -98,6 +98,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfotelcb.setOnClickListener(this);
         prdinfointocompanytv.setOnClickListener(this);
         productinfocollectcb.setOnClickListener(this);
+        prdinfobtmll.setOnClickListener(this);
 
     }
 
@@ -144,7 +145,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 finish();
                 break;
             }
-            case R.id.prd_info_into_company_tv: {
+            case R.id.prd_info_btm_ll: {
 
                 Intent intent = new Intent(this, InterpriseInfoActivity.class);
                 intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());

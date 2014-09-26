@@ -1,23 +1,23 @@
 package com.promote.ebingo.InformationActivity;
 
-import android.support.v4.app.Fragment;
-
 /**
  * Created by ACER on 2014/9/18.
  */
-public class InterpriseBaseFragment extends Fragment {
+public interface InterpriseBaseFragment {
     /**
      * 企业id. *
      */
-    private int interprsetId = -1;
+    int interprsetId = -1;
 
-    public int getInterprsetId() {
-        return interprsetId;
-    }
+    /**
+     * 设置企业id*
+     */
+    public int getInterprsetId();
 
-    public void setInterprsetId(int interprsetId) {
-        this.interprsetId = interprsetId;
-    }
+    /**
+     * 获得企业id*
+     */
+    public void setInterprsetId(int interprsetId);
 
 
 }
