@@ -20,7 +20,6 @@ import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -42,7 +41,7 @@ import java.util.ArrayList;
  * Use the {@link com.promote.ebingo.find.FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
+public class FindFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -96,13 +95,12 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         mOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.img_big_failed)
+                .showImageOnLoading(R.drawable.loading_waite)
+                .showImageOnFail(R.drawable.img_big_failed)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
     }
-
 
 
     @Override
@@ -141,14 +139,14 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     public void onClick(View v) {
 
         int id = v.getId();
-        switch (id){
-            case R.id.search_bar_tv:{
+        switch (id) {
+            case R.id.search_bar_tv: {
 
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
                 break;
             }
-            default:{
+            default: {
 
             }
         }
@@ -169,11 +167,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     /**
      * category gridview adapter.
      */
-    private class MyGrideAdapter extends BaseAdapter{
+    private class MyGrideAdapter extends BaseAdapter {
 
         Context context = null;
 
-        public MyGrideAdapter( Context context){
+        public MyGrideAdapter(Context context) {
 
             this.context = context;
         }
@@ -198,15 +196,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder = null;
-            if (convertView == null){
+            if (convertView == null) {
 
                 holder = new ViewHolder();
                 convertView = (View) LayoutInflater.from(this.context).inflate(R.layout.find_gridview_item, null);
                 holder.imgView = (ImageView) convertView.findViewById(R.id.find_grid_item_img);
-                holder.text = (TextView)convertView.findViewById(R.id.find_grid_item_tv);
+                holder.text = (TextView) convertView.findViewById(R.id.find_grid_item_tv);
                 convertView.setTag(holder);
-            }else {
-                holder = (ViewHolder)convertView.getTag();
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
             CategoryBeen categoryBeen = mCategoryBeens.get(position);
@@ -221,19 +219,19 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     /**
      * 从网络获取数据。
      */
-    private void getCategoryList(){
+    private void getCategoryList() {
 
         String urlStr = HttpConstant.getCategories;
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
 
-        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler(){
+        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<CategoryBeen> categoryBeens = CategoryBeanTools.getCategories(response.toString());
-                if (categoryBeens != null && categoryBeens.size() != 0){
+                if (categoryBeens != null && categoryBeens.size() != 0) {
 
                     mCategoryBeens.clear();
                     mCategoryBeens.addAll(categoryBeens);
@@ -260,9 +258,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     }
 
 
-
-
-    static class ViewHolder{
+    static class ViewHolder {
         ImageView imgView;
         TextView text;
     }

@@ -118,12 +118,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
      * 热门供应 *
      */
     private HoteBeanAdapter mHotSupplyAdapter = null;
-    //test data.
-    private int imgsRes[] = {R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2, R.drawable.test_main_1, R.drawable.test_main_2};
 
     private Point imageSize = new Point(720, 256);
-    private TextView mainhote8sttv;
-    private TextView mainhote7sttv;
 
     private ScrollListView mHotBuyLv = null;
     private ScrollListView mSupplyLv = null;
@@ -170,7 +166,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         initialize(view);
-        LogCat.i("--->","home onCreateView");
         return view;
     }
 
@@ -242,16 +237,16 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         mOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.img_big_failed)
+                .showImageOnLoading(R.drawable.loading_waite)
+                .showImageOnFail(R.drawable.img_big_failed)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
         mCircleImageOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.circle_img)
-                .showImageOnLoading(R.drawable.circle_img)
-                .showImageOnFail(R.drawable.circle_img)
+                .showImageForEmptyUri(R.drawable.img_big_failed)
+                .showImageOnLoading(R.drawable.loading_waite)
+                .showImageOnFail(R.drawable.img_big_failed)
                 .cacheInMemory(true).cacheOnDisc(true).build();
     }
 
@@ -363,8 +358,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             ImageView imgView = new ImageView(context);
             LinearLayout.LayoutParams imgLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             imgView.setLayoutParams(imgLayoutParam);
-            imgView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imgView.setBackgroundResource(R.drawable.loading);
+            imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imgs.add(imgView);
         }
 
@@ -374,8 +368,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             imgs.clear();
             for (int i = 0; i < mAds.size(); i++) {
                 ImageView imgView = new ImageView(mContext);
-//                imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-//                imgView.setBackgroundResource(imgsRes[i]);
+                imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ImageManager.load(mAds.get(i).getSrc(), imgView, mOptions);
                 setImageViewListner(imgView, mAds.get(i).getType(), mAds.get(i).getContent());
                 imgs.add(imgView);

@@ -23,7 +23,9 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     ArrayList<View> views = new ArrayList<View>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+
+    {
         super.onCreate(savedInstanceState);
         if (Constant.isFirstStart(getApplicationContext())) {
             setContentView(R.layout.activity_guide);

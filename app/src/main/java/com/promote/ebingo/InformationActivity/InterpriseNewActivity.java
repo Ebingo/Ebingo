@@ -20,6 +20,9 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+/**
+ * 企业新闻.
+ */
 public class InterpriseNewActivity extends Activity implements View.OnClickListener {
 
     public final static String ARG_ID = "news_id";
@@ -108,7 +111,7 @@ public class InterpriseNewActivity extends Activity implements View.OnClickListe
         switch (v.getId()) {
 
 
-            case R.id.common_back_btn:{
+            case R.id.common_back_btn: {
 
                 onBackPressed();
                 this.finish();

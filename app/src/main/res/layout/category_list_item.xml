@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     style="@style/list_item_style"
-    android:background="@color/white"
+    android:background="@drawable/click_gray_bg"
     android:layout_height="wrap_content">
 
 

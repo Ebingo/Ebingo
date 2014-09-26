@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
  * <p/>
  * 供求信息。
  */
-public class SupplyDemandInfoFragment extends InterpriseBaseFragment implements RadioGroup.OnCheckedChangeListener {
+public class SupplyDemandInfoFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, InterpriseBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -186,6 +186,16 @@ public class SupplyDemandInfoFragment extends InterpriseBaseFragment implements 
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    @Override
+    public int getInterprsetId() {
+        return 0;
+    }
+
+    @Override
+    public void setInterprsetId(int interprsetId) {
 
     }
 }
