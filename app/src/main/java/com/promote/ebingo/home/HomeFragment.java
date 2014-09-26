@@ -236,17 +236,18 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.img_big_failed)
-                .showImageOnLoading(R.drawable.loading_waite)
-                .showImageOnFail(R.drawable.img_big_failed)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .showImageForEmptyUri(R.drawable.load_failed_big_img)
+                .showImageOnLoading(R.drawable.loading_big_img)
+                .showImageOnFail(R.drawable.load_failed_big_img)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
         mCircleImageOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.img_big_failed)
-                .showImageOnLoading(R.drawable.loading_waite)
-                .showImageOnFail(R.drawable.img_big_failed)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .showImageForEmptyUri(R.drawable.load_failed_img)
+
+                .showImageOnLoading(R.drawable.load_failed_img)
+                .showImageOnFail(R.drawable.load_failed_img)
                 .cacheInMemory(true).cacheOnDisc(true).build();
     }
 

@@ -44,7 +44,7 @@
 
     <ImageView
         android:id="@+id/main_hot_1get_img"
-        android:src="@drawable/circle_img"
+        android:src="@drawable/load_failed_img"
         android:scaleType="centerCrop"
         android:layout_alignParentRight="true"
         android:layout_width="@dimen/common_circl_img_size"

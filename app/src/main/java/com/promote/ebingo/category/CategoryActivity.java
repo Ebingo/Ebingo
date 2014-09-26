@@ -29,6 +29,7 @@ import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.bean.SearchTypeBean;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -54,6 +55,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     private int category_id = -1;
     private CategoryListAdapter mListAdapter = null;
     /**
+     * 分页最大加载数。 *
+     */
+    private int pageSize = 20;
+    /**
      * 类别选择弹出window. *
      */
     private CategoryTypePop mTypePop;
@@ -74,6 +79,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
      */
     private ArrayList<SearchTypeBean> mCategoryBean = new ArrayList<SearchTypeBean>();
     private PullToRefreshView categoryrefreshview;
+    private TextView nodatatv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +97,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
         categoryrefreshview = (PullToRefreshView) findViewById(R.id.category_refresh_view);
+        nodatatv = (TextView) findViewById(R.id.nodata_tv);
 
         mTypePop = new CategoryTypePop(getApplicationContext(), this);
         mTypePop.setOnDismissListener(new TypePopDismissLSNER());
@@ -143,6 +150,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 }
 
                 mTypePop.dismiss();
+                categoryrefreshview.setUpRefreshable(true);
                 getDemandInfoList(0);
 
                 break;
@@ -156,6 +164,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 }
 
                 mTypePop.dismiss();
+                categoryrefreshview.setUpRefreshable(true);
                 getSupplyInfoList(0);
                 break;
             }
@@ -164,6 +173,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 categoryrightcb.setText(((TextView) v).getText());
                 mCurRankType = CategoryRankType.LOOKNUM;
                 mRankPop.dismiss();
+                categoryrefreshview.setUpRefreshable(true);
                 if (mCurType == CategoryType.DEMAND) {
                     getDemandInfoList(0);
                 } else {
@@ -177,6 +187,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 String sortStr = ((TextView) v).getText().toString();
                 categoryrightcb.setText(sortStr);
+                categoryrefreshview.setUpRefreshable(true);
 
                 if (getResources().getString(R.string.time).equals(sortStr)) {     //按时间排序。
                     mCurRankType = CategoryRankType.TIME;
@@ -197,6 +208,71 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
             }
         }
+
+    }
+
+    /**
+     *
+     */
+    private void hasData() {
+
+        categoryrefreshview.setVisibility(View.VISIBLE);
+        nodatatv.setVisibility(View.GONE);
+
+    }
+
+    /**
+     *
+     */
+    private void noData() {
+
+        categoryrefreshview.setVisibility(View.GONE);
+        nodatatv.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 显示数据.
+     *
+     * @param searchTypeBeans
+     * @param lastId
+     */
+    private void displayData(ArrayList<? extends SearchTypeBean> searchTypeBeans, int lastId) {
+
+        if (lastId == 0) {   //第一次加载清空数据
+            mCategoryBean.clear();
+        }
+        if (searchTypeBeans == null || searchTypeBeans.size() == 0) {       //加载数据失败或没有加载没有数据
+            if (lastId == 0) {       //首次没有加载数据.
+                noData();
+            } else {
+                loadComplete(true);
+            }
+
+        } else {     //加载数据，显示.
+            hasData();
+            int loadCount = searchTypeBeans.size();
+
+            if (loadCount < pageSize) {
+                if (lastId == 0)
+                    loadComplete(false);
+                else
+                    loadComplete(true);
+            }
+            mCategoryBean.addAll(searchTypeBeans);
+            mListAdapter.notifyDataSetChanged();
+        }
+        categoryrefreshview.onFooterRefreshComplete();
+        mListAdapter.notifyDataSetChanged();
+
+    }
+
+    /**
+     * 上拉加载数据完成.
+     */
+    private void loadComplete(boolean msg) {
+        categoryrefreshview.setUpRefreshable(false);
+        if (msg)
+            ContextUtil.toast(getResources().getString(R.string.load_data_complete));
 
     }
 
@@ -332,7 +408,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         String url = HttpConstant.getDemandInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
-        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("pagesize", pageSize);       //每页显示20条。
+
 
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
@@ -348,22 +425,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 super.onSuccess(statusCode, headers, response);
 
                 ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
-                if (lastId == 0) {   //第一次加载清空数据
-                    mCategoryBean.clear();
-                }
-                if (searchDemandBeans == null || searchDemandBeans.size() == 0) {       //加载数据失败或没有加载没有数据
-                    if (lastId == 0) {       //首次没有加载数据.
-//                        noData(getString(R.string.no_search_data));
-                    }
-                } else {     //加载数据，显示.
-                    mCategoryBean.addAll(searchDemandBeans);
-                    mListAdapter.notifyDataSetChanged();
-                }
-
-                dialog.dismiss();
-
-
-                mListAdapter.notifyDataSetChanged();
+                displayData(searchDemandBeans, lastId);
 
                 dialog.dismiss();
 
@@ -372,14 +434,14 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-//                getDataFailed();
+                noData();
                 dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-//                getDataFailed();
+                noData();
                 dialog.dismiss();
             }
 
@@ -404,7 +466,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         String url = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
-        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("pagesize", pageSize);       //每页显示20条。
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
@@ -421,18 +483,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
 
 
-                if (lastId == 0) {   //第一次加载清空数据
-                    mCategoryBean.clear();
-                }
-                if (searchSupplyBeans == null || searchSupplyBeans.size() == 0) {       //加载数据失败或没有加载没有数据
-                    if (lastId == 0) {       //首次没有加载数据.
-//                        noData(getString(R.string.no_search_data));
-                    }
-                } else {     //加载数据，显示.
-                    mCategoryBean.addAll(searchSupplyBeans);
-                    mListAdapter.notifyDataSetChanged();
-                }
-
+                displayData(searchSupplyBeans, lastId);
                 dialog.dismiss();
 
             }
@@ -441,6 +492,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 //                getDataFailed();
+                noData();
                 dialog.dismiss();
             }
 
@@ -448,6 +500,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
 //                getDataFailed();
+                noData();
                 dialog.dismiss();
             }
 
