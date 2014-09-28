@@ -104,7 +104,22 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 删除文件
+     * @param file
+     */
+    public void delete(File file){
+        if (file!=null&&file.exists())file.delete();
+    }
 
+    /**
+     * 删除文件
+     * @param context
+     * @param name
+     */
+    public void deleteFile(Context context,String name){
+        delete(getFile(context,name));
+    }
     /**
      * 缓存文件路径 cache/<company_id>/name
      *

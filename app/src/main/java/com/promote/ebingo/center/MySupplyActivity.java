@@ -40,9 +40,10 @@ import java.util.ArrayList;
 
 public class MySupplyActivity extends BaseListActivity {
 
-    private final ArrayList<SearchSupplyBean> mSupplyBeans =new ArrayList<SearchSupplyBean>();
+    private final ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
     private DisplayImageOptions mOptions;
     private MyAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,16 +66,15 @@ public class MySupplyActivity extends BaseListActivity {
                 .showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
-
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
 
         adapter = new MyAdapter();
         setListAdapter(adapter);
         enableDelete(true);
-        enableCache(FileUtil.FILE_SUPPLY_LIST,mSupplyBeans);
+        enableCache(FileUtil.FILE_SUPPLY_LIST, mSupplyBeans);
         setDownRefreshable(true);
         setUpRefreshable(true);
-        if (mSupplyBeans.size()==0)getMySupply(lastId);
+        if (mSupplyBeans.size() == 0) getMySupply(lastId);
     }
 
     private void delete(final int posotion) {
@@ -129,10 +129,8 @@ public class MySupplyActivity extends BaseListActivity {
                 if (searchSupplyBeans != null && searchSupplyBeans.size() > 0) {
                     mSupplyBeans.addAll(searchSupplyBeans);
                     adapter.notifyDataSetChanged();
-                    onLoadMoreFinish(true);
-                }else{
-                    onLoadMoreFinish(false);
                 }
+                onLoadFinish();
                 dialog.dismiss();
             }
 
@@ -140,7 +138,7 @@ public class MySupplyActivity extends BaseListActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 dialog.dismiss();
-                LogCat.i("--->", errorResponse+"");
+                LogCat.i("--->", errorResponse + "");
             }
 
             @Override

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,6 +48,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         setListAdapter(adapter);
         getListView().setOnItemLongClickListener(this);
         enableDelete(true);
+        setDownRefreshable(true);
         enableCache(FileUtil.FILE_DEMAND_LIST, mDemandBeans);
         LogCat.i("--->", mDemandBeans.size() + "");
         if (mDemandBeans.size() == 0) getMyDemandList(lastId);
@@ -62,7 +62,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         parma.put("lastid", lastId);
         parma.put("pagesize", pageSize);
         parma.put("condition", getCondition());
-
+        LogCat.i("--->", parma.toString());
         HttpUtil.post(urlStr, parma, new JsonHttpResponseHandler("utf-8") {
 
             @Override
@@ -73,10 +73,8 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 if (demandBeans != null && demandBeans.size() > 0) {
                     mDemandBeans.addAll(demandBeans);
                     adapter.notifyDataSetChanged();
-                    onLoadMoreFinish(true);
-                } else {
-                    onLoadMoreFinish(false);
                 }
+                onLoadFinish();
                 dialog.dismiss();
             }
 
@@ -99,7 +97,8 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         sb.append("{")
                 .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
                 .append(",")
-                .append(makeCondition("sort", "time"));
+                .append(makeCondition("sort", "time"))
+                .append("}");
 
         try {
             return URLEncoder.encode(sb.toString(), "utf-8");
@@ -214,5 +213,11 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
     @Override
     protected void onLoadMore(int lastId) {
         getMyDemandList(lastId);
+    }
+
+    @Override
+    protected void onRefresh() {
+        mDemandBeans.clear();
+        getMyDemandList(0);
     }
 }

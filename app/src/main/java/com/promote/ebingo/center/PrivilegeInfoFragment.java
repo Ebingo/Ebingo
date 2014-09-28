@@ -8,12 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -93,11 +93,11 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     private void addItem(LinearLayout content, String[] items, LayoutInflater inflater) {
         if (items == null) return;
         for (String str : items) {
-            TagView tagView = (TagView) inflater.inflate(R.layout.sample_tag_view, null);
-            tagView.setNumber(0);
+            TextView tagView = (TextView) inflater.inflate(R.layout.provilige_tip, null);
             tagView.setText(str);
-            tagView.setTextSize(13);
-            content.addView(tagView);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(dp(4),dp(5),dp(4),dp(5));
+            content.addView(tagView, lp);
         }
     }
 

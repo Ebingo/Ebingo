@@ -192,4 +192,5 @@
     <string name="i_know">我知道了</string>
     <string name="net_error">网络不给力，请稍后再试！</string>
     <string name="no_network"></string>
+    <string name="last_update">最后更新于：</string>
 </resources>

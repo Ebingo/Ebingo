@@ -2,8 +2,8 @@ package com.promote.ebingo;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -13,7 +13,8 @@ import com.promote.ebingo.center.ItemDelteDialog;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.jch.lib.view.PullToRefreshView.*;
@@ -23,14 +24,35 @@ import static com.jch.lib.view.PullToRefreshView.*;
  * zhuchao on 2014/9/18.
  */
 public class BaseListActivity extends ListActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
+    /**
+     * 分页的lastId
+     */
     protected int lastId = 0;
     protected int pageSize = 20;
-    private int delete_position = -1;
+    /**
+     * 弹出编辑框的位置
+     */
+    private int edit_position = -1;
     private ItemDelteDialog delteDialog;
-    protected TextView tv_no_data;
     private PullToRefreshView mPullToRefreshView;
+    /**
+     * 缓存模块的名称
+     */
     protected String mCacheName;
+    /**
+     * 缓存的数据
+     */
     protected List mCache;
+    /**
+     * 上一次更新的时间
+     */
+    private Date lastRefreshTime = null;
+    /**
+     * 保存上次更新时间的文件名
+     */
+    private final String CACHE_DATE = "cache_date";
+
+    private boolean isHeadRefreshing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +60,13 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         setContentView(R.layout.activity_base_list);
         setTitle(getTitle());
         delteDialog = new ItemDelteDialog(this, this);
-        tv_no_data = (TextView) findViewById(android.R.id.empty);
         mPullToRefreshView = (PullToRefreshView) findViewById(R.id.list_content);
         mPullToRefreshView.setFootViewVisibility(View.GONE);//先把FooterView隐藏，上来就显示很不美观
         setUpRefreshable(false);
         setDownRefreshable(false);
+
+        lastRefreshTime = getLastRefreshTime(getLocalClassName());
+        mPullToRefreshView.setLastUpdated(getString(R.string.last_update) + getDateString(lastRefreshTime));
     }
 
     @Override
@@ -66,10 +90,10 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         mCache = data;
         if (mCache != null) {//读取缓存
             mCache.clear();
-            List temp= (List) ContextUtil.read(mCacheName);
-            if(temp!=null){
+            List temp = (List) ContextUtil.read(mCacheName);
+            if (temp != null) {
                 mCache.addAll(temp);
-                BaseAdapter adapter = (BaseAdapter) getListAdapter();
+                BaseAdapter adapter = getAdapter();
                 if (adapter != null) adapter.notifyDataSetChanged();
                 lastId = mCache.size();
             }
@@ -77,13 +101,43 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         }
     }
 
+    protected BaseAdapter getAdapter() {
+        return (BaseAdapter) getListAdapter();
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
         //写入缓存
+        LogCat.i("--->", "-->" + getLocalClassName() + " lastRefreshTime" + lastRefreshTime);
         if (mCacheName != null && mCache != null) {
             ContextUtil.saveCache(mCacheName, mCache);
+            if (lastRefreshTime != null) {
+                getSharedPreferences(CACHE_DATE, MODE_PRIVATE).edit().putString(getLocalClassName(), getDateString(lastRefreshTime)).commit();
+                LogCat.i("---->", "name=" + getLocalClassName() + " date=" + getDateString(lastRefreshTime));
+            }
         }
+    }
+
+    private String getDateString(Date date) {
+        return DateFormat.format("MM-dd hh:mm:ss", date).toString();
+    }
+
+    /**
+     * 从配置文件中读取 上次更新的时间
+     *
+     * @return
+     */
+    private Date getLastRefreshTime(String name) {
+        try {
+            String date = getSharedPreferences(CACHE_DATE, MODE_PRIVATE).getString(name, null);
+            LogCat.i("---->", "name=" + name + " date=" + date);
+            SimpleDateFormat format = new SimpleDateFormat("MM-dd hh:mm:ss");
+            return format.parse(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Date();
     }
 
     /**
@@ -105,14 +159,11 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
     public void setDownRefreshable(boolean refreshable) {
         if (refreshable) {
             mPullToRefreshView.setOnHeaderRefreshListener(headerRefreshListener);
+
         } else {
             mPullToRefreshView.setOnHeaderRefreshListener(null);
         }
         mPullToRefreshView.setDownRefreshable(refreshable);
-    }
-
-    public void showNoData() {
-        tv_no_data.setText(R.string.no_data);
     }
 
     /**
@@ -164,7 +215,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        delete_position = position;
+        edit_position = position;
         delteDialog.setItemText(onPrepareDelete(position), position);
         delteDialog.show();
         return true;
@@ -180,12 +231,18 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
 
     @Override
     public void onItemDelete(View view, int itemId) {
-        onDelete(delete_position);
+        onDelete(edit_position);
     }
 
     /**
      * 如果listView已经加载了所有的数据，就应该隐藏上拉加载更多功能
-     *
+     */
+    protected void onLoadFinish() {
+        onLoadMoreFinish(getAdapter().getCount() % pageSize == 0);
+        onRefreshFinish();
+    }
+
+    /**
      * @param hasMoreData true 如果还有更多数据 false 数据已经加载完毕
      */
     protected void onLoadMoreFinish(boolean hasMoreData) {
@@ -197,9 +254,15 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         } else {
             mPullToRefreshView.setUpRefreshable(true);
         }
-        mPullToRefreshView.onHeaderRefreshComplete();
     }
 
+    public void onRefreshFinish() {
+        if (!isHeadRefreshing) return;
+        lastRefreshTime = new Date();
+        mPullToRefreshView.setLastUpdated(getString(R.string.last_update) + getDateString(lastRefreshTime));
+        mPullToRefreshView.onHeaderRefreshComplete();
+        isHeadRefreshing = false;
+    }
 
     /**
      * 下拉刷新监听
@@ -207,8 +270,9 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
     private OnHeaderRefreshListener headerRefreshListener = new OnHeaderRefreshListener() {
         @Override
         public void onHeaderRefresh(PullToRefreshView view) {
-            lastId=0;
+            lastId = 0;
             mPullToRefreshView.setUpRefreshable(true);
+            isHeadRefreshing = true;
             onRefresh();
         }
     };
