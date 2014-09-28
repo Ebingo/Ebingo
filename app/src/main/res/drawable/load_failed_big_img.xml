@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<!--</bitmap>-->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/loading_big_waite"
+    android:gravity="center">
 
-<scale xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/img_big_failed"
-    android:scaleGravity="center"
-    android:scaleHeight="50%"
-    android:scaleWidth="50%">
-
-
-</scale>
+</bitmap>

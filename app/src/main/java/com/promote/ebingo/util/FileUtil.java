@@ -1,7 +1,6 @@
 package com.promote.ebingo.util;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.promote.ebingo.bean.Company;
 
@@ -18,11 +17,13 @@ import java.io.ObjectOutputStream;
  */
 public class FileUtil {
 
-    public static final String FILE_COMPANY="company";
-    public static final String FILE_PROVINCE_LIST="provinceList";
-    public static final String FILE_SUPPLY_LIST="supplyList";
-    public static final String FILE_DEMAND_LIST="demandList";
-    public static final String FILE_WISH_LIST="wishList";
+    public static final String FILE_COMPANY = "company";
+    public static final String FILE_PROVINCE_LIST = "provinceList";
+    public static final String FILE_SUPPLY_LIST = "supplyList";
+    public static final String FILE_DEMAND_LIST = "demandList";
+    public static final String FILE_WISH_LIST = "wishList";
+    public static final String HOEM_DATA_CACh = "home_data";
+    public static final String CATEGORY_CACH = "category_data";
 
     /**
      * 读取缓存文件
@@ -116,7 +117,7 @@ public class FileUtil {
         File dir = new File(context.getCacheDir(), Company.getInstance().getCompanyId() + "");
         if (!dir.exists()) dir.mkdir();
         //创建缓存文件
-        return  new File(dir, name);
+        return new File(dir, name);
     }
 
     private File getFile(Context context, String name) {
