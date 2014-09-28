@@ -11,8 +11,7 @@
         android:id="@+id/search_interprise_item_iv"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/test_search_item_img" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:orientation="vertical"

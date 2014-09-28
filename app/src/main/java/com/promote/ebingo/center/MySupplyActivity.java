@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
-import com.jch.lib.view.PullToRefreshView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -28,6 +27,7 @@ import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 
 public class MySupplyActivity extends BaseListActivity {
 
-    private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
+    private final ArrayList<SearchSupplyBean> mSupplyBeans =new ArrayList<SearchSupplyBean>();
     private DisplayImageOptions mOptions;
     private MyAdapter adapter;
     @Override
@@ -70,8 +70,11 @@ public class MySupplyActivity extends BaseListActivity {
 
         adapter = new MyAdapter();
         setListAdapter(adapter);
-        getMySupply(0);
         enableDelete(true);
+        enableCache(FileUtil.FILE_SUPPLY_LIST,mSupplyBeans);
+        setDownRefreshable(true);
+        setUpRefreshable(true);
+        if (mSupplyBeans.size()==0)getMySupply(lastId);
     }
 
     private void delete(final int posotion) {
@@ -131,14 +134,13 @@ public class MySupplyActivity extends BaseListActivity {
                     onLoadMoreFinish(false);
                 }
                 dialog.dismiss();
-
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 dialog.dismiss();
-                LogCat.i("--->", errorResponse.toString());
+                LogCat.i("--->", errorResponse+"");
             }
 
             @Override
@@ -224,5 +226,11 @@ public class MySupplyActivity extends BaseListActivity {
     @Override
     protected void onLoadMore(int lastId) {
         getMySupply(lastId);
+    }
+
+    @Override
+    protected void onRefresh() {
+        mSupplyBeans.clear();
+        getMySupply(0);
     }
 }

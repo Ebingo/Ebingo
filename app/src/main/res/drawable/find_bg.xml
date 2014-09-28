@@ -4,16 +4,9 @@
     android:shape="rectangle">
 
     <gradient
-        android:startColor="@color/gray_bg"
-        android:centerColor="@color/gray_bg"
-        android:endColor="@color/gray_bg" />
-
-    <!--<padding-->
-    <!--android:bottom="10dp"-->
-    <!--android:top="10dp"-->
-    <!--android:left="10dp"-->
-    <!--android:right="10dp" />-->
-    <!--<solid android:color="@color/white" />-->
+        android:startColor="@color/home_divide_gray"
+        android:centerColor="@color/home_divide_gray"
+        android:endColor="@color/home_divide_gray" />
 
     <stroke
         android:color="@color/white"

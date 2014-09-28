@@ -18,6 +18,7 @@
     <dimen name="widget_height">45dp</dimen>
     <dimen name="ic_padding">5dp</dimen>
     <dimen name="common_circl_img_size">60dp</dimen>
+    <dimen name="home_item_img_width">90dp</dimen>
 
     <dimen name="sub_tab_pad_b_t">8dp</dimen>
     <dimen name="category_tab_pad_right">40dp</dimen>

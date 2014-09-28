@@ -28,7 +28,7 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.PreviewActivity;
 import com.promote.ebingo.publish.PublishBaseActivity;
-import com.promote.ebingo.util.CacheUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
@@ -106,7 +106,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
 
     public void setHeadImage(Uri uri) {
         if (uri == null) {//本地没有头像
-            final String imageUrl = Company.getInstance().getImage();
+            final String imageUrl =Company.getInstance().getImage();
             if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
                 LogCat.e("--->", "setHeadImage uriError uri=" + uri);
                 image_enterprise.setImageResource(R.drawable.center_head);
@@ -159,7 +159,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     private void getProvinceList() {
-        provinceList = (ArrayList<RegionBeen>) ContextUtil.read(CacheUtil.FILE_PROVINCE_LIST);
+        provinceList = (ArrayList<RegionBeen>) ContextUtil.read(HttpConstant.getProvinceList);
         if (provinceList != null) {
             showProvinceDialog();
             return;
@@ -176,7 +176,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     JSONArray array = response.getJSONArray("data");
                     JsonUtil.getArray(array, RegionBeen.class, provinceList);
                     showProvinceDialog();
-                    ContextUtil.save(CacheUtil.FILE_PROVINCE_LIST, provinceList);
+                    ContextUtil.saveCache(FileUtil.FILE_PROVINCE_LIST, provinceList);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -217,7 +217,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
      * @param province_id
      */
     private void getCityList(int province_id) {
-        cityList= (ArrayList<RegionBeen>) ContextUtil.read(CacheUtil.FILE_CITY_LIST);
+        cityList= (ArrayList<RegionBeen>) ContextUtil.read(HttpConstant.getCityList);
         if (cityList!=null){
             showCityDialog(cityList);
             return;
@@ -304,7 +304,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
             public void onSuccess(int statusCode, JSONObject response) {
                 Company company = Company.getInstance();
                 company.setCompanyId(company_id);
-                company.setImage(image_url);
+                company.setImage(HttpConstant.getHost()+image_url);
                 company.setName(name);
                 company.setCompanyTel(company_tel);
                 company.setProvince_name(province);
@@ -314,6 +314,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 company.setEmail(email);
                 setResult(RESULT_OK, new Intent());
                 ContextUtil.toast("修改成功！");
+                new FileUtil().saveFile(getApplicationContext(),FileUtil.FILE_COMPANY,company);
                 finish();
             }
 

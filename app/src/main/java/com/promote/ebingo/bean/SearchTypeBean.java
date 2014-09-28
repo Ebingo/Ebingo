@@ -1,11 +1,13 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ACER on 2014/9/2.
  *
  * 搜索內容基類。
  */
-public class SearchTypeBean {
+public class SearchTypeBean implements Serializable{
 
     protected int id;
 

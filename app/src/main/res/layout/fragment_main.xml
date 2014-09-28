@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/blue_15_tv"
-                        android:text="987" />
+                        android:text="0" />
 
                     <TextView
                         style="@style/gray_11_tv"
@@ -118,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/blue_15_tv"
-                        android:text="987" />
+                        android:text="0" />
 
                     <TextView
                         style="@style/gray_11_tv"
@@ -148,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/blue_15_tv"
-                        android:text="987" />
+                        android:text="0" />
 
                     <TextView
                         style="@style/gray_11_tv"
@@ -166,8 +166,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/home_divide_gray" />
+                android:layout_height="1px"
+                android:background="@color/center_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -187,9 +187,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 style="@style/home_subtitle_style"
-                android:background="@color/home_divide_gray" />
+                android:background="@color/center_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -220,7 +220,7 @@
 
                 <com.jch.lib.view.ScrollListView
                     android:id="@+id/home_hotsupply_lv"
-                    android:divider="@color/home_divide_gray"
+                    android:divider="@color/center_divider"
                     android:dividerHeight="0.5dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -230,9 +230,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
                 style="@style/home_subtitle_style"
-                android:background="@color/home_divide_gray" />
+                android:background="@color/center_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -264,7 +264,7 @@
                     android:id="@+id/home_hot_buy_lv"
                     android:layout_width="match_parent"
                     android:dividerHeight="0.5dp"
-                    android:divider="@color/home_divide_gray"
+                    android:divider="@color/center_divider"
                     android:layout_height="match_parent">
 
                 </com.jch.lib.view.ScrollListView>

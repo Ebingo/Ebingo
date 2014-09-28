@@ -11,17 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.promote.ebingo.application.Constant;
+import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
 import java.util.ArrayList;
 
 
-public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener {
+public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener,RadioGroup.OnCheckedChangeListener {
     ViewPager pager;
     ArrayList<View> views = new ArrayList<View>();
-
+    RadioGroup indicator_group;
     @Override
     protected void onCreate(Bundle savedInstanceState)
 
@@ -30,12 +34,15 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         if (Constant.isFirstStart(getApplicationContext())) {
             setContentView(R.layout.activity_guide);
             pager = (ViewPager) findViewById(R.id.guide_pager);
+            indicator_group = (RadioGroup) findViewById(R.id.indicator_group);
+            indicator_group.setOnCheckedChangeListener(this);
             views.add(getImage(R.drawable.guide1));
             views.add(getImage(R.drawable.guide2));
             views.add(getImage(R.drawable.guide3));
             views.add(getImage(R.drawable.guide4));
             pager.setAdapter(new GuideAdapter());
             pager.setOnPageChangeListener(this);
+            showDot(0);
         } else {
             setLoading();
         }
@@ -49,24 +56,42 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         return imageView;
     }
 
+    private float mSavedOffset =0;
+    private boolean scrollToEnd=false;
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        LogCat.i("page:" + position);
+        LogCat.i("page:" + position+" positionOffset:"+positionOffset+" positionOffsetPixels:"+positionOffsetPixels);
+        if (position==3){
+            float delta=mSavedOffset-positionOffset;
+            scrollToEnd=(delta==0);
+        }
+        mSavedOffset =positionOffset;
+
     }
 
     @Override
     public void onPageSelected(int position) {
-        if (position == 3) {
-            Constant.savefirstStart(getApplicationContext());
-            setLoading();
-        }
+        showDot(position);
     }
 
 
     @Override
     public void onPageScrollStateChanged(int state) {
+        if (state==ViewPager.SCROLL_STATE_IDLE&&pager.getCurrentItem()==3&&scrollToEnd){
+            setLoading();
+            Constant.savefirstStart(getApplicationContext());
+        }
+    }
 
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        for(int i=0;i<group.getChildCount();i++){
+            if (group.getChildAt(i).getId()==checkedId){
+                pager.setCurrentItem(i);
+                break;
+            }
 
+        }
     }
 
     class GuideAdapter extends PagerAdapter {
@@ -93,10 +118,14 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         }
     }
 
+    private void showDot(int index){
+        ((RadioButton)(indicator_group.getChildAt(index))).setChecked(true);
+    }
+
     private void setLoading() {
 
         setContentView(R.layout.loadpage_layout);
-
+        Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(),FileUtil.FILE_COMPANY));
         new Thread() {
             @Override
             public void run() {

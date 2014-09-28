@@ -163,7 +163,7 @@
         <item name="android:paddingRight">20dp</item>
         <item name="android:clickable">true</item>
         <item name="android:onClick">onClick</item>
-        <item name="android:background">@drawable/click_gray_bg</item>
+        <item name="android:background">@drawable/click_whit_bg</item>
         <item name="android:drawableRight">@drawable/right_arro</item>
         <item name="android:drawablePadding">15dp</item>
     </style>

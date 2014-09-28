@@ -1,11 +1,13 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by jch on 2014/8/28.
  * <p/>
  * 首页广告图片.
  */
-public class Adv {
+public class Adv implements Serializable {
 
     /**  **/
     private String src = null;

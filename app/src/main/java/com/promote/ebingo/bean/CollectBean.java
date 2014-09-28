@@ -1,11 +1,12 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by ACER on 2014/9/12.
  */
-public class CollectBean {
+public class CollectBean implements Serializable{
 
     /**
      * 搜藏id. *

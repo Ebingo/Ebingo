@@ -1,6 +1,5 @@
 package com.promote.ebingo.home;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -9,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -20,35 +18,31 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
-import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
 import com.jch.lib.view.PagerIndicator;
 import com.jch.lib.view.PagerScrollView;
 import com.jch.lib.view.ScrollListView;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.BaseFragment;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Adv;
-import com.promote.ebingo.bean.GetIndexBeanTools;
 import com.promote.ebingo.bean.GetIndexBeanTools.GetIndexBean;
 import com.promote.ebingo.bean.HotBean;
 import com.promote.ebingo.bean.HotCategory;
 import com.promote.ebingo.bean.TodayNum;
 import com.promote.ebingo.category.CategoryActivity;
-import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.impl.EbingoRequest;
+import com.promote.ebingo.impl.SimleHomeBean;
 import com.promote.ebingo.search.SearchActivity;
-import com.promote.ebingo.util.LogCat;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -56,7 +50,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class HomeFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
+public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PARAM1 = "param1";
@@ -156,6 +150,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        initImgOperation();
         scheduledExecutorService = Executors
                 .newSingleThreadScheduledExecutor();
 
@@ -189,6 +184,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
 
     private void initialize(View view) {
+
         mainSearchBarTv = (TextView) view.findViewById(R.id.search_bar_tv);
         mainfragvp = (ViewPager) view.findViewById(R.id.main_frag_vp);
         mainfragpi = (PagerIndicator) view.findViewById(R.id.main_frag_pi);
@@ -205,20 +201,28 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         mSupplyLv = (ScrollListView) view.findViewById(R.id.home_hotsupply_lv);
         mSupplyLv.setParentScrollView(homesv);
 
+        //初始化默认数据.
+        mIndexBean = SimleHomeBean.initSimpleHomeBean();
+
         mBannerPagerAdapter = new BannerVagerAdapter(getActivity().getApplicationContext());
         mainfragvp.setAdapter(mBannerPagerAdapter);
         mainfragvp.setOnPageChangeListener(this);
         mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
         DisplayUtil.reSizeViewByScreenWidth(mainfragvp, imageSize.x, imageSize.y, getActivity());
 
+
+        hot_category.addAll(mIndexBean.getHot_category());
         hotMarketAdapter = new HotMarketAdapter(getActivity().getApplicationContext(), hot_category, mOptions);
         mHotMarketGv.setSelector(new BitmapDrawable());
         mHotMarketGv.setOnItemClickListener(new HotMarketOCL());
         mHotMarketGv.setAdapter(hotMarketAdapter);
 
+        hot_demand.addAll(mIndexBean.getHot_demand());
         mHotBuyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_demand, imageSize);
         mHotBuyLv.setAdapter(mHotBuyAdapter);
         mHotBuyLv.setOnItemClickListener(new HotBuyOCL());
+
+        hot_supply.addAll(mIndexBean.getHot_supply());
         mHotSupplyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_supply, imageSize);
         mSupplyLv.setAdapter(mHotSupplyAdapter);
         mSupplyLv.setOnItemClickListener(new HotSupplyOCL());
@@ -227,7 +231,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         loopPager();
         getIndex();
-        initImgOperation();
+
     }
 
     /**
@@ -237,17 +241,17 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.img_big_failed)
-                .showImageOnLoading(R.drawable.loading_waite)
-                .showImageOnFail(R.drawable.img_big_failed)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .showImageForEmptyUri(R.drawable.loading_big_waite)
+                .showImageOnLoading(R.drawable.loading_big_img)
+                .showImageOnFail(R.drawable.load_failed_big_img)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
         mCircleImageOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.img_big_failed)
-                .showImageOnLoading(R.drawable.loading_waite)
-                .showImageOnFail(R.drawable.img_big_failed)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .showImageForEmptyUri(R.drawable.loading_waite)
+                .showImageOnLoading(R.drawable.load_failed_img)
+                .showImageOnFail(R.drawable.load_failed_img)
                 .cacheInMemory(true).cacheOnDisc(true).build();
     }
 
@@ -357,7 +361,10 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             this.mContext = context;
 
             ImageView imgView = new ImageView(context);
+
+            imgView.setImageDrawable(getResources().getDrawable(R.drawable.loading_big_img));
             LinearLayout.LayoutParams imgLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
             imgView.setLayoutParams(imgLayoutParam);
             imgs.add(imgView);
         }
@@ -392,37 +399,48 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
                     switch (AdvType) {
                         case 1: {            //go 產品詳情頁
-
-                            Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
-                            imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
-                            startActivity(imgIntent);
+                            if (isNetworkConnected()) {
+                                Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
+                                imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
+                                startActivity(imgIntent);
+                            }
                             break;
                         }
 
                         case 2: {        //go 求购詳情頁
-                            Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
-                            intent.putExtra(BuyInfoActivity.DEMAND_ID, Integer.valueOf(content));
-                            startActivity(intent);
+
+                            if (isNetworkConnected()) {
+                                Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
+                                intent.putExtra(BuyInfoActivity.DEMAND_ID, Integer.valueOf(content));
+                                startActivity(intent);
+                            }
+
 
                             break;
                         }
 
                         case 3: {        //go 企業詳情
 
-                            Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
-                            intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
-                            startActivity(intent);
-                            break;
+
+                            if (isNetworkConnected()) {
+                                Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
+                                intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
+                                startActivity(intent);
+                                break;
+                            }
+
                         }
 
                         case 4: {        //外聯web頁面.
 
-                            Intent intent = new Intent();
-                            intent.setAction("android.intent.action.VIEW");
-                            Uri content_uri = Uri.parse(content);
-                            intent.setData(content_uri);
-                            startActivity(intent);
+                            if (isNetworkConnected()) {
+                                Intent intent = new Intent();
+                                intent.setAction("android.intent.action.VIEW");
+                                Uri content_uri = Uri.parse(content);
+                                intent.setData(content_uri);
+                                startActivity(intent);
 
+                            }
                             break;
                         }
                         default: {
@@ -440,7 +458,9 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         @Override
         public int getCount() {
-
+            if (imgs.size() == 1 || imgs.size() == 0) {
+                return 1;
+            }
             return Integer.MAX_VALUE;
         }
 
@@ -472,8 +492,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
 
-//            container.removeView((View)object);
-//            super.destroyItem(container, position, object);
         }
 
         /**
@@ -508,64 +526,66 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
      */
     private void getIndex() {
 
-        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
-        EbingoRequestParmater parma = new EbingoRequestParmater(getActivity().getApplicationContext());
-        parma.put("company_id", 0);
 
-        HttpUtil.post(HttpConstant.getIndex, parma, new JsonHttpResponseHandler("utf-8") {
-
+        EbingoRequest.getHomedata(getActivity(), new EbingoRequest.RequestCallBack<GetIndexBean>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-
-                LogCat.d("home data -- : " + response.toString());
-
-                GetIndexBean indexBean = GetIndexBeanTools.getIndexBeanJson(response.toString());
-                ArrayList<Adv> advs = indexBean.getAds();
-                if (advs != null) {
-                    mAds.addAll(advs);
+            public void onFaild(int resultCode, String msg) {
+                GetIndexBean indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
+                if (indexBean == null) {
+                    Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                } else {
+                    initGetData(indexBean);
                 }
 
-                ArrayList<HotCategory> hotCategories = indexBean.getHot_category();
-                if (hotCategories != null) {
-                    hot_category.addAll(hotCategories);
-                }
-
-                ArrayList<HotBean> hotDemands = indexBean.getHot_demand();
-                if (hotDemands != null) {
-                    hot_demand.addAll(hotDemands);
-                    mHotBuyAdapter.notifyDataSetChanged();
-                }
-
-                ArrayList<HotBean> hotSupplys = indexBean.getHot_supply();
-                if (hotSupplys != null) {
-                    hot_supply.addAll(hotSupplys);
-                    mHotSupplyAdapter.notifyDataSetChanged();
-                }
-
-                mIndexBean = indexBean;
-                initTodayData();
-                setAdvPager();
-                initHotMarket();
-
-                dialog.dismiss();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
+            public void onSuccess(GetIndexBean resultObj) {
+                GetIndexBean indexBean = resultObj;
+                if (indexBean == null) {
+                    indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
+                }
+                if (indexBean != null) {
+                    initGetData(indexBean);
+                }
 
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-
-                dialog.dismiss();
             }
         });
 
+    }
+
+    private void initGetData(GetIndexBean indexBean) {
+        ArrayList<Adv> advs = indexBean.getAds();
+        if (advs != null) {
+            mAds.clear();
+            mAds.addAll(advs);
+        }
+
+        ArrayList<HotCategory> hotCategories = indexBean.getHot_category();
+        if (hotCategories != null) {
+            hot_category.clear();
+            hot_category.addAll(hotCategories);
+        }
+
+        ArrayList<HotBean> hotDemands = indexBean.getHot_demand();
+        if (hotDemands != null) {
+            hot_demand.clear();
+            hot_demand.addAll(hotDemands);
+            mHotBuyAdapter.notifyDataSetChanged();
+
+        }
+
+        ArrayList<HotBean> hotSupplys = indexBean.getHot_supply();
+        if (hotSupplys != null) {
+            hot_supply.clear();
+            hot_supply.addAll(hotSupplys);
+            mHotSupplyAdapter.notifyDataSetChanged();
+        }
+
+        mIndexBean = indexBean;
+        initTodayData();
+        setAdvPager();
+        initHotMarket();
     }
 
     /**
@@ -605,12 +625,14 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //TODO
-            HotCategory category = hot_category.get(position);
-            Intent intent = new Intent(getActivity(), CategoryActivity.class);
-            intent.putExtra(CategoryActivity.ARG_ID, category.getId());
-            intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
-            startActivity(intent);
+            if (isNetworkConnected()) {
+                HotCategory category = hot_category.get(position);
+                Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                intent.putExtra(CategoryActivity.ARG_ID, category.getId());
+                intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
+                startActivity(intent);
+            }
+
 
         }
     }
@@ -623,11 +645,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (isNetworkConnected()) {
+                HotBean hotBean = hot_demand.get(position);
+                Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
+                intent.putExtra(BuyInfoActivity.DEMAND_ID, hotBean.getId());
+                startActivity(intent);
+            }
 
-            HotBean hotBean = hot_demand.get(position);
-            Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
-            intent.putExtra(BuyInfoActivity.DEMAND_ID, hotBean.getId());
-            startActivity(intent);
         }
     }
 
@@ -639,10 +663,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            HotBean hotBean = hot_supply.get(position);
-            Intent intent = new Intent(getActivity(), ProductInfoActivity.class);
-            intent.putExtra(ProductInfoActivity.ARG_ID, hotBean.getId());
-            startActivity(intent);
+            if (isNetworkConnected()) {
+                HotBean hotBean = hot_supply.get(position);
+                Intent intent = new Intent(getActivity(), ProductInfoActivity.class);
+                intent.putExtra(ProductInfoActivity.ARG_ID, hotBean.getId());
+                startActivity(intent);
+            }
+
         }
     }
 

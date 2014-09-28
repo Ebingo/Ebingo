@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:paddingTop="15dp"
-        android:layout_margin="0.5dp"
+        android:layout_margin="1px"
         android:background="@drawable/click_whit_bg"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content">
@@ -16,8 +16,7 @@
             android:id="@+id/find_grid_item_img"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/circle_img" />
+            android:scaleType="centerCrop" />
 
         <TextView
             style="@style/font_gray_15"

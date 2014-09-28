@@ -9,6 +9,7 @@
         android:id="@+id/hote_buy_supplly_top_img"
         android:layout_width="match_parent"
         android:scaleType="centerCrop"
+        android:src="@drawable/loading_big_waite"
         android:layout_height="wrap_content" />
 
 </LinearLayout>
