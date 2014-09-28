@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -358,7 +359,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             ImageView imgView = new ImageView(context);
             LinearLayout.LayoutParams imgLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             imgView.setLayoutParams(imgLayoutParam);
-            imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imgs.add(imgView);
         }
 
@@ -367,10 +367,12 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         public void notifyDataSetChanged() {
             imgs.clear();
             for (int i = 0; i < mAds.size(); i++) {
+
                 ImageView imgView = new ImageView(mContext);
                 imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                ImageManager.load(mAds.get(i).getSrc(), imgView, mOptions);
-                setImageViewListner(imgView, mAds.get(i).getType(), mAds.get(i).getContent());
+                Adv adv = mAds.get(i);
+                ImageManager.load(adv.getSrc(), imgView, mOptions);
+                setImageViewListner(imgView, adv.getType(), mAds.get(i).getContent());
                 imgs.add(imgView);
                 super.notifyDataSetChanged();
             }
@@ -397,8 +399,10 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                             break;
                         }
 
-                        case 2: {        //go 分類詳情頁
-
+                        case 2: {        //go 求购詳情頁
+                            Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
+                            intent.putExtra(BuyInfoActivity.DEMAND_ID, Integer.valueOf(content));
+                            startActivity(intent);
 
                             break;
                         }
@@ -412,6 +416,12 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                         }
 
                         case 4: {        //外聯web頁面.
+
+                            Intent intent = new Intent();
+                            intent.setAction("android.intent.action.VIEW");
+                            Uri content_uri = Uri.parse(content);
+                            intent.setData(content_uri);
+                            startActivity(intent);
 
                             break;
                         }
