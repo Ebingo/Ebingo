@@ -191,4 +191,5 @@
     <string name="find_password_dialog_message">我们已发送修改密码的链接到您的注册邮箱中，请您注意查收!</string>
     <string name="i_know">我知道了</string>
     <string name="net_error">网络不给力，请稍后再试！</string>
+    <string name="last_update">最后更新于：</string>
 </resources>

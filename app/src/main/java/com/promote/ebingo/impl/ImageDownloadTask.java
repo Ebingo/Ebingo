@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.jch.lib.util.DialogUtil;
 import com.promote.ebingo.bean.Company;
@@ -17,6 +18,7 @@ import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,16 +49,18 @@ public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
         try {
             if (uri != null)
                 bitmap = MediaStore.Images.Media.getBitmap(ContextUtil.getContext().getContentResolver(), uri);
-            else if (!TextUtils.isEmpty(path=params[0])) {
+            else if (!TextUtils.isEmpty(path = params[0])) {
                 URL url = new URL(path);
                 LogCat.i("ImageDownloadTask--->", path);
                 URLConnection urlConnection = url.openConnection();
                 urlConnection.setDoInput(true);
-                bitmap = BitmapFactory.decodeStream(urlConnection.getInputStream());
+                InputStream inputStream = urlConnection.getInputStream();
+                LogCat.i("--->", inputStream + "");
+                bitmap = BitmapFactory.decodeStream(inputStream);
                 Company.getInstance().setImageUri(ImageUtil.saveBitmap(bitmap, PreviewActivity.PIC_NAME));
             }
-        } catch (IOException e) {
-
+        } catch (Exception e) {
+           LogCat.e("ImageDownloadTask error!");
         }
         return bitmap;
     }

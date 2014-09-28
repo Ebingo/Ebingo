@@ -67,6 +67,7 @@ public class PickRegionActivity extends BaseListActivity {
                 try {
                     array = response.getJSONArray("data");
                     JsonUtil.getArray(array, RegionBeen.class, regionList);
+                    getAdapter().notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -88,7 +89,7 @@ public class PickRegionActivity extends BaseListActivity {
     private void init() {
         setListAdapter(new RegionAdapter(this));
         enableCache(FileUtil.FILE_PROVINCE_LIST,regionList);
-        if (regionList==null)getProvinceList();
+        if (regionList.size()==0)getProvinceList();
     }
 
     public String getCurrentCityName() {
@@ -132,7 +133,7 @@ public class PickRegionActivity extends BaseListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent data = new Intent();
-        data.putExtra("result", regionList.get(position));
+        data.putExtra("result", regionList.get(position).getName());
         setResult(RESULT_OK, data);
         finish();
     }

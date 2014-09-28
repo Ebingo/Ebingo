@@ -10,6 +10,7 @@ import com.promote.ebingo.R;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 
 /**
  * Created by acer on 2014/9/16.
@@ -49,6 +50,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.logout:
                 Company.clearInstance();
 //                ((EbingoApp)getApplicationContext()).cleanCurComany();
+                new FileUtil().deleteFile(this,FileUtil.FILE_COMPANY);
                 toActivity(LoginActivity.class);
                 finish();
                 break;

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<CheckBox
+<TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tag"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:text="键盘"
-    android:checked="true"
-    style="@style/tag_style"/>
+    android:textSize="13sp"
+    android:layout_margin="4dp"
+    android:lineSpacingExtra="3dp"
+    style="@style/font_gray_14"
+    android:background="@drawable/rect_frame_light"
+    />
 
 

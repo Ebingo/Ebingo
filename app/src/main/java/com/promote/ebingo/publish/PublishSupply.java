@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -102,7 +103,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         picked_image.setOnClickListener(this);
         upload_3d_cb.setOnClickListener(this);
         v.findViewById(R.id.btn_publish).setOnClickListener(this);
-//        test();
+        test();
         return v;
     }
 
@@ -246,15 +247,19 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
 
         if (company_id == null) ContextUtil.toast("请重新登录！");
         else if (category_id == null) Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
-        else if (TextUtils.isEmpty(region_name))Error.showError(tv_pick_region, Error.REGION_EMPTY);
+        else if (TextUtils.isEmpty(region_name))
+            Error.showError(tv_pick_region, Error.REGION_EMPTY);
         else if (TextUtils.isEmpty(title)) Error.showError(edit_title, Error.TITLE_EMPTY);
         else if (TextUtils.isEmpty(price)) Error.showError(edit_price, Error.PRICE_EMPTY);
         else if (TextUtils.isEmpty(image_url)) Error.showError(tv_pick_image, Error.IMAGE_EMPTY);
-        else if (TextUtils.isEmpty(description))Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
-        else if (TextUtils.isEmpty(min_sell_num))Error.showError(edit_min_sell_num, Error.MIN_SELL_NUM_EMPTY);
+        else if (TextUtils.isEmpty(description))
+            Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
+        else if (TextUtils.isEmpty(min_sell_num))
+            Error.showError(edit_min_sell_num, Error.MIN_SELL_NUM_EMPTY);
         else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
         else if (TextUtils.isEmpty(contacts_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
-        else if (!LoginManager.isMobile(contacts_phone))Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
+        else if (!LoginManager.isMobile(contacts_phone))
+            Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
         else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
         else {
             parmater = new EbingoRequestParmater(getActivity());
@@ -291,7 +296,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         switch (requestCode) {
             case PICK_CATEGORY:
                 tv_pick_category.setText(result);
-                if(data!=null)tv_pick_category.setTag(data.getIntExtra("categoryId", 0));
+                if (data != null) tv_pick_category.setTag(data.getIntExtra("categoryId", 0));
                 LogCat.i("--->", "categoryId:" + tv_pick_category.getTag());
                 break;
             case PICK_DESCRIPTION:
@@ -301,15 +306,23 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
             case PICK_REGION:
                 tv_pick_region.setText(result);
                 break;
-            case PICK_IMAGE:
+            case PICK_IMAGE: {
                 if (data == null || data.getData() == null) return;
                 Uri uri = data.getData();
                 LogCat.i("--->", uri.toString());
-                toPreviewActivity(uri);
+                cropImage(uri);
                 break;
+            }
             case PICK_CAMERA:
+                cropImage(Uri.fromFile(getImageTempFile()));
+                break;
+
+            case CROP: {
+                if (data == null || resultCode != Activity.RESULT_OK) return;
                 toPreviewActivity(Uri.fromFile(getImageTempFile()));
                 break;
+            }
+
             case PREVIEW:
                 if (data == null) return;
                 uploadImage(data.getData());
@@ -321,14 +334,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     }
 
     private File getImageTempFile() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), CAMERA_PICTURE_NAME);
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                LogCat.e("--->", "create Image File failed!!");
-                file = null;
-            }
-        }
-        return file;
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), CAMERA_PICTURE_NAME);
     }
 
     /**
@@ -403,30 +409,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     };
 
 
-//    /**
-//     * 选择获取图片的方式
-//     *
-//     * @param title
-//     */
-//    private void showPickDialog(String title) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle(title).setItems(new String[]{"相册", "拍照"}, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//                switch (which) {
-//                    case 0:
-//                        openAlbum();
-//                        break;
-//                    case 1:
-//                        openCamera();
-//                        break;
-//                }
-//            }
-//        }).show();
-//    }
-
-
     /**
      * 弹出图片选择窗口
      */
@@ -472,6 +454,20 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         startActivityForResult(i, PICK_FOR_SUPPLY | PICK_IMAGE);
     }
 
+    private void cropImage(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 640);
+        intent.putExtra("aspectY", 400);
+        intent.putExtra("outputX", 640);
+        intent.putExtra("outputY", 400);
+        intent.putExtra("output", Uri.fromFile(getImageTempFile()));// 保存到原文件
+        intent.putExtra("outputFormat", "JPEG");// 返回格式
+        intent.putExtra("return-data", false);
+        startActivityForResult(intent, PICK_FOR_SUPPLY | CROP);
+    }
 
     /**
      * 清空文字
@@ -490,6 +486,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         picked_image.setVisibility(View.GONE);
         picked_image.setImageBitmap(null);
         picked_image.setContentDescription(null);
+        edit_unit.setText(null);
     }
 
     private void test() {

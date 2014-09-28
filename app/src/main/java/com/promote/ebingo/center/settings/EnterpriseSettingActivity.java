@@ -104,30 +104,29 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         setHeadImage(Company.getInstance().getImageUri());
     }
 
+    /**
+     * 设置头像
+     *
+     * @param uri
+     */
     public void setHeadImage(Uri uri) {
-        if (uri == null) {//本地没有头像
-            final String imageUrl =Company.getInstance().getImage();
+        ImageDownloadTask task = new ImageDownloadTask() {
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if (bitmap != null)
+                    image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
+            }
+        };
+        if (uri != null) {//本地有头像
+            task.loadBY(uri);
+        } else {
+            final String imageUrl = Company.getInstance().getImage();
             if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
                 LogCat.e("--->", "setHeadImage uriError uri=" + uri);
                 image_enterprise.setImageResource(R.drawable.center_head);
             } else {//有远程头像URL
-                new ImageDownloadTask() {
-                    @Override
-                    protected void onPostExecute(Bitmap bitmap) {
-                        if (bitmap != null)
-                            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
-                    }
-                }.execute(imageUrl);
+                task.loadBy(imageUrl);
             }
-
-            return;
-        }
-
-        try {
-            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bm, (int) Dimension.dp(48)));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -163,8 +162,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         if (provinceList != null) {
             showProvinceDialog();
             return;
-        }else{
-            provinceList=new ArrayList<RegionBeen>();
+        } else {
+            provinceList = new ArrayList<RegionBeen>();
         }
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在加载省份列表...");
         EbingoRequestParmater params = new EbingoRequestParmater(this);
@@ -214,11 +213,12 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
 
     /**
      * 获取城市列表
+     *
      * @param province_id
      */
     private void getCityList(int province_id) {
-        cityList= (ArrayList<RegionBeen>) ContextUtil.read(HttpConstant.getCityList);
-        if (cityList!=null){
+        cityList = (ArrayList<RegionBeen>) ContextUtil.read(HttpConstant.getCityList);
+        if (cityList != null) {
             showCityDialog(cityList);
             return;
         }
@@ -261,7 +261,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         new AlertDialog.Builder(this).setItems(cities, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                RegionBeen city=cityList.get(which);
+                RegionBeen city = cityList.get(which);
                 tv_pick_city.setText(city.getName());
                 tv_pick_city.setTag(city.getId());
             }
@@ -304,7 +304,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
             public void onSuccess(int statusCode, JSONObject response) {
                 Company company = Company.getInstance();
                 company.setCompanyId(company_id);
-                company.setImage(HttpConstant.getHost()+image_url);
+                company.setImage(HttpConstant.getHost() + image_url);
                 company.setName(name);
                 company.setCompanyTel(company_tel);
                 company.setProvince_name(province);
@@ -314,7 +314,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 company.setEmail(email);
                 setResult(RESULT_OK, new Intent());
                 ContextUtil.toast("修改成功！");
-                new FileUtil().saveFile(getApplicationContext(),FileUtil.FILE_COMPANY,company);
+                new FileUtil().saveFile(getApplicationContext(), FileUtil.FILE_COMPANY, company);
                 finish();
             }
 
@@ -414,13 +414,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     private Uri getImageCacheUri() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "EbingooPics");
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                LogCat.e("--->", "create Image File failed!!");
-            }
-        }
-        return Uri.fromFile(file);
+        return Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ebingo_pics.png"));
     }
 
     @Override

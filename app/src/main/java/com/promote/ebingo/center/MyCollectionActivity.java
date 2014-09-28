@@ -1,13 +1,11 @@
 package com.promote.ebingo.center;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -64,8 +62,9 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         myAdapter = new MyAdapter();
         setListAdapter(myAdapter);
         enableCache(FileUtil.FILE_WISH_LIST, mCollections);
-        if(mCollections.size()==0)getWishlist(0);
+        if (mCollections.size() == 0) getWishlist(0);
         enableDelete(true);
+        setDownRefreshable(true);
     }
 
 
@@ -94,10 +93,8 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 if (collectBeans != null && collectBeans.size() > 0) {
                     mCollections.addAll(collectBeans);
                     myAdapter.notifyDataSetChanged();
-                    onLoadMoreFinish(true);
-                } else {
-                    onLoadMoreFinish(false);
                 }
+                onLoadFinish();
                 dialog.dismiss();
             }
 
@@ -211,6 +208,12 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         TextView nameTv;
         TextView timesTv;
         TextView timeTv;
+    }
+
+    @Override
+    protected void onRefresh() {
+        mCollections.clear();
+        getWishlist(0);
     }
 
     @Override
