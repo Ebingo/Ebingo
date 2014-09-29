@@ -51,7 +51,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         setDownRefreshable(true);
         enableCache(FileUtil.FILE_DEMAND_LIST, mDemandBeans);
         LogCat.i("--->", mDemandBeans.size() + "");
-        if (mDemandBeans.size() == 0) getMyDemandList(lastId);
+        if (mDemandBeans.size() == 0||getIntent().getBooleanExtra("refresh",false)) getMyDemandList(0);
     }
 
     private void getMyDemandList(int lastId) {
@@ -98,6 +98,8 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
                 .append(",")
                 .append(makeCondition("sort", "time"))
+                .append(",")
+                .append(makeCondition("verify",3))
                 .append("}");
 
         try {

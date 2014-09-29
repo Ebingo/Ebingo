@@ -51,14 +51,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
 
     private void initialize() {
         setUpRefreshable(true);
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
-
-
+        mOptions = ContextUtil.getSquareImgOptions();
         myAdapter = new MyAdapter();
         setListAdapter(myAdapter);
         enableCache(FileUtil.FILE_WISH_LIST, mCollections);

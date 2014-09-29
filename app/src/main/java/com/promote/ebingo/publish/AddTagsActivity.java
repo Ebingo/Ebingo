@@ -14,6 +14,7 @@ import android.widget.MultiAutoCompleteTextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.HotTag;
@@ -32,7 +33,7 @@ import java.util.LinkedList;
 /**
  * Created by acer on 2014/9/4.
  */
-public class AddTagsActivity extends PublishBaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TagView.OnTagClickListener {
+public class AddTagsActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TagView.OnTagClickListener {
     MultiAutoCompleteTextView edit_add_tab;
     private int tag_select_color;
     private int tag_unSelect_color;
@@ -51,7 +52,6 @@ public class AddTagsActivity extends PublishBaseActivity implements View.OnClick
     private void init() {
         findViewById(R.id.commit_title_done).setOnClickListener(this);
         tagContainer = (AutoLineLayout) findViewById(R.id.tags_container);
-        setBackTitle(getString(R.string.title_add_tag));
         edit_add_tab = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
 
         new Handler().postDelayed(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签

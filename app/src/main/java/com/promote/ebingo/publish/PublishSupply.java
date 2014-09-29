@@ -8,7 +8,6 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,10 +32,12 @@ import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.MyPrivilegeActivity;
 import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
@@ -59,7 +60,7 @@ import static com.promote.ebingo.publish.PublishFragment.*;
 /**
  * Created by acer on 2014/9/2.
  */
-public class PublishSupply extends Fragment implements View.OnClickListener {
+public class PublishSupply extends Fragment implements View.OnClickListener, PublishEditActivity.EditInfo {
     private EditText edit_title;
     private EditText edit_contact;
     private EditText edit_phone;
@@ -75,6 +76,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     private ImageView picked_image;
     private CheckBox upload_3d_cb;
 
+    private DetailInfoBean mDetailInfo;
     private TextView tv_3d_notice;
     private final String CAMERA_PICTURE_NAME = "publish_upload.png";
 
@@ -103,7 +105,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         picked_image.setOnClickListener(this);
         upload_3d_cb.setOnClickListener(this);
         v.findViewById(R.id.btn_publish).setOnClickListener(this);
-        test();
+        edit(mDetailInfo);
+        LogCat.i("--->", "onCreateView edit");
         return v;
     }
 
@@ -441,7 +444,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
     private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getImageTempFile()));
-        startActivityForResult(intent, PICK_FOR_SUPPLY | PICK_CAMERA);
+        getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PICK_CAMERA);
     }
 
     /**
@@ -451,7 +454,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(i, PICK_FOR_SUPPLY | PICK_IMAGE);
+        getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_IMAGE);
     }
 
     private void cropImage(Uri uri) {
@@ -466,7 +469,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         intent.putExtra("output", Uri.fromFile(getImageTempFile()));// 保存到原文件
         intent.putExtra("outputFormat", "JPEG");// 返回格式
         intent.putExtra("return-data", false);
-        startActivityForResult(intent, PICK_FOR_SUPPLY | CROP);
+        getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | CROP);
     }
 
     /**
@@ -489,17 +492,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
         edit_unit.setText(null);
     }
 
-    private void test() {
-        tv_pick_region.setText("广州");
-        edit_price.setText("123123");
-
-        tv_pick_description.setText("真好吃，不骗你，一般人我不告诉他！！");
-        edit_title.setText("大郎炊饼");
-
-        edit_min_sell_num.setText("100个");
-        edit_contact.setText("朱先生");
-        edit_phone.setText("18761844602");
-    }
 
     public void startPublish(EbingoRequestParmater parmater) {
 
@@ -513,6 +505,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         Intent intent = new Intent(getActivity(), MySupplyActivity.class);
+                        intent.putExtra("refresh",true);
                         startActivity(intent);
                         clearText();
                     }
@@ -533,5 +526,36 @@ public class PublishSupply extends Fragment implements View.OnClickListener {
                 dialog.dismiss();
             }
         });
+    }
+
+    private void test() {
+        DetailInfoBean infoBean = new DetailInfoBean();
+    }
+
+    @Override
+    public void edit(DetailInfoBean infoBean) {
+        LogCat.i("--->", " edit" + infoBean);
+        if (infoBean == null) return;
+        mDetailInfo = infoBean;
+        if (tv_pick_image != null) {
+            tv_pick_category.getTag(infoBean.getCategory_id());
+            tv_pick_category.setText(infoBean.getCategory_name());
+            tv_pick_region.setText(infoBean.getRegion());
+            edit_title.setText(infoBean.getTitle());
+
+            edit_price.setText(infoBean.getPrice());
+            edit_unit.setText(infoBean.getUnit());
+            edit_min_sell_num.setText(infoBean.getMin_sell_num());
+            tv_pick_description.setText(infoBean.getDescription());
+
+            edit_contact.setText(infoBean.getContacts());
+            edit_phone.setText(infoBean.getPhone_num());
+            String image = infoBean.getImage();
+            picked_image.setContentDescription(image);
+            if (!TextUtils.isEmpty(image)) {
+                picked_image.setVisibility(View.VISIBLE);
+                ImageManager.load(image, picked_image);
+            }
+        }
     }
 }

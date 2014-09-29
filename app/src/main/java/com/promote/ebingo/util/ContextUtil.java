@@ -6,13 +6,17 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.EbingoApp;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.R;
 
 /**
  * Created by acer on 2014/9/3.
  */
 public class ContextUtil {
     private static Context mContext;
-    private static FileUtil mFileUtil;
 
     /**
      * get square image options.
@@ -87,8 +91,7 @@ public class ContextUtil {
      * @param o
      */
     public static void saveCache(String name, Object o) {
-        if (mFileUtil == null) mFileUtil = new FileUtil();
-        mFileUtil.saveCache(mContext, name, o);
+        FileUtil.saveCache(mContext, name, o);
     }
 
     /**
@@ -98,9 +101,27 @@ public class ContextUtil {
      * @return
      */
     public static Object read(String name) {
-        if (mFileUtil == null) mFileUtil = new FileUtil();
-        return mFileUtil.readCache(mContext, name);
+        return FileUtil.readCache(mContext, name);
     }
 
 
+    public static void cleanCurComany() {
+        ((EbingoApp) mContext).cleanCurComany();
+    }
+
+    public static String getCurCompanyPwd() {
+        return ((EbingoApp) mContext).getCurCompanyPwd();
+    }
+
+    public static String getCurCompanyName() {
+        return ((EbingoApp) mContext).getCurCompanyName();
+    }
+
+    public static void saveCurCompanyPwd(String pwd) {
+        ((EbingoApp) mContext).saveCurCompanyPwd(pwd);
+    }
+
+    public static void saveCurCompanyName(String name) {
+        ((EbingoApp) mContext).saveCurCompanyName(name);
+    }
 }

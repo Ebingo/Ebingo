@@ -19,6 +19,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.MyDemandActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginManager;
@@ -35,12 +36,13 @@ import static com.promote.ebingo.publish.PublishFragment.PICK_FOR_DEMAND;
 import static com.promote.ebingo.publish.PublishFragment.PICK_TAGS;
 import static com.promote.ebingo.publish.PublishFragment.TYPE_DEMAND;
 import static com.promote.ebingo.publish.PublishFragment.Error;
+
 /**
  * 发布求购
  * Created by acer on 2014/9/2.
  */
-public class PublishDemand extends Fragment implements View.OnClickListener {
-
+public class PublishDemand extends Fragment implements View.OnClickListener, PublishEditActivity.EditInfo {
+    private DetailInfoBean mDetailInfo;
     TextView tv_pick_category;
     TextView tv_pick_description;
     TextView tv_tags;
@@ -56,6 +58,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.publish_demand, container, false);
         init(view);
+        if (mDetailInfo!=null)edit(mDetailInfo);
         return view;
     }
 
@@ -81,18 +84,18 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.pick_category: {
                 Intent intent = new Intent(getActivity(), PickCategoryActivity.class);
-                startActivityForResult(intent, PICK_FOR_DEMAND | PICK_CATEGORY);
+                getActivity().startActivityForResult(intent, PICK_FOR_DEMAND | PICK_CATEGORY);
                 break;
             }
             case R.id.pick_description: {
                 Intent intent = new Intent(getActivity(), EditDescription.class);
-                intent.putExtra("description", tv_pick_description.getText().toString().trim());
-                startActivityForResult(intent, PICK_FOR_DEMAND | PICK_DESCRIPTION);
+                intent.putExtra(EditDescription.CONTENT, tv_pick_description.getText().toString().trim());
+                getActivity().startActivityForResult(intent, PICK_FOR_DEMAND | PICK_DESCRIPTION);
                 break;
             }
             case R.id.pick_tags: {
                 Intent intent = new Intent(getActivity(), AddTagsActivity.class);
-                startActivityForResult(intent, PICK_FOR_DEMAND | PICK_TAGS);
+                getActivity().startActivityForResult(intent, PICK_FOR_DEMAND | PICK_TAGS);
                 break;
             }
 
@@ -108,14 +111,21 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
                 Integer company_id = Company.getInstance().getCompanyId();
 
                 if (company_id == null) ContextUtil.toast("请重新登录！");
-                else if (category_id == null)Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
+                else if (category_id == null)
+                    Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
                 else if (TextUtils.isEmpty(title)) Error.showError(edit_title, Error.TITLE_EMPTY);
-                else if (TextUtils.isEmpty(description)) Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
-                else if (TextUtils.isEmpty(demand_num)) Error.showError(edit_demand_num, Error.BUY_NUM_EMPTY);
-                else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
-                else if (getChineseNum(contacts)<2||getChineseNum(contacts)>4) Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
-                else if (TextUtils.isEmpty(contact_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
-                else if (!LoginManager.isMobile(contact_phone)) Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
+                else if (TextUtils.isEmpty(description))
+                    Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
+                else if (TextUtils.isEmpty(demand_num))
+                    Error.showError(edit_demand_num, Error.BUY_NUM_EMPTY);
+                else if (TextUtils.isEmpty(contacts))
+                    Error.showError(edit_contact, Error.CONTACT_EMPTY);
+                else if (getChineseNum(contacts) < 2 || getChineseNum(contacts) > 4)
+                    Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
+                else if (TextUtils.isEmpty(contact_phone))
+                    Error.showError(edit_phone, Error.PHONE_EMPTY);
+                else if (!LoginManager.isMobile(contact_phone))
+                    Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
                 else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
                 else {
                     EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
@@ -137,8 +147,8 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
         }
     }
 
-    private int getChineseNum(String input){
-        LogCat.i("--->","input:"+input.length());
+    private int getChineseNum(String input) {
+        LogCat.i("--->", "input:" + input.length());
         return input.length();
     }
 
@@ -181,6 +191,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         Intent intent = new Intent(getActivity(), MyDemandActivity.class);
+                        intent.putExtra("refresh",true);
                         startActivity(intent);
                         clearText();
                     }
@@ -207,11 +218,30 @@ public class PublishDemand extends Fragment implements View.OnClickListener {
      * 清空文字
      */
     private void clearText() {
+
+        edit_demand_num.setText(null);
         tv_pick_category.setText(null);
         edit_title.setText(null);
         tv_pick_description.setText(null);
         edit_contact.setText(null);
         edit_phone.setText(null);
         tv_tags.setText(null);
+        edit_unit.setText(null );
+    }
+
+    @Override
+    public void edit(DetailInfoBean infoBean) {
+        mDetailInfo=infoBean;
+        if (tv_pick_category!=null) {
+            tv_pick_category.getTag(infoBean.getCategory_id());
+            tv_pick_category.setText(infoBean.getCategory_name());
+            edit_title.setText(infoBean.getTitle());
+            tv_pick_description.setText(infoBean.getDescription());
+
+            edit_demand_num.setText(infoBean.getMin_sell_num());
+            edit_unit.setText(infoBean.getUnit());
+            edit_contact.setText(infoBean.getContacts());
+            edit_phone.setText(infoBean.getPhone_num());
+        }
     }
 }

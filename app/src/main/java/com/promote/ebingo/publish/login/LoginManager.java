@@ -91,7 +91,7 @@ public class LoginManager {
 
     public static boolean isMobile(String input) {
         if (TextUtils.isEmpty(input)) return false;
-        else return input.matches("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+        else return input.matches("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
     }
 
     public void doLogin(final String phone, final String password, final Callback callback) {
@@ -109,8 +109,9 @@ public class LoginManager {
                     Company company= JsonUtil.get(data.toString(),Company.class);
                     Company.loadInstance(company);
 
-                    new FileUtil().saveFile(ContextUtil.getContext(),FileUtil.FILE_COMPANY, company);
-
+                    FileUtil.saveFile(ContextUtil.getContext(),FileUtil.FILE_COMPANY, company);
+                    ContextUtil.saveCurCompanyName(phone);
+                    ContextUtil.saveCurCompanyPwd(password);
                     if (company.getImage() != null)loadHeadImage(company.getImage(), new Handler(new Handler.Callback() {
                         @Override
                         public boolean handleMessage(Message msg) {

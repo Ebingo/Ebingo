@@ -59,22 +59,14 @@ public class MySupplyActivity extends BaseListActivity {
 
     private void initialize() {
         setUpRefreshable(true);
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
-
-        // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-
+        mOptions = ContextUtil.getSquareImgOptions();
         adapter = new MyAdapter();
         setListAdapter(adapter);
         enableDelete(true);
         enableCache(FileUtil.FILE_SUPPLY_LIST, mSupplyBeans);
         setDownRefreshable(true);
         setUpRefreshable(true);
-        if (mSupplyBeans.size() == 0) getMySupply(lastId);
+        if (mSupplyBeans.size() == 0||getIntent().getBooleanExtra("refresh", false)) getMySupply(0);
     }
 
     private void delete(final int posotion) {
@@ -114,6 +106,8 @@ public class MySupplyActivity extends BaseListActivity {
                     .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
                     .append(",")
                     .append(makeCondition("sort", "time"))
+                    .append(",")
+                    .append(makeCondition("verify",3))
                     .append("}");
             param.put("condition", URLEncoder.encode(sb.toString(), "utf-8"));
         } catch (UnsupportedEncodingException e) {

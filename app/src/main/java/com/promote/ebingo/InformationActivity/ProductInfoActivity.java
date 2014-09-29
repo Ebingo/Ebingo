@@ -103,7 +103,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        popError();
+        if (true)popError();
         if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
             productinforlll.setVisibility(View.GONE);
         else productinforlll.setVisibility(View.VISIBLE);
@@ -168,12 +168,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     cancelCollection(collectId);
                 }
                 break;
-            case R.id.tv_warn: {
-                Intent intent = new Intent(this, PublishEditActivity.class);
-                intent.putExtra(PublishEditActivity.TYPE, PublishEditActivity.TYPE_SUPPLY);
-                startActivity(intent);
-                break;
-            }
+           
             default: {
             }
         }
@@ -279,7 +274,14 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         final View contentView = View.inflate(this, R.layout.error_pop_window, null);
         final TextView tv_warn = (TextView) contentView.findViewById(R.id.tv_warn);
         errorWindow = new PopupWindow(contentView, 0, 0, false);
-        tv_warn.setOnClickListener(this);
+        tv_warn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductInfoActivity.this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.INFO, mDetailInfoBean);
+                startActivity(intent);
+            }
+        });
         errorWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         errorWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         errorWindow.setAnimationStyle(android.R.style.Animation_Toast);
@@ -293,6 +295,5 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     protected void onDestroy() {
         super.onDestroy();
         if (errorWindow != null) errorWindow.dismiss();
-
     }
 }

@@ -170,5 +170,9 @@ public class HttpConstant {
      * 获取全国省份列表
      */
     public static final String getProvinceList = getRootUrl() + "getProvinceList";
+    /**
+     * 获取最新版
+     */
+    public static final String getNewestVersion = getRootUrl() + "getNewestVersion";
 
 }
