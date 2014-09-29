@@ -6,15 +6,15 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="50dp"
+        android:layout_width="60dp"
         android:layout_centerVertical="true"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:scaleType="centerCrop"
         android:id="@+id/search_list_item_img" />
 
     <LinearLayout
         android:layout_toRightOf="@id/search_list_item_img"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_marginLeft="10dp"
         android:orientation="vertical"
         android:layout_height="wrap_content">
@@ -42,7 +42,6 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_marginTop="2dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -61,53 +60,64 @@
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_marginTop="2dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/search_min_num"
-                android:layout_width="wrap_content"
-                style="@style/font_gray_12"
-                android:text="200"
-                android:singleLine="true"
-                android:layout_height="wrap_content" />
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/search_r_ll"
                 android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:singleLine="true"
-                android:text="@string/search_start" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="@string/search_look" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/search_result_item_look_num_tvs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="2000" />
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="@string/search_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/search_l_ll"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:text="@string/search_look" />
+                android:layout_marginTop="0dp"
+                android:layout_toLeftOf="@id/search_r_ll"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/search_result_item_look_num_tvs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:text="2000" />
+                <TextView
+                    android:id="@+id/search_min_num"
+                    android:layout_width="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="200"
+                    android:singleLine="true"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:text="@string/search_time" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:singleLine="true"
+                    android:text="@string/search_start" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/search_result_company_name_tv"

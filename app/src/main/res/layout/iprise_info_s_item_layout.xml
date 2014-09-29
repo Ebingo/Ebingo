@@ -6,7 +6,7 @@
     android:background="@drawable/click_gray_bg"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    style="@style/info_content_pad">
+    style="@style/list_item_style">
 
     <ImageView
         android:layout_width="50dp"
@@ -50,7 +50,6 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_marginTop="2dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -69,51 +68,61 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:text="@string/search_look" />
-
-            <TextView
-                android:id="@+id/iprise_info_s_item_item_look_num_tvs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:text="2000" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:text="@string/search_time" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_marginTop="2dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/iprise_info_s_item_num"
-                android:layout_width="wrap_content"
-                style="@style/font_gray_12"
-                android:text="200"
-                android:singleLine="true"
-                android:layout_height="wrap_content" />
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/iprise_info_r_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/font_gray_12"
-                android:singleLine="true"
-                android:text="@string/search_start" />
-        </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="@string/search_look" />
+
+                <TextView
+                    android:id="@+id/iprise_info_s_item_item_look_num_tvs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="2000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="@string/search_time" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/iprise_info_l_ll"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_toLeftOf="@id/iprise_info_r_ll"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/iprise_info_s_item_num"
+                    android:layout_width="wrap_content"
+                    style="@style/font_gray_12"
+                    android:text="200"
+                    android:singleLine="true"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/font_gray_12"
+                    android:singleLine="true"
+                    android:text="@string/search_start" />
+            </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
