@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.jch.lib.util.ImageManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchInterpriseBean;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchTypeBean;
+import com.promote.ebingo.util.ContextUtil;
 
 import java.util.ArrayList;
 
@@ -39,12 +39,7 @@ public class SearchResultAdapter extends BaseAdapter {
     public SearchResultAdapter(Context context, SearchType type, ArrayList<SearchTypeBean> searchTypeBeans) {
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.img_big_failed)
-                .showImageOnLoading(R.drawable.loading_waite)
-                .showImageOnFail(R.drawable.img_big_failed)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getSquareImgOptions();
         this.mContext = context;
         mSearchTypeBeans = searchTypeBeans;
         mType = type;

@@ -26,7 +26,6 @@ import com.jch.lib.view.PagerIndicator;
 import com.jch.lib.view.PagerScrollView;
 import com.jch.lib.view.ScrollListView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.BaseFragment;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
@@ -240,19 +239,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     private void initImgOperation() {
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .showImageForEmptyUri(R.drawable.loading_big_waite)
-                .showImageOnLoading(R.drawable.loading_big_img)
-                .showImageOnFail(R.drawable.load_failed_big_img)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getRectangleImgOptions();
 
-        mCircleImageOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .showImageForEmptyUri(R.drawable.loading_waite)
-                .showImageOnLoading(R.drawable.load_failed_img)
-                .showImageOnFail(R.drawable.load_failed_img)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mCircleImageOptions = ContextUtil.getSquareImgOptions();
     }
 
 

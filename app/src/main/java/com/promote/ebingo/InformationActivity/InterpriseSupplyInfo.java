@@ -16,10 +16,10 @@ import android.widget.TextView;
 import com.jch.lib.util.ImageManager;
 import com.jch.lib.view.PullToRefreshView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.impl.EbingoRequest;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import java.lang.reflect.Field;
@@ -76,12 +76,7 @@ public class InterpriseSupplyInfo extends CommonListFragment implements AdapterV
             enterprise_id = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getSquareImgOptions();
         myAdapter = new MyAdapter();
         getData(0);
     }

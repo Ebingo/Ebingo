@@ -40,6 +40,7 @@ public class SupplyDemandInfoFragment extends Fragment implements RadioGroup.OnC
     private String mDemandFragmentName = "demandFragmentName";
     private InterpriseDemandInfo demandInfo = null;
     private InterpriseSupplyInfo supplyInfo = null;
+    private int companyId = -1;
 
     /**
      * 本activity是否已经运行过. *
@@ -191,11 +192,11 @@ public class SupplyDemandInfoFragment extends Fragment implements RadioGroup.OnC
 
     @Override
     public int getInterprsetId() {
-        return 0;
+        return companyId;
     }
 
     @Override
     public void setInterprsetId(int interprsetId) {
-
+        this.companyId = interprsetId;
     }
 }

@@ -45,7 +45,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
             showDot(0);
         } else {
             setLoading();
-        }
+    }
     }
 
     private ImageView getImage(int id) {

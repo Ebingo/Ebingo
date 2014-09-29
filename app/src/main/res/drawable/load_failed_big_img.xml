@@ -2,7 +2,7 @@
 
 
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/loading_big_waite"
+    android:src="@drawable/img_big_failed"
     android:gravity="center">
 
 </bitmap>

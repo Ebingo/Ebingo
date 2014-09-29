@@ -1,6 +1,5 @@
 package com.promote.ebingo.find;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,25 +14,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jch.lib.util.DialogUtil;
-import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.HttpConstant;
-import com.promote.ebingo.bean.CategoryBeanTools;
 import com.promote.ebingo.bean.CategoryBeen;
 import com.promote.ebingo.category.CategoryActivity;
 import com.promote.ebingo.impl.EbingoRequest;
-import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.search.SearchActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.FileUtil;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -119,6 +109,9 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+//        if (!hidden) {
+//            getCategoryList();
+//        }
     }
 
     @Override
@@ -131,12 +124,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         searchbartv = (TextView) view.findViewById(R.id.search_bar_tv);
         fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
         mNoDataView = (TextView) view.findViewById(R.id.nodate_tv);
+
+        mNoDataView.setText(getResources().getString(R.string.refresh));
         String[] categorys = getResources().getStringArray(R.array.category_data);
         adapter = new MyGrideAdapter(getActivity().getApplicationContext());
         fragfindgv.setAdapter(adapter);
 
         searchbartv.setOnClickListener(this);
         fragfindgv.setOnItemClickListener(this);
+        mNoDataView.setOnClickListener(this);
         getCategoryList();
     }
 
@@ -149,6 +145,12 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
 
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
+                break;
+            }
+
+            case R.id.nodate_tv: {
+
+                getCategoryList();
                 break;
             }
             default: {
@@ -235,7 +237,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
      * 从网络获取数据。
      */
     private void getCategoryList() {
-
+        haseData();
         EbingoRequest.getCategoryList(getActivity(), new EbingoRequest.RequestCallBack<ArrayList<CategoryBeen>>() {
             @Override
             public void onFaild(int resultCode, String msg) {
@@ -245,8 +247,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
                 if (categoryBeens == null || categoryBeens.size() == 0) {
                     //nodata
                     noData();
-                    
-
                 } else {
                     mCategoryBeens.clear();
                     mCategoryBeens.addAll(categoryBeens);
@@ -264,38 +264,38 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         });
 
 
-        String urlStr = HttpConstant.getCategories;
-        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
-        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
-
-        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-
-                ArrayList<CategoryBeen> categoryBeens = CategoryBeanTools.getCategories(response.toString());
-                if (categoryBeens != null && categoryBeens.size() != 0) {
-
-
-                }
-
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-
-                dialog.dismiss();
-            }
-        });
+//        String urlStr = HttpConstant.getCategories;
+//        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
+//        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
+//
+//        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                super.onSuccess(statusCode, headers, response);
+//
+//                ArrayList<CategoryBeen> categoryBeens = CategoryBeanTools.getCategories(response.toString());
+//                if (categoryBeens != null && categoryBeens.size() != 0) {
+//
+//
+//                }
+//
+//                dialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                super.onFailure(statusCode, headers, responseString, throwable);
+//
+//                dialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                super.onFailure(statusCode, headers, throwable, errorResponse);
+//
+//                dialog.dismiss();
+//            }
+//        });
     }
 
 
