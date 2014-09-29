@@ -1,9 +1,11 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by jch on 2014/8/28.
  */
-public class HotCategory {
+public class HotCategory implements Serializable {
 
     private int id;
 

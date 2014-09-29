@@ -55,7 +55,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public static final String ACTION_INVALIDATE="com.promote.ebingo.center.ACTION_INVALIDATE";
+    public static final String ACTION_INVALIDATE = "com.promote.ebingo.center.ACTION_INVALIDATE";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -118,6 +118,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         initialize(view);
         return view;
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -125,7 +126,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void invalidateData(){
+    private void invalidateData() {
         String companyName = Company.getInstance().getName();
         if (companyName == null) {
             centerloginbtn.setText(R.string.login);
@@ -160,7 +161,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        getActivity().registerReceiver(invalidateReceiver,new IntentFilter(ACTION_INVALIDATE));
+        getActivity().registerReceiver(invalidateReceiver, new IntentFilter(ACTION_INVALIDATE));
     }
 
     @Override
@@ -234,7 +235,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
      * @param uri
      */
     public void setHeadImage(Uri uri) {
-        ImageDownloadTask task=new ImageDownloadTask(){
+        ImageDownloadTask task = new ImageDownloadTask() {
             @Override
             protected void onPostExecute(Bitmap bitmap) {
                 if (bitmap != null)
@@ -243,7 +244,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         };
         if (uri != null) {//本地有头像
             task.loadBY(uri);
-        }else{
+        } else {
             final String imageUrl = Company.getInstance().getImage();
             if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
                 LogCat.e("--->", "setHeadImage uriError uri=" + uri);
@@ -259,7 +260,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         int id = v.getId();
         //除了"我的特权"以外，所有选项都必须在登录状态下，才可以使用
-        if (id != R.id.cent_privilege_tv && Company.getInstance().getCompanyId()==null) {
+        if (id != R.id.cent_privilege_tv && Company.getInstance().getCompanyId() == null) {
             gotoLogin();
             return;
         }
@@ -346,7 +347,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             }
-            case R.id.cent_share:{
+            case R.id.cent_share: {
                 Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
                 intent.setType("text/plain"); // 分享发送的数据类型
                 intent.putExtra(Intent.EXTRA_SUBJECT, "分享Ebingoo"); // 分享的主题
@@ -441,7 +442,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
-    private BroadcastReceiver invalidateReceiver=new BroadcastReceiver() {
+    private BroadcastReceiver invalidateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             invalidateData();

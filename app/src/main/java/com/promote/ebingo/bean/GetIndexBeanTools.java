@@ -2,6 +2,7 @@ package com.promote.ebingo.bean;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +25,7 @@ public class GetIndexBeanTools {
     }
 
 
-    public class GetIndexBean {
+    public class GetIndexBean implements Serializable {
 
         /**
          * 公告条. *

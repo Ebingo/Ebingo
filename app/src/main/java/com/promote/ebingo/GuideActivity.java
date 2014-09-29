@@ -45,10 +45,12 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
             views.add(getImage(R.drawable.guide4));
             pager.setAdapter(new GuideAdapter());
             pager.setOnPageChangeListener(this);
+
             showDot(0);
+
         } else {
             setLoading();
-        }
+    }
     }
 
     private ImageView getImage(int id) {

@@ -98,6 +98,8 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
                 .append(",")
                 .append(makeCondition("sort", "time"))
+                .append(",")
+                .append(makeCondition("verify",3))
                 .append("}");
 
         try {

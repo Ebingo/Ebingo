@@ -192,7 +192,9 @@
     <string name="i_know">我知道了</string>
     <string name="already_new_version">已经是最新版本了！</string>
     <string name="update_right_now">立即升级</string>
+    <string name="refresh">肿么木有数据，再刷一次。</string>
     <string name="net_error">网络不给力，请稍后再试！</string>
+    <string name="no_network">网络错误</string>
     <string name="last_update">最后更新于：</string>
     <string name="clear_success">清除成功！</string>
     <string name="warn">温馨提示</string>

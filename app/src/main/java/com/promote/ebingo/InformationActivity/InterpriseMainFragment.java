@@ -28,6 +28,7 @@ import com.promote.ebingo.bean.CurrentSupplyBean;
 import com.promote.ebingo.bean.InterpriseInfoBean;
 import com.promote.ebingo.bean.InterpriseInfoBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -63,6 +64,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     private boolean mScrollAble = true;     //viewpager 防止滑动时重绘view
 
     private OnFragmentInteractionListener mListener;
+    private int companyId = -1;
 
     private DisplayImageOptions mOptions;
     private PagerScrollView enterpriseinfopsv;
@@ -92,12 +94,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getSquareImgOptions();
         getDataInfo();
         mScrollAble = true;
 
@@ -235,12 +232,12 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
     @Override
     public int getInterprsetId() {
-        return 0;
+        return companyId;
     }
 
     @Override
     public void setInterprsetId(int interprsetId) {
-
+        companyId = interprsetId;
     }
 
     /**

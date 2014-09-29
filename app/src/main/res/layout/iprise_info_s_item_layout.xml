@@ -13,8 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_height="50dp"
         android:scaleType="centerCrop"
-        android:id="@+id/iprise_info_s_item_img"
-        android:src="@drawable/test_search_item_img" />
+        android:id="@+id/iprise_info_s_item_img" />
 
     <LinearLayout
         android:layout_toRightOf="@id/iprise_info_s_item_img"

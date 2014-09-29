@@ -3,6 +3,9 @@ package com.promote.ebingo.util;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.R;
 import com.promote.ebingo.application.EbingoApp;
 
 /**
@@ -10,6 +13,40 @@ import com.promote.ebingo.application.EbingoApp;
  */
 public class ContextUtil {
     private static Context mContext;
+
+    /**
+     * get square image options.
+     *
+     * @return
+     */
+    public static DisplayImageOptions getSquareImgOptions() {
+
+        DisplayImageOptions squareImageOptions = new DisplayImageOptions.Builder()
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .showImageForEmptyUri(R.drawable.loading_waite)
+                .showImageOnLoading(R.drawable.loading_waite)
+                .showImageOnFail(R.drawable.load_failed_img)
+                .cacheInMemory(true).cacheOnDisc(true).build();
+        return squareImageOptions;
+    }
+
+    /**
+     * get rectangle image options.
+     *
+     * @return
+     */
+    public static DisplayImageOptions getRectangleImgOptions() {
+
+        DisplayImageOptions ractangleImgOptions = new DisplayImageOptions.Builder()
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .showImageForEmptyUri(R.drawable.loading_big_waite)
+                .showImageOnLoading(R.drawable.loading_big_img)
+                .showImageOnFail(R.drawable.load_failed_big_img)
+                .cacheInMemory(true).cacheOnDisc(true).build();
+
+
+        return ractangleImgOptions;
+    }
 
     public static void init(Context context) {
         mContext = context;

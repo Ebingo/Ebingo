@@ -6,11 +6,19 @@ import android.app.ProgressDialog;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.CategoryBeanTools;
+import com.promote.ebingo.bean.CategoryBeen;
+import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.GetIndexBeanTools;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -30,10 +38,109 @@ public class EbingoRequest {
         public void onSuccess(T resultObj);
     }
 
+    /**
+     * 获取首页数据.
+     *
+     * @param activity
+     * @param callBack
+     */
+    public static void getHomedata(Activity activity, final RequestCallBack<GetIndexBeanTools.GetIndexBean> callBack) {
+
+        final ProgressDialog dialog = DialogUtil.waitingDialog(activity);
+        EbingoRequestParmater parma = new EbingoRequestParmater(activity.getApplicationContext());
+        Company company = Company.getInstance();
+        if (company.getCompanyId() != null) {
+            parma.put("company_id", company.getCompanyId());
+        } else {
+            parma.put("company_id", 0);
+        }
+
+        HttpUtil.post(HttpConstant.getIndex, parma, new JsonHttpResponseHandler("utf-8") {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                LogCat.d("home data -- : " + response.toString());
+                GetIndexBeanTools.GetIndexBean indexBean = GetIndexBeanTools.getIndexBeanJson(response.toString());
+                if (indexBean != null) {
+                    ContextUtil.saveCache(FileUtil.HOEM_DATA_CACh, indexBean);
+                } else {
+                    indexBean = (GetIndexBeanTools.GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
+                }
+                callBack.onSuccess(indexBean);
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                callBack.onFaild(statusCode, "数据解析错误。");
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                callBack.onFaild(statusCode, "网络错误");
+                dialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 获取发现分类列表。
+     *
+     * @param activity
+     * @param callBack
+     */
+    public static void getCategoryList(final Activity activity, final RequestCallBack<ArrayList<CategoryBeen>> callBack) {
+
+        String urlStr = HttpConstant.getCategories;
+        final ProgressDialog dialog = DialogUtil.waitingDialog(activity);
+        EbingoRequestParmater parmater = new EbingoRequestParmater(activity.getApplicationContext());
+
+        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                ArrayList<CategoryBeen> categoryBeens = CategoryBeanTools.getCategories(response.toString());
+                if (categoryBeens != null && categoryBeens.size() != 0) {
+                    callBack.onSuccess(categoryBeens);
+                    ContextUtil.saveCache(FileUtil.CATEGORY_CACH, categoryBeens);
+                } else {
+                    callBack.onFaild(400, "网络错误");
+                }
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                callBack.onFaild(statusCode, activity.getResources().getString(R.string.no_network));
+
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                callBack.onFaild(statusCode, "数据解析错误.");
+                dialog.dismiss();
+            }
+        });
+
+    }
+
 
     /**
      * 從網絡獲取求购信息列表.
-     *http://218.244.149.129/eb/index.php?s=/Home/Api/getDemandInfoList?condition=%7B%22company_id%22%3A%224%22%7D&pagesize=20&lastid=0&os=android&secret=77509d84ef8f40f374fb89f35e09b516&uuid=990003109238541&time=1411191259183
+     *
      * @param activity
      * @param lastId
      * @param companyId
@@ -113,7 +220,8 @@ public class EbingoRequest {
 
     /**
      * 從網絡获取供应信息列表。
-     *http://218.244.149.129/eb/index.php?s=/Home/Api/getSupplyInfoList?condition=%7B%22company_id%22%3A%22-1%22%7D&pagesize=20&lastid=0&os=android&secret=5cab4ffb3c00730b53eaad20a22bb201&uuid=000000000000000&time=1411200220872
+     * http://218.244.149.129/eb/index.php?s=/Home/Api/getSupplyInfoList?condition=%7B%22company_id%22%3A%22-1%22%7D&pagesize=20&lastid=0&os=android&secret=5cab4ffb3c00730b53eaad20a22bb201&uuid=000000000000000&time=1411200220872
+     *
      * @param activity
      * @param lastId
      * @param company_id
@@ -155,7 +263,7 @@ public class EbingoRequest {
 //                    hasData(false);
 //                }
 //                mAdapter.notifyDataSetChanged(mSearchTypeBeans);
-                                dialog.dismiss();
+                dialog.dismiss();
 
             }
 
