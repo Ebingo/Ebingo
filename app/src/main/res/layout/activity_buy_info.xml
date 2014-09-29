@@ -6,7 +6,9 @@
     android:orientation="vertical"
     tools:context="com.promote.ebingo.InformationActivity.BuyInfoActivity">
 
-    <include layout="@layout/common_head_layout"></include>
+    <include
+
+        layout="@layout/common_head_layout"></include>
 
     <RelativeLayout
         android:layout_width="match_parent"

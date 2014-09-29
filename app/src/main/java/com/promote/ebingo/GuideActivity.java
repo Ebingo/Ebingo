@@ -16,16 +16,19 @@ import android.widget.RadioGroup;
 
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.publish.login.LoginManager;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
 import java.util.ArrayList;
 
 
-public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener,RadioGroup.OnCheckedChangeListener {
+public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
     ViewPager pager;
     ArrayList<View> views = new ArrayList<View>();
     RadioGroup indicator_group;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
 
@@ -56,16 +59,17 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         return imageView;
     }
 
-    private float mSavedOffset =0;
-    private boolean scrollToEnd=false;
+    private float mSavedOffset = 0;
+    private boolean scrollToEnd = false;
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        LogCat.i("page:" + position+" positionOffset:"+positionOffset+" positionOffsetPixels:"+positionOffsetPixels);
-        if (position==3){
-            float delta=mSavedOffset-positionOffset;
-            scrollToEnd=(delta==0);
+        LogCat.i("page:" + position + " positionOffset:" + positionOffset + " positionOffsetPixels:" + positionOffsetPixels);
+        if (position == 3) {
+            float delta = mSavedOffset - positionOffset;
+            scrollToEnd = (delta == 0);
         }
-        mSavedOffset =positionOffset;
+        mSavedOffset = positionOffset;
 
     }
 
@@ -77,7 +81,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        if (state==ViewPager.SCROLL_STATE_IDLE&&pager.getCurrentItem()==3&&scrollToEnd){
+        if (state == ViewPager.SCROLL_STATE_IDLE && pager.getCurrentItem() == 3 && scrollToEnd) {
             setLoading();
             Constant.savefirstStart(getApplicationContext());
         }
@@ -85,8 +89,8 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        for(int i=0;i<group.getChildCount();i++){
-            if (group.getChildAt(i).getId()==checkedId){
+        for (int i = 0; i < group.getChildCount(); i++) {
+            if (group.getChildAt(i).getId() == checkedId) {
                 pager.setCurrentItem(i);
                 break;
             }
@@ -118,39 +122,41 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         }
     }
 
-    private void showDot(int index){
-        ((RadioButton)(indicator_group.getChildAt(index))).setChecked(true);
+    private void showDot(int index) {
+        ((RadioButton) (indicator_group.getChildAt(index))).setChecked(true);
     }
 
     private void setLoading() {
 
         setContentView(R.layout.loadpage_layout);
-        Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(),FileUtil.FILE_COMPANY));
-        new Thread() {
+        String psw = ContextUtil.getCurCompanyPwd();
+        String companyName = ContextUtil.getCurCompanyName();
+        new LoginManager().doLogin(companyName, psw, new LoginManager.Callback() {
             @Override
-            public void run() {
-                super.run();
-
-                try {
-                    sleep(2000);    //暂停两秒  可以用来加载首页数据.
-                } catch (InterruptedException e) {
-
-                }
-
-                handler.sendEmptyMessage(0);
+            public void onSuccess() {
+                LogCat.w("--->","Login success,toMainActivityDelay delay 1000ms...");
+                toMainActivityDelay(1000);
             }
-        }.start();
+
+            @Override
+            public void onFail(String msg) {
+                //如果使用用户名密码登陆失败，就直接加载上一次保存的公司信息
+                LogCat.w("--->","Login Failed,loading cache company...");
+                Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(), FileUtil.FILE_COMPANY));
+                toMainActivityDelay(500);
+            }
+
+        });
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
 
-            if (msg.what == 0) {
+    private void toMainActivityDelay(long time){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
                 startActivity(new Intent(GuideActivity.this, MainActivity.class));
                 GuideActivity.this.finish();
             }
-        }
-    };
+        },time);
+    }
 }

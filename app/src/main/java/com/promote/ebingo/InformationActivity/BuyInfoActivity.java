@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginDialog;
 
@@ -48,7 +52,6 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_buy_info);
         initialize();
     }
-
 
     private void initialize() {
 
@@ -192,6 +195,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
+        popError();
         buyinfonametv.setText(mDetailInfoBean.getTitle());
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
@@ -201,4 +205,33 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyinfodetailtv.loadDataWithBaseURL(HttpConstant.getRootUrl(), mDetailInfoBean.getDescription(), "text/html", "UTF-8", "about:blank");
     }
 
+    private PopupWindow errorWindow;
+
+    private void popError() {
+        final View contentView = View.inflate(this, R.layout.error_pop_window, null);
+        final TextView tv_warn = (TextView) contentView.findViewById(R.id.tv_warn);
+        errorWindow = new PopupWindow(contentView, 0, 0, false);
+        tv_warn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BuyInfoActivity.this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.INFO, mDetailInfoBean);
+                startActivity(intent);
+            }
+        });
+        errorWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        errorWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        errorWindow.setAnimationStyle(android.R.style.Animation_Toast);
+        int[] location = new int[2];
+        View parent = findViewById(R.id.head_layout);
+        parent.getLocationOnScreen(location);
+        errorWindow.showAtLocation(parent, Gravity.TOP, 0, location[1] + parent.getHeight());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (errorWindow != null) errorWindow.dismiss();
+
+    }
 }

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -27,10 +28,9 @@ import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.PreviewActivity;
-import com.promote.ebingo.publish.PublishBaseActivity;
-import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.JsonUtil;
 import com.promote.ebingo.util.LogCat;
@@ -48,9 +48,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by acer on 2014/9/9.
+ * 企业设置
  */
-public class EnterpriseSettingActivity extends PublishBaseActivity {
+public class EnterpriseSettingActivity extends BaseActivity {
 
     private static final int PICK_IMAGE = 1;
     private static final int PICK_CAMERA = 2;
@@ -63,15 +63,12 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     private EditText edit_enterprise_email;
     private TextView tv_pick_province;
     private TextView tv_pick_city;
-    private Map<String, ArrayList> cityMap = null;
     private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();//省份列表
-    private ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();//城市列表
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enterprise_setting);
-        setBackTitle("企业设置");
         image_enterprise = findImage(R.id.image_enterprise);
 
         edit_enterprise_name = findEdit(R.id.edit_enterprise_name);
@@ -107,9 +104,10 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     /**
      * 设置头像
      *
-     * @param uri
+     * @param uri 图片的uri
      */
     public void setHeadImage(Uri uri) {
+
         ImageDownloadTask task = new ImageDownloadTask() {
             @Override
             protected void onPostExecute(Bitmap bitmap) {
@@ -117,6 +115,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
             }
         };
+
         if (uri != null) {//本地有头像
             task.loadBY(uri);
         } else {
@@ -158,7 +157,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     private void getProvinceList() {
-        provinceList = (ArrayList<RegionBeen>) ContextUtil.read(HttpConstant.getProvinceList);
+        provinceList = (ArrayList<RegionBeen>) ContextUtil.read(FileUtil.FILE_PROVINCE_LIST);
         if (provinceList != null) {
             showProvinceDialog();
             return;
@@ -199,7 +198,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         for (int i = 0; i < length; i++) {
             provinces[i] = provinceList.get(i).getName();
         }
-        new AlertDialog.Builder(EnterpriseSettingActivity.this).setItems(provinces, new DialogInterface.OnClickListener() {
+        ListDialog dialog=ListDialog.newInstance(provinces, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!provinces[which].equals(tv_pick_province.getText().toString())) {
@@ -208,7 +207,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     tv_pick_province.setTag(provinceList.get(which).getId());
                 }
             }
-        }).show();
+        });
+        dialog.show(getSupportFragmentManager(), null);
     }
 
     /**
@@ -216,8 +216,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
      *
      * @param province_id
      */
-    private void getCityList(int province_id) {
-        cityList = (ArrayList<RegionBeen>) ContextUtil.read(HttpConstant.getCityList);
+    private void getCityList(final int province_id) {
+
+        ArrayList<RegionBeen> cityList = (ArrayList<RegionBeen>) ContextUtil.read(FileUtil.FILE_CITY_LIST+province_id);
         if (cityList != null) {
             showCityDialog(cityList);
             return;
@@ -232,7 +233,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     JSONArray array = response.getJSONArray("data");
                     final ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();
                     JsonUtil.getArray(array, RegionBeen.class, cityList);
+                    ContextUtil.saveCache(FileUtil.FILE_CITY_LIST+province_id,cityList);
                     showCityDialog(cityList);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -257,15 +260,14 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         for (int i = 0; i < length; i++) {
             cities[i] = cityList.get(i).getName();
         }
-
-        new AlertDialog.Builder(this).setItems(cities, new DialogInterface.OnClickListener() {
+        ListDialog.newInstance(cities, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 RegionBeen city = cityList.get(which);
                 tv_pick_city.setText(city.getName());
                 tv_pick_city.setTag(city.getId());
             }
-        }).show();
+        }).show(getSupportFragmentManager(),null);
     }
 
     private String getString(TextView tv) {
@@ -314,7 +316,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 company.setEmail(email);
                 setResult(RESULT_OK, new Intent());
                 ContextUtil.toast("修改成功！");
-                new FileUtil().saveFile(getApplicationContext(), FileUtil.FILE_COMPANY, company);
+                FileUtil.saveFile(getApplicationContext(), FileUtil.FILE_COMPANY, company);
                 finish();
             }
 
@@ -461,9 +463,10 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
      *
      * @deprecated
      */
-    private void getCities() {
+    private Map<String, ArrayList> getCities() {
+
         XmlResourceParser parser = getResources().getXml(R.xml.cities);
-        cityMap = new HashMap<String, ArrayList>();
+        Map<String, ArrayList> cityMap = new HashMap<String, ArrayList>();
         try {
             int eventType = parser.getEventType();
             String province = null;
@@ -495,6 +498,6 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return cityMap;
     }
 }

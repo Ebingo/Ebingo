@@ -1,11 +1,17 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ACER on 2014/9/12.
  */
-public class DetailInfoBean {
-
-
+public class DetailInfoBean implements Serializable {
+    /**
+     * 从哪个平台过来
+     * 值：android,ios,pc
+     */
+    private String from;
+    private String category_name;
     /**
      * 信息 id *
      */
@@ -47,7 +53,7 @@ public class DetailInfoBean {
      */
     private String region;
     /**
-     * 供应还是求购 *
+     * 供应还是求购 1 求购 2 供应
      */
     private int type;
     /**
@@ -79,6 +85,26 @@ public class DetailInfoBean {
      * 公司名称. *
      */
     private String company_name;
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
+    }
+
+    public void setCompany_id(Integer company_id) {
+        this.company_id = company_id;
+    }
 
     public String getUnit() {
         return unit;

@@ -85,12 +85,12 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.EditDescription"
-            android:label="@string/app_name"
+            android:label="@string/title_edit_description"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.AddTagsActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_add_tag"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
@@ -105,7 +105,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".center.settings.EnterpriseSettingActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_enterprise_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
@@ -113,11 +113,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".publish.PublishBaseActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".InformationActivity.InterpriseNewActivity"
             android:label="@string/app_name"
@@ -229,7 +225,7 @@
         </activity>
         <activity
             android:name=".publish.PublishEditActivity"
-            android:label="@string/title_activity_publish_edit" >
+            android:label="@string/title_activity_publish_edit_demand" >
         </activity>
     </application>
 

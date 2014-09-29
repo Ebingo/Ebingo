@@ -1,40 +1,65 @@
 package com.promote.ebingo.publish;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
 
+import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.DetailInfoBean;
+import com.promote.ebingo.bean.InfoDetailBean;
+import com.promote.ebingo.impl.EbingoHandler;
+import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.JsonUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PublishEditActivity extends BaseActivity {
 
-    public static final String TYPE = "0";
-    public static final String TYPE_DEMAND = "1";
-    public static final String TYPE_SUPPLY = "2";
+    public static final String INFO = "infoBean";
     private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_edit);
-        String type = getIntent().getStringExtra(TYPE);
-        if (TYPE_SUPPLY.equals(type)){
+        DetailInfoBean infoBean = (DetailInfoBean) getIntent().getSerializableExtra(INFO);
+        if ("pc".equals(infoBean.getFrom())) showDialog();
+        showDialog(1);
+        if (2 == infoBean.getType()) {
             mFragment = new PublishSupply();
-            setTitle(R.string.title_activity_publish_edit);
+            setTitle(R.string.title_activity_publish_edit_supply);
+        } else {
+            mFragment = new PublishDemand();
+            setTitle(R.string.title_activity_publish_edit_demand);
         }
-        else mFragment = new PublishDemand();
         getSupportFragmentManager().beginTransaction().add(R.id.content, mFragment).commit();
+        ((EditInfo) mFragment).edit(infoBean);
+    }
+
+    public interface EditInfo {
+        public void edit(DetailInfoBean infoBean);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showDialog() {
+        new AlertDialog.Builder(this).setTitle(R.string.warn)
+                .setMessage("当前信息由PC端发布，请至PC端修改该信息！")
+                .setPositiveButton(R.string.i_know, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 }

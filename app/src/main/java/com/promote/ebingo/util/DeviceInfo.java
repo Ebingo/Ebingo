@@ -109,7 +109,6 @@ public class DeviceInfo {
 			for (int i = 0; i < 15; i++) {
 				sb.append(random.nextInt(10));
 			}
-
 			miei = sb.toString();
 			SharedPreferenceUtil.saveString(context,MIEI, miei);
 		}

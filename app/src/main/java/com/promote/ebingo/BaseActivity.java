@@ -1,11 +1,10 @@
 package com.promote.ebingo;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -50,5 +49,11 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void setTitle(int titleId) {
         ((TextView) findViewById(R.id.common_title_tv)).setText(titleId);
+    }
+    protected ImageView findImage(int id){
+        return (ImageView) findViewById(id);
+    }
+    protected EditText findEdit(int id){
+        return (EditText) findViewById(id);
     }
 }
