@@ -90,7 +90,6 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
 
         @Override
         protected Bitmap doInBackground(Uri... params) {
-            ContentResolver resolver = getContentResolver();
             Bitmap result = null;
             try {
                 BitmapFactory.Options options=new BitmapFactory.Options();

@@ -2,10 +2,11 @@ package com.promote.ebingo.center.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.VaildUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
@@ -28,6 +30,7 @@ import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.PreviewActivity;
+import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.FileUtil;
@@ -39,13 +42,10 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 企业设置
@@ -55,6 +55,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
     private static final int PICK_IMAGE = 1;
     private static final int PICK_CAMERA = 2;
     private static final int PREVIEW = 3;
+    private static final int CROP = 4;
     private ImageView image_enterprise;
     private EditText edit_enterprise_name;
     private EditText edit_enterprise_address;
@@ -64,6 +65,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
     private TextView tv_pick_province;
     private TextView tv_pick_city;
     private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();//省份列表
+    private File imageTempFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,9 @@ public class EnterpriseSettingActivity extends BaseActivity {
         image_enterprise.setContentDescription(company.getImage());
 
         tv_pick_province.setText(company.getProvince_name());
+        tv_pick_province.setTag(company.getProvince_id());
         tv_pick_city.setText(company.getCity_name());
+        tv_pick_city.setTag(company.getCity_id());
 
         setHeadImage(Company.getInstance().getImageUri());
     }
@@ -133,7 +137,10 @@ public class EnterpriseSettingActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_commit:
-                commit();
+                EnterPriseInfo info = getInputInfo();
+                if (info.check(getApplicationContext())) {
+                    commit(info);
+                }
                 break;
             case R.id.image_enterprise:
                 showPickDialog();
@@ -165,9 +172,8 @@ public class EnterpriseSettingActivity extends BaseActivity {
             provinceList = new ArrayList<RegionBeen>();
         }
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在加载省份列表...");
-        EbingoRequestParmater params = new EbingoRequestParmater(this);
 
-        HttpUtil.post(HttpConstant.getProvinceList, params, new EbingoHandler() {
+        HttpUtil.post(HttpConstant.getProvinceList, new EbingoRequestParmater(this), new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 try {
@@ -198,7 +204,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
         for (int i = 0; i < length; i++) {
             provinces[i] = provinceList.get(i).getName();
         }
-        ListDialog dialog=ListDialog.newInstance(provinces, new DialogInterface.OnClickListener() {
+        ListDialog dialog = ListDialog.newInstance(provinces, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!provinces[which].equals(tv_pick_province.getText().toString())) {
@@ -218,7 +224,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
      */
     private void getCityList(final int province_id) {
 
-        ArrayList<RegionBeen> cityList = (ArrayList<RegionBeen>) ContextUtil.read(FileUtil.FILE_CITY_LIST+province_id);
+        ArrayList<RegionBeen> cityList = (ArrayList<RegionBeen>) ContextUtil.read(FileUtil.FILE_CITY_LIST + province_id);
         if (cityList != null) {
             showCityDialog(cityList);
             return;
@@ -233,7 +239,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
                     JSONArray array = response.getJSONArray("data");
                     final ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();
                     JsonUtil.getArray(array, RegionBeen.class, cityList);
-                    ContextUtil.saveCache(FileUtil.FILE_CITY_LIST+province_id,cityList);
+                    ContextUtil.saveCache(FileUtil.FILE_CITY_LIST + province_id, cityList);
                     showCityDialog(cityList);
 
                 } catch (JSONException e) {
@@ -267,7 +273,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
                 tv_pick_city.setText(city.getName());
                 tv_pick_city.setTag(city.getId());
             }
-        }).show(getSupportFragmentManager(),null);
+        }).show(getSupportFragmentManager(), null);
     }
 
     private String getString(TextView tv) {
@@ -277,43 +283,14 @@ public class EnterpriseSettingActivity extends BaseActivity {
     /**
      * 点击提交按钮执行事件
      */
-    private void commit() {
-        EbingoRequestParmater parmater = new EbingoRequestParmater(this);
-        final Integer company_id = Company.getInstance().getCompanyId();
-        final String image_url = image_enterprise.getContentDescription() + "";
+    private void commit(final EnterPriseInfo info) {
 
-        final String name = getString(edit_enterprise_name);
-        final String company_tel = getString(edit_enterprise_phone);
-        final String address = getString(edit_enterprise_address);
-        final String website = getString(edit_enterprise_site);
-        final String email = getString(edit_enterprise_email);
-        final String province = getString(tv_pick_province);
-        final String city = getString(tv_pick_city);
-
-        parmater.put("company_id", company_id);
-        parmater.put("image", image_url);
-        parmater.put("name", name);
-        parmater.put("company_tel", company_tel);
-        parmater.put("province", tv_pick_province.getTag());
-        parmater.put("city", tv_pick_city.getTag());
-        parmater.put("address", address);
-        parmater.put("website", website);
-        parmater.put("email", email);
-        LogCat.i("--->" + parmater);
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在更新数据...");
-        HttpUtil.post(HttpConstant.updateCompanyInfo, parmater, new EbingoHandler() {
+        HttpUtil.post(HttpConstant.updateCompanyInfo, info.getParams(this), new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 Company company = Company.getInstance();
-                company.setCompanyId(company_id);
-                company.setImage(HttpConstant.getHost() + image_url);
-                company.setName(name);
-                company.setCompanyTel(company_tel);
-                company.setProvince_name(province);
-                company.setCity_name(city);
-                company.setAddress(address);
-                company.setWebsite(website);
-                company.setEmail(email);
+                info.apply(company);
                 setResult(RESULT_OK, new Intent());
                 ContextUtil.toast("修改成功！");
                 FileUtil.saveFile(getApplicationContext(), FileUtil.FILE_COMPANY, company);
@@ -335,6 +312,52 @@ public class EnterpriseSettingActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+    /**
+     * 获取用户填入的信息
+     */
+    private EnterPriseInfo getInputInfo() {
+        final EnterPriseInfo info = new EnterPriseInfo();
+
+        info.company_id = Company.getInstance().getCompanyId();
+        info.image = image_enterprise.getContentDescription() + "";
+        info.name = getString(edit_enterprise_name);
+        info.company_tel = getString(edit_enterprise_phone);
+        info.address = getString(edit_enterprise_address);
+        info.website = getString(edit_enterprise_site);
+        info.email = getString(edit_enterprise_email);
+        info.province = getString(tv_pick_province);
+        info.city = getString(tv_pick_city);
+        info.province_id = (Integer) tv_pick_province.getTag();
+        info.city_id = (Integer) tv_pick_city.getTag();
+        return info;
+    }
+
+    /**
+     * 裁剪图片
+     *
+     * @param uri
+     */
+    private void cropImage(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", 200);
+        intent.putExtra("outputY", 200);
+        intent.putExtra("output", Uri.fromFile(getImageTempFile()));// 保存到原文件
+        intent.putExtra("outputFormat", "png");// 返回格式
+        intent.putExtra("return-data", false);
+        startActivityForResult(intent, CROP);
+    }
+
+    public File getImageTempFile() {
+        if (imageTempFile == null)
+            imageTempFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "company_image.png");
+        return imageTempFile;
     }
 
     /**
@@ -380,7 +403,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
      */
     private void showPickDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("企业形象").setItems(new String[]{"相册", "拍照"}, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.enterprise_image).setItems(getResources().getStringArray(R.array.pick_picture), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -428,76 +451,88 @@ public class EnterpriseSettingActivity extends BaseActivity {
             case PICK_CAMERA:
                 LogCat.i("--->", uri.toString());
                 if (uri != null) {
-                    toPreviewActivity(uri);
+                    cropImage(uri);
                 }
                 break;
             case PICK_IMAGE:
                 LogCat.i("--->", uri.toString());
                 if (uri != null) {
-                    toPreviewActivity(uri);
+                    cropImage(uri);
                 }
                 break;
             case PREVIEW:
                 if (data == null) return;
                 uploadImage(data.getData());
                 break;
-        }
-    }
-
-    /**
-     * 将image战士到PreviewActivity中
-     *
-     * @param image
-     */
-    private void toPreviewActivity(Uri image) {
-        if (PreviewActivity.isPreviewing()) {
-            return;
-        }
-        Intent intent = new Intent(this, PreviewActivity.class);
-        intent.setData(image);
-        startActivityForResult(intent, PREVIEW);
-    }
-
-    /**
-     * 从xml中加载城市列表
-     *
-     * @deprecated
-     */
-    private Map<String, ArrayList> getCities() {
-
-        XmlResourceParser parser = getResources().getXml(R.xml.cities);
-        Map<String, ArrayList> cityMap = new HashMap<String, ArrayList>();
-        try {
-            int eventType = parser.getEventType();
-            String province = null;
-            ArrayList<String> cities = null;
-            while (eventType != XmlResourceParser.END_DOCUMENT) {
-                String tag = parser.getName();
-                switch (eventType) {
-
-                    case XmlResourceParser.START_TAG:
-                        if (tag.equals("province")) {
-                            cities = new ArrayList<String>();
-                            province = parser.getAttributeValue(0);
-                        }
-                        if (tag.equals("city")) {
-                            cities.add(parser.getAttributeValue(0));
-                        }
-                        break;
-                    case XmlResourceParser.END_TAG:
-                        if (tag.equals("province")) {
-                            cityMap.put(province, cities);
-                        }
-                        break;
-
+            case CROP: {
+                if (PreviewActivity.isPreviewing()) {
+                    return;
                 }
-                eventType = parser.next();
+                Intent intent = new Intent(this, PreviewActivity.class);
+                intent.setData(Uri.fromFile(getImageTempFile()));
+                startActivityForResult(intent, PREVIEW);
+                break;
             }
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return cityMap;
+    }
+
+    class EnterPriseInfo {
+        Integer company_id;
+        String image;
+        String name;
+        String company_tel;
+        Integer province_id;
+        Integer city_id;
+        String province;
+        String city;
+        String address;
+        String website;
+        String email;
+
+        EbingoRequestParmater getParams(Context context) {
+            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
+            parmater.put("company_id", company_id);
+            parmater.put("image", image);
+            parmater.put("name", name);
+            parmater.put("company_tel", company_tel);
+            parmater.put("province", province);
+            parmater.put("city", city);
+            parmater.put("address", address);
+            parmater.put("website", website);
+            parmater.put("email", email);
+            return parmater;
+        }
+
+        void apply(Company company) {
+            company.setImage(HttpConstant.getHost() + image);
+            company.setName(name);
+            company.setCompanyTel(company_tel);
+            company.setProvince_id(province_id);
+            company.setCity_id(city_id);
+            company.setProvince_name(province);
+            company.setCity_name(city);
+            company.setAddress(address);
+            company.setWebsite(website);
+            company.setEmail(email);
+        }
+
+        boolean check(Context context) {
+
+            String tel = "\\d{3}-\\d{8}|\\d{4}-\\d{7}";
+            String phoneRule = "^((14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$";
+
+            if (!TextUtils.isEmpty(company_tel) && !company_tel.matches(tel) && !company_tel.matches(phoneRule)) {
+                ContextUtil.toast("请输入正确的手机号或电话！");
+                return false;
+            }
+
+            String msg = VaildUtil.validEmail(email);
+            if (!TextUtils.isEmpty(msg)) {
+                ContextUtil.toast(msg);
+                return false;
+            }
+
+            return true;
+        }
     }
 }

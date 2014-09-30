@@ -23,6 +23,7 @@ import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.impl.VerifyManager;
 import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginDialog;
@@ -155,7 +156,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
     public boolean isVip(String vipType) {
 
         assert vipType == null;
-        return VipType.parse(vipType).compareTo(VipType.NORMAL_VIP) > 0;
+        return VipType.parse(vipType).compareTo(VipType.Standard_VIP) > 0;
 
     }
 
@@ -195,7 +196,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
-        popError();
+        if (!VerifyManager.PASS.equals(mDetailInfoBean.getVerify_result()))popError(mDetailInfoBean.getVerify_reason());
         buyinfonametv.setText(mDetailInfoBean.getTitle());
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
@@ -207,10 +208,11 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
 
     private PopupWindow errorWindow;
 
-    private void popError() {
+    private void popError(String msg) {
         final View contentView = View.inflate(this, R.layout.error_pop_window, null);
         final TextView tv_warn = (TextView) contentView.findViewById(R.id.tv_warn);
         errorWindow = new PopupWindow(contentView, 0, 0, false);
+        tv_warn.setText(msg);
         tv_warn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

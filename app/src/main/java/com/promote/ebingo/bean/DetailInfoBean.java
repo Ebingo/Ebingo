@@ -85,6 +85,42 @@ public class DetailInfoBean implements Serializable {
      * 公司名称. *
      */
     private String company_name;
+    /**
+     * 审核时间
+     */
+    private String verify_time;
+    /**
+     * 审核结果
+     */
+    private String verify_result;
+    /**
+     * 审核原因，失败原因？
+     */
+    private String verify_reason;
+
+    public String getVerify_time() {
+        return verify_time;
+    }
+
+    public void setVerify_time(String verify_time) {
+        this.verify_time = verify_time;
+    }
+
+    public String getVerify_result() {
+        return verify_result;
+    }
+
+    public void setVerify_result(String verify_result) {
+        this.verify_result = verify_result;
+    }
+
+    public String getVerify_reason() {
+        return verify_reason;
+    }
+
+    public void setVerify_reason(String verify_reason) {
+        this.verify_reason = verify_reason;
+    }
 
     public String getFrom() {
         return from;

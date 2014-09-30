@@ -82,13 +82,13 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         fragments[0].setDisplayVipType(VipType.VISITOR);
 
         fragments[1] = new PrivilegeInfoFragment();
-        fragments[1].setDisplayVipType(VipType.NORMAL_VIP);
+        fragments[1].setDisplayVipType(VipType.Standard_VIP);
 
         fragments[2] = new PrivilegeInfoFragment();
-        fragments[2].setDisplayVipType(VipType.VIP);
+        fragments[2].setDisplayVipType(VipType.Silver_VIP);
 
         fragments[3] = new PrivilegeInfoFragment();
-        fragments[3].setDisplayVipType(VipType.VVIP);
+        fragments[3].setDisplayVipType(VipType.Platinum_VIP);
         getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[0]).commit();
         String vipType = Company.getInstance().getVipType();
         boolean beVVip=getIntent().getBooleanExtra(SHOW_VVIP,false);

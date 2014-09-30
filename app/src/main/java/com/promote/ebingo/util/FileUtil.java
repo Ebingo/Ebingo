@@ -2,6 +2,7 @@ package com.promote.ebingo.util;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.promote.ebingo.bean.Company;
 
@@ -81,7 +82,7 @@ public class FileUtil {
             ObjectInputStream ois = new ObjectInputStream(is);
             obj = ois.readObject();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.w("FileUtil",e.getMessage());
         }
         LogCat.i("--->", "read:" + file + "===" + obj);
         return obj;

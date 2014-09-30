@@ -1,7 +1,6 @@
 package com.promote.ebingo.publish;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,30 +8,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.jch.lib.util.DialogUtil;
-import com.jch.lib.util.HttpUtil;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.MyPrivilegeActivity;
-import com.promote.ebingo.center.MySupplyActivity;
-import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
-
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -275,7 +262,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         public void onPageSelected(int i) {
             ((RadioButton) tabs.getChildAt(i)).setChecked(true);
             final String vipType=Company.getInstance().getVipType();
-            if(!VipType.canPublishSupply(vipType)){
+            if(VipType.parse(vipType).compareTo(VipType.Experience_Vip)<0){
                 showVipDialog();
             }
         }

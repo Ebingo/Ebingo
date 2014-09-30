@@ -29,6 +29,7 @@ import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.impl.VerifyManager;
 import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
@@ -103,7 +104,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        if (true)popError();
+        if (!VerifyManager.PASS.equals(infoBean.getVerify_result()))popError(infoBean.getVerify_reason());
         if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
             productinforlll.setVisibility(View.GONE);
         else productinforlll.setVisibility(View.VISIBLE);
@@ -168,6 +169,13 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     cancelCollection(collectId);
                 }
                 break;
+            case R.id.prd_info_company_tv:{
+                Intent intent = new Intent(this, InterpriseInfoActivity.class);
+                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
+                startActivity(intent);
+                break;
+            }
            
             default: {
             }
@@ -196,7 +204,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
             @Override
             public void onFail(int statusCode, String msg) {
-                ContextUtil.toast("添加收藏失败！" + msg);
                 productinfocollectcb.setChecked(false);
             }
 
@@ -270,10 +277,11 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
     private PopupWindow errorWindow;
 
-    private void popError() {
+    private void popError(String result) {
         final View contentView = View.inflate(this, R.layout.error_pop_window, null);
         final TextView tv_warn = (TextView) contentView.findViewById(R.id.tv_warn);
         errorWindow = new PopupWindow(contentView, 0, 0, false);
+        tv_warn.setText(result);
         tv_warn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

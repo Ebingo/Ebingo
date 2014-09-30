@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -57,9 +56,9 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         resMap.put(VipType.VISITOR.code, R.array.privilege_info_visitor);
-        resMap.put(VipType.NORMAL_VIP.code, R.array.privilege_info_normal_vip);
-        resMap.put(VipType.VIP.code, R.array.privilege_info_vip);
-        resMap.put(VipType.VVIP.code, R.array.privilege_info_vvip);
+        resMap.put(VipType.Standard_VIP.code, R.array.privilege_info_normal_vip);
+        resMap.put(VipType.Silver_VIP.code, R.array.privilege_info_vip);
+        resMap.put(VipType.Platinum_VIP.code, R.array.privilege_info_vvip);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
                 VipType curVipType = VipType.parse(Company.getInstance().getVipType());
                 if (getDisplayVipType().compareTo(curVipType) <= 0) {
                     ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
-                } else if (getDisplayVipType().compareTo(VipType.NORMAL_VIP) == 0) {
+                } else if (getDisplayVipType().compareTo(VipType.Standard_VIP) == 0) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 } else {

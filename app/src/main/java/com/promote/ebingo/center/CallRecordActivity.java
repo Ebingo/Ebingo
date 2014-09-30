@@ -243,7 +243,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                 }
             };
             CallDialog callDialog = new CallDialog(context, phoneCallBack);
-            callDialog.setCallphone(number);
+            callDialog.setCallphone(context.getString(R.string.dial_number_notice,record.getPhone_num()));
             callDialog.show();
 //            AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //            builder.setTitle("拨打电话")

@@ -143,13 +143,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             centerloginbtn.setText(companyName);
             centerloginbtn.setClickable(false);
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setHeadImage(Company.getInstance().getImageUri());
-                getCurrentCompanyBaseNum();
-            }
-        }, 100);
+        setHeadImage(Company.getInstance().getImageUri());
+        getCurrentCompanyBaseNum();
     }
 
     @Override

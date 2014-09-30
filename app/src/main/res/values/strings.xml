@@ -198,4 +198,9 @@
     <string name="last_update">最后更新于：</string>
     <string name="clear_success">清除成功！</string>
     <string name="warn">温馨提示</string>
+    <string name="dial_number_notice">是否拨打%s?</string>
+    <array name="pick_picture">
+        <item >相册</item>
+        <item >拍照</item>
+    </array>
 </resources>

@@ -78,7 +78,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 
     private DetailInfoBean mDetailInfo;
     private TextView tv_3d_notice;
-    private final String CAMERA_PICTURE_NAME = "publish_upload.png";
+    private final String CAMERA_PICTURE_NAME = "supply_image.png";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -152,9 +152,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         };
         EbingoDialog dialog = new EbingoDialog(getActivity());
         dialog.setTitle("拨打电话");
-        dialog.setMessage("是否拨打客服电话?");
+        dialog.setMessage(getString(R.string.dial_number_notice,"客服"));
         dialog.setPositiveButton("拨打", l);
-        dialog.setNegativeButton("取消", l);
+        dialog.setNegativeButton(getString(R.string.cancel), l);
         dialog.show();
     }
 
@@ -191,6 +191,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 break;
             }
             case R.id.upload_3d_cb: {
+                callService();
                 if (has3dPermission()) show3dNotice(upload_3d_cb.isChecked());
                 break;
             }
@@ -204,7 +205,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      */
     private boolean has3dPermission() {
         String vipCode = Company.getInstance().getVipType();
-        if (VipType.parse(vipCode).compareTo(VipType.VVIP) < 0) {
+        if (VipType.parse(vipCode).compareTo(VipType.Platinum_VIP) < 0) {
             EbingoDialog dialog = new EbingoDialog(getActivity());
             dialog.setTitle("尊敬的" + VipType.nameOf(vipCode));
             dialog.setMessage("您目前所属等级没有权限上传3D图片，请先升级");
@@ -337,7 +338,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
     }
 
     private File getImageTempFile() {
-        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), CAMERA_PICTURE_NAME);
+        return new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), CAMERA_PICTURE_NAME);
     }
 
     /**

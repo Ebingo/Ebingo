@@ -31,7 +31,6 @@ public class PublishEditActivity extends BaseActivity {
         setContentView(R.layout.activity_publish_edit);
         DetailInfoBean infoBean = (DetailInfoBean) getIntent().getSerializableExtra(INFO);
         if ("pc".equals(infoBean.getFrom())) showDialog();
-        showDialog(1);
         if (2 == infoBean.getType()) {
             mFragment = new PublishSupply();
             setTitle(R.string.title_activity_publish_edit_supply);

@@ -1,10 +1,12 @@
 package com.promote.ebingo.publish;
 
+import android.text.TextUtils;
+
 /**
  * Created by acer on 2014/9/15.
  */
 public enum VipType {
-    VISITOR("9", "游客"), NORMAL_VIP("0", "普通会员"), VIP("1", "VIP用户"), VVIP("2", "VVIP用户");
+    VISITOR("9", "游客"), Experience_Vip("0", "体验会员"), Standard_VIP("1", "普通会员"), Silver_VIP("2", "银牌用户"), Gold_VIP("3", "金牌会员"), Platinum_VIP("4", "铂金会员");
     public String code;
     public String name;
 
@@ -15,18 +17,9 @@ public enum VipType {
 
     @Override
     public String toString() {
-        return code ;
+        return code;
     }
 
-    /**
-     * 判断当前vip类型是否具有发布供应信息特权
-     *
-     * @param vipCode
-     * @return
-     */
-    public static boolean canPublishSupply(String vipCode) {
-        return !(vipCode == null || "".equals(vipCode) || "0".equals(vipCode) || "9".equals(vipCode));
-    }
 
     /**
      * 根据vipCode获取vip名
@@ -49,10 +42,11 @@ public enum VipType {
         return null;
     }
 
-    public static VipType parse(String code){
+    public static VipType parse(String code) {
+        if (TextUtils.isEmpty(code)) return VipType.VISITOR;
         for (VipType type : VipType.values()) {
             if (type.code.equals(code)) return type;
         }
-       return null;
+        return null;
     }
 }

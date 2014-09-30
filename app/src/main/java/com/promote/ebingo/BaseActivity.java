@@ -15,11 +15,7 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
-        try {
-            ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
-        } catch (NullPointerException e) {
-            throw new IllegalStateException("BaseActivity must include a TextView with id:common_title_tv");
-        }
+        setTitle(getTitle());
     }
 
     @Override
@@ -43,17 +39,22 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void setTitle(CharSequence title) {
-        ((TextView) findViewById(R.id.common_title_tv)).setText(title);
+        TextView titleView = ((TextView) findViewById(R.id.common_title_tv));
+        if (titleView == null)
+            throw new IllegalStateException("BaseActivity must include a TextView with id:common_title_tv");
+        titleView.setText(title);
     }
 
     @Override
     public void setTitle(int titleId) {
-        ((TextView) findViewById(R.id.common_title_tv)).setText(titleId);
+        setTitle(getString(titleId));
     }
-    protected ImageView findImage(int id){
+
+    protected ImageView findImage(int id) {
         return (ImageView) findViewById(id);
     }
-    protected EditText findEdit(int id){
+
+    protected EditText findEdit(int id) {
         return (EditText) findViewById(id);
     }
 }

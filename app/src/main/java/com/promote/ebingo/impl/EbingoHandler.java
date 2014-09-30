@@ -45,20 +45,21 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
 
     @Override
     final public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.String s, java.lang.Throwable throwable) {
-        showError(statusCode);
+        showError(statusCode,s);
     }
 
     @Override
     final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-        showError(statusCode);
+        showError(statusCode,errorResponse+"");
     }
 
     @Override
     final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-        showError(statusCode);
+        showError(statusCode,errorResponse+"");
     }
 
-    private void showError(int statusCode) {
+    private void showError(int statusCode,String msg) {
+        LogCat.w("EbingooHandler error:"+msg);
         String net_error = ContextUtil.getString(R.string.net_error);
         onFail(statusCode, net_error);
         ContextUtil.toast(net_error);

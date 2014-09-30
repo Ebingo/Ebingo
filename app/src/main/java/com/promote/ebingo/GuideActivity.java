@@ -50,7 +50,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
         } else {
             setLoading();
-    }
+        }
     }
 
     private ImageView getImage(int id) {
@@ -72,7 +72,6 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
             scrollToEnd = (delta == 0);
         }
         mSavedOffset = positionOffset;
-
     }
 
     @Override
@@ -84,7 +83,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     @Override
     public void onPageScrollStateChanged(int state) {
         if (state == ViewPager.SCROLL_STATE_IDLE && pager.getCurrentItem() == 3 && scrollToEnd) {
-            setLoading();
+            loginBackground();
             Constant.savefirstStart(getApplicationContext());
         }
     }
@@ -129,21 +128,22 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     }
 
     private void setLoading() {
-
         setContentView(R.layout.loadpage_layout);
+        loginBackground();
+    }
+
+    private void loginBackground() {
         String psw = ContextUtil.getCurCompanyPwd();
         String companyName = ContextUtil.getCurCompanyName();
         new LoginManager().doLogin(companyName, psw, new LoginManager.Callback() {
             @Override
             public void onSuccess() {
-                LogCat.w("--->","Login success,toMainActivityDelay delay 1000ms...");
                 toMainActivityDelay(1000);
             }
 
             @Override
             public void onFail(String msg) {
                 //如果使用用户名密码登陆失败，就直接加载上一次保存的公司信息
-                LogCat.w("--->","Login Failed,loading cache company...");
                 Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(), FileUtil.FILE_COMPANY));
                 toMainActivityDelay(500);
             }
@@ -151,14 +151,14 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         });
     }
 
-
-    private void toMainActivityDelay(long time){
+    private void toMainActivityDelay(long time) {
+        LogCat.w("--->", String.format("Login success,toMainActivityDelay delay %d ms...", (int) time));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 startActivity(new Intent(GuideActivity.this, MainActivity.class));
                 GuideActivity.this.finish();
             }
-        },time);
+        }, time);
     }
 }
