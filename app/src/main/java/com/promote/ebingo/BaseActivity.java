@@ -22,6 +22,7 @@ public class BaseActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.common_back_btn:
+                onBackPressed();
                 finish();
                 break;
         }
