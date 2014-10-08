@@ -10,7 +10,7 @@ import com.jch.lib.util.SharedPreferenceUtil;
  * Created by ACER on 2014/8/25.
  */
 public class Constant {
-
+    public static final String PASS="1";
     /**
      * 设置是否为debug模式。 *
      */

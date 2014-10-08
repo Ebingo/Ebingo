@@ -53,6 +53,10 @@ public class EbingoDialog extends AlertDialog {
         setTitle(getContext().getString(titleId));
     }
 
+    public void setMessage(int msgId){
+        setMessage(getContext().getString(msgId));
+    }
+
     @Override
     public void setMessage(CharSequence message) {
         P.message = message;
@@ -81,6 +85,9 @@ public class EbingoDialog extends AlertDialog {
         if (P.mPositiveListener == null || P.mNativeListener == null)
             btn_divider.setVisibility(View.GONE);
     }
+    public void setPositiveButton(int textId, OnClickListener positiveListener) {
+        setPositiveButton(getContext().getResources().getString(textId,positiveListener),positiveListener);
+    }
 
     public void setPositiveButton(CharSequence text, OnClickListener positiveListener) {
         P.textPositive = text;
@@ -90,7 +97,9 @@ public class EbingoDialog extends AlertDialog {
             mPositiveButton.setOnClickListener(new CustomListener(this, positiveListener, BUTTON_POSITIVE));
         }
     }
-
+    public void setNegativeButton(int textId, OnClickListener negativeListener) {
+        setNegativeButton(getContext().getString(textId), negativeListener);
+    }
     public void setNegativeButton(CharSequence text, OnClickListener negativeListener) {
         P.textNegative = text;
         P.mNativeListener = negativeListener;

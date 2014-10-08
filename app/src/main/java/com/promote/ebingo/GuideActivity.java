@@ -1,22 +1,31 @@
 package com.promote.ebingo;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.publish.login.LoginManager;
+import com.promote.ebingo.publish.login.RegisterActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
@@ -28,6 +37,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     ViewPager pager;
     ArrayList<View> views = new ArrayList<View>();
     RadioGroup indicator_group;
+    final int LOGIN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,16 +53,53 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
             views.add(getImage(R.drawable.guide2));
             views.add(getImage(R.drawable.guide3));
             views.add(getImage(R.drawable.guide4));
+            views.add(getLastPage());
             pager.setAdapter(new GuideAdapter());
             pager.setOnPageChangeListener(this);
-
             showDot(0);
-
         } else {
             setLoading();
         }
     }
 
+    /**
+     * 获取导航的最后一页
+     *
+     * @return
+     */
+    private View getLastPage() {
+        View v = View.inflate(this, R.layout.guide_last_page, null);
+        View.OnClickListener lastPageListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_reg: {
+                        Intent intent = new Intent(GuideActivity.this, RegisterActivity.class);
+                        startActivityForResult(intent, RegisterActivity.REQUEST_CODE);
+                        break;
+                    }
+                    case R.id.btn_login: {
+                        Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        Constant.savefirstStart(getApplicationContext());
+                        finish();
+                        break;
+                    }
+                }
+            }
+        };
+
+        v.findViewById(R.id.btn_reg).setOnClickListener(lastPageListener);
+        v.findViewById(R.id.btn_login).setOnClickListener(lastPageListener);
+        return v;
+    }
+
+    /**
+     * 获取每个导航页
+     *
+     * @param id 图片的资源ID
+     * @return
+     */
     private ImageView getImage(int id) {
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(id);
@@ -67,7 +114,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         LogCat.i("page:" + position + " positionOffset:" + positionOffset + " positionOffsetPixels:" + positionOffsetPixels);
-        if (position == 3) {
+        if (position == views.size() - 1) {
             float delta = mSavedOffset - positionOffset;
             scrollToEnd = (delta == 0);
         }
@@ -82,8 +129,8 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        if (state == ViewPager.SCROLL_STATE_IDLE && pager.getCurrentItem() == 3 && scrollToEnd) {
-            loginBackground();
+        if (state == ViewPager.SCROLL_STATE_IDLE && pager.getCurrentItem() == pager.getChildCount() - 1 && scrollToEnd) {
+//            loginBackground();
             Constant.savefirstStart(getApplicationContext());
         }
     }
@@ -146,6 +193,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
                 //如果使用用户名密码登陆失败，就直接加载上一次保存的公司信息
                 Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(), FileUtil.FILE_COMPANY));
                 toMainActivityDelay(500);
+                LogCat.i("--->","Company.loadInstance:"+Company.getInstance());
             }
 
         });
@@ -153,6 +201,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     private void toMainActivityDelay(long time) {
         LogCat.w("--->", String.format("Login success,toMainActivityDelay delay %d ms...", (int) time));
+        LogCat.i("--->","Company:"+Company.getInstance());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -160,5 +209,19 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
                 GuideActivity.this.finish();
             }
         }, time);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RegisterActivity.REQUEST_CODE: {
+                if (resultCode == RESULT_OK) {
+                    startActivity(new Intent(GuideActivity.this, MainActivity.class));
+                    GuideActivity.this.finish();
+                    Constant.savefirstStart(getApplicationContext());
+                }
+                break;
+            }
+        }
     }
 }

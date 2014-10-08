@@ -21,6 +21,7 @@ import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
@@ -29,7 +30,6 @@ import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
-import com.promote.ebingo.impl.VerifyManager;
 import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
@@ -104,7 +104,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        if (!VerifyManager.PASS.equals(infoBean.getVerify_result()))popError(infoBean.getVerify_reason());
+        if (!Constant.PASS.equals(infoBean.getVerify_result()))popError(infoBean.getVerify_reason());
         if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
             productinforlll.setVisibility(View.GONE);
         else productinforlll.setVisibility(View.VISIBLE);

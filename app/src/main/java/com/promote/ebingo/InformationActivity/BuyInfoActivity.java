@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
@@ -23,7 +24,6 @@ import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
-import com.promote.ebingo.impl.VerifyManager;
 import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginDialog;
@@ -196,7 +196,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
-        if (!VerifyManager.PASS.equals(mDetailInfoBean.getVerify_result()))popError(mDetailInfoBean.getVerify_reason());
+        if (!Constant.PASS.equals(mDetailInfoBean.getVerify_result()))popError(mDetailInfoBean.getVerify_reason());
         buyinfonametv.setText(mDetailInfoBean.getTitle());
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
