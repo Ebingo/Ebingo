@@ -2,15 +2,19 @@ package com.promote.ebingo.center.settings;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,8 +23,10 @@ import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
+import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.MainActivity;
@@ -30,11 +36,13 @@ import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +53,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -53,6 +62,9 @@ import java.net.URLEncoder;
  * Created by acer on 2014/9/16.
  */
 public class SettingActivity extends BaseActivity {
+    private APKDownloadTask mTask;
+    private final String testUrl = "http://www.ebingoo.com/upload/ebingoo.apk";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +81,9 @@ public class SettingActivity extends BaseActivity {
                 toActivity(AboutUsActivity.class);
                 break;
             case R.id.check_update: {
-//                requestVersionCode(getApplicationContext());
-                downloadFile("http://d3.dn.ptbus.com/soft/apk/ptbus_daotachuanqi_2.1.2.apk");
+                if (mTask == null) mTask = new APKDownloadTask(SettingActivity.this);
+                requestVersionCode(SettingActivity.this);
+//                downloadFile(testUrl);
                 break;
             }
             case R.id.clear_cache: {
@@ -83,61 +96,116 @@ public class SettingActivity extends BaseActivity {
             case R.id.suggestion:
                 toActivity(SuggestionActivity.class);
                 break;
-            case R.id.logout:
-                Company.clearInstance();
-                ContextUtil.cleanCurComany();
-                FileUtil.deleteFile(this, FileUtil.FILE_COMPANY);
-                toActivity(LoginActivity.class);
-                finish();
+            case R.id.logout: {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.warn);
+                builder.setMessage(R.string.confirm_logout);
+                DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            Company.clearInstance();
+                            ContextUtil.cleanCurComany();
+                            FileUtil.deleteFile(SettingActivity.this, FileUtil.FILE_COMPANY);
+                            toActivity(LoginActivity.class);
+                            finish();
+                        }
+                    }
+                };
+                builder.setPositiveButton(R.string.cancel, l);
+                builder.setNegativeButton(R.string.cancel, l);
+                builder.show();
                 break;
+            }
             default:
                 super.onClick(v);
         }
     }
 
+    /**
+     * 请求版本信息
+     *
+     * @param context
+     */
     private void requestVersionCode(final Context context) {
 
         EbingoRequestParmater param = new EbingoRequestParmater(context);
-        HttpUtil.post(HttpConstant.getNewestVersion, param, new EbingoHandler() {
+        final Dialog dialog = DialogUtil.waitingDialog(this, "正在获取版本信息...");
+        HttpUtil.post(HttpConstant.getNewestVersion, param, new JsonHttpResponseHandler("utf-8") {
             @Override
-            public void onSuccess(int statusCode, JSONObject response) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                EbingoDialog versionDialog = new EbingoDialog(context);
                 try {
-                    if (response.getInt("version") > EbingoApp.localeVersion) {
-                        builder.setMessage(response.getString("msg"));
-                        builder.setPositiveButton(R.string.update_right_now, new DialogInterface.OnClickListener() {
+                    LogCat.i("--->", response + "");
+                    //response.getInt("version") > EbingoApp.localeVersion
+                    if (true) {
+//                        final String url = response.getString("url");
+                        final String url = testUrl;
+                        String fileName = url.substring(url.lastIndexOf("/") + 1);
+                        versionDialog.setTitle(fileName);
+                        versionDialog.setMessage(response.getJSONObject("response").getString("msg"));
+                        DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                if (which == DialogInterface.BUTTON_POSITIVE)
+                                    //检查wifi状态，在非wifi状态下提醒用户，让用户确定下载
+                                    checkWifiAndDownload(url);
                             }
-                        });
-                        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
+                        };
+                        versionDialog.setPositiveButton(R.string.update_right_now, l);
+                        versionDialog.setNegativeButton(R.string.cancel, l);
                     } else {
-                        builder.setMessage(R.string.already_new_version);
+                        versionDialog.setMessage(R.string.already_new_version);
                     }
+                    versionDialog.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFail(int statusCode, String msg) {
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
             }
 
             @Override
             public void onFinish() {
-
+                dialog.dismiss();
             }
         });
     }
 
+    /**
+     * 检查wifi状态，在非wifi状态下提醒用户，让用户确定下载
+     *
+     * @param url
+     */
+    private void checkWifiAndDownload(final String url) {
+        WifiManager manager = (WifiManager) getSystemService(WIFI_SERVICE);
+        if (manager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) {
+            EbingoDialog dialog = new EbingoDialog(this);
+            dialog.setTitle(R.string.warn);
+            DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) mTask.execute(url);
+                }
+            };
+            dialog.setPositiveButton(R.string.yes, l);
+            dialog.setNegativeButton(R.string.cancel, l);
+            dialog.setMessage("检测到当前不是wifi状态，");
+            dialog.show();
+            return;
+        }
+        mTask.execute(url);
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void downloadFile(String url) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            mTask.execute(url);
+            return;
+        }
         DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         try {
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -158,36 +226,54 @@ public class SettingActivity extends BaseActivity {
         registerReceiver(new DownLoadReceiver(), new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
-    public static class APKDownloadTask extends AsyncTask<String, Integer, Void> {
+    /**
+     * 下载apk，需要传入url
+     */
+    public static class APKDownloadTask extends AsyncTask<String, Integer, File> implements Dialog.OnDismissListener {
         private Context mContext;
+        private ProgressDialog dialog;
 
         public APKDownloadTask(Context Context) {
             this.mContext = Context;
+            dialog = new ProgressDialog(mContext);
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog.setOnDismissListener(this);
+            dialog.setCancelable(false);
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected void onPreExecute() {
+            dialog.show();
+        }
+
+        @Override
+        protected File doInBackground(String... params) {
             String url = params[0];
-            String fileName = params[1];
+            String fileName = url.substring(url.lastIndexOf("/") + 1);
+            File apkFile = new File(Environment.getExternalStorageDirectory(), fileName);
             FileOutputStream fot = null;
             InputStream is = null;
             try {
-                URLConnection cnn = new URL(url).openConnection();
+                HttpURLConnection cnn = (HttpURLConnection) new URL(url).openConnection();
                 cnn.setDoInput(true);
-                fot = new FileOutputStream(new File(Environment.getExternalStorageDirectory(), fileName));
+                cnn.getURL().getFile();
+                fot = new FileOutputStream(apkFile);
                 is = cnn.getInputStream();
                 byte[] bytes = new byte[10 * 1024];
 
                 int len;
-                int contentLength=cnn.getContentLength();
-                int downloadLength=0;
+                int contentLength = cnn.getContentLength();
+                int downloadLength = 0;
                 while ((len = is.read(bytes)) != -1) {
                     fot.write(bytes, 0, len);
-                    downloadLength+=len;
-                    publishProgress(downloadLength,contentLength);
+                    downloadLength += len;
+                    publishProgress(downloadLength, contentLength);
                 }
+                is.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                ContextUtil.toast("下载失败！");
+                return null;
             } finally {
                 if (fot != null)
                     try {
@@ -199,24 +285,42 @@ public class SettingActivity extends BaseActivity {
 
             }
 
-            return null;
+            return apkFile;
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            int download=values[0];
-            int total=values[1];
-            int rate= (int) ((download/(float)total)*100);
-            NotificationCompat.Builder builder=new NotificationCompat.Builder(mContext);
-            builder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_launcher));
-            builder.setContent(null);
-            builder.setAutoCancel(false);
-            builder.setProgress(total,download,true);
-            builder.setContentIntent(PendingIntent.getActivity(mContext,1,new Intent(mContext, MainActivity.class),PendingIntent.FLAG_UPDATE_CURRENT));
-            NotificationManager manager= (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify(0,builder.build());
+            int download = values[0];
+            int total = values[1];
+            int rate = (int) ((download / (float) total) * 100);
+            dialog.setMessage("已完成" + rate + "%");
+            dialog.setProgress(rate);
         }
 
+        @Override
+        protected void onPostExecute(File file) {
+            dialog.dismiss();
+            final File f = file;
+            EbingoDialog installDialog = new EbingoDialog(mContext);
+            installDialog.setTitle(R.string.warn);
+            installDialog.setMessage(file.getName()+"下载完成，请立即安装！\n注意：这只是测试用的，不要安装。");
+            installDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setAction(android.content.Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(f),
+                            "application/vnd.android.package-archive");
+                    mContext.startActivity(intent);
+                }
+            });
+            installDialog.show();
+        }
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+        }
     }
 
 }
