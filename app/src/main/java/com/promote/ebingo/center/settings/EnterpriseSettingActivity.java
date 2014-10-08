@@ -31,6 +31,7 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.PreviewActivity;
 import com.promote.ebingo.publish.login.LoginManager;
+import com.promote.ebingo.publish.login.RegisterActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.FileUtil;
@@ -291,20 +292,15 @@ public class EnterpriseSettingActivity extends BaseActivity {
             public void onSuccess(int statusCode, JSONObject response) {
                 Company company = Company.getInstance();
                 info.apply(company);
-                setResult(RESULT_OK, new Intent());
                 ContextUtil.toast("修改成功！");
                 FileUtil.saveFile(getApplicationContext(), FileUtil.FILE_COMPANY, company);
+                setResult(RESULT_OK);
                 finish();
             }
 
             @Override
             public void onFail(int statusCode, String msg) {
-                try {
-                    JSONObject error = new JSONObject(msg);
-                    ContextUtil.toast(error.getString("msg"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                ContextUtil.toast(msg);
             }
 
             @Override
@@ -348,16 +344,10 @@ public class EnterpriseSettingActivity extends BaseActivity {
         intent.putExtra("aspectY", 1);
         intent.putExtra("outputX", 200);
         intent.putExtra("outputY", 200);
-        intent.putExtra("output", Uri.fromFile(getImageTempFile()));// 保存到原文件
+        intent.putExtra("output", getImageCacheUri());// 保存到原文件
         intent.putExtra("outputFormat", "png");// 返回格式
         intent.putExtra("return-data", false);
         startActivityForResult(intent, CROP);
-    }
-
-    public File getImageTempFile() {
-        if (imageTempFile == null)
-            imageTempFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "company_image.png");
-        return imageTempFile;
     }
 
     /**
@@ -439,22 +429,20 @@ public class EnterpriseSettingActivity extends BaseActivity {
     }
 
     private Uri getImageCacheUri() {
-        return Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ebingo_pics.png"));
+        return Uri.fromFile(new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "company_image.png"));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LogCat.i("--->", "onActivityResult " + " " + requestCode + " " + resultCode + " " + data);
         if (resultCode != RESULT_OK) return;
-        if (data == null) return;
-        Uri uri = data.getData();
+
         switch (requestCode) {
             case PICK_CAMERA:
-                LogCat.i("--->", uri.toString());
-                if (uri != null) {
-                    cropImage(uri);
-                }
+                cropImage(getImageCacheUri());
                 break;
             case PICK_IMAGE:
+                Uri uri=data.getData();
                 LogCat.i("--->", uri.toString());
                 if (uri != null) {
                     cropImage(uri);
@@ -469,7 +457,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
                     return;
                 }
                 Intent intent = new Intent(this, PreviewActivity.class);
-                intent.setData(Uri.fromFile(getImageTempFile()));
+                intent.setData(getImageCacheUri());
                 startActivityForResult(intent, PREVIEW);
                 break;
             }
@@ -495,8 +483,8 @@ public class EnterpriseSettingActivity extends BaseActivity {
             parmater.put("image", image);
             parmater.put("name", name);
             parmater.put("company_tel", company_tel);
-            parmater.put("province", province);
-            parmater.put("city", city);
+            parmater.put("province", province_id);//此处传的是id，而不是省名
+            parmater.put("city", city_id);//传id，而不是名称
             parmater.put("address", address);
             parmater.put("website", website);
             parmater.put("email", email);
@@ -518,7 +506,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
 
         boolean check(Context context) {
 
-            String tel = "\\d{3}-\\d{8}|\\d{4}-\\d{7}";
+            String tel = "\\d{3}-\\d{8}|\\d{4}-\\d{7}|\\d{4}-\\d{8}";
             String phoneRule = "^((14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$";
 
             if (!TextUtils.isEmpty(company_tel) && !company_tel.matches(tel) && !company_tel.matches(phoneRule)) {

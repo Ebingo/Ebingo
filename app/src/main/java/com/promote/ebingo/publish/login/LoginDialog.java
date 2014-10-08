@@ -15,7 +15,7 @@ import com.promote.ebingo.application.EbingoApp;
 import com.promote.ebingo.center.CenterFragment;
 
 /**
- * Created by acer on 2014/9/2.
+ * 登录窗口
  */
 public class LoginDialog extends Dialog implements View.OnClickListener {
     private final String LOG_TAG = getClass().getSimpleName();

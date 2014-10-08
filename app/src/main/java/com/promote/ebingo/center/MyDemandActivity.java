@@ -50,8 +50,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         enableDelete(true);
         setDownRefreshable(true);
         enableCache(FileUtil.FILE_DEMAND_LIST, mDemandBeans);
-        LogCat.i("--->", mDemandBeans.size() + "");
-        if (mDemandBeans.size() == 0||getIntent().getBooleanExtra("refresh",false)) getMyDemandList(0);
+        if (mDemandBeans.size() == 0||getIntent().getBooleanExtra(ARG_REFRESH,false)) onRefresh();
     }
 
     private void getMyDemandList(int lastId) {
@@ -92,6 +91,10 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         });
     }
 
+    /**
+     * 创建筛选条件
+     * @return
+     */
     private String getCondition() {
         StringBuilder sb = new StringBuilder();
         sb.append("{")
@@ -209,7 +212,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         TextView nameTv;
         TextView lookTv;
         TextView timeTv;
-
     }
 
     @Override

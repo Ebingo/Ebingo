@@ -233,7 +233,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
     public void edit(DetailInfoBean infoBean) {
         mDetailInfo=infoBean;
         if (tv_pick_category!=null) {
-            tv_pick_category.getTag(infoBean.getCategory_id());
+            tv_pick_category.setTag(infoBean.getCategory_id());
             tv_pick_category.setText(infoBean.getCategory_name());
             edit_title.setText(infoBean.getTitle());
             tv_pick_description.setText(infoBean.getDescription());

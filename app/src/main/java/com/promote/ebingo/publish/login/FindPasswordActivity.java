@@ -30,8 +30,6 @@ public class FindPasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_passord);
-        LinkedList a;
-
         edit_phone = (EditText) findViewById(R.id.edit_phone);
     }
 

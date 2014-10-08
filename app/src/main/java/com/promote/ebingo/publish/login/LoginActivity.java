@@ -69,19 +69,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 break;
             }
             case R.id.commit_title_done: {
-                String message = null;
                 String name = editusername.getText().toString().trim();
                 String pwd = editpassword.getText().toString().trim();
                 if (TextUtil.stringIsNull(name)) {
                     Toast.makeText(LoginActivity.this, "请输入账号！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                message = VaildUtil.validPassword(pwd);
-                if (!message.equals("")) {
-                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 login(name, pwd);
 
                 break;
@@ -89,7 +82,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             case R.id.tv_reg: {
                 Intent intent = new Intent(this, RegisterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, RegisterActivity.REQUEST_CODE);
                 break;
 
             }
@@ -116,6 +109,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void onSuccess() {
                 dialog.dismiss();
+                setResult(RESULT_OK);
                 LoginActivity.this.finish();
             }
 
@@ -127,4 +121,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode==RESULT_OK&&requestCode==RegisterActivity.REQUEST_CODE){
+            finish();
+        }
+    }
 }

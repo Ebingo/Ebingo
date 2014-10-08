@@ -43,45 +43,19 @@ public class LoginManager {
             EbingoRequestParmater parmater = new EbingoRequestParmater(context);
             parmater.put("phonenum", phonenum);
             final ProgressDialog dialog = DialogUtil.waitingDialog(context);
-            HttpUtil.post(HttpConstant.getYzm, parmater, new JsonHttpResponseHandler("utf-8") {
+            HttpUtil.post(HttpConstant.getYzm, parmater,new EbingoHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    try {
-                        if (HttpConstant.CODE_OK.equals(response.getJSONObject("response").getString("code"))) {
-                            mCallback.onSuccess();
-                        } else {
-                            mCallback.onFail("获取验证码失败" + response);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        mCallback.onFail("获取验证码失败" + response);
-                    }
-
+                public void onSuccess(int statusCode, JSONObject response) {
+                    mCallback.onSuccess();
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
-                    mCallback.onFail("String:" + responseString);
+                public void onFail(int statusCode, String msg) {
+                    mCallback.onFail(msg);
                 }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    mCallback.onFail("JSONObject:" + errorResponse);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    mCallback.onFail("JSONArray:" + errorResponse);
-                }
-
 
                 @Override
                 public void onFinish() {
-                    super.onFinish();
                     dialog.dismiss();
                 }
             });

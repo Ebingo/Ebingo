@@ -10,6 +10,11 @@
         android:id="@+id/head_layout"
         layout="@layout/common_head_layout" />
 
+    <TextView
+        android:id="@+id/tv_warn"
+        android:text="错误提示：审核未通过，请重新上传"
+        style="@style/tv_warn_style" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

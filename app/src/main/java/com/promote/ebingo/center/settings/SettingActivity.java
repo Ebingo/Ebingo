@@ -303,7 +303,7 @@ public class SettingActivity extends BaseActivity {
             final File f = file;
             EbingoDialog installDialog = new EbingoDialog(mContext);
             installDialog.setTitle(R.string.warn);
-            installDialog.setMessage(file.getName()+"下载完成，请立即安装！\n注意：这只是测试用的，不要安装。");
+            installDialog.setMessage(file.getName()+"下载完成，请立即安装！\n注意：这是测试链接，下载的apk是来自www.ebingoo.com，不要安装。");
             installDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

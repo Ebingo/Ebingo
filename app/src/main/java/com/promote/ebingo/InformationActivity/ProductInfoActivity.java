@@ -59,7 +59,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     private TextView productinfocitytv;
     private WebView productinfoDetailwv;
     private DetailInfoBean mDetailInfoBean = null;
-    private int collectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +69,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void initialize() {
-        collectId = getIntent().getIntExtra(ARG_COLLECT_ID, -1);
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
 
@@ -166,7 +164,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 if (productinfocollectcb.isChecked()) {
                     addCollection(mDetailInfoBean.getInfo_id());
                 } else {
-                    cancelCollection(collectId);
+                    cancelCollection(mDetailInfoBean.getWishlist_id());
                 }
                 break;
             case R.id.prd_info_company_tv:{
@@ -196,7 +194,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             public void onSuccess(int statusCode, JSONObject response) {
                 ContextUtil.toast("添加收藏成功！");
                 try {
-                    collectId = response.getJSONObject("data").getInt("wishlistid");
+                    mDetailInfoBean.setWishlist_id(response.getJSONObject("data").getInt("wishlistid"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -275,13 +273,11 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
     }
 
-    private PopupWindow errorWindow;
 
     private void popError(String result) {
-        final View contentView = View.inflate(this, R.layout.error_pop_window, null);
-        final TextView tv_warn = (TextView) contentView.findViewById(R.id.tv_warn);
-        errorWindow = new PopupWindow(contentView, 0, 0, false);
+        final TextView tv_warn = (TextView) findViewById(R.id.tv_warn);
         tv_warn.setText(result);
+        tv_warn.setVisibility(View.VISIBLE);
         tv_warn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,18 +286,10 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 startActivity(intent);
             }
         });
-        errorWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        errorWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        errorWindow.setAnimationStyle(android.R.style.Animation_Toast);
-        int[] location = new int[2];
-        View parent = findViewById(R.id.head_layout);
-        parent.getLocationOnScreen(location);
-        errorWindow.showAtLocation(parent, Gravity.TOP, 0, location[1] + parent.getHeight());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (errorWindow != null) errorWindow.dismiss();
     }
 }

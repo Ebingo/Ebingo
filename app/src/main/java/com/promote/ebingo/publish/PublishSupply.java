@@ -34,6 +34,7 @@ import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -53,9 +54,17 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 
+import static com.promote.ebingo.publish.PublishFragment.APPLY_3D;
+import static com.promote.ebingo.publish.PublishFragment.CROP;
 import static com.promote.ebingo.publish.PublishFragment.Error;
-
-import static com.promote.ebingo.publish.PublishFragment.*;
+import static com.promote.ebingo.publish.PublishFragment.PICK_CAMERA;
+import static com.promote.ebingo.publish.PublishFragment.PICK_CATEGORY;
+import static com.promote.ebingo.publish.PublishFragment.PICK_DESCRIPTION;
+import static com.promote.ebingo.publish.PublishFragment.PICK_FOR_SUPPLY;
+import static com.promote.ebingo.publish.PublishFragment.PICK_IMAGE;
+import static com.promote.ebingo.publish.PublishFragment.PICK_REGION;
+import static com.promote.ebingo.publish.PublishFragment.PREVIEW;
+import static com.promote.ebingo.publish.PublishFragment.TYPE_SUPPLY;
 
 /**
  * Created by acer on 2014/9/2.
@@ -78,6 +87,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 
     private DetailInfoBean mDetailInfo;
     private TextView tv_3d_notice;
+    private String info_id;
     private final String CAMERA_PICTURE_NAME = "supply_image.png";
 
     @Override
@@ -248,7 +258,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         String contacts_phone = edit_phone.getText().toString().trim();
         String min_sell_num = edit_min_sell_num.getText().toString().trim();
         String unit = edit_unit.getText().toString().trim();
-
+        LogCat.i("--->", "publish categoryId:" + tv_pick_category.getTag());
         if (company_id == null) ContextUtil.toast("请重新登录！");
         else if (category_id == null) Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
         else if (TextUtils.isEmpty(region_name))
@@ -495,7 +505,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 
 
     public void startPublish(EbingoRequestParmater parmater) {
-
+        parmater.put("info_id",mDetailInfo.getInfo_id());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
@@ -506,7 +516,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         Intent intent = new Intent(getActivity(), MySupplyActivity.class);
-                        intent.putExtra("refresh",true);
+                        intent.putExtra(BaseListActivity.ARG_REFRESH,true);
                         startActivity(intent);
                         clearText();
                     }
@@ -535,11 +545,11 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 
     @Override
     public void edit(DetailInfoBean infoBean) {
-        LogCat.i("--->", " edit" + infoBean);
+        LogCat.i("--->", " edit:" + infoBean);
         if (infoBean == null) return;
         mDetailInfo = infoBean;
         if (tv_pick_image != null) {
-            tv_pick_category.getTag(infoBean.getCategory_id());
+            tv_pick_category.setTag(infoBean.getCategory_id());
             tv_pick_category.setText(infoBean.getCategory_name());
             tv_pick_region.setText(infoBean.getRegion());
             edit_title.setText(infoBean.getTitle());

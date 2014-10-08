@@ -77,6 +77,7 @@ public class DetailInfoBean implements Serializable {
      */
     private int inwishlist;
 
+    private int wishlist_id;
     /**
      * 求购数量. *
      */
@@ -97,6 +98,14 @@ public class DetailInfoBean implements Serializable {
      * 审核原因，失败原因？
      */
     private String verify_reason;
+
+    public int getWishlist_id() {
+        return wishlist_id;
+    }
+
+    public void setWishlist_id(int wishlist_id) {
+        this.wishlist_id = wishlist_id;
+    }
 
     public String getVerify_time() {
         return verify_time;

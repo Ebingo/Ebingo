@@ -191,15 +191,15 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             case R.id.common_back_btn:
                 finish();
                 break;
-            case R.id.btn_next:
-                new LoginManager().getYzm(RegisterInputYzm.this, getIntent().getStringExtra("phonenum"), new LoginManager.Callback() {
-
-                    @Override
-                    public void onSuccess() {
-                        startTimer2InvalidateButton();
-                    }
-                });
-                break;
+//            case R.id.btn_next:
+//                new LoginManager().getYzm(RegisterInputYzm.this, getIntent().getStringExtra("phonenum"), new LoginManager.Callback() {
+//
+//                    @Override
+//                    public void onSuccess() {
+//                        startTimer2InvalidateButton();
+//                    }
+//                });
+//                break;
             case R.id.image_verify:
                 invalidateVerify();
                 break;

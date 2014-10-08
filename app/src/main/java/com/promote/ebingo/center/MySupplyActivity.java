@@ -66,7 +66,7 @@ public class MySupplyActivity extends BaseListActivity {
         enableCache(FileUtil.FILE_SUPPLY_LIST, mSupplyBeans);
         setDownRefreshable(true);
         setUpRefreshable(true);
-        if (mSupplyBeans.size() == 0||getIntent().getBooleanExtra("refresh", false)) getMySupply(0);
+        if (mSupplyBeans.size() == 0||getIntent().getBooleanExtra(ARG_REFRESH, false))onRefresh();
     }
 
     private void delete(final int posotion) {

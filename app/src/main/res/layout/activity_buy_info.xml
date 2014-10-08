@@ -8,7 +8,11 @@
 
     <include
 
-        layout="@layout/common_head_layout"></include>
+        layout="@layout/common_head_layout" />
+
+    <TextView
+        android:id="@+id/tv_warn"
+        style="@style/tv_warn_style" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -55,7 +55,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         myAdapter = new MyAdapter();
         setListAdapter(myAdapter);
         enableCache(FileUtil.FILE_WISH_LIST, mCollections);
-        if (mCollections.size() == 0) getWishlist(0);
+        if (mCollections.size() == 0||getIntent().getBooleanExtra(ARG_REFRESH,false)) onRefresh();
         enableDelete(true);
         setDownRefreshable(true);
     }
@@ -183,7 +183,6 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
             }
 
             CollectBean collectBean = mCollections.get(position);
-
             ImageManager.load(collectBean.getImg(), viewHolder.imgIv, mOptions);
             viewHolder.nameTv.setText(collectBean.getTitle());
             viewHolder.priceTv.setText(collectBean.getPrice());

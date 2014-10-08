@@ -24,6 +24,7 @@ import static com.jch.lib.view.PullToRefreshView.*;
  * zhuchao on 2014/9/18.
  */
 public class BaseListActivity extends ListActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
+    public static final String ARG_REFRESH="refresh";
     /**
      * 分页的lastId
      */

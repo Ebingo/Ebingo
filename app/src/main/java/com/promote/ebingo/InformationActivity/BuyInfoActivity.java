@@ -196,7 +196,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
-        if (!Constant.PASS.equals(mDetailInfoBean.getVerify_result()))popError(mDetailInfoBean.getVerify_reason());
+        if (!Constant.PASS.equals(mDetailInfoBean.getVerify_result()))
+            popError(mDetailInfoBean.getVerify_reason());
         buyinfonametv.setText(mDetailInfoBean.getTitle());
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
@@ -206,13 +207,10 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyinfodetailtv.loadDataWithBaseURL(HttpConstant.getRootUrl(), mDetailInfoBean.getDescription(), "text/html", "UTF-8", "about:blank");
     }
 
-    private PopupWindow errorWindow;
-
     private void popError(String msg) {
-        final View contentView = View.inflate(this, R.layout.error_pop_window, null);
-        final TextView tv_warn = (TextView) contentView.findViewById(R.id.tv_warn);
-        errorWindow = new PopupWindow(contentView, 0, 0, false);
+        final TextView tv_warn = (TextView) findViewById(R.id.tv_warn);
         tv_warn.setText(msg);
+        tv_warn.setVisibility(View.VISIBLE);
         tv_warn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,19 +219,10 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
             }
         });
-        errorWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        errorWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        errorWindow.setAnimationStyle(android.R.style.Animation_Toast);
-        int[] location = new int[2];
-        View parent = findViewById(R.id.head_layout);
-        parent.getLocationOnScreen(location);
-        errorWindow.showAtLocation(parent, Gravity.TOP, 0, location[1] + parent.getHeight());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (errorWindow != null) errorWindow.dismiss();
-
     }
 }

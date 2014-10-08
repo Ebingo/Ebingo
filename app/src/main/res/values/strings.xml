@@ -27,6 +27,7 @@
     <string name="collect">收藏</string>
     <string name="message">消息</string>
     <string name="cancel">取消</string>
+    <string name="yes">确定</string>
     <string name="interprise_info">企业信息</string>
     <string name="buy_info">求购信息</string>
     <string name="supply_info">供应信息</string>
@@ -50,6 +51,7 @@
     <string name="serch_key">关键词:</string>
     <string name="login">登录|注册</string>
     <string name="login_">登 录</string>
+    <string name="enter_now">立即体验</string>
     <string name="reg">注 册</string>
     <string name="reg_for_free">免费注册</string>
     <string name="category_spaced">分 类</string>
@@ -198,12 +200,10 @@
     <string name="last_update">最后更新于：</string>
     <string name="clear_success">清除成功！</string>
     <string name="warn">温馨提示</string>
-    <string name="enter_now">立即体验</string>
-    <string name="confirm_logout">确定退出登录？</string>
-    <string name="yes">确定</string>
     <string name="dial_number_notice">是否拨打%s?</string>
     <array name="pick_picture">
         <item >相册</item>
         <item >拍照</item>
     </array>
+    <string name="confirm_logout">确定退出登录？</string>
 </resources>
