@@ -44,6 +44,7 @@ public class InterpriseDynamicFragment extends CommonListFragment implements Ada
     private String mParam2;
     private ArrayList<ComanyNewsListBeanTools.CompanyNewListBean> mCompanyNewListBeans = new ArrayList<ComanyNewsListBeanTools.CompanyNewListBean>();
     private MyAdapter myAdapter = null;
+    private int mCompanyId = 0;
 
     /**
      * Use this factory method to create a new instance of
@@ -111,14 +112,13 @@ public class InterpriseDynamicFragment extends CommonListFragment implements Ada
     }
 
     @Override
-
     public int getInterprsetId() {
-        return interprsetId;
+        return mCompanyId;
     }
 
     @Override
-    public void setInterprsetId(int interprsetId) {
-        interprsetId = interprsetId;
+    public void setInterprsetId(int interpriseId) {
+        this.mCompanyId = interpriseId;
     }
 
     /**
