@@ -55,7 +55,7 @@ public class DetailInfoBean implements Serializable {
     /**
      * 供应还是求购 1 求购 2 供应
      */
-    private int type;
+    private String type;
     /**
      * 图片地址 *
      */
@@ -256,11 +256,11 @@ public class DetailInfoBean implements Serializable {
         this.region = region;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 

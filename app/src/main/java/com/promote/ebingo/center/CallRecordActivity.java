@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
@@ -18,8 +19,11 @@ import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.VaildUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.BaseListActivity;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.CallDialog;
+import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
@@ -40,19 +44,29 @@ import java.util.List;
  * 通话记录
  */
 public class CallRecordActivity extends BaseListActivity implements View.OnClickListener {
-    private final static int ITEM_DELETE_ID = 2;
-    private final static int ITEM_CANCEL_ID = 3;
     private ArrayList<CallRecord> records;
     private RecordAdapter adapter;
-    private CallRecordManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        manager = new CallRecordManager(getApplicationContext());
         getCallRecord();
-        registerForContextMenu(getListView());
         enableDelete(true);
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        CallRecord record=records.get(position);
+        Intent intent=new Intent();
+        LogCat.i("--->","type="+record.getType()+" info_id="+record.getInfoId());
+        if (Constant.PUBLISH_SUPPLY.equals(record.getType())){
+            intent.setClass(this, ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID,record.getInfoId());
+        }else{
+            intent.setClass(this, BuyInfoActivity.class);
+            intent.putExtra(BuyInfoActivity.DEMAND_ID,record.getInfoId());
+        }
+        startActivity(intent);
     }
 
     private void getCallRecord() {
@@ -102,6 +116,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
+                    LogCat.i("--->",response+"");
                     response = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
                         ContextUtil.toast("操作成功!");

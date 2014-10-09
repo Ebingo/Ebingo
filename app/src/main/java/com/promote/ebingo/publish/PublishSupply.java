@@ -162,7 +162,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         };
         EbingoDialog dialog = new EbingoDialog(getActivity());
         dialog.setTitle("拨打电话");
-        dialog.setMessage(getString(R.string.dial_number_notice,"客服"));
+        dialog.setMessage(getString(R.string.dial_number_notice, "客服"));
         dialog.setPositiveButton("拨打", l);
         dialog.setNegativeButton(getString(R.string.cancel), l);
         dialog.show();
@@ -252,7 +252,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         String region_name = tv_pick_region.getText().toString().trim();
         String price = edit_price.getText().toString().trim();
         String image_url = picked_image.getContentDescription() + "";
-        String description = tv_pick_description.getText().toString().trim();
+        String description = tv_pick_description.getContentDescription().toString();
         String title = edit_title.getText().toString().trim();
         String contacts = edit_contact.getText().toString().trim();
         String contacts_phone = edit_phone.getText().toString().trim();
@@ -314,8 +314,11 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 LogCat.i("--->", "categoryId:" + tv_pick_category.getTag());
                 break;
             case PICK_DESCRIPTION:
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == Activity.RESULT_OK) {
                     tv_pick_description.setText(result);
+                    tv_pick_description.setContentDescription(result);
+
+                }
                 break;
             case PICK_REGION:
                 tv_pick_region.setText(result);
@@ -505,7 +508,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 
 
     public void startPublish(EbingoRequestParmater parmater) {
-        parmater.put("info_id",mDetailInfo.getInfo_id());
+        if (mDetailInfo != null)
+            parmater.put("info_id", mDetailInfo.getInfo_id());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
@@ -516,7 +520,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         Intent intent = new Intent(getActivity(), MySupplyActivity.class);
-                        intent.putExtra(BaseListActivity.ARG_REFRESH,true);
+                        intent.putExtra(BaseListActivity.ARG_REFRESH, true);
                         startActivity(intent);
                         clearText();
                     }
@@ -558,7 +562,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             edit_unit.setText(infoBean.getUnit());
             edit_min_sell_num.setText(infoBean.getMin_sell_num());
             tv_pick_description.setText(infoBean.getDescription());
-
+            tv_pick_description.setContentDescription(infoBean.getDescription());
             edit_contact.setText(infoBean.getContacts());
             edit_phone.setText(infoBean.getPhone_num());
             String image = infoBean.getImage();

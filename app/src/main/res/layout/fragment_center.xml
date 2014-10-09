@@ -87,7 +87,9 @@
                     android:background="@color/trans_black"
                     android:weightSum="4">
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_supply_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_supply_num_tv"
@@ -103,7 +105,9 @@
                             android:text="@string/supply" />
                     </LinearLayout>
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_demand_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_demand_num_tv"
@@ -119,7 +123,9 @@
                             android:text="@string/buy" />
                     </LinearLayout>
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_collect_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_collect_num_tv"
@@ -135,7 +141,9 @@
                             android:text="@string/collect" />
                     </LinearLayout>
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_msg_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_msg_num_tv"

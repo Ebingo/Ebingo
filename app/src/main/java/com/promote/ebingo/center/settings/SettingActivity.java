@@ -97,9 +97,9 @@ public class SettingActivity extends BaseActivity {
                 toActivity(SuggestionActivity.class);
                 break;
             case R.id.logout: {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.warn);
-                builder.setMessage(R.string.confirm_logout);
+                EbingoDialog dialog=new EbingoDialog(this);
+                dialog.setTitle(R.string.warn);
+                dialog.setMessage(R.string.confirm_logout);
                 DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -112,9 +112,9 @@ public class SettingActivity extends BaseActivity {
                         }
                     }
                 };
-                builder.setPositiveButton(R.string.cancel, l);
-                builder.setNegativeButton(R.string.cancel, l);
-                builder.show();
+                dialog.setPositiveButton(R.string.yes, l);
+                dialog.setNegativeButton(R.string.cancel, l);
+                dialog.show();
                 break;
             }
             default:
@@ -137,13 +137,15 @@ public class SettingActivity extends BaseActivity {
                 EbingoDialog versionDialog = new EbingoDialog(context);
                 try {
                     LogCat.i("--->", response + "");
-                    //response.getInt("version") > EbingoApp.localeVersion
-                    if (true) {
-//                        final String url = response.getString("url");
-                        final String url = testUrl;
+                    LogCat.i("--->", "localeVersion:"+ EbingoApp.localeVersion);
+
+                    JSONObject result = response.getJSONObject("response");
+                    if (result.getInt("version_code") > EbingoApp.localeVersion) {
+                        final String url = result.getString("url");
+//                        final String url = testUrl;
                         String fileName = url.substring(url.lastIndexOf("/") + 1);
                         versionDialog.setTitle(fileName);
-                        versionDialog.setMessage(response.getJSONObject("response").getString("msg"));
+                        versionDialog.setMessage(result.getString("msg"));
                         DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -303,7 +305,7 @@ public class SettingActivity extends BaseActivity {
             final File f = file;
             EbingoDialog installDialog = new EbingoDialog(mContext);
             installDialog.setTitle(R.string.warn);
-            installDialog.setMessage(file.getName()+"下载完成，请立即安装！\n注意：这是测试链接，下载的apk是来自www.ebingoo.com，不要安装。");
+            installDialog.setMessage(file.getName()+"下载完成，请立即安装！");
             installDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

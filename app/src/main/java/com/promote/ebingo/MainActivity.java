@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.jch.lib.util.DialogUtil;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
@@ -24,7 +25,9 @@ import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 
-public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener,PublishFragment.PublishCallback {
+public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener, PublishFragment.PublishCallback {
+
+    public static final String ARG_PUBLISH_TYPE = "publish_type";
     private RadioButton mainrb;
     private RadioButton findrb;
     private RadioButton publishrb;
@@ -50,6 +53,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogCat.i("--->", "onCreate");
         setContentView(R.layout.activity_main);
         initialize();
     }
@@ -57,7 +61,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        LogCat.i("--->","onRestoreInstanceState");
+        LogCat.i("--->", "onRestoreInstanceState");
         Company.loadInstance((Company) savedInstanceState.getSerializable("company"));
         sendBroadcast(new Intent(CenterFragment.ACTION_INVALIDATE));
     }
@@ -66,7 +70,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("company", Company.getInstance());
-        LogCat.i("--->","onSaveInstanceState");
+        LogCat.i("--->", "onSaveInstanceState");
     }
 
     private void initialize() {
@@ -199,17 +203,29 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     public void onLoginCancel() {
         mainrb.setChecked(true);
     }
-    private long lastTime=0;
+
+    private long lastTime = 0;
+
     @Override
     public void onBackPressed() {
-
-        long curTime=System.currentTimeMillis();
-        if ( curTime -lastTime < 1500) {
+        long curTime = System.currentTimeMillis();
+        if (curTime - lastTime < 1500) {
             super.onBackPressed();
-        }else{
+        } else {
             ContextUtil.toast("再按一次退出！");
-            lastTime=curTime;
+            lastTime = curTime;
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogCat.i("--->", "onResume");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LogCat.i("--->", "onRestart");
     }
 }

@@ -13,6 +13,8 @@ public class Constant {
     public static final String WAITING = "0";
     public static final String PASS = "1";
     public static final String FAIL = "2";
+    public static final String PUBLISH_SUPPLY = "2";
+    public static final String PUBLISH_DEMAND = "1";
     /**
      * 设置是否为debug模式。 *
      */

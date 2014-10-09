@@ -3,9 +3,12 @@ package com.promote.ebingo;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.jch.lib.view.PullToRefreshView;
@@ -24,7 +27,7 @@ import static com.jch.lib.view.PullToRefreshView.*;
  * zhuchao on 2014/9/18.
  */
 public class BaseListActivity extends ListActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
-    public static final String ARG_REFRESH="refresh";
+    public static final String ARG_REFRESH = "refresh";
     /**
      * 分页的lastId
      */
@@ -300,5 +303,21 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
      */
     protected void onRefresh() {
 
+    }
+
+    /**
+     * 设置一个View，当列表数据为空的时候显示
+     * @param v
+     */
+    public void setEmptyView(View v) {
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_content);
+        frameLayout.removeView(findViewById(android.R.id.empty));
+        v.setId(android.R.id.empty);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER);
+        frameLayout.addView(v, 0, lp);
+        onContentChanged();
     }
 }

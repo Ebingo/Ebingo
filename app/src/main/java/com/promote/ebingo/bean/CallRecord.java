@@ -5,7 +5,7 @@ package com.promote.ebingo.bean;
  */
 public class CallRecord {
 
-    private Integer infoId;
+    private Integer info_id;
     private String name;
     private String type;//关联信息类型1求2供
     private String call_time;//上次拨打时间
@@ -40,11 +40,11 @@ public class CallRecord {
     }
 
     public Integer getInfoId() {
-        return infoId;
+        return info_id;
     }
 
     public void setInfoId(Integer infoId) {
-        this.infoId = infoId;
+        this.info_id = infoId;
     }
 
     public String getName() {

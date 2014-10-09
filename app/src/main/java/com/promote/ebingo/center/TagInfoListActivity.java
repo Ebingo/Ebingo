@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.BaseListActivity;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -75,8 +76,9 @@ public class TagInfoListActivity extends BaseListActivity implements View.OnClic
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent=new Intent(this, ProductInfoActivity.class);
-        intent.putExtra(ProductInfoActivity.ARG_ID,data.get(position).getId());
+        Intent intent=new Intent(this, BuyInfoActivity.class);
+        SearchTagBean bean=data.get(position);
+        intent.putExtra(BuyInfoActivity.DEMAND_ID,bean.getId());
         startActivity(intent);
     }
 

@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.text.TextUtilsCompat;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
+import com.jch.lib.util.TextUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
@@ -58,6 +63,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     private LinearLayout productinfonameleftll;
     private TextView productinfocitytv;
     private WebView productinfoDetailwv;
+    private TextView productinfoDetailtv;
     private DetailInfoBean mDetailInfoBean = null;
 
     @Override
@@ -88,6 +94,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfonameleftll = (LinearLayout) findViewById(R.id.product_info_name_left_ll);
         productinfocitytv = (TextView) findViewById(R.id.product_info_city_tv);
         productinfoDetailwv = (WebView) findViewById(R.id.product_info_detail_wv);
+        productinfoDetailtv = (TextView) findViewById(R.id.product_info_detail_tv);
         int productId = getIntent().getIntExtra(ARG_ID, -1);
         assert (productId != -1);
         //網絡訪問
@@ -102,7 +109,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        if (!Constant.PASS.equals(infoBean.getVerify_result()))popError(infoBean.getVerify_reason());
+        if (!Constant.PASS.equals(infoBean.getVerify_result()))
+            popError(infoBean.getVerify_reason());
         if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
             productinforlll.setVisibility(View.GONE);
         else productinforlll.setVisibility(View.VISIBLE);
@@ -110,7 +118,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         pi_title_tv.setText(infoBean.getTitle());
         pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
         productinfolooknumtv.setText(infoBean.getRead_num() + "");
-        if (infoBean.getType() == 1) {
+        if (infoBean.getUnit() != null) {
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "" + infoBean.getUnit());
         } else {
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "");
@@ -118,7 +126,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfocollectcb.setChecked(infoBean.getInwishlist() == 1);
         productinfocitytv.setText(infoBean.getRegion());
 
-        if (!TextUtils.isEmpty(infoBean.getUrl_3d())) {
+        if (!TextUtils.isEmpty(infoBean.getUrl_3d())) {//如果有3d图片，就只显示3D图片
             productinfoiweb.setVisibility(View.VISIBLE);
             productinfoimg.setVisibility(View.GONE);
             productinfoiweb.getSettings().setJavaScriptEnabled(true);
@@ -128,9 +136,20 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             productinfoiweb.setVisibility(View.GONE);
             ImageManager.load(infoBean.getImage(), productinfoimg);
         }
-        productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
-        productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
+        String description = infoBean.getDescription();
+        if (ContextUtil.isHtml(description)) {//根据是否为html文本，来用不同的控件显示
+            productinfoDetailtv.setVisibility(View.GONE);
+            productinfoDetailwv.setVisibility(View.VISIBLE);
+            productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
+            productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
+        } else {
+            productinfoDetailwv.setVisibility(View.GONE);
+            productinfoDetailtv.setVisibility(View.VISIBLE);
+            productinfoDetailtv.setText(description);
+        }
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -167,14 +186,14 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     cancelCollection(mDetailInfoBean.getWishlist_id());
                 }
                 break;
-            case R.id.prd_info_company_tv:{
+            case R.id.prd_info_company_tv: {
                 Intent intent = new Intent(this, InterpriseInfoActivity.class);
                 intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
                 intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
                 startActivity(intent);
                 break;
             }
-           
+
             default: {
             }
         }
@@ -243,8 +262,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     /**
      * 獲得詳情。
      */
-    private void getInfoDetail(int demandId) {
-
+    private void getInfoDetail(int productId) {
+        LogCat.i("--->", "info_id" + productId);
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         Company company = Company.getInstance();
         if (company.getCompanyId() != null) {
@@ -252,7 +271,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         } else {
             parmater.put("company_id", "0");    //游客
         }
-        parmater.put("info_id", demandId);
+        parmater.put("info_id", productId);
 
         final ProgressDialog dialog = DialogUtil.waitingDialog(ProductInfoActivity.this);
 

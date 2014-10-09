@@ -180,11 +180,18 @@
                             android:text="@string/buy_detail" />
 
                         <WebView
-                            android:id="@+id/buy_info_detail_tv"
+                            android:id="@+id/buy_info_detail_wv"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="5dp" />
 
+                        <TextView
+                            style="@style/font_black_15"
+                            android:id="@+id/buy_info_detail_tv"
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
 

@@ -124,4 +124,14 @@ public class ContextUtil {
     public static void saveCurCompanyName(String name) {
         ((EbingoApp) mContext).saveCurCompanyName(name);
     }
+
+    /**
+     * 暂时只是简单的根据是否以"<"开头，以">"结尾来判断是否为html
+     * @param str
+     * @return
+     */
+    public static boolean isHtml(String str) {
+        if (str == null) return false;
+        return str.startsWith("<")&&str.endsWith(">");
+    }
 }

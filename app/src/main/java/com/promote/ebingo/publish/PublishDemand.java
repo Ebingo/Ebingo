@@ -103,7 +103,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                 Integer category_id = (Integer) tv_pick_category.getTag();
                 String title = edit_title.getText().toString().trim();
                 String tags = tv_tags.getText().toString().trim();
-                String description = tv_pick_description.getText().toString().trim();
+                String description = tv_pick_description.getContentDescription().toString();
                 String contacts = edit_contact.getText().toString().trim();
                 String contact_phone = edit_phone.getText().toString().trim();
                 String demand_num = edit_demand_num.getText().toString().trim();
@@ -170,6 +170,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                     break;
                 case PICK_DESCRIPTION:
                     tv_pick_description.setText(result);
+                    tv_pick_description.setContentDescription(result);
                     break;
                 case PICK_TAGS:
                     tv_tags.setText(result);
@@ -180,7 +181,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
     }
 
     public void startPublish(EbingoRequestParmater parmater) {
-
+        if (mDetailInfo != null)parmater.put("info_id",mDetailInfo.getInfo_id());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
@@ -237,7 +238,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
             tv_pick_category.setText(infoBean.getCategory_name());
             edit_title.setText(infoBean.getTitle());
             tv_pick_description.setText(infoBean.getDescription());
-
+            tv_pick_description.setContentDescription(infoBean.getDescription());
             edit_demand_num.setText(infoBean.getMin_sell_num());
             edit_unit.setText(infoBean.getUnit());
             edit_contact.setText(infoBean.getContacts());

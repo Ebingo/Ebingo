@@ -6,7 +6,7 @@
     android:background="@drawable/click_gray_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/common_head_layout" />
+    <include layout="@layout/common_head_layout_2" />
 
     <LinearLayout
         style="@style/info_content_pad"

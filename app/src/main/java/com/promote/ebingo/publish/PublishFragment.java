@@ -226,12 +226,21 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         LogCat.i("--->","onCheckedChanged");
         switch (checkedId) {
             case R.id.rb_publish_demand:
-                content.setCurrentItem(1);
+                showPage(1);
                 break;
             case R.id.rb_publish_supply:
-                content.setCurrentItem(0);
+                showPage(0);
                 break;
         }
+    }
+
+    /**
+     * 显示一个发布页
+     * @param page 0：发布求购
+     *             1：发布供应
+     */
+    public void showPage(int page){
+        content.setCurrentItem(page);
     }
 
     class PublishContentAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {

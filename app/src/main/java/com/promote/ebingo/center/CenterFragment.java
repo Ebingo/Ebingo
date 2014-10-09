@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.promote.ebingo.center.settings.EnterpriseSettingActivity;
 import com.promote.ebingo.center.settings.SettingActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
+import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
@@ -126,23 +128,23 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * 刷新数据
+     */
     private void invalidateData() {
         String companyName = Company.getInstance().getName();
-        if (companyName == null) {
+        if (Company.getInstance().getCompanyId() == null) {//没有登录
             centerloginbtn.setText(R.string.login);
-        } else if ("".equals(companyName)) {
+        } else if ("".equals(companyName)) {//已经登录，还没有设置用户名
             centerloginbtn.setText("未设置公司名");
-            centerloginbtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), EnterpriseSettingActivity.class);
-                    startActivity(intent);
-                }
-            });
         } else {
             centerloginbtn.setText(companyName);
-            centerloginbtn.setClickable(false);
         }
+
+        VipType vipType = VipType.parse(Company.getInstance().getVipType());
+        centerloginbtn.setCompoundDrawablePadding((int) Dimension.dp(6));
+        centerloginbtn.setCompoundDrawables(null, null, vipType.getIcon(getActivity()), null);
+
         setHeadImage(Company.getInstance().getImageUri());
         getCurrentCompanyBaseNum();
     }
@@ -216,6 +218,10 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centsettingtv.setOnClickListener(this);
         centsettingtv.setOnClickListener(this);
         centShare.setOnClickListener(this);
+        view.findViewById(R.id.cent_demand_bar).setOnClickListener(this);
+        view.findViewById(R.id.cent_supply_bar).setOnClickListener(this);
+        view.findViewById(R.id.cent_collect_bar).setOnClickListener(this);
+        view.findViewById(R.id.cent_msg_bar).setOnClickListener(this);
     }
 
     @Override
@@ -240,7 +246,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         if (uri != null) {//本地有头像
             task.loadBY(uri);
         } else {
-            final String imageUrl = Company.getInstance().getImage();
+            String imageUrl = Company.getInstance().getImage();
             if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
                 LogCat.e("--->", "setHeadImage uriError uri=" + uri);
                 centerheadiv.setImageResource(R.drawable.center_head);
@@ -261,19 +267,9 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
 
         switch (id) {
-            case R.id.center_head_iv: {
-
-                if (isLogined()) {
-
-                } else {
-
-                }
-
-                break;
-            }
-
+            case R.id.center_head_iv:
             case R.id.center_login_btn: {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Intent intent = new Intent(getActivity(), EnterpriseSettingActivity.class);
                 startActivity(intent);
                 break;
             }
@@ -282,34 +278,24 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
                 break;
             }
-            case R.id.center_supply_num_tv: {
 
-
-                break;
-            }
-            case R.id.center_demand_num_tv: {
+            case R.id.cent_msg_bar: {
 
                 break;
             }
-            case R.id.center_collect_num_tv: {
-
-                break;
-            }
-            case R.id.center_msg_num_tv: {
-
-                break;
-            }
+            case R.id.cent_supply_bar:
             case R.id.cent_supply_tv: {
                 Intent intent = new Intent(getActivity(), MySupplyActivity.class);
                 startActivity(intent);
                 break;
             }
+            case R.id.cent_demand_bar:
             case R.id.cent_demand_tv: {
                 Intent intent = new Intent(getActivity(), MyDemandActivity.class);
                 startActivity(intent);
-
                 break;
             }
+            case R.id.cent_collect_bar:
             case R.id.cent_collet_tv: {
                 Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
                 startActivity(intent);
@@ -345,7 +331,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             case R.id.cent_share: {
                 Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
                 intent.setType("text/plain"); // 分享发送的数据类型
-                intent.putExtra(Intent.EXTRA_SUBJECT, "分享Ebingoo"); // 分享的主题
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Ebingoo--指尖商机"); // 分享的主题
                 intent.putExtra(Intent.EXTRA_TEXT, "Ebingoo--指尖商机 用手指做生意.打造全新电商平台。网址：www.ebingoo.com"); // 分享的内容
                 startActivity(Intent.createChooser(intent, "选择分享"));
                 break;

@@ -162,6 +162,10 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
     }
 
+    /**
+     * 切换标签状态
+     * @param state 是否为删除状态
+     */
     private void toggleTagViewState(boolean state) {
         for (int i = 0; i < tagContent.getChildCount(); i++) {
             TagView tagView = (TagView) tagContent.getChildAt(i);

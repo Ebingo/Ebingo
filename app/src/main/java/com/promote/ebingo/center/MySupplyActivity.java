@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,13 +21,16 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
+import com.promote.ebingo.MainActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
@@ -58,15 +62,40 @@ public class MySupplyActivity extends BaseListActivity {
     }
 
     private void initialize() {
+        addEmptyView();
         setUpRefreshable(true);
         mOptions = ContextUtil.getSquareImgOptions();
         adapter = new MyAdapter();
         setListAdapter(adapter);
+
         enableDelete(true);
         enableCache(FileUtil.FILE_SUPPLY_LIST, mSupplyBeans);
+
         setDownRefreshable(true);
         setUpRefreshable(true);
-        if (mSupplyBeans.size() == 0||getIntent().getBooleanExtra(ARG_REFRESH, false))onRefresh();
+        if (mSupplyBeans.size() == 0 || getIntent().getBooleanExtra(ARG_REFRESH, false))
+            onRefresh();
+
+    }
+
+    /**
+     * 添加一个emptyView,如果不添加则使用默认的
+     */
+    private void addEmptyView() {
+        View empty_view = View.inflate(this, R.layout.empty_layout, null);
+        TextView notice= (TextView) empty_view.findViewById(R.id.tv_empty_notice);
+        notice.setText(getString(R.string.empty_notice,"供应"));
+        empty_view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MySupplyActivity.this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.TYPE, Constant.PUBLISH_DEMAND);
+                startActivity(intent);
+            }
+        });
+
+        setEmptyView(empty_view);
     }
 
     private void delete(final int posotion) {
@@ -107,7 +136,7 @@ public class MySupplyActivity extends BaseListActivity {
                     .append(",")
                     .append(makeCondition("sort", "time"))
                     .append(",")
-                    .append(makeCondition("verify",3))
+                    .append(makeCondition("verify", 3))
                     .append("}");
             param.put("condition", URLEncoder.encode(sb.toString(), "utf-8"));
         } catch (UnsupportedEncodingException e) {

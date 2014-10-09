@@ -292,6 +292,8 @@
     </style>
 
     <style name="center_num_style">
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/trans_black_clickable</item>
         <item name="android:paddingTop">2dp</item>
         <item name="android:paddingBottom">2dp</item>
         <item name="android:layout_height">wrap_content</item>

@@ -106,7 +106,7 @@
 
                     <TextView
                         style="@style/publish_text_style"
-                        android:text="详细地址" />
+                        android:text="具体街道" />
 
                     <View style="@style/vertical_divider_20" />
 

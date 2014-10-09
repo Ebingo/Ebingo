@@ -24,9 +24,11 @@ import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginDialog;
+import com.promote.ebingo.util.ContextUtil;
 
 /**
  * 求购信息详情。
@@ -41,7 +43,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
     private TextView buynumtv;
     private TextView buyinfopublishtimetv;
     private TextView publishlooknumtv;
-    private WebView buyinfodetailtv;
+    private TextView productinfoDetailtv;
+    private WebView buyinfodetailwv;
     private Button buyInfocontactphonetv;
     private ImageView commonbackbtn;
     private TextView commontitletv;
@@ -65,7 +68,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buynumtv = (TextView) findViewById(R.id.buy_num_tv);
         buyinfopublishtimetv = (TextView) findViewById(R.id.buy_info_publish_time_tv);
         publishlooknumtv = (TextView) findViewById(R.id.publish_look_num_tv);
-        buyinfodetailtv = (WebView) findViewById(R.id.buy_info_detail_tv);
+        buyinfodetailwv = (WebView) findViewById(R.id.buy_info_detail_wv);
+        productinfoDetailtv = (TextView) findViewById(R.id.buy_info_detail_tv);
         buyInfocontactphonetv = (Button) findViewById(R.id.buy_info_contact_phone_tv);
 
         int demandId = getIntent().getIntExtra(DEMAND_ID, -1);
@@ -113,8 +117,11 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
                         record.setInfoId(mDetailInfoBean.getInfo_id());
                         CallRecordActivity.CallRecordManager.dialNumber(this, record);
                     } else {        //不是vip会员.
-                        VipDialog vipDialog = new VipDialog(BuyInfoActivity.this);
-                        vipDialog.show();
+                        EbingoDialog dialog = new EbingoDialog(BuyInfoActivity.this);
+                        dialog.setTitle(R.string.warn);
+                        dialog.setMessage(R.string.vip_promote);
+                        dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
+                        dialog.show();
                     }
                 }
 
@@ -203,9 +210,20 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
         publishlooknumtv.setText(String.valueOf(mDetailInfoBean.getRead_num()));
         buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
-        buyinfodetailtv.getSettings().setJavaScriptEnabled(true);
-        buyinfodetailtv.loadDataWithBaseURL(HttpConstant.getRootUrl(), mDetailInfoBean.getDescription(), "text/html", "UTF-8", "about:blank");
+
+        String description = mDetailInfoBean.getDescription();
+        if (ContextUtil.isHtml(description)) {//根据是否为html文本，来用不同的控件显示
+            productinfoDetailtv.setVisibility(View.GONE);
+            buyinfodetailwv.setVisibility(View.VISIBLE);
+            buyinfodetailwv.getSettings().setJavaScriptEnabled(true);
+            buyinfodetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), description, "text/html", "UTF-8", "about:blank");
+        } else {
+            buyinfodetailwv.setVisibility(View.GONE);
+            productinfoDetailtv.setVisibility(View.VISIBLE);
+            productinfoDetailtv.setText(description);
+        }
     }
+
 
     private void popError(String msg) {
         final TextView tv_warn = (TextView) findViewById(R.id.tv_warn);

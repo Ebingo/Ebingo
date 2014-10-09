@@ -139,7 +139,6 @@
                             style="@style/font_gray_15"
                             android:layout_alignParentLeft="true"
                             android:layout_gravity="left"
-                            android:text="水晶特價 感恩大回饋 水晶珠寶首飾"
                             android:layout_height="wrap_content" />
 
 
@@ -254,6 +253,14 @@
                         android:id="@+id/product_info_detail_wv"
                         android:layout_width="match_parent"
                         android:layout_marginTop="5dp"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/font_black_15"
+                        android:id="@+id/product_info_detail_tv"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:visibility="gone"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>

@@ -15,12 +15,15 @@ import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
+import com.promote.ebingo.MainActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchDemandBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -43,6 +46,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
     }
 
     private void initialize() {
+        addEmptyView();
         setUpRefreshable(true);
         adapter = new MyAdapter();
         setListAdapter(adapter);
@@ -52,7 +56,25 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         enableCache(FileUtil.FILE_DEMAND_LIST, mDemandBeans);
         if (mDemandBeans.size() == 0||getIntent().getBooleanExtra(ARG_REFRESH,false)) onRefresh();
     }
+    /**
+     * 添加一个emptyView,如果不添加则使用默认的
+     */
+    private void addEmptyView() {
+        View empty_view = View.inflate(this, R.layout.empty_layout, null);
+        TextView notice= (TextView) empty_view.findViewById(R.id.tv_empty_notice);
+        notice.setText(getString(R.string.empty_notice,"求购"));
+        empty_view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyDemandActivity.this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.TYPE, Constant.PUBLISH_DEMAND);
+                startActivity(intent);
+            }
+        });
+
+        setEmptyView(empty_view);
+    }
     private void getMyDemandList(int lastId) {
 
         String urlStr = HttpConstant.getDemandInfoList;
