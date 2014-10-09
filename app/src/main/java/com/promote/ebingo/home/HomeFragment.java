@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -614,15 +615,31 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     public class HotMarketOCL implements AdapterView.OnItemClickListener {
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            view.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.adv_item_click));
-            if (isNetworkConnected()) {
-                HotCategory category = hot_category.get(position);
-                Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                intent.putExtra(CategoryActivity.ARG_ID, category.getId());
-                intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
-                startActivity(intent);
-            }
+        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            Animation animation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.adv_item_click);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (isNetworkConnected()) {
+                        HotCategory category = hot_category.get(position);
+                        Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                        intent.putExtra(CategoryActivity.ARG_ID, category.getId());
+                        intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            view.startAnimation(animation);
 
 
         }
