@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -614,6 +615,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            view.startAnimation(AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.adv_item_click));
             if (isNetworkConnected()) {
                 HotCategory category = hot_category.get(position);
                 Intent intent = new Intent(getActivity(), CategoryActivity.class);
