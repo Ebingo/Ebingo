@@ -120,6 +120,7 @@
     <string name="time">时间</string>
     <string name="promote">提示</string>
     <string name="vip_promote">目前只有VIP及已上用户可以一键拨号，请升级。</string>
+    <string name="go_company_info_toast">查找不到当前企业信息</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -202,8 +203,8 @@
     <string name="warn">温馨提示</string>
     <string name="dial_number_notice">是否拨打%s?</string>
     <array name="pick_picture">
-        <item >相册</item>
-        <item >拍照</item>
+        <item>相册</item>
+        <item>拍照</item>
     </array>
     <string name="confirm_logout">确定退出登录？</string>
     <string name="empty_notice">您当前没有发布任何%s信息。</string>

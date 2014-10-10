@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:gravity="center_vertical"
     style="@style/home_item_style"
-    android:background="@drawable/click_gray_bg"
+    android:background="@drawable/trans_gray_selector"
     android:layout_height="wrap_content">
 
 

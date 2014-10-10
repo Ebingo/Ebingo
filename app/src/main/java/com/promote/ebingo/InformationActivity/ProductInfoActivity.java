@@ -4,27 +4,19 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.text.TextUtilsCompat;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
-import com.jch.lib.util.TextUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
@@ -150,7 +142,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
 
-
     @Override
     public void onClick(View v) {
 
@@ -164,11 +155,14 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 break;
             }
             case R.id.prd_info_btm_ll: {
-
-                Intent intent = new Intent(this, InterpriseInfoActivity.class);
-                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
-                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
-                startActivity(intent);
+                if (HttpUtil.isNetworkConnected(getApplicationContext()) && mDetailInfoBean != null) {
+                    Intent intent = new Intent(this, InterpriseInfoActivity.class);
+                    intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+                    intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.go_company_info_toast), Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
             case R.id.product_info_tel_cb:
@@ -186,13 +180,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     cancelCollection(mDetailInfoBean.getWishlist_id());
                 }
                 break;
-            case R.id.prd_info_company_tv: {
-                Intent intent = new Intent(this, InterpriseInfoActivity.class);
-                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
-                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
-                startActivity(intent);
-                break;
-            }
 
             default: {
             }

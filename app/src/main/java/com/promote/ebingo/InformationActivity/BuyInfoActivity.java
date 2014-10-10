@@ -4,17 +4,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
@@ -129,23 +128,25 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.buy_info_btm_ll: {
-                if (mDetailInfoBean != null) {
+                if (mDetailInfoBean != null && HttpUtil.isNetworkConnected(getApplicationContext())) {
                     Intent intent = new Intent(BuyInfoActivity.this, InterpriseInfoActivity.class);
                     intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+                    intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
                     startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.go_company_info_toast), Toast.LENGTH_SHORT).show();
                 }
 
                 break;
 
             }
-            case R.id.buy_info_into_company_tv: {
-
-                Intent intent = new Intent(this, InterpriseInfoActivity.class);
-                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
-                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
-                startActivity(intent);
-                break;
-            }
+//            case R.id.buy_info_into_company_tv: {
+//                Intent intent = new Intent(this, InterpriseInfoActivity.class);
+//                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+//                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
+//                startActivity(intent);
+//                break;
+//            }
             default: {
 
             }

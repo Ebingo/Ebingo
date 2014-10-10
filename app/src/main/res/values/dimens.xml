@@ -31,8 +31,8 @@
     <dimen name="interprise_info_img_height">60dp</dimen>
     <dimen name="loing_divide_height">20dp</dimen>
 
-    <dimen name="intpr_info_img_width">30dp</dimen>
-    <dimen name="intpr_info_img_heiht">25dp</dimen>
+    <dimen name="intpr_info_img_width">25dp</dimen>
+    <dimen name="intpr_info_img_heiht">20dp</dimen>
 
     <dimen name="login_widget_height">45dp</dimen>
     <dimen name="logo_margin_top">27dp</dimen>
