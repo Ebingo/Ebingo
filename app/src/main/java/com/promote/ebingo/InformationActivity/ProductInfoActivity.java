@@ -94,7 +94,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         commontitletv.setText(R.string.title_product_info);
         commonbackbtn.setOnClickListener(this);
         productinfotelcb.setOnClickListener(this);
-        prdinfointocompanytv.setOnClickListener(this);
         productinfocollectcb.setOnClickListener(this);
         prdinfobtmll.setOnClickListener(this);
 

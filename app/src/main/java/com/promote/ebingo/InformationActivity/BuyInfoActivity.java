@@ -76,7 +76,6 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getString(R.string.title_buy_detail));
         buyInfocontactphonetv.setOnClickListener(this);
-        buyinfointocompanytv.setOnClickListener(this);
         buyinfobtmll.setOnClickListener(this);
         getInfoDetail();
 

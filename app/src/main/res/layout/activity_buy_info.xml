@@ -84,7 +84,7 @@
 
                         <TextView
                             android:id="@+id/buy_info_name_tv"
-                            style="@style/black_15_tv"
+                            style="@style/font_gray_15"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
