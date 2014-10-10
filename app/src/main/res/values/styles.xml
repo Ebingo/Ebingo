@@ -390,4 +390,9 @@
         <item name="android:paddingRight">23dp</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <style name="popupAnimation" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/pop_drop_in</item>
+        <item name="android:windowExitAnimation">@anim/pop_drop_out</item>
+    </style>
 </resources>
