@@ -28,6 +28,8 @@ import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.EbingoDialog;
+import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.JsonUtil;
 import com.promote.ebingo.util.LogCat;
@@ -56,15 +58,15 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        CallRecord record=records.get(position);
-        Intent intent=new Intent();
-        LogCat.i("--->","type="+record.getType()+" info_id="+record.getInfoId());
-        if (Constant.PUBLISH_SUPPLY.equals(record.getType())){
+        CallRecord record = records.get(position);
+        Intent intent = new Intent();
+        LogCat.i("--->", "type=" + record.getType() + " info_id=" + record.getInfoId());
+        if (Constant.PUBLISH_SUPPLY.equals(record.getType())) {
             intent.setClass(this, ProductInfoActivity.class);
-            intent.putExtra(ProductInfoActivity.ARG_ID,record.getInfoId());
-        }else{
+            intent.putExtra(ProductInfoActivity.ARG_ID, record.getInfoId());
+        } else {
             intent.setClass(this, BuyInfoActivity.class);
-            intent.putExtra(BuyInfoActivity.DEMAND_ID,record.getInfoId());
+            intent.putExtra(BuyInfoActivity.DEMAND_ID, record.getInfoId());
         }
         startActivity(intent);
     }
@@ -116,7 +118,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
-                    LogCat.i("--->",response+"");
+                    LogCat.i("--->", response + "");
                     response = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
                         ContextUtil.toast("操作成功!");
@@ -192,10 +194,15 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             public void onClick(View v) {
                 try {
                     CallRecord record = (CallRecord) v.getTag();
-                    LogCat.i("--->", record + "");
-                    LogCat.i("--->", record.getPhone_num() + "");
-                    LogCat.i("--->", record.getTo_id() + "");
-                    CallRecordManager.dialNumber(CallRecordActivity.this, record);
+                    VipType vipType = VipType.parse(Company.getInstance().getVipType());
+                    VipType.VipInfo info = vipType.getVipInfo();
+                    String type = record.getType();
+                    if (info.canDial(type)) {//这里加判断，为了防止会员过期后，此处还有通话记录
+                        CallRecordManager.dialNumber(CallRecordActivity.this, record);
+                    } else {
+                        EbingoDialog.newInstance(CallRecordActivity.this, EbingoDialog.DialogStyle.STYLE_CANNOT_DIAL).show();
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -258,7 +265,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                 }
             };
             CallDialog callDialog = new CallDialog(context, phoneCallBack);
-            callDialog.setCallphone(context.getString(R.string.dial_number_notice,record.getPhone_num()));
+            callDialog.setCallphone(context.getString(R.string.dial_number_notice, record.getPhone_num()));
             callDialog.show();
 //            AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //            builder.setTitle("拨打电话")

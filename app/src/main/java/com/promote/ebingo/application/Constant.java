@@ -10,8 +10,10 @@ import com.jch.lib.util.SharedPreferenceUtil;
  * Created by ACER on 2014/8/25.
  */
 public class Constant {
-    public static final String WAITING = "0";
-    public static final String PASS = "1";
+    public static final String VERIFY_WAITING = "0";
+    public static final String VERIFY_PASS = "1";
+    public static final String VERIFY_NOT_PASS = "2";
+//    通过审核为1，未通过为2，待审核为0
     public static final String FAIL = "2";
     public static final String PUBLISH_SUPPLY = "2";
     public static final String PUBLISH_DEMAND = "1";

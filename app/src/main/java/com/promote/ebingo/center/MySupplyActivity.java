@@ -210,13 +210,12 @@ public class MySupplyActivity extends BaseListActivity {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.mysupply_item, null);
                 viewHolder = new ViewHolder();
-
                 viewHolder.img = (ImageView) convertView.findViewById(R.id.mysupply_item_img);
                 viewHolder.nameTv = (TextView) convertView.findViewById(R.id.mysupply_item_name);
                 viewHolder.priceTv = (TextView) convertView.findViewById(R.id.mysupply_price_tv);
                 viewHolder.startTv = (TextView) convertView.findViewById(R.id.mysupply_supply_num_tv);
                 viewHolder.timeTv = (TextView) convertView.findViewById(R.id.mysupply_time);
-
+                viewHolder.verifyTv = (TextView) convertView.findViewById(R.id.tv_verify_result);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -228,8 +227,19 @@ public class MySupplyActivity extends BaseListActivity {
             if (!TextUtils.isEmpty(supplyBean.getUnit()))
                 viewHolder.priceTv.append("/" + supplyBean.getUnit());
             viewHolder.timeTv.setText(supplyBean.getDate());
-            viewHolder.startTv.setText(supplyBean.getMin_supply_num());
-
+            viewHolder.startTv.setText(getString(R.string.supply_start_num,supplyBean.getMin_supply_num()));
+            String verify_result=supplyBean.getVerify_result();
+            if (Constant.VERIFY_WAITING.equals(verify_result)){
+                viewHolder.verifyTv.setVisibility(View.VISIBLE);
+                viewHolder.verifyTv.setText("待审核");
+                viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.orange_my));
+            }else if(Constant.VERIFY_NOT_PASS.equals(verify_result)){
+                viewHolder.verifyTv.setVisibility(View.VISIBLE);
+                viewHolder.verifyTv.setText("未通过");
+                viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.gray));
+            }else{
+                viewHolder.verifyTv.setVisibility(View.INVISIBLE);
+            }
             return convertView;
         }
 
@@ -242,6 +252,7 @@ public class MySupplyActivity extends BaseListActivity {
         TextView priceTv;
         TextView startTv;
         TextView timeTv;
+        TextView verifyTv;
     }
 
     @Override

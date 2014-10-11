@@ -1,5 +1,7 @@
 package com.promote.ebingo.impl;
 
+import android.text.TextUtils;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -28,10 +30,11 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
             if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
                 onSuccess(statusCode, response);
             } else {
-                onFail(statusCode, response.getString("msg"));
+                showError(statusCode, response.getString("msg"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            showError(statusCode,e.getLocalizedMessage());
         }
     }
 
@@ -60,9 +63,11 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
 
     private void showError(int statusCode,String msg) {
         LogCat.w("EbingooHandler error:"+msg);
-        String net_error = ContextUtil.getString(R.string.net_error);
-        onFail(statusCode, net_error);
-        ContextUtil.toast(net_error);
+        if (TextUtils.isEmpty(msg)){
+            msg= ContextUtil.getString(R.string.net_error);
+        }
+        onFail(statusCode, msg);
+        ContextUtil.toast(msg);
     }
 
     /**

@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -99,17 +96,14 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             case R.id.buy_info_contact_phone_tv: {
 
                 if (mDetailInfoBean != null) {
-
                     Company company = Company.getInstance();
                     if (company == null || company.getCompanyId() == null) {//用户没有登录。
-
                         LoginDialog loginDialog = new LoginDialog(BuyInfoActivity.this);
                         loginDialog.setOwnerActivity(this);
                         loginDialog.setCanceledOnTouchOutside(true);
                         loginDialog.setCancelable(true);
                         loginDialog.show();
-
-                    } else if (isVip(company.getVipType())) {       //vip会员.
+                    } else if (VipType.getCompanyInstance().getVipInfo().canDialDemand()) {       //vip会员.
                         CallRecord record = new CallRecord();
                         record.setPhone_num(mDetailInfoBean.getPhone_num());
                         record.setTo_id(mDetailInfoBean.getCompany_id());
@@ -117,10 +111,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
                         record.setInfoId(mDetailInfoBean.getInfo_id());
                         CallRecordActivity.CallRecordManager.dialNumber(this, record);
                     } else {        //不是vip会员.
-                        EbingoDialog dialog = new EbingoDialog(BuyInfoActivity.this);
-                        dialog.setTitle(R.string.warn);
-                        dialog.setMessage(R.string.vip_promote);
-                        dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
+                        EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_DIAL);
                         dialog.show();
                     }
                 }
@@ -151,19 +142,6 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             }
 
         }
-
-    }
-
-    /**
-     * 判断是否为vip会员.
-     *
-     * @param vipType
-     * @return true 是vip会员.
-     */
-    public boolean isVip(String vipType) {
-
-        assert vipType == null;
-        return VipType.parse(vipType).compareTo(VipType.Standard_VIP) > 0;
 
     }
 
@@ -203,8 +181,12 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
-        if (!Constant.PASS.equals(mDetailInfoBean.getVerify_result()))
+        if (mDetailInfoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
+            buyInfocontactphonetv.setVisibility(View.GONE);
+        }
+        if (!Constant.VERIFY_PASS.equals(mDetailInfoBean.getVerify_result())) {
             popError(mDetailInfoBean.getVerify_reason());
+        }
         buyinfonametv.setText(mDetailInfoBean.getTitle());
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());

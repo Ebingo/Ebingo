@@ -3,6 +3,7 @@ package com.promote.ebingo.center;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.PagerTitleStrip;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -213,17 +214,28 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 viewHolder.nameTv = (TextView) convertView.findViewById(R.id.mydemand_name_tv);
                 viewHolder.lookTv = (TextView) convertView.findViewById(R.id.mydemand_look_num_tv);
                 viewHolder.timeTv = (TextView) convertView.findViewById(R.id.mydemand_time_tv);
+                viewHolder.verifyTv = (TextView) convertView.findViewById(R.id.tv_verify_result);
 
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-
             SearchDemandBean demandBean = mDemandBeans.get(position);
             viewHolder.nameTv.setText(demandBean.getName());
-            viewHolder.lookTv.setText(demandBean.getRead_num());
+            viewHolder.lookTv.setText(getString(R.string.look_unite, demandBean.getRead_num()));
             viewHolder.timeTv.setText(demandBean.getDate());
-
+            String verify_result=demandBean.getVerify_result();
+            if (Constant.VERIFY_WAITING.equals(verify_result)){
+                viewHolder.verifyTv.setVisibility(View.VISIBLE);
+                viewHolder.verifyTv.setText("待审核");
+                viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.orange_my));
+            }else if(Constant.VERIFY_NOT_PASS.equals(verify_result)){
+                viewHolder.verifyTv.setVisibility(View.VISIBLE);
+                viewHolder.verifyTv.setText("未通过");
+                viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.gray));
+            }else{
+                viewHolder.verifyTv.setVisibility(View.INVISIBLE);
+            }
             return convertView;
         }
 
@@ -234,6 +246,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         TextView nameTv;
         TextView lookTv;
         TextView timeTv;
+        TextView verifyTv;
     }
 
     @Override

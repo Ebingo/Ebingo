@@ -35,7 +35,10 @@ import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.publish.PublishEditActivity;
+import com.promote.ebingo.publish.VipType;
+import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -71,13 +74,11 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
         initialize();
-
     }
 
     private void initialize() {
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
-
         prdinfointocompanytv = (TextView) findViewById(R.id.prd_info_into_company_tv);//进入公司
         prdinfocompanytv = (TextView) findViewById(R.id.prd_info_company_tv);//公司名
         prdinfobtmll = (RelativeLayout) findViewById(R.id.prd_info_btm_ll);
@@ -109,11 +110,12 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void setData(DetailInfoBean infoBean) {
-        if (!Constant.PASS.equals(infoBean.getVerify_result()))
+        if (!Constant.VERIFY_PASS.equals(infoBean.getVerify_result())) {
             popError(infoBean.getVerify_reason());
-        if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
+        }
+        if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
             productinforlll.setVisibility(View.GONE);
-        else productinforlll.setVisibility(View.VISIBLE);
+        } else productinforlll.setVisibility(View.VISIBLE);
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
         pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
@@ -150,7 +152,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
 
-
     @Override
     public void onClick(View v) {
 
@@ -172,12 +173,23 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 break;
             }
             case R.id.product_info_tel_cb:
-                CallRecord record = new CallRecord();
-                record.setCall_id(Company.getInstance().getCompanyId());
-                record.setInfoId(mDetailInfoBean.getInfo_id());
-                record.setTo_id(mDetailInfoBean.getCompany_id());
-                record.setPhone_num(mDetailInfoBean.getPhone_num());
-                CallRecordActivity.CallRecordManager.dialNumber(this, record);
+                Company company=Company.getInstance();
+                if (company == null || company.getCompanyId() == null) {//用户没有登录。
+                    LoginDialog loginDialog = new LoginDialog(ProductInfoActivity.this);
+                    loginDialog.setOwnerActivity(this);
+                    loginDialog.setCanceledOnTouchOutside(true);
+                    loginDialog.setCancelable(true);
+                    loginDialog.show();
+                }else if (VipType.getCompanyInstance().getVipInfo().canDialSupply()) {
+                    CallRecord record = new CallRecord();
+                    record.setCall_id(Company.getInstance().getCompanyId());
+                    record.setInfoId(mDetailInfoBean.getInfo_id());
+                    record.setTo_id(mDetailInfoBean.getCompany_id());
+                    record.setPhone_num(mDetailInfoBean.getPhone_num());
+                    CallRecordActivity.CallRecordManager.dialNumber(this, record);
+                }else{
+                    EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_DIAL);
+                }
                 break;
             case R.id.product_info_collect_cb:
                 if (productinfocollectcb.isChecked()) {
@@ -186,7 +198,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     cancelCollection(mDetailInfoBean.getWishlist_id());
                 }
                 break;
-            case R.id.prd_info_company_tv: {
+            case R.id.prd_info_into_company_tv: {
                 Intent intent = new Intent(this, InterpriseInfoActivity.class);
                 intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
                 intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
@@ -221,6 +233,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
             @Override
             public void onFail(int statusCode, String msg) {
+                LogCat.w("--->",msg);
                 productinfocollectcb.setChecked(false);
             }
 

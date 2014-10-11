@@ -65,6 +65,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
     private EditText edit_enterprise_email;
     private TextView tv_pick_province;
     private TextView tv_pick_city;
+    private TextView tv_error;
     private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();//省份列表
     private File imageTempFile;
 
@@ -82,7 +83,8 @@ public class EnterpriseSettingActivity extends BaseActivity {
 
         tv_pick_province = (TextView) findViewById(R.id.pick_province);
         tv_pick_city = (TextView) findViewById(R.id.pick_city);
-
+        tv_error = (TextView) findViewById(R.id.tv_error);
+        tv_error.setVisibility(View.GONE);
         tv_pick_province.setOnClickListener(this);
         tv_pick_city.setOnClickListener(this);
         image_enterprise.setOnClickListener(this);
@@ -139,6 +141,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_commit:
                 EnterPriseInfo info = getInputInfo();
+                tv_error.setVisibility(View.GONE);
                 if (info.check(getApplicationContext())) {
                     commit(info);
                 }
@@ -372,6 +375,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                LogCat.i("--->",response+"");
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code")))
@@ -442,7 +446,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
                 cropImage(getImageCacheUri());
                 break;
             case PICK_IMAGE:
-                Uri uri=data.getData();
+                Uri uri = data.getData();
                 LogCat.i("--->", uri.toString());
                 if (uri != null) {
                     cropImage(uri);
@@ -492,7 +496,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
         }
 
         void apply(Company company) {
-            company.setImage(HttpConstant.getHost() + image);
+            company.setImage(image);
             company.setName(name);
             company.setCompanyTel(company_tel);
             company.setProvince_id(province_id);
@@ -510,17 +514,21 @@ public class EnterpriseSettingActivity extends BaseActivity {
             String phoneRule = "^((14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$";
 
             if (!TextUtils.isEmpty(company_tel) && !company_tel.matches(tel) && !company_tel.matches(phoneRule)) {
-                ContextUtil.toast("请输入正确的手机号或电话！");
+                showError(getString(R.string.tel_format_error));
                 return false;
             }
 
             String msg = VaildUtil.validEmail(email);
             if (!TextUtils.isEmpty(msg)) {
-                ContextUtil.toast(msg);
+                showError(msg);
                 return false;
             }
-
             return true;
         }
+    }
+
+    void showError(String msg) {
+        tv_error.setText(msg);
+        tv_error.setVisibility(View.VISIBLE);
     }
 }

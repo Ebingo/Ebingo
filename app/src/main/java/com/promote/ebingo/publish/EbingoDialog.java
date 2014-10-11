@@ -1,5 +1,6 @@
 package com.promote.ebingo.publish;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,6 +30,38 @@ public class EbingoDialog extends AlertDialog {
     public EbingoDialog(Context context) {
         super(context);
         P = new P();
+    }
+
+    public enum DialogStyle {
+        STYLE_CANNOT_DIAL,
+        STYLE_CANNOT_ADD_TAG
+    }
+
+    /**
+     * 对话框工厂
+     * @param context
+     * @param style
+     * @return
+     */
+    public static EbingoDialog newInstance(Activity context, DialogStyle style) {
+        EbingoDialog dialog = new EbingoDialog(context);
+        switch (style) {
+            case STYLE_CANNOT_DIAL:
+            {
+                dialog.setTitle(R.string.warn);
+                dialog.setMessage(R.string.vip_promote);
+                dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
+                break;
+            }
+            case STYLE_CANNOT_ADD_TAG:
+            {
+                VipType.VipInfo info=VipType.getCompanyInstance().getVipInfo();
+                dialog.setTitle(R.string.warn);
+                dialog.setMessage(context.getString(R.string.vip_add_tag,VipType.getCompanyInstance().name,info.book_tag_num));
+                dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
+            }
+        }
+        return dialog;
     }
 
     @Override
@@ -86,8 +119,8 @@ public class EbingoDialog extends AlertDialog {
             btn_divider.setVisibility(View.GONE);
     }
 
-    public void setPositiveButton(int textId,OnClickListener positiveListener){
-        setPositiveButton(getContext().getResources().getString(textId),positiveListener);
+    public void setPositiveButton(int textId, OnClickListener positiveListener) {
+        setPositiveButton(getContext().getResources().getString(textId), positiveListener);
     }
 
     public void setPositiveButton(CharSequence text, OnClickListener positiveListener) {
@@ -99,7 +132,7 @@ public class EbingoDialog extends AlertDialog {
         }
     }
 
-    public void setNegativeButton(int textId,OnClickListener negativeListener){
+    public void setNegativeButton(int textId, OnClickListener negativeListener) {
         setNegativeButton(getContext().getResources().getString(textId), negativeListener);
     }
 
@@ -138,6 +171,5 @@ public class EbingoDialog extends AlertDialog {
             dialog.dismiss();
             if (mListener != null) mListener.onClick(dialog, which);
         }
-
     }
 }

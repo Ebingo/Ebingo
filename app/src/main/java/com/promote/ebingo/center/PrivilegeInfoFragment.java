@@ -40,7 +40,6 @@ import java.util.Map;
  */
 public class PrivilegeInfoFragment extends Fragment implements View.OnClickListener {
 
-    private Map<String, Integer> resMap = new HashMap<String, Integer>();
 
     private VipType displayVipType;
 
@@ -55,26 +54,16 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        resMap.put(VipType.VISITOR.code, R.array.privilege_info_visitor);
-        resMap.put(VipType.Standard_VIP.code, R.array.privilege_info_normal_vip);
-        resMap.put(VipType.Silver_VIP.code, R.array.privilege_info_vip);
-        resMap.put(VipType.Platinum_VIP.code, R.array.privilege_info_vvip);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if (displayVipType == null) {
-            try {
-                displayVipType = VipType.values()[savedInstanceState.getInt("displayVipType")];
-            } catch (NullPointerException e) {
-                throw new RuntimeException(PrivilegeInfoFragment.class.getName() + ":displayVipType is null!");
-            }
+            displayVipType = VipType.parse(savedInstanceState.getString("displayVipType"));
         }
-        String[] info = getResources().getStringArray(resMap.get(displayVipType.code));
         View v = inflater.inflate(R.layout.privilege_info, null);
-        addItem((LinearLayout) v.findViewById(R.id.info_content), info, inflater);
-        if (displayVipType.compareTo(VipType.parse(Company.getInstance().getVipType())) <= 0) {
+        if (displayVipType.compareTo(VipType.getCompanyInstance()) <= 0) {
             v.findViewById(R.id.btn_apply_vip).setVisibility(View.GONE);
         } else {
             v.findViewById(R.id.btn_apply_vip).setOnClickListener(this);
@@ -86,22 +75,7 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("displayVipType", displayVipType.ordinal());
-    }
-
-    private void addItem(LinearLayout content, String[] items, LayoutInflater inflater) {
-        if (items == null) return;
-        for (String str : items) {
-            TextView tagView = (TextView) inflater.inflate(R.layout.provilige_tip, null);
-            tagView.setText(str);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(dp(4),dp(5),dp(4),dp(5));
-            content.addView(tagView, lp);
-        }
-    }
-
-    private int dp(int value) {
-        return (int) Dimension.dp(value);
+        outState.putString("displayVipType", displayVipType.code);
     }
 
     @Override
@@ -111,7 +85,7 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
                 VipType curVipType = VipType.parse(Company.getInstance().getVipType());
                 if (getDisplayVipType().compareTo(curVipType) <= 0) {
                     ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
-                } else if (getDisplayVipType().compareTo(VipType.Standard_VIP) == 0) {
+                } else if (getDisplayVipType().compareTo(VipType.Experience_Vip) == 0) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 } else {
@@ -125,7 +99,7 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
         final Dialog dialog = DialogUtil.waitingDialog(getActivity(), "正在提交申请...");
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity());
         parmater.put("company_id", Company.getInstance().getCompanyId());
-        parmater.put("apply_type", "");
+        parmater.put("apply_type", displayVipType.code);
         HttpUtil.post(HttpConstant.applyVip, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

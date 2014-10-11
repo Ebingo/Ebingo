@@ -108,10 +108,10 @@
     <string name="title_buy_detail">求购详情</string>
     <string name="title_product_detail">供应详情</string>
     <string name="look_time">查看次数:</string>
-    <string name="look_unite">次</string>
+    <string name="look_unite">查看%s次</string>
     <string name="phone_num">手机号</string>
     <string name="price_unit">元</string>
-    <string name="supply_start_num">起供应</string>
+    <string name="supply_start_num">%s起供应</string>
     <string name="no_data">没有数据！</string>
     <string name="delete">删除</string>
     <string name="yuan">元</string>
@@ -119,7 +119,9 @@
     <string name="home_newsadd">今日新增</string>
     <string name="time">时间</string>
     <string name="promote">提示</string>
-    <string name="vip_promote">目前只有VIP及已上用户可以一键拨号，请升级。</string>
+    <string name="vip_promote">目前只有普通会员及已上用户可以一键拨号，请升级。</string>
+    <string name="vip_add_tag">您当前为%1$s,最多可以添加%2$s个订阅标签，如需添加更多标签，请升级。普通会员以上级别也可以单独购买。</string>
+    <string name="vip_add_3d">您当前为%1$s,最多可以添加%2$s个订阅标签，如需添加更多标签，请升级。普通会员以上级别也可以单独购买。</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -156,29 +158,6 @@
     <string name="enterprise_email">企业邮箱</string>
     <string name="title_activity_my_supply">MySupplyActivity</string>
 
-    <string-array name="privilege_info_visitor">
-        <item>查看企业供求信息</item>
-        <item>发布企业详细信息</item>
-        <item>免费升级普通会员</item>
-    </string-array>
-    <string-array name="privilege_info_normal_vip">
-        <item>享受游客全部特权</item>
-        <item>发布企业求购信息</item>
-        <item>可订阅3个标签，精确推送相关求购信息</item>
-    </string-array>
-    <string-array name="privilege_info_vip">
-        <item>享受普通会员全部特权</item>
-        <item>发布企业求购信息/供应信息</item>
-        <item>可一键拨打电话咨询产品详细情况</item>
-        <item>可订阅23个标签，精确推送相关求购信息</item>
-    </string-array>
-    <string-array name="privilege_info_vvip">
-        <item>享受VIP会员全部特权</item>
-        <item>可订阅标签数不限</item>
-        <item>享受产品3D展示，全方位展示您的产品</item>
-        <item>邮件推送功能，实时获取最新供求信息</item>
-    </string-array>
-
     <string name="about_name">南京普而摩网络技术有限公司</string>
     <string name="about_contact">董小姐</string>
     <string name="about_email">kefu@chinapromo.cn</string>
@@ -202,10 +181,11 @@
     <string name="warn">温馨提示</string>
     <string name="dial_number_notice">是否拨打%s?</string>
     <array name="pick_picture">
-        <item >相册</item>
-        <item >拍照</item>
+        <item>相册</item>
+        <item>拍照</item>
     </array>
     <string name="confirm_logout">确定退出登录？</string>
     <string name="empty_notice">您当前没有发布任何%s信息。</string>
     <string name="modify">修改</string>
+    <string name="tel_format_error">电话格式错误，如0558-7211314或010-88888888或138********</string>
 </resources>

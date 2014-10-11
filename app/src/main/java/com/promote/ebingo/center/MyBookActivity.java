@@ -18,6 +18,8 @@ import com.promote.ebingo.bean.BookBean;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.EbingoDialog;
+import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.JsonUtil;
 import com.promote.ebingo.util.LogCat;
@@ -69,7 +71,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     }
 
     /**
-     * 获取标签
+     * 获取订阅标签
      */
     private void getData() {
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
@@ -77,7 +79,6 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         HttpUtil.post(HttpConstant.getMyTagList, parmater, new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
-                LogCat.i("--->", response + ":onSuccess");
                 ArrayList<BookBean> books = new ArrayList<BookBean>();
                 try {
                     JsonUtil.getArray(response.getJSONArray("data"), BookBean.class, books);
@@ -116,12 +117,6 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
             @Override
             public void onFail(int statusCode, String msg) {
-                try {
-                    JSONObject fail = new JSONObject(msg);
-                    if (!"102".equals(fail.getString("code"))) ContextUtil.toast("保存失败！");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
@@ -131,6 +126,10 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         });
     }
 
+    /**
+     * 将所有标签拼接起来，用逗号分开
+     * @return
+     */
     private String getTags() {
         StringBuilder sb = new StringBuilder();
         int tagNumber = tagContent.getChildCount();
@@ -142,10 +141,21 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         return sb.toString();
     }
 
+    /**
+     * 添加一个标签
+     * @param bookBean
+     */
     private void addTag(BookBean bookBean) {
+        int tagNum=tagContent.getChildCount();
+        VipType.VipInfo info=VipType.getCompanyInstance().getVipInfo();
+        int maxTagNum=info.book_tag_num;
+        if (tagNum>=maxTagNum){
+            EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_ADD_TAG).show();
+            return;
+        }
         String name = bookBean.getName();
         if (TextUtils.isEmpty(name)) {
-//            ContextUtil.toast("请输入标签！");
+            ContextUtil.toast("请输入标签！");
             return;
         }
         TagView tagView = (TagView) View.inflate(this, R.layout.sample_tag_view, null);

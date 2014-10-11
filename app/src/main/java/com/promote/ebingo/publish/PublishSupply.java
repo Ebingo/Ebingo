@@ -201,7 +201,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 break;
             }
             case R.id.upload_3d_cb: {
-                callService();
+//                callService();
                 if (has3dPermission()) show3dNotice(upload_3d_cb.isChecked());
                 break;
             }
@@ -215,10 +215,12 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      */
     private boolean has3dPermission() {
         String vipCode = Company.getInstance().getVipType();
-        if (VipType.parse(vipCode).compareTo(VipType.Platinum_VIP) < 0) {
+        VipType vipType = VipType.getCompanyInstance();
+        VipType.VipInfo info = vipType.getVipInfo();
+        if (info.display_3d == 0) {
             EbingoDialog dialog = new EbingoDialog(getActivity());
             dialog.setTitle("尊敬的" + VipType.nameOf(vipCode));
-            dialog.setMessage("您目前所属等级没有权限上传3D图片，请先升级");
+            dialog.setMessage("很抱歉，您没有权限上传3D图片，普通会员以上级别可购买上传3D图片次数。金牌会员赠送1次，铂金会员赠送5次。买请先升级");
             dialog.setPositiveButton("升 级", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -541,10 +543,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 dialog.dismiss();
             }
         });
-    }
-
-    private void test() {
-        DetailInfoBean infoBean = new DetailInfoBean();
     }
 
     @Override

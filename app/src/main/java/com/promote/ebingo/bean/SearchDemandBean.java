@@ -17,6 +17,15 @@ public class SearchDemandBean extends SearchTypeBean implements Serializable{
     private String read_num = null;
     /** 求購數量. **/
     private String buy_num = null;
+    private String verify_result;
+
+    public String getVerify_result() {
+        return verify_result;
+    }
+
+    public void setVerify_result(String verify_result) {
+        this.verify_result = verify_result;
+    }
 
     public String getBuy_num() {
         return buy_num;

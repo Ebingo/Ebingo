@@ -24,6 +24,11 @@ public class SearchSupplyBean extends SearchTypeBean implements Serializable{
     private int read_num;
     /**企业等级**/
     private String company_rank;
+    private String verify_result;
+
+    public String getVerify_result() {
+        return verify_result;
+    }
 
     public String getUnit() {
         return unit;

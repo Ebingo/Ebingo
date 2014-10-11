@@ -181,9 +181,9 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
     }
 
     private void showVipDialog(){
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-        builder.setMessage("您好！您目前是普通会员，没有权限发布自己的产品供应信息，您可以点击下方升级按钮进行升级。")
-        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        EbingoDialog dialog=new EbingoDialog(getActivity());
+        dialog.setMessage("您好！您目前是普通会员，没有权限发布自己的产品供应信息，您可以点击下方升级按钮进行升级。");
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -191,15 +191,17 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
                 content.setCurrentItem(0);
 
             }
-        })
-        .setPositiveButton("升级",new DialogInterface.OnClickListener(){
+        });
+        dialog.setPositiveButton("升级", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent=new Intent(getActivity(), MyPrivilegeActivity.class);
+                Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
                 startActivity(intent);
             }
         });
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     public PublishCallback getCallback() {
@@ -270,6 +272,10 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         @Override
         public void onPageSelected(int i) {
             ((RadioButton) tabs.getChildAt(i)).setChecked(true);
+            if (i==1){
+                VipType.VipInfo info=VipType.getCompanyInstance().getVipInfo();
+            }
+
             final String vipType=Company.getInstance().getVipType();
             if(VipType.parse(vipType).compareTo(VipType.Experience_Vip)<0){
                 showVipDialog();
