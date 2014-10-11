@@ -311,7 +311,6 @@
     </style>
 
     <style name="rb_my_privilege_info">
-        <item name="android:drawablePadding">-5dp</item>
         <item name="android:background">@drawable/rb_privilege_bg</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>

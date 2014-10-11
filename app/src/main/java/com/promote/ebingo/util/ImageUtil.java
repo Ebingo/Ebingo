@@ -37,10 +37,11 @@ public class ImageUtil {
     public static Uri saveBitmap(Bitmap bm, String picName) {
         if (TextUtils.isEmpty(picName) || bm == null) return null;
         File f = new File(getImageFile(), picName);
-        if (f.exists()) {
-            f.delete();
-        }
+
         try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
             FileOutputStream out = new FileOutputStream(f);
             bm.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();

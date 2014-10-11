@@ -43,7 +43,7 @@ public class LoginManager {
             EbingoRequestParmater parmater = new EbingoRequestParmater(context);
             parmater.put("phonenum", phonenum);
             final ProgressDialog dialog = DialogUtil.waitingDialog(context);
-            HttpUtil.post(HttpConstant.getYzm, parmater,new EbingoHandler() {
+            HttpUtil.post(HttpConstant.getYzm, parmater, new EbingoHandler() {
                 @Override
                 public void onSuccess(int statusCode, JSONObject response) {
                     mCallback.onSuccess();
@@ -62,11 +62,29 @@ public class LoginManager {
         }
     }
 
-
+    /**
+     * 校验手机号
+     * @param input
+     * @return
+     */
     public static boolean isMobile(String input) {
+        String a="^1[34578][0-9]\\d{8}";
+        String b="^((13[0-9])|(14[0-9])|(15[^4,\\D])|(18[0-9])|(17[0-9]))\\d{8}$";
         if (TextUtils.isEmpty(input)) return false;
-        else return input.matches("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
+        else return input.matches(a);
     }
+
+    /**
+     * 校验固话
+     * @param input
+     * @return
+     */
+    public static boolean isPhone(String input) {
+        if (TextUtils.isEmpty(input)) return false;
+        else return input.matches( "\\d{3}-\\d{8}|\\d{4}-\\d{7}|\\d{4}-\\d{8}");
+    }
+
+
 
     public void doLogin(final String phone, final String password, final Callback callback) {
 
@@ -74,26 +92,27 @@ public class LoginManager {
 //        final String md5Pwd = new MD5().getStrToMD5(password);
         parmater.put("phonenum", phone);
         parmater.put("password", password);
-        HttpUtil.post(HttpConstant.login, parmater,new EbingoHandler() {
+        HttpUtil.post(HttpConstant.login, parmater, new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 JSONObject data = null;
                 try {
                     data = response.getJSONObject("data");
-                    Company company= JsonUtil.get(data.toString(),Company.class);
+                    Company company = JsonUtil.get(data.toString(), Company.class);
                     Company.loadInstance(company);
 
-                    FileUtil.saveFile(ContextUtil.getContext(),FileUtil.FILE_COMPANY, company);
+                    FileUtil.saveFile(ContextUtil.getContext(), FileUtil.FILE_COMPANY, company);
                     ContextUtil.saveCurCompanyName(phone);
                     ContextUtil.saveCurCompanyPwd(password);
-                    if (company.getImage() != null)loadHeadImage(company.getImage(), new Handler(new Handler.Callback() {
-                        @Override
-                        public boolean handleMessage(Message msg) {
-                            Company.getInstance().setImageUri((Uri) msg.obj);
-                            callback.onSuccess();
-                            return false;
-                        }
-                    }));
+                    if (company.getImage() != null)
+                        loadHeadImage(company.getImage(), new Handler(new Handler.Callback() {
+                            @Override
+                            public boolean handleMessage(Message msg) {
+                                Company.getInstance().setImageUri((Uri) msg.obj);
+                                callback.onSuccess();
+                                return false;
+                            }
+                        }));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -102,7 +121,7 @@ public class LoginManager {
 
             @Override
             public void onFail(int statusCode, String msg) {
-                callback.onFail(msg+"");
+                callback.onFail(msg + "");
             }
 
             @Override
@@ -119,11 +138,10 @@ public class LoginManager {
      * @param url
      * @param handler
      */
-    private void loadHeadImage(final String url,final Handler handler) {
+    private void loadHeadImage(final String url, final Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ActivityManager manager;
                 Bitmap bitmap = ImageUtil.getImageFromWeb(url);
                 Uri uri = ImageUtil.saveBitmap(bitmap, "company_image.png");
                 handler.sendMessage(handler.obtainMessage(1, uri));
@@ -146,7 +164,7 @@ public class LoginManager {
          * 回调方法，获取失败时调用
          */
         public void onFail(String msg) {
-            ContextUtil.toast(""+ msg);
+            ContextUtil.toast("" + msg);
         }
     }
 }

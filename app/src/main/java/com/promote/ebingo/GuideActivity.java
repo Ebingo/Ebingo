@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.center.settings.VersionManager;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.publish.login.RegisterActivity;
@@ -176,6 +177,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     private void setLoading() {
         setContentView(R.layout.loadpage_layout);
+        VersionManager.requestVersionCode(this);
         loginBackground();
     }
 

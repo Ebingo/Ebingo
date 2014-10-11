@@ -124,7 +124,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                     Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
                 else if (TextUtils.isEmpty(contact_phone))
                     Error.showError(edit_phone, Error.PHONE_EMPTY);
-                else if (!LoginManager.isMobile(contact_phone))
+                else if (!LoginManager.isMobile(contact_phone)&&!LoginManager.isPhone(contact_phone))
                     Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
                 else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
                 else {
@@ -180,6 +180,10 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
         }
     }
 
+    /**
+     * 提交发布信息
+     * @param parmater
+     */
     public void startPublish(EbingoRequestParmater parmater) {
         if (mDetailInfo != null)parmater.put("info_id",mDetailInfo.getInfo_id());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());

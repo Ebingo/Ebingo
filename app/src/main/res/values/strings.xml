@@ -28,6 +28,7 @@
     <string name="message">消息</string>
     <string name="cancel">取消</string>
     <string name="yes">确定</string>
+    <string name="ok">好的</string>
     <string name="interprise_info">企业信息</string>
     <string name="buy_info">求购信息</string>
     <string name="supply_info">供应信息</string>
@@ -47,7 +48,7 @@
     <string name="publish_time">发布时间：</string>
     <string name="buy_look">查看</string>
     <string name="buy_num">求购数量：</string>
-    <string name="contact_buy">联系买家</string>
+    <string name="contact_buy">联系卖家</string>
     <string name="serch_key">关键词:</string>
     <string name="login">登录|注册</string>
     <string name="login_">登 录</string>
@@ -172,8 +173,10 @@
     <string name="find_password_dialog_title">发送成功</string>
     <string name="find_password_dialog_message">我们已发送修改密码的链接到您的注册邮箱中，请您注意查收!</string>
     <string name="i_know">我知道了</string>
+    <string name="continue_">继续</string>
     <string name="already_new_version">已经是最新版本了！</string>
     <string name="update_right_now">立即升级</string>
+    <string name="find_new_version">发现新版本%s</string>
     <string name="refresh">肿么木有数据，再刷一次。</string>
     <string name="net_error">网络不给力，请稍后再试！</string>
     <string name="no_network">网络错误</string>
@@ -188,5 +191,11 @@
     <string name="confirm_logout">确定退出登录？</string>
     <string name="empty_notice">您当前没有发布任何%s信息。</string>
     <string name="modify">修改</string>
-    <string name="tel_format_error">电话格式错误，如0558-7211314或010-88888888或138********</string>
+    <string name="tel_format_error">电话格式错误，如：0558-7211314或010-88888888或138********</string>
+    <string name="visitor">游客</string>
+    <string name="vip_experience">体验会员</string>
+    <string name="vip_standard">普通会员</string>
+    <string name="vip_silver">银牌会员</string>
+    <string name="vip_gold">金牌会员</string>
+    <string name="vip_platinum">铂金会员</string>
 </resources>

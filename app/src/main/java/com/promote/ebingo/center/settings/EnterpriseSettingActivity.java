@@ -510,10 +510,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
 
         boolean check(Context context) {
 
-            String tel = "\\d{3}-\\d{8}|\\d{4}-\\d{7}|\\d{4}-\\d{8}";
-            String phoneRule = "^((14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$";
-
-            if (!TextUtils.isEmpty(company_tel) && !company_tel.matches(tel) && !company_tel.matches(phoneRule)) {
+            if (!LoginManager.isMobile(company_tel)&&!LoginManager.isPhone(company_tel)) {
                 showError(getString(R.string.tel_format_error));
                 return false;
             }

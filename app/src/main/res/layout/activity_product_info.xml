@@ -109,7 +109,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:button="@null"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginLeft="7dp"
                             android:layout_toRightOf="@id/product_info_tel_cb"
                             android:background="@drawable/product_info_collect_sel" />
 

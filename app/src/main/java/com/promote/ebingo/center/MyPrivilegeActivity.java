@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,7 +28,7 @@ import java.io.IOException;
  */
 public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
-    public static final String SHOW_VVIP = "vvip";
+    public static final String SHOW_VIP_CODE = "show_vip";
     private PrivilegeInfoFragment[] fragments;
     private int cur = 0;
     private TextView tv_vipType;
@@ -77,51 +78,36 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
     }
 
     private void initFragment() {
-        fragments = new PrivilegeInfoFragment[4];
-        fragments[0] = new PrivilegeInfoFragment();
-        fragments[0].setDisplayVipType(VipType.VISITOR);
-
-        fragments[1] = new PrivilegeInfoFragment();
-        fragments[1].setDisplayVipType(VipType.Standard_VIP);
-
-        fragments[2] = new PrivilegeInfoFragment();
-        fragments[2].setDisplayVipType(VipType.Silver_VIP);
-
-        fragments[3] = new PrivilegeInfoFragment();
-        fragments[3].setDisplayVipType(VipType.Platinum_VIP);
-        getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[0]).commit();
-        String vipType = Company.getInstance().getVipType();
-        boolean beVVip=getIntent().getBooleanExtra(SHOW_VVIP,false);
-        if (!TextUtils.isEmpty(vipType)&&!beVVip){
-            for (int i = 0; i < fragments.length; i++) {
-                if (fragments[i].getDisplayVipType().code.equals(vipType)) {
-                    changeFrag(i);
-                    ((RadioButton) ((RadioGroup) findViewById(R.id.rb_group)).getChildAt(i)).setChecked(true);
-                    break;
-                }
-            }
-        }else {
-            changeFrag(3);
-            ((RadioButton) ((RadioGroup) findViewById(R.id.rb_group)).getChildAt(3)).setChecked(true);
+        VipType[] vipTypes = VipType.values();
+        fragments = new PrivilegeInfoFragment[vipTypes.length];
+        for (int i = 0; i < vipTypes.length; i++) {//初始化vipType信息
+            fragments[i] = PrivilegeInfoFragment.newInstance(vipTypes[i]);
         }
+        getSupportFragmentManager().beginTransaction().add(R.id.info_fragment_content, fragments[0]).commit();
+        String intentVipCode = getIntent().getStringExtra(SHOW_VIP_CODE);
+        VipType showType;
+        if (!TextUtils.isEmpty(intentVipCode)) {
+            showType = VipType.parse(intentVipCode);
+        } else {
+            showType = VipType.getCompanyInstance();
+        }
+        ((RadioGroup) findViewById(R.id.rb_group)).getChildAt(showType.ordinal()).performClick();
+
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-        switch (checkedId) {
-            case R.id.rb_visitor:
-                changeFrag(0);
+        for (int i=0;i<group.getChildCount();i++){
+            RadioButton radioButton= (RadioButton) group.getChildAt(i);
+            radioButton.clearAnimation();
+            if (radioButton.getId()==checkedId){
+                TranslateAnimation translateAnimation=new TranslateAnimation(-4,2,0,0);
+                translateAnimation.setDuration(100);
+                translateAnimation.setFillAfter(true);
+                radioButton.startAnimation(translateAnimation);
+                changeFrag(i);
                 break;
-            case R.id.rb_user:
-                changeFrag(1);
-                break;
-            case R.id.rb_vip:
-                changeFrag(2);
-                break;
-            case R.id.rb_vvip:
-                changeFrag(3);
-                break;
+            }
         }
     }
 

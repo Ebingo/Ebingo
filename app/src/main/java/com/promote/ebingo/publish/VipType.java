@@ -53,6 +53,7 @@ public enum VipType {
 
     /**
      * 获取当前vip所拥有的特权信息
+     *
      * @return
      */
     public VipInfo getVipInfo() {
@@ -136,21 +137,21 @@ public enum VipType {
      * 根据vip的code，获得相应的vipType。
      *
      * @param code
-     * @return 如果不存在对应的vipType，返回空
+     * @return 如果不存在对应的vipType，返回游客
      */
     public static VipType parse(String code) {
-        if (TextUtils.isEmpty(code)) return VipType.VISITOR;
         for (VipType type : VipType.values()) {
             if (type.code.equals(code)) return type;
         }
-        return null;
+        return VipType.VISITOR;
     }
 
     /**
      * 获取当前公司VIP类型
+     *
      * @return
      */
-    public static VipType getCompanyInstance(){
+    public static VipType getCompanyInstance() {
         return parse(Company.getInstance().getVipType());
     }
 
@@ -205,13 +206,14 @@ public enum VipType {
 
         /**
          * 判断该用户是否有权利拨打 电话
+         *
          * @param type 参照Constant.PUBLISH_SUPPLY，Constant.PUBLISH_DEMAND
          * @return true能拨打 false不能拨打
          */
-        public boolean canDial(String type){
-            if (Constant.PUBLISH_DEMAND.equals(type)){
+        public boolean canDial(String type) {
+            if (Constant.PUBLISH_DEMAND.equals(type)) {
                 return canDialDemand();
-            }else if (Constant.PUBLISH_SUPPLY.equals(type)){
+            } else if (Constant.PUBLISH_SUPPLY.equals(type)) {
                 return canDialSupply();
             }
             return false;

@@ -62,41 +62,52 @@
                 android:id="@+id/rb_visitor"
                 style="@style/rb_my_privilege_info"
                 android:checked="true"
-                android:text="游客"
-                android:drawableTop="@drawable/rb_visitor" />
+                android:text="@string/visitor" />
 
             <RadioButton
-                android:id="@+id/rb_user"
+                android:id="@+id/rb_exp"
                 style="@style/rb_my_privilege_info"
-                android:text="普通会员"
-                android:drawableTop="@drawable/rb_user" />
+                android:text="@string/vip_experience" />
 
             <RadioButton
-                android:id="@+id/rb_vip"
-                android:text="VIP会员"
-                style="@style/rb_my_privilege_info"
-                android:drawableTop="@drawable/rb_vip" />
+                android:id="@+id/rb_standard"
+                android:text="@string/vip_standard"
+                style="@style/rb_my_privilege_info" />
 
             <RadioButton
-                android:id="@+id/rb_vvip"
-                android:text="VVIP会员"
-                style="@style/rb_my_privilege_info"
-                android:drawableTop="@drawable/rb_vvip" />
+                android:id="@+id/rb_silver"
+                android:text="@string/vip_silver"
+                style="@style/rb_my_privilege_info" />
+
+            <RadioButton
+                android:id="@+id/rb_gold"
+                android:text="@string/vip_gold"
+                style="@style/rb_my_privilege_info" />
+
+            <RadioButton
+                android:id="@+id/rb_platinum"
+                android:text="@string/vip_platinum"
+                style="@style/rb_my_privilege_info" />
 
         </RadioGroup>
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
 
             <FrameLayout
                 android:id="@+id/info_fragment_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
             </FrameLayout>
-        </ScrollView>
+
+
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

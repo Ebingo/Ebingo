@@ -21,6 +21,7 @@ import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.ContextUtil;
@@ -41,6 +42,12 @@ import java.util.Map;
 public class PrivilegeInfoFragment extends Fragment implements View.OnClickListener {
 
 
+    public static PrivilegeInfoFragment newInstance(VipType vipType){
+        PrivilegeInfoFragment fragment=new PrivilegeInfoFragment();
+        fragment.setDisplayVipType(vipType);
+        return fragment;
+    }
+
     private VipType displayVipType;
 
     public VipType getDisplayVipType() {
@@ -50,6 +57,8 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     public void setDisplayVipType(VipType vipType) {
         this.displayVipType = vipType;
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,14 +138,15 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     }
 
     private void showDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("温馨提示")
-                .setMessage("提交申请成功！请耐心等待工作人员处理。")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+        EbingoDialog dialog = new EbingoDialog(getActivity());
+        dialog.setTitle(R.string.warn);
+        dialog.setMessage("提交申请成功！请耐心等待工作人员处理。");
+        dialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

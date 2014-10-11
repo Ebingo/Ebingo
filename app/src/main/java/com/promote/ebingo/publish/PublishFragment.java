@@ -355,8 +355,8 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
             errorMap.put(BUY_NUM_EMPTY, "请输入求购数量");
             errorMap.put(CONTACT_EMPTY, "请填写联系人姓名");
             errorMap.put(CONTACT_LENGTH_ERROR, "联系人姓名为2-4字");
-            errorMap.put(PHONE_EMPTY, "请填写联系人手机号");
-            errorMap.put(PHONE_FORMAT_ERROR, "手机格式不正确");
+            errorMap.put(PHONE_EMPTY, "请填写联系电话");
+            errorMap.put(PHONE_FORMAT_ERROR, "联系电话格式不正确");
             errorMap.put(PRICE_EMPTY, "请输入价格");
             errorMap.put(MIN_SELL_NUM_EMPTY, "请输入起订标准");
             errorMap.put(NULL_UNIT, "单位不能为空");

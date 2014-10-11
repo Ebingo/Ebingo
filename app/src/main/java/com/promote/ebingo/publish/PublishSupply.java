@@ -225,7 +225,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
-                    intent.putExtra(MyPrivilegeActivity.SHOW_VVIP, true);
+                    intent.putExtra(MyPrivilegeActivity.SHOW_VIP_CODE, VipType.Gold_VIP.code);
                     upload_3d_cb.setChecked(false);
                     startActivity(intent);
                 }
@@ -274,7 +274,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             Error.showError(edit_min_sell_num, Error.MIN_SELL_NUM_EMPTY);
         else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
         else if (TextUtils.isEmpty(contacts_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
-        else if (!LoginManager.isMobile(contacts_phone))
+        else if (!LoginManager.isMobile(contacts_phone)&&!LoginManager.isPhone(contacts_phone))
             Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
         else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
         else {

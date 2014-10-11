@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Environment;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -25,7 +24,6 @@ public class EbingoApp extends Application {
     public static final String EBINGO_COMPANY_DATA = "ebingo_user_data_prefer";
     public static final String COMPANY_NAME = "company_name";
     public static final String COMPANY_PWD = "company_pwd";
-    public static int localeVersion;//版本号
     /**
      * 当前公司本地信息。用于默认登录 *
      */
@@ -37,13 +35,8 @@ public class EbingoApp extends Application {
         mCurCompanyData = getApplicationContext().getSharedPreferences(EBINGO_COMPANY_DATA, MODE_PRIVATE);
         initImageLoaderConfiguration();
         ContextUtil.init(getApplicationContext());
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-            localeVersion = info.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
     }
+
 
     /**
      * 配置imgloader.

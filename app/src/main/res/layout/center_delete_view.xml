@@ -1,44 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/divide_gray"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/center_del_name_tv"
         style="@style/item_pad_black_15_tv"
-        android:layout_alignParentTop="true"
         android:background="@color/white"
-        android:minWidth="200dp"
         android:text="求购衣物求购衣物求购衣物求购"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/ebingo_button_divider" />
 
     <TextView
         android:id="@+id/center_del_delte_tv"
         style="@style/item_pad_gray_15_tv"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/click_gray_bg"
         android:text="@string/delete"
-        android:layout_below="@id/center_del_name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/center_del_name_tv"
-        android:layout_alignRight="@id/center_del_name_tv" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/ebingo_button_divider" />
 
     <TextView
         android:id="@+id/center_del_cancel_tv"
         style="@style/item_pad_gray_15_tv"
-        android:layout_marginTop="0.5dp"
         android:background="@drawable/click_gray_bg"
         android:text="@string/cancel"
-        android:layout_below="@id/center_del_delte_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/center_del_delte_tv"
-        android:layout_alignRight="@id/center_del_delte_tv" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-</RelativeLayout>
+</LinearLayout>

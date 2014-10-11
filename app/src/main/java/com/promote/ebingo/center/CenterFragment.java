@@ -218,6 +218,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centsettingtv.setOnClickListener(this);
         centsettingtv.setOnClickListener(this);
         centShare.setOnClickListener(this);
+        centerheadiv.setOnClickListener(this);
         view.findViewById(R.id.cent_demand_bar).setOnClickListener(this);
         view.findViewById(R.id.cent_supply_bar).setOnClickListener(this);
         view.findViewById(R.id.cent_collect_bar).setOnClickListener(this);
@@ -279,10 +280,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 break;
             }
 
-            case R.id.cent_msg_bar: {
-
-                break;
-            }
             case R.id.cent_supply_bar:
             case R.id.cent_supply_tv: {
                 Intent intent = new Intent(getActivity(), MySupplyActivity.class);
@@ -302,6 +299,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
                 break;
             }
+            case R.id.cent_msg_bar:
             case R.id.cent_book_tv: {
                 Intent intent = new Intent(getActivity(), MyBookActivity.class);
                 startActivity(intent);

@@ -88,6 +88,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfocitytv = (TextView) findViewById(R.id.product_info_city_tv);
         productinfoDetailwv = (WebView) findViewById(R.id.product_info_detail_wv);
         productinfoDetailtv = (TextView) findViewById(R.id.product_info_detail_tv);
+        productinforlll.setVisibility(View.GONE);//默认隐藏拨打电话和收藏功能，等加载完详情才有可能显示
         int productId = getIntent().getIntExtra(ARG_ID, -1);
         assert (productId != -1);
         //網絡訪問
@@ -99,20 +100,26 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfocollectcb.setOnClickListener(this);
         prdinfobtmll.setOnClickListener(this);
 
+
+
     }
 
     private void setData(DetailInfoBean infoBean) {
         if (!Constant.VERIFY_PASS.equals(infoBean.getVerify_result())) {
+            //弹出审核未通过提示
             popError(infoBean.getVerify_reason());
         }
-        if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
+        if (!infoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
+            //如果不是自己发布的信息，则显示拨打电话和收藏功能
+            productinforlll.setVisibility(View.VISIBLE);
+        } else {
             productinforlll.setVisibility(View.GONE);
-        } else productinforlll.setVisibility(View.VISIBLE);
+        }
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
         pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
         productinfolooknumtv.setText(infoBean.getRead_num() + "");
-        if (infoBean.getUnit() != null) {
+        if (infoBean.getUnit() != null) {//起售标准
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "" + infoBean.getUnit());
         } else {
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "");
@@ -168,26 +175,32 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 break;
             }
             case R.id.product_info_tel_cb:
-                Company company=Company.getInstance();
+                Company company = Company.getInstance();
                 if (company == null || company.getCompanyId() == null) {//用户没有登录。
                     LoginDialog loginDialog = new LoginDialog(ProductInfoActivity.this);
                     loginDialog.setOwnerActivity(this);
                     loginDialog.setCanceledOnTouchOutside(true);
                     loginDialog.setCancelable(true);
                     loginDialog.show();
-                }else if (VipType.getCompanyInstance().getVipInfo().canDialSupply()) {
+                } else if (VipType.getCompanyInstance().getVipInfo().canDialSupply()) {
                     CallRecord record = new CallRecord();
                     record.setCall_id(Company.getInstance().getCompanyId());
                     record.setInfoId(mDetailInfoBean.getInfo_id());
                     record.setTo_id(mDetailInfoBean.getCompany_id());
                     record.setPhone_num(mDetailInfoBean.getPhone_num());
                     CallRecordActivity.CallRecordManager.dialNumber(this, record);
-                }else{
+                } else {
                     EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_DIAL);
                 }
                 break;
             case R.id.product_info_collect_cb:
-                if (productinfocollectcb.isChecked()) {
+                if (Company.getInstance().getCompanyId() == null) {
+                    LoginDialog loginDialog = new LoginDialog(ProductInfoActivity.this);
+                    loginDialog.setOwnerActivity(this);
+                    loginDialog.setCanceledOnTouchOutside(true);
+                    loginDialog.setCancelable(true);
+                    loginDialog.show();
+                } else if (productinfocollectcb.isChecked()) {
                     addCollection(mDetailInfoBean.getInfo_id());
                 } else {
                     cancelCollection(mDetailInfoBean.getWishlist_id());
@@ -228,7 +241,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
             @Override
             public void onFail(int statusCode, String msg) {
-                LogCat.w("--->",msg);
+                LogCat.w("--->", msg);
                 productinfocollectcb.setChecked(false);
             }
 
@@ -256,7 +269,6 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
             @Override
             public void onFail(int statusCode, String msg) {
-                ContextUtil.toast("取消收藏失败！" + msg);
                 productinfocollectcb.setChecked(true);
             }
 
