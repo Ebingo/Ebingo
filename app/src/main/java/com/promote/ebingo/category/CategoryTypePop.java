@@ -40,6 +40,8 @@ public class CategoryTypePop extends PopupWindow {
         this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setFocusable(true);
         this.setBackgroundDrawable(new BitmapDrawable());
+        this.setAnimationStyle(R.style.popupAnimation);
+        this.update();
     }
 
     public int getContentWidth() {

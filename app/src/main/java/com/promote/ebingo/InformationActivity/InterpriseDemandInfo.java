@@ -80,7 +80,8 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
         EbingoRequest.getDemandInfoList(getActivity(), lastId, enterprise_id, 20, new EbingoRequest.RequestCallBack<ArrayList<SearchDemandBean>>() {
             @Override
             public void onFaild(int resultCode, String msg) {
-                itprdemandpulltorefresh.onFooterRefreshComplete();
+                if (itprdemandpulltorefresh != null)
+                    itprdemandpulltorefresh.onFooterRefreshComplete();
             }
 
             @Override

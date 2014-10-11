@@ -47,7 +47,8 @@ public class SearchCategoryPop extends PopupWindow {
 //        this.setAnimationStyle(R.style.AnimBottom);
         // 设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(new BitmapDrawable());
-
+        this.setAnimationStyle(R.style.popupAnimation);
+        this.update();
 
     }
 

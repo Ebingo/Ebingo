@@ -124,7 +124,8 @@ public class InterpriseSupplyInfo extends CommonListFragment implements AdapterV
 
         @Override
         public void onFaild(int resultCode, String msg) {
-            itprsupplypulltorefresh.onFooterRefreshComplete();
+            if (itprsupplypulltorefresh != null)
+                itprsupplypulltorefresh.onFooterRefreshComplete();
         }
 
         @Override

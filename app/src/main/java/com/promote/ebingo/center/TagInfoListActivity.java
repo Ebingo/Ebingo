@@ -1,6 +1,5 @@
 package com.promote.ebingo.center;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
-import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -44,6 +42,7 @@ public class TagInfoListActivity extends BaseListActivity implements View.OnClic
 
     /**
      * 根据id加载相关信息
+     *
      * @param id
      */
     private void loadTagList(int id) {
@@ -76,15 +75,15 @@ public class TagInfoListActivity extends BaseListActivity implements View.OnClic
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent=new Intent(this, BuyInfoActivity.class);
-        SearchTagBean bean=data.get(position);
-        intent.putExtra(BuyInfoActivity.DEMAND_ID,bean.getId());
+        Intent intent = new Intent(this, BuyInfoActivity.class);
+        SearchTagBean bean = data.get(position);
+        intent.putExtra(BuyInfoActivity.DEMAND_ID, bean.getId());
         startActivity(intent);
     }
 
     private void initView() {
-        String title=getIntent().getStringExtra(NAME);
-        if (!TextUtils.isEmpty(title))setTitle(title);
+        String title = getIntent().getStringExtra(NAME);
+        if (!TextUtils.isEmpty(title)) setTitle(title);
         else setTitle(R.string.no_data);
         setListAdapter(adapter);
         int tagId = getIntent().getIntExtra(ID, -1);
@@ -119,15 +118,15 @@ public class TagInfoListActivity extends BaseListActivity implements View.OnClic
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                holder=new ViewHolder();
+                holder = new ViewHolder();
                 convertView = View.inflate(mContext, R.layout.item_tag_info_list, null);
-                holder.tv_create_time= (TextView) convertView.findViewById(R.id.tv_create_time);
-                holder.tv_name= (TextView) convertView.findViewById(R.id.tv_name);
+                holder.tv_create_time = (TextView) convertView.findViewById(R.id.tv_create_time);
+                holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             SearchTagBean tagBean = data.get(position);
-            LogCat.i("--->","tagBean="+tagBean);
+            LogCat.i("--->", "tagBean=" + tagBean);
             holder.tv_name.setText(tagBean.getTitle());
             holder.tv_create_time.setText(tagBean.getCreate_time());
             convertView.setTag(holder);

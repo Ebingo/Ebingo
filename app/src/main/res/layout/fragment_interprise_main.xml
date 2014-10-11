@@ -117,13 +117,20 @@
 
         </LinearLayout>
 
+        <View style="@style/divider_horizontal" />
+
+        <View
+            style="@style/divider_horizontal"
+            android:layout_marginTop="@dimen/section_divide_height" />
+
         <LinearLayout
             style="@style/info_content_pad"
+
             android:background="@color/white"
-            android:layout_marginTop="@dimen/section_divide_height"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="wrap_content">
+
 
             <TextView
                 style="@style/black_15_tv"
@@ -137,13 +144,18 @@
                 android:id="@+id/frag_interprise_main_range_tv"
                 android:layout_width="match_parent"
                 style="@style/font_gray_14"
-
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
 
+        <View style="@style/divider_horizontal" />
+
+        <View
+            style="@style/divider_horizontal"
+            android:layout_marginTop="@dimen/section_divide_height" />
+
+
         <LinearLayout
-            android:layout_marginTop="@dimen/section_divide_height"
             android:layout_width="match_parent"
             android:background="@color/white"
             style="@style/info_content_pad"
@@ -166,8 +178,13 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <View style="@style/divider_horizontal" />
+
+        <View
+            style="@style/divider_horizontal"
+            android:layout_marginTop="@dimen/section_divide_height" />
+
         <LinearLayout
-            android:layout_marginTop="@dimen/section_divide_height"
             style="@style/info_content_pad"
             android:background="@color/white"
             android:layout_width="match_parent"
@@ -182,7 +199,7 @@
 
             <com.jch.lib.view.ScrollListView
                 android:id="@+id/interpise_main_sup_dem_lv"
-                android:divider="@color/info_list_div"
+                android:divider="@color/center_divider"
                 android:layout_width="match_parent"
                 android:dividerHeight="0.5dp"
                 android:layout_marginTop="5dp"
