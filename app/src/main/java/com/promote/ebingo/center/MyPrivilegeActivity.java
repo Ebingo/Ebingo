@@ -138,7 +138,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         if (fragments[cur] != null && fragments[cur].isAdded()) {
             ft.hide(fragments[cur]);
         }
-        ft.commitAllowingStateLoss();
+        ft.commit();
         cur = to;
     }
 
