@@ -28,6 +28,7 @@ import com.promote.ebingo.bean.CurrentSupplyBean;
 import com.promote.ebingo.bean.InterpriseInfoBean;
 import com.promote.ebingo.bean.InterpriseInfoBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
 
 import org.apache.http.Header;
@@ -51,7 +52,6 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     private String mParam1;
     private ImageView interprismainimg;
     private TextView fraginterprisemainnametv;
-    private ImageView fraginterprisemainvipimg;
     private TextView fraginterprisemainaddrtv;
     private TextView fraginterprisemainhttpaddrtv;
     private TextView fraginterprisemaintelltv;
@@ -117,7 +117,6 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
         interprismainimg = (ImageView) containerView.findViewById(R.id.interpris_main_img);
         fraginterprisemainnametv = (TextView) containerView.findViewById(R.id.frag_interprise_main_name_tv);
-        fraginterprisemainvipimg = (ImageView) containerView.findViewById(R.id.frag_interprise_main_vip_img);
         fraginterprisemainaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_addr_tv);
         fraginterprisemainhttpaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_httpaddr_tv);
         fraginterprisemaintelltv = (TextView) containerView.findViewById(R.id.frag_interprise_main_tell_tv);
@@ -201,11 +200,8 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         fraginterprisemaintelltv.setText(infoBean.getTel());
         fraginterprisemainabstracttv.setText(infoBean.getIntroduction());
         fraginterprisemainrangetv.setText(infoBean.getMainRun());
-        if (infoBean.getViptype() == 1) {
-            fraginterprisemainvipimg.setVisibility(View.VISIBLE);
-        } else {
-            fraginterprisemainvipimg.setVisibility(View.GONE);
-        }
+        VipType vipType = VipType.parse(infoBean.getViptype() + "");
+        fraginterprisemainnametv.setCompoundDrawables(null, null, vipType.getIcon(getActivity()), null);
         if (infoBean.getInfoarray() != null) {
             currentSupplyBeans.clear();
             currentSupplyBeans.addAll(infoBean.getInfoarray());

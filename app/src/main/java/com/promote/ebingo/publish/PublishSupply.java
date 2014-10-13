@@ -525,6 +525,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                         intent.putExtra(BaseListActivity.ARG_REFRESH, true);
                         startActivity(intent);
                         clearText();
+                        if (getActivity() instanceof PublishEditActivity){
+                            getActivity().finish();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

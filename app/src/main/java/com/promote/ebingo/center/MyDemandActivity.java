@@ -167,6 +167,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 mDemandBeans.remove(position);
                 adapter.notifyDataSetChanged();
                 dialog.dismiss();
+                refreshFooterView(true);
                 super.onSuccess(statusCode, headers, response);
             }
 

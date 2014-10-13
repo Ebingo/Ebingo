@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jch.lib.view.PullToRefreshView;
@@ -72,6 +73,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         lastRefreshTime = getLastRefreshTime(getLocalClassName());
         mPullToRefreshView.setLastUpdated(getString(R.string.last_update) + getDateString(lastRefreshTime));
     }
+
 
     @Override
     public void onClick(View v) {
@@ -242,21 +244,33 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
      * 如果listView已经加载了所有的数据，就应该隐藏上拉加载更多功能
      */
     protected void onLoadFinish() {
-        onLoadMoreFinish(getAdapter().getCount() % pageSize == 0);
+        refreshFooterView(false);
         onRefreshFinish();
     }
 
     /**
-     * @param hasMoreData true 如果还有更多数据 false 数据已经加载完毕
+     * @param isDelete true 由于删除导致需要刷新页面
+     *                 false 非删除导致需要刷新页面
      */
-    protected void onLoadMoreFinish(boolean hasMoreData) {
-        mPullToRefreshView.onFooterRefreshComplete();
-        if (!hasMoreData) {
-            mPullToRefreshView.setUpRefreshable(false);
-            lastId = getListView().getChildCount();//
-            ContextUtil.toast("数据已经加载完毕！");
+    protected void refreshFooterView(boolean isDelete) {
+        int itemCount = getAdapter().getCount();
+        if (isDelete) {
+            lastId = 0;//如果用户删除数据，则无论用户接下来是上拉还是下拉
+            ListView lv = getListView();
+            int oneScreenItemCount = lv.getLastVisiblePosition() - lv.getFirstVisiblePosition() + 1;
+            if (oneScreenItemCount == itemCount)
+                mPullToRefreshView.setFootViewVisibility(INVISIBLE);
         } else {
-            mPullToRefreshView.setUpRefreshable(true);
+            mPullToRefreshView.onFooterRefreshComplete();
+            if (itemCount % pageSize == 0) {
+                mPullToRefreshView.setUpRefreshable(true);
+                mPullToRefreshView.setFootViewVisibility(VISIBLE);
+            } else {
+                mPullToRefreshView.setUpRefreshable(false);
+                lastId = getListView().getChildCount();//
+                mPullToRefreshView.setFootViewVisibility(INVISIBLE);
+                ContextUtil.toast("数据已经加载完毕！");
+            }
         }
     }
 
@@ -266,6 +280,10 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         mPullToRefreshView.setLastUpdated(getString(R.string.last_update) + getDateString(lastRefreshTime));
         mPullToRefreshView.onHeaderRefreshComplete();
         isHeadRefreshing = false;
+    }
+
+    public void hideFooterView() {
+        mPullToRefreshView.setFootViewVisibility(GONE);
     }
 
     /**
@@ -286,8 +304,13 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
     private OnFooterRefreshListener footerRefreshListener = new OnFooterRefreshListener() {
         @Override
         public void onFooterRefresh(PullToRefreshView view) {
-            view.setFootViewVisibility(View.VISIBLE);
-            onLoadMore(lastId += pageSize);
+
+            if (lastId != 0) {
+                view.setFootViewVisibility(View.VISIBLE);
+                onLoadMore(lastId += pageSize);
+            }else{
+                onRefresh();
+            }
         }
     };
 
@@ -307,6 +330,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
 
     /**
      * 设置一个View，当列表数据为空的时候显示
+     *
      * @param v
      */
     public void setEmptyView(View v) {

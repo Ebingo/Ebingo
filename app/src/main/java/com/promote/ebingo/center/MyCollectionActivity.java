@@ -16,10 +16,11 @@ import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.BaseListActivity;
+import com.promote.ebingo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CollectBean;
 import com.promote.ebingo.bean.CollectBeanTools;
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 
 public class MyCollectionActivity extends BaseListActivity implements View.OnClickListener {
 
+    private static boolean refresh;
+
     private DisplayImageOptions mOptions;
 
     private MyAdapter myAdapter = null;
@@ -49,13 +52,22 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         initialize();
     }
 
+    /**
+     * 刷新收藏列表
+     */
+    public static void setRefresh() {
+        refresh = true;
+    }
+
     private void initialize() {
         setUpRefreshable(true);
         mOptions = ContextUtil.getSquareImgOptions();
         myAdapter = new MyAdapter();
         setListAdapter(myAdapter);
         enableCache(FileUtil.FILE_WISH_LIST, mCollections);
-        if (mCollections.size() == 0||getIntent().getBooleanExtra(ARG_REFRESH,false)) onRefresh();
+        if (mCollections.size() == 0 || getIntent().getBooleanExtra(ARG_REFRESH, false)||refresh){
+            onRefresh();
+        }
         enableDelete(true);
         setDownRefreshable(true);
     }
@@ -107,10 +119,22 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(MyCollectionActivity.this, ProductInfoActivity.class);
-        intent.putExtra(ProductInfoActivity.ARG_ID, mCollections.get(position).getInfo_id());
-        intent.putExtra("collectId", mCollections.get(position).getId());
+        CollectBean collect = mCollections.get(position);
+        Integer info_id = collect.getInfo_id();
+        if (info_id == null || info_id <= 0) {
+            ContextUtil.toast(R.string.data_error);
+            return;
+        }
+        Intent intent = new Intent();
+        intent.putExtra(ProductInfoActivity.ARG_ID, info_id);
+        if (Constant.PUBLISH_SUPPLY.equals(collect.getType())) {
+            intent.setClass(MyCollectionActivity.this, ProductInfoActivity.class);
+        } else {
+            intent.setClass(MyCollectionActivity.this, BuyInfoActivity.class);
+        }
         startActivity(intent);
+
+
     }
 
     @Override
@@ -129,6 +153,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 ContextUtil.toast("删除收藏成功！");
                 mCollections.remove(position);
                 myAdapter.notifyDataSetChanged();
+                refreshFooterView(true);
             }
 
             @Override

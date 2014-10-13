@@ -109,6 +109,7 @@ public class MySupplyActivity extends BaseListActivity {
                 mSupplyBeans.remove(posotion);
                 adapter.notifyDataSetChanged();
                 ContextUtil.toast("删除成功！");
+                refreshFooterView(true);
             }
 
             @Override
@@ -223,7 +224,7 @@ public class MySupplyActivity extends BaseListActivity {
             SearchSupplyBean supplyBean = mSupplyBeans.get(position);
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
             viewHolder.nameTv.setText(supplyBean.getName());
-            viewHolder.priceTv.setText(supplyBean.getPrice());
+            viewHolder.priceTv.setText(supplyBean.getPrice()+"元");
             if (!TextUtils.isEmpty(supplyBean.getUnit()))
                 viewHolder.priceTv.append("/" + supplyBean.getUnit());
             viewHolder.timeTv.setText(supplyBean.getDate());

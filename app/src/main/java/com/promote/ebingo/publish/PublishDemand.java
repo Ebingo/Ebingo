@@ -243,7 +243,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
             edit_title.setText(infoBean.getTitle());
             tv_pick_description.setText(infoBean.getDescription());
             tv_pick_description.setContentDescription(infoBean.getDescription());
-            edit_demand_num.setText(infoBean.getMin_sell_num());
+            edit_demand_num.setText(infoBean.getBuy_num());
             edit_unit.setText(infoBean.getUnit());
             edit_contact.setText(infoBean.getContacts());
             edit_phone.setText(infoBean.getPhone_num());

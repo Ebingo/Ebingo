@@ -121,7 +121,9 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.buy_info_btm_ll: {
-                if (mDetailInfoBean != null && HttpUtil.isNetworkConnected(getApplicationContext())) {
+                if (!VipType.getCompanyInstance().getVipInfo().can_scan_demand_company_info) {
+                    EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_SCAN_DEMAND_COMPANY_INFO).show();
+                } else if (mDetailInfoBean != null && HttpUtil.isNetworkConnected(getApplicationContext())) {
                     Intent intent = new Intent(BuyInfoActivity.this, InterpriseInfoActivity.class);
                     intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
                     intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
@@ -184,6 +186,11 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
+        Integer sellerId = mDetailInfoBean.getCompany_id();
+        if (sellerId == null) {
+            EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_INFO_DELETED).show();
+            return;
+        }
         if (mDetailInfoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
             buyInfocontactphonetv.setVisibility(View.GONE);
         }

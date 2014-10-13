@@ -2,11 +2,11 @@ package com.promote.ebingo.publish;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.util.LogCat;
 
 /**
  * Created by acer on 2014/9/15.
@@ -14,10 +14,10 @@ import com.promote.ebingo.bean.Company;
 public enum VipType {
     VISITOR("9", "游客", 0),
     Experience_Vip("0", "体验会员", 0),
-    Standard_VIP("1", "普通会员", R.drawable.standard),
-    Silver_VIP("2", "银牌用户", R.drawable.silver),
-    Gold_VIP("3", "金牌会员", R.drawable.gold),
-    Platinum_VIP("4", "铂金会员", R.drawable.platinum);
+    Standard_VIP("1", "普通会员", R.drawable.vip_standard),
+    Silver_VIP("2", "银牌用户", R.drawable.vip_silver),
+    Gold_VIP("3", "金牌会员", R.drawable.vip_gold),
+    Platinum_VIP("4", "铂金会员", R.drawable.vip_platinum);
 
     public String code;
     public String name;
@@ -45,8 +45,9 @@ public enum VipType {
         Drawable drawable = null;
         try {
             drawable = context.getResources().getDrawable(drawableId);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         } catch (Exception e) {
-
+            LogCat.e(e.getLocalizedMessage());
         }
         return drawable;
     }
@@ -77,34 +78,37 @@ public enum VipType {
 
             case Standard_VIP: {
                 info.dial_permission = VipInfo.DIAL_DEMAND_TEL | VipInfo.DIAL_SUPPLY_TEL;
-                info.supply_max_num = 20;
+                info.supply_max_num = Long.MAX_VALUE;
                 info.demand_max_num = Long.MAX_VALUE;
                 info.book_tag_num = 5;
                 info.display_3d = 0;
                 info.webService = false;
                 info.email_book_info = false;
+                info.can_scan_demand_company_info=true;
                 break;
             }
 
             case Silver_VIP: {
                 info.dial_permission = VipInfo.DIAL_DEMAND_TEL | VipInfo.DIAL_SUPPLY_TEL;
-                info.supply_max_num = 30;
+                info.supply_max_num = Long.MAX_VALUE;
                 info.demand_max_num = Long.MAX_VALUE;
                 info.book_tag_num = 10;
                 info.display_3d = 0;
                 info.webService = false;
                 info.email_book_info = false;
+                info.can_scan_demand_company_info=true;
                 break;
             }
 
             case Gold_VIP: {
                 info.dial_permission = VipInfo.DIAL_DEMAND_TEL | VipInfo.DIAL_SUPPLY_TEL;
-                info.supply_max_num = 50;
+                info.supply_max_num = Long.MAX_VALUE;
                 info.demand_max_num = Long.MAX_VALUE;
                 info.book_tag_num = 20;
                 info.display_3d = 1;
                 info.webService = true;
                 info.email_book_info = false;
+                info.can_scan_demand_company_info=true;
                 break;
             }
 
@@ -115,12 +119,24 @@ public enum VipType {
                 info.book_tag_num = Integer.MAX_VALUE;
                 info.display_3d = 5;
                 info.webService = true;
+                info.can_scan_demand_company_info=true;
                 info.email_book_info = true;
                 break;
             }
 
         }
         return info;
+    }
+
+    /**
+     * 返回下一个等级的vipType，如果当前已经是最后一个了，则返回null
+     *
+     * @return
+     */
+    public VipType next() {
+        VipType[] vipTypes = VipType.values();
+        if (ordinal() >= vipTypes.length) return null;
+        else return vipTypes[ordinal() + 1];
     }
 
     /**
@@ -195,6 +211,11 @@ public enum VipType {
          * 标签信息邮件推送
          */
         public boolean email_book_info = false;
+        /**
+         * 查看求购的公司信息
+         */
+        public boolean can_scan_demand_company_info = false;
+
 
         public boolean canDialSupply() {
             return (dial_permission & DIAL_SUPPLY_TEL) != 0;

@@ -127,6 +127,7 @@
                     <View style="@style/vertical_divider_20" />
 
                     <EditText
+                        android:inputType="phone"
                         android:id="@+id/edit_enterprise_phone"
                         style="@style/publish_edit" />
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -46,6 +47,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         edit_tag = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
         save.setText("保存");
         save.setOnClickListener(this);
+        edit_tag.setOnClickListener(this);
         getData();
         ((ToggleButton) findViewById(R.id.arrange)).setOnCheckedChangeListener(this);
     }
@@ -63,6 +65,10 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
                 bookBean.setNo_read(0);
                 addTag(bookBean);
                 edit_tag.setText(null);
+                break;
+            case R.id.edit_add_tags:
+                ScrollView scrollView = (ScrollView) findViewById(R.id.scroll);
+                scrollView.fullScroll(View.FOCUS_DOWN);
                 break;
             default:
                 super.onClick(v);
@@ -128,6 +134,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
     /**
      * 将所有标签拼接起来，用逗号分开
+     *
      * @return
      */
     private String getTags() {
@@ -143,13 +150,14 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
     /**
      * 添加一个标签
+     *
      * @param bookBean
      */
     private void addTag(BookBean bookBean) {
-        int tagNum=tagContent.getChildCount();
-        VipType.VipInfo info=VipType.getCompanyInstance().getVipInfo();
-        int maxTagNum=info.book_tag_num;
-        if (tagNum>=maxTagNum){
+        int tagNum = tagContent.getChildCount();
+        VipType.VipInfo info = VipType.getCompanyInstance().getVipInfo();
+        int maxTagNum = info.book_tag_num;
+        if (tagNum >= maxTagNum) {
             EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_ADD_TAG).show();
             return;
         }
@@ -174,6 +182,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
     /**
      * 切换标签状态
+     *
      * @param state 是否为删除状态
      */
     private void toggleTagViewState(boolean state) {
