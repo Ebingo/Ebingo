@@ -202,11 +202,15 @@
     <string name="clear_success">清除成功！</string>
     <string name="warn">温馨提示</string>
     <string name="dial_number_notice">是否拨打%s?</string>
+
     <array name="pick_picture">
         <item>相册</item>
         <item>拍照</item>
     </array>
+
     <string name="confirm_logout">确定退出登录？</string>
     <string name="empty_notice">您当前没有发布任何%s信息。</string>
     <string name="modify">修改</string>
+    <string name="title_activity_code_scan">Ebingoo</string>
+
 </resources>

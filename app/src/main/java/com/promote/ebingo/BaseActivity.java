@@ -12,6 +12,7 @@ import android.widget.TextView;
  */
 public class BaseActivity extends FragmentActivity implements View.OnClickListener {
 
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);

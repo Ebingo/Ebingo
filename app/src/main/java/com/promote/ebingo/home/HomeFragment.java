@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -75,6 +76,10 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     private TextView mainpricenumtv;
     private GridView mHotMarketGv;
     private HotMarketAdapter hotMarketAdapter;
+    /**
+     * 二维码扫描按钮。 *
+     */
+    private ImageButton mScanIb = null;
     /**
      * banner條滾動schedule. *
      */
@@ -196,6 +201,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mainpricenumtv = (TextView) view.findViewById(R.id.main_price_num_tv);
         homesv = (PagerScrollView) view.findViewById(R.id.home_sv);
         mHotMarketGv = (GridView) view.findViewById(R.id.main_hotmarket_gv);
+        mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
 
         mHotBuyLv = (ScrollListView) view.findViewById(R.id.home_hot_buy_lv);
         mHotBuyLv.setParentScrollView(homesv);
@@ -213,7 +219,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
 
         hot_category.addAll(mIndexBean.getHot_category());
-        hotMarketAdapter = new HotMarketAdapter(getActivity().getApplicationContext(), hot_category, mOptions);
+        hotMarketAdapter = new HotMarketAdapter(getActivity().getApplicationContext(), hot_category, ContextUtil.getCircleImgOptions());
         mHotMarketGv.setSelector(new BitmapDrawable());
         mHotMarketGv.setOnItemClickListener(new HotMarketOCL());
         mHotMarketGv.setAdapter(hotMarketAdapter);
@@ -229,6 +235,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mSupplyLv.setOnItemClickListener(new HotSupplyOCL());
 
         mainSearchBarTv.setOnClickListener(this);
+        mScanIb.setOnClickListener(this);
 
         loopPager();
         getIndex();
@@ -269,6 +276,11 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 startActivity(intent);
 
                 break;
+            }
+
+            case R.id.scan_ib: {        //二维码扫描。
+
+                scan2Code();
             }
 
             default: {
@@ -434,6 +446,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                             }
                             break;
                         }
+
                         default: {
 
                         }
@@ -682,4 +695,8 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

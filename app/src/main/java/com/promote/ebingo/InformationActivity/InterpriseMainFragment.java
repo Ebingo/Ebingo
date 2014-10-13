@@ -125,6 +125,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         fraginterprisemainabstracttv = (TextView) containerView.findViewById(R.id.frag_interprise_main_abstract_tv);
         interpisemainsupdemlv = (ScrollListView) containerView.findViewById(R.id.interpise_main_sup_dem_lv);
         enterpriseinfopsv = (PagerScrollView) containerView.findViewById(R.id.enterprise_info_psv);
+//        enterpriseinfopsv.smoothScrollTo(0, 0);
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
         interpisemainsupdemlv.setOnItemClickListener(this);
@@ -132,7 +133,13 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
             initData(mInterpriseInfoBean);
         }
 //        interpisemainsupdemlv.smoothScrollByOffset(0);
-        enterpriseinfopsv.smoothScrollTo(0, 0);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        enterpriseinfopsv.smoothScrollTo(-200, 0);
     }
 
     /**
@@ -211,6 +218,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
             currentSupplyBeans.addAll(infoBean.getInfoarray());
         }
         myAdapter.notifyDataSetChanged();
+        enterpriseinfopsv.smoothScrollTo(0, 0);
 
     }
 

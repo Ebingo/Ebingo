@@ -8,10 +8,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.EbingoApp;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.promote.ebingo.R;
-
 /**
  * Created by acer on 2014/9/3.
  */
@@ -50,6 +46,18 @@ public class ContextUtil {
 
 
         return ractangleImgOptions;
+    }
+
+    public static DisplayImageOptions getCircleImgOptions() {
+        DisplayImageOptions circleImgOptions = new DisplayImageOptions.Builder()
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .showImageForEmptyUri(R.drawable.circle_loading)
+                .showImageOnLoading(R.drawable.circle_loading)
+                .showImageOnFail(R.drawable.circle_loading)
+                .cacheInMemory(true).cacheOnDisc(true).build();
+
+        return circleImgOptions;
+
     }
 
     public static void init(Context context) {
@@ -127,11 +135,12 @@ public class ContextUtil {
 
     /**
      * 暂时只是简单的根据是否以"<"开头，以">"结尾来判断是否为html
+     *
      * @param str
      * @return
      */
     public static boolean isHtml(String str) {
         if (str == null) return false;
-        return str.startsWith("<")&&str.endsWith(">");
+        return str.startsWith("<") && str.endsWith(">");
     }
 }

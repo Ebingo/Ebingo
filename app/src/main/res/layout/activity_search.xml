@@ -75,7 +75,7 @@
                     android:drawablePadding="2dp"
                     android:background="@null"
                     android:drawableRight="@drawable/blue_arro_check"
-                    android:text="@string/interprise"
+                    android:text="@string/supply"
                     android:layout_height="match_parent" />
 
                 <EditText

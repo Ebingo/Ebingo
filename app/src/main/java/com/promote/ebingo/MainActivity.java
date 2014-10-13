@@ -12,15 +12,12 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.jch.lib.util.DialogUtil;
-import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
 import com.promote.ebingo.publish.login.LoginDialog;
-import com.promote.ebingo.publish.login.RegisterActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -195,7 +192,14 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
             }
             changeFrag(mCenterFragment, mCurFragment);
             centerrb.setChecked(true);
+        } else if (requestCode == BaseFragment.TO_SCAN) {
+            if (!mMainFramgent.isHidden()) {
+                mMainFramgent.onActivityResult(requestCode, resultCode, data);
+            } else if (!mFindFrament.isHidden()) {
+                mFindFrament.onActivityResult(requestCode, resultCode, data);
+            }
         }
+
 
     }
 
