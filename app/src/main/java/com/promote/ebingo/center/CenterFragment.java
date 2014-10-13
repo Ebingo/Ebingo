@@ -1,18 +1,13 @@
 package com.promote.ebingo.center;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
@@ -41,8 +35,6 @@ import com.promote.ebingo.util.LogCat;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -340,7 +332,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
 
     }
-
 
     /**
      * This interface must be implemented by activities that contain this

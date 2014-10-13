@@ -46,11 +46,18 @@
             <LinearLayout
                 android:id="@+id/search_clear_ll"
                 android:gravity="center"
-                android:background="@drawable/search_bar_right_shape"
+                android:background="@drawable/clear_bar_bg"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
-                android:paddingRight="10dp"
+                android:padding="0dp"
                 android:layout_height="35dp">
+
+                <ImageButton
+                    android:id="@+id/search_clear_ib"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:src="@drawable/search_bar_right_shape" />
 
             </LinearLayout>
 
@@ -75,7 +82,7 @@
                     android:drawablePadding="2dp"
                     android:background="@null"
                     android:drawableRight="@drawable/blue_arro_check"
-                    android:text="@string/interprise"
+                    android:text="@string/supply"
                     android:layout_height="match_parent" />
 
                 <EditText

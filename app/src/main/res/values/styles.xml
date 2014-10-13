@@ -117,7 +117,9 @@
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">15dp</item>
-        <item name="android:layout_margin">0.5dp</item>
+        <item name="android:layout_marginTop">1px</item>
+        <item name="android:layout_marginLeft">1px</item>
+        <item name="android:layout_marginRight">1px</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/font_15</item>
         <item name="android:textColor">@drawable/gray_white_selector</item>
@@ -140,6 +142,11 @@
     <style name="info_content_pad">
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">22dp</item>
+        <item name="android:paddingRight">22dp</item>
+    </style>
+
+    <style name="info_btm_pad">
         <item name="android:paddingLeft">22dp</item>
         <item name="android:paddingRight">22dp</item>
     </style>

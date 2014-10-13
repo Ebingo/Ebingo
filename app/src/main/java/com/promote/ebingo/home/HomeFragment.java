@@ -1,5 +1,6 @@
 package com.promote.ebingo.home;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -17,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,10 +54,19 @@ import java.util.concurrent.TimeUnit;
 
 
 public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
+
+    public interface HomeFragmentListener {
+        public void moreHotMarket();
+    }
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PARAM1 = "param1";
     public static final String ARG_PARAM2 = "param2";
+    /**
+     * 主页回调函数. *
+     */
+    public HomeFragmentListener mHomeFragmentListener = null;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,6 +86,10 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     private TextView mainpricenumtv;
     private GridView mHotMarketGv;
     private HotMarketAdapter hotMarketAdapter;
+    /**
+     * 二维码扫描按钮。 *
+     */
+    private ImageButton mScanIb = null;
     /**
      * banner條滾動schedule. *
      */
@@ -175,15 +190,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdown();
-        }
-    }
-
-
     private void initialize(View view) {
 
         mainSearchBarTv = (TextView) view.findViewById(R.id.search_bar_tv);
@@ -196,6 +202,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mainpricenumtv = (TextView) view.findViewById(R.id.main_price_num_tv);
         homesv = (PagerScrollView) view.findViewById(R.id.home_sv);
         mHotMarketGv = (GridView) view.findViewById(R.id.main_hotmarket_gv);
+        mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
 
         mHotBuyLv = (ScrollListView) view.findViewById(R.id.home_hot_buy_lv);
         mHotBuyLv.setParentScrollView(homesv);
@@ -213,7 +220,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
 
         hot_category.addAll(mIndexBean.getHot_category());
-        hotMarketAdapter = new HotMarketAdapter(getActivity().getApplicationContext(), hot_category, mOptions);
+        hotMarketAdapter = new HotMarketAdapter(getActivity().getApplicationContext(), hot_category, ContextUtil.getCircleImgOptions());
         mHotMarketGv.setSelector(new BitmapDrawable());
         mHotMarketGv.setOnItemClickListener(new HotMarketOCL());
         mHotMarketGv.setAdapter(hotMarketAdapter);
@@ -229,6 +236,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mSupplyLv.setOnItemClickListener(new HotSupplyOCL());
 
         mainSearchBarTv.setOnClickListener(this);
+        mScanIb.setOnClickListener(this);
 
         loopPager();
         getIndex();
@@ -269,6 +277,11 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 startActivity(intent);
 
                 break;
+            }
+
+            case R.id.scan_ib: {        //二维码扫描。
+
+                scan2Code();
             }
 
             default: {
@@ -434,6 +447,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                             }
                             break;
                         }
+
                         default: {
 
                         }
@@ -626,11 +640,15 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     if (isNetworkConnected()) {
-                        HotCategory category = hot_category.get(position);
-                        Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                        intent.putExtra(CategoryActivity.ARG_ID, category.getId());
-                        intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
-                        startActivity(intent);
+                        if (position < hot_category.size()) {
+                            HotCategory category = hot_category.get(position);
+                            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                            intent.putExtra(CategoryActivity.ARG_ID, category.getId());
+                            intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
+                            startActivity(intent);
+                        } else {        //跳转到发现界面.
+                            mHomeFragmentListener.moreHotMarket();
+                        }
                     }
                 }
 
@@ -681,5 +699,31 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         }
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mHomeFragmentListener = (HomeFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (scheduledExecutorService != null) {
+            scheduledExecutorService.shutdown();
+        }
+        mHomeFragmentListener = null;
+    }
 
 }

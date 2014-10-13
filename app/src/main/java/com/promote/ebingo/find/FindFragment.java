@@ -2,14 +2,16 @@ package com.promote.ebingo.find;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import com.jch.lib.util.ImageManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.BaseFragment;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.CategoryBeen;
 import com.promote.ebingo.category.CategoryActivity;
@@ -34,7 +37,7 @@ import java.util.ArrayList;
  * Use the {@link com.promote.ebingo.find.FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class FindFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -43,6 +46,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    /**
+     * 二维码扫描按钮。 *
+     */
+    private ImageButton mScanIb = null;
 
     private GridView fragfindgv;
     private LinearLayout searchll;
@@ -123,7 +130,9 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         searchlogoimg = (ImageView) view.findViewById(R.id.search_logo_img);
         searchbartv = (TextView) view.findViewById(R.id.search_bar_tv);
         fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
+        fragfindgv.setSelector(new BitmapDrawable());
         mNoDataView = (TextView) view.findViewById(R.id.nodate_tv);
+        mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
 
         mNoDataView.setText(getResources().getString(R.string.refresh));
         String[] categorys = getResources().getStringArray(R.array.category_data);
@@ -148,6 +157,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
                 break;
             }
 
+            case R.id.scan_ib: {
+                scan2Code();
+            }
+
             case R.id.nodate_tv: {
 
                 getCategoryList();
@@ -162,7 +175,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
         Intent intent = new Intent(getActivity(), CategoryActivity.class);
         intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getId());
         intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getName());
@@ -210,6 +222,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
                 holder.imgView = (ImageView) convertView.findViewById(R.id.find_grid_item_img);
                 holder.text = (TextView) convertView.findViewById(R.id.find_grid_item_tv);
                 convertView.setTag(holder);
+                convertView.setOnTouchListener(new GradItemCLS());
+
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
@@ -221,6 +235,34 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
             return convertView;
         }
 
+    }
+
+    private class GradItemCLS implements View.OnTouchListener {
+
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+
+            int action = event.getAction();
+            switch (action) {
+
+                case MotionEvent.ACTION_DOWN: {
+
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+
+                    break;
+                }
+
+                default: {
+
+                }
+            }
+
+            return false;
+        }
     }
 
     private void noData() {
@@ -304,4 +346,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         TextView text;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

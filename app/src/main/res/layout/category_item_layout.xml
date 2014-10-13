@@ -67,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/font_gray_12"
+                android:visibility="gone"
                 android:layout_alignParentLeft="true"
                 android:text="@string/supply_company" />
 
@@ -100,8 +101,8 @@
 
             <TextView
                 android:id="@+id/category_lv_item_privater_tv"
+                android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/category_lv_item_right_ll"
-                android:layout_toRightOf="@id/category_supply_tv"
                 android:layout_width="wrap_content"
                 style="@style/gray_12_tv"
                 android:layout_marginLeft="2dp"
