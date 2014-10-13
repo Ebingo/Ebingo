@@ -24,6 +24,7 @@ import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
+import com.promote.ebingo.center.MyCollectionActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
@@ -39,7 +40,6 @@ import org.json.JSONObject;
 
 public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
-    public static final String ARG_COLLECT_ID = "collectId";
     private ImageView commonbackbtn;
     private TextView commontitletv;
     private TextView prdinfointocompanytv;
@@ -99,12 +99,14 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         prdinfointocompanytv.setOnClickListener(this);
         productinfocollectcb.setOnClickListener(this);
         prdinfobtmll.setOnClickListener(this);
-
-
-
     }
 
     private void setData(DetailInfoBean infoBean) {
+        Integer sellerId = mDetailInfoBean.getCompany_id();
+        if (sellerId == null) {
+            EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_INFO_DELETED).show();
+            return;
+        }
         if (!Constant.VERIFY_PASS.equals(infoBean.getVerify_result())) {
             //弹出审核未通过提示
             popError(infoBean.getVerify_reason());
@@ -234,6 +236,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 ContextUtil.toast("添加收藏成功！");
                 try {
                     mDetailInfoBean.setWishlist_id(response.getJSONObject("data").getInt("wishlistid"));
+                    MyCollectionActivity.setRefresh();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -265,6 +268,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 ContextUtil.toast("取消收藏成功！");
+                MyCollectionActivity.setRefresh();
             }
 
             @Override

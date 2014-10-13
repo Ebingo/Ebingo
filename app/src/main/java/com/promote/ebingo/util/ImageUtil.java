@@ -125,7 +125,6 @@ public class ImageUtil {
         canvas.restore();
 
         if (result != resizeSrc && !resizeSrc.isRecycled()) resizeSrc.recycle();
-        if (result != src && !src.isRecycled()) src.recycle();
 
         return result;
     }

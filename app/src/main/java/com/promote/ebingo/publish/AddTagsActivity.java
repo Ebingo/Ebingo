@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.ScrollView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -22,6 +23,7 @@ import com.promote.ebingo.center.TagView;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.JsonUtil;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -53,7 +55,7 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.commit_title_done).setOnClickListener(this);
         tagContainer = (AutoLineLayout) findViewById(R.id.tags_container);
         edit_add_tab = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
-
+        edit_add_tab.setOnClickListener(this);
         new Handler().postDelayed(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签
             @Override
             public void run() {
@@ -116,6 +118,17 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
                 } else {
                     toastTagIsMax();
                 }
+                break;
+            case R.id.edit_add_tags:
+                LogCat.i("--->", "edit_add_tags");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ScrollView mScrollView = (ScrollView) findViewById(R.id.scroll);
+                        mScrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                },100);
+
                 break;
             case R.id.commit_title_done:
 

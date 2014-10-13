@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -125,17 +126,21 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
      */
     private void invalidateData() {
         String companyName = Company.getInstance().getName();
+
         if (Company.getInstance().getCompanyId() == null) {//没有登录
+            centerloginbtn.setBackgroundResource(R.drawable.login_btn_shape);
             centerloginbtn.setText(R.string.login);
         } else if ("".equals(companyName)) {//已经登录，还没有设置用户名
+            centerloginbtn.setBackgroundResource(0);
             centerloginbtn.setText("未设置公司名");
         } else {
+            centerloginbtn.setBackgroundResource(0);
             centerloginbtn.setText(companyName);
         }
 
-        VipType vipType = VipType.parse(Company.getInstance().getVipType());
-        centerloginbtn.setCompoundDrawablePadding((int) Dimension.dp(6));
-        centerloginbtn.setCompoundDrawables(null, null, vipType.getIcon(getActivity()), null);
+        Drawable icon=VipType.getCompanyInstance().getIcon(getActivity());
+        LogCat.i("set vip icon:"+icon);
+        centerloginbtn.setCompoundDrawables(null, null, icon, null);
 
         setHeadImage(Company.getInstance().getImageUri());
         getCurrentCompanyBaseNum();

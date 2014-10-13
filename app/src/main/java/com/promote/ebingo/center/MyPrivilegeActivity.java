@@ -1,5 +1,8 @@
 package com.promote.ebingo.center;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,8 +55,9 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
     private void init() {
         Company company = Company.getInstance();
         if (company.getCompanyId() == null) return;
-        if (!TextUtils.isEmpty(company.getVipType()))
-            tv_vipType.setText(VipType.nameOf(company.getVipType()));
+        VipType vipType = VipType.getCompanyInstance();
+        tv_vipType.setText(vipType.name);
+        tv_vipType.setCompoundDrawables(null,null,vipType.getIcon(this),null);
         if (!TextUtils.isEmpty(company.getName())) tv_name.setText(company.getName());
         setHeadImage(company.getImageUri());
     }
@@ -97,11 +101,11 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        for (int i=0;i<group.getChildCount();i++){
-            RadioButton radioButton= (RadioButton) group.getChildAt(i);
+        for (int i = 0; i < group.getChildCount(); i++) {
+            RadioButton radioButton = (RadioButton) group.getChildAt(i);
             radioButton.clearAnimation();
-            if (radioButton.getId()==checkedId){
-                TranslateAnimation translateAnimation=new TranslateAnimation(-4,2,0,0);
+            if (radioButton.getId() == checkedId) {
+                TranslateAnimation translateAnimation = new TranslateAnimation(-4, 2, 0, 0);
                 translateAnimation.setDuration(100);
                 translateAnimation.setFillAfter(true);
                 radioButton.startAnimation(translateAnimation);
@@ -126,6 +130,13 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         }
         ft.commit();
         cur = to;
+    }
+
+    /**
+     * @param vipType 要展示的vipType
+     */
+    public static void startFrom(Context context,VipType vipType){
+
     }
 
     @Override

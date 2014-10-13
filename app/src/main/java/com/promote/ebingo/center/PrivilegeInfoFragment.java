@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,8 +43,8 @@ import java.util.Map;
 public class PrivilegeInfoFragment extends Fragment implements View.OnClickListener {
 
 
-    public static PrivilegeInfoFragment newInstance(VipType vipType){
-        PrivilegeInfoFragment fragment=new PrivilegeInfoFragment();
+    public static PrivilegeInfoFragment newInstance(VipType vipType) {
+        PrivilegeInfoFragment fragment = new PrivilegeInfoFragment();
         fragment.setDisplayVipType(vipType);
         return fragment;
     }
@@ -57,7 +58,6 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     public void setDisplayVipType(VipType vipType) {
         this.displayVipType = vipType;
     }
-
 
 
     @Override
@@ -76,6 +76,27 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
             v.findViewById(R.id.btn_apply_vip).setVisibility(View.GONE);
         } else {
             v.findViewById(R.id.btn_apply_vip).setOnClickListener(this);
+        }
+        ImageView iv= (ImageView) v.findViewById(R.id.iv_vip_info);
+        switch (displayVipType) {
+            case VISITOR:
+                iv.setImageResource(R.drawable.visitor_info);
+                break;
+            case Experience_Vip:
+                iv.setImageResource(R.drawable.experience_info);
+                break;
+            case Standard_VIP:
+                iv.setImageResource(R.drawable.standard_info);
+                break;
+            case Silver_VIP:
+                iv.setImageResource(R.drawable.silver_info);
+                break;
+            case Gold_VIP:
+                iv.setImageResource(R.drawable.gold_info);
+                break;
+            case Platinum_VIP:
+                iv.setImageResource(R.drawable.platinum_info);
+                break;
         }
 
         return v;

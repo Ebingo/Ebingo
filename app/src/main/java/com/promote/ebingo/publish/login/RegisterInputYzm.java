@@ -100,6 +100,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             public void onSuccess(int statusCode, JSONObject response) {
                 try {
                     Company.getInstance().setCompanyId(response.getInt("company_id"));
+                    Company.getInstance().setVipType(response.getString("vip_type"));
                     Intent intent = new Intent(RegisterInputYzm.this, EnterpriseSettingActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
                 } catch (JSONException e) {
@@ -115,7 +116,6 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             @Override
             public void onFinish() {
                 dialog.dismiss();
-
             }
         });
     }

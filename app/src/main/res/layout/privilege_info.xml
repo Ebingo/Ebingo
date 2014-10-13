@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    style="@style/info_content_pad"
     android:background="@color/gray_bg"
     android:layout_height="match_parent">
 
@@ -13,19 +14,27 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ImageView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2890dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/guide1" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_vip_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/platinum_info" />
+
+            <Button
+                android:id="@+id/btn_apply_vip"
+                style="@style/blue_button"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="15dp"
+                android:text="立即升级" />
+        </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_apply_vip"
-        style="@style/blue_button"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_width="200dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="10dp"
-        android:text="立即升级" />
+
 </LinearLayout>

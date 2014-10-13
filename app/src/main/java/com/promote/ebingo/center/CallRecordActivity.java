@@ -124,6 +124,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                         ContextUtil.toast("操作成功!");
                         records.remove(position);
                         adapter.notifyDataSetChanged();
+                        refreshFooterView(true);
                     } else {
                         ContextUtil.toast("操作失败!");
                     }

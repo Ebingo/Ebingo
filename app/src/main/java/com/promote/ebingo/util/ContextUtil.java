@@ -64,15 +64,7 @@ public class ContextUtil {
         mContext = context;
     }
 
-    public static void toast(String msg) {
-        if (mContext == null)
-            throw new RuntimeException(ContextUtil.class.getName() + " has not called init() ");
-        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-    }
-
     public static void toast(int resId) {
-        if (mContext == null)
-            throw new RuntimeException(ContextUtil.class.getName() + " has not called init() ");
         toast(mContext.getString(resId));
     }
 

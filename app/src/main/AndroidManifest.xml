@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.promote.ebingo"
-    android:versionCode="2"
-    android:versionName="1.0.1">
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -91,11 +90,13 @@
             android:name=".publish.EditDescription"
             android:label="@string/title_edit_description"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.AddTagsActivity"
             android:label="@string/title_add_tag"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".publish.PickRegionActivity"
@@ -164,7 +165,7 @@
             android:label="@string/title_my_book"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".center.MyPrivilegeActivity"
             android:configChanges="keyboardHidden|orientation"

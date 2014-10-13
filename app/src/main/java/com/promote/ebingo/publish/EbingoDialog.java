@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.view.View;
 import android.widget.TextView;
 
 import com.promote.ebingo.R;
+import com.promote.ebingo.center.MyPrivilegeActivity;
 
 /**
  * Created by acer on 2014/9/19.
@@ -34,16 +37,28 @@ public class EbingoDialog extends AlertDialog {
 
     public enum DialogStyle {
         STYLE_CANNOT_DIAL,
-        STYLE_CANNOT_ADD_TAG
+        /**
+         * 添加订阅标签超出上限
+         */
+        STYLE_CANNOT_ADD_TAG,
+        /**
+         * 信息已经被删除，点击“我知道了”会关闭当前Activity
+         */
+        STYLE_INFO_DELETED,
+        /**
+         *不能从求购信息中链接到发布者信息
+         */
+        STYLE_CANNOT_SCAN_DEMAND_COMPANY_INFO
     }
 
     /**
      * 对话框工厂
+     *
      * @param context
      * @param style
      * @return
      */
-    public static EbingoDialog newInstance(Activity context, DialogStyle style) {
+    public static EbingoDialog newInstance(final Activity context, DialogStyle style) {
         EbingoDialog dialog = new EbingoDialog(context);
         switch (style) {
             case STYLE_CANNOT_DIAL:
@@ -55,13 +70,58 @@ public class EbingoDialog extends AlertDialog {
             }
             case STYLE_CANNOT_ADD_TAG:
             {
-                VipType.VipInfo info=VipType.getCompanyInstance().getVipInfo();
+                VipType.VipInfo info = VipType.getCompanyInstance().getVipInfo();
                 dialog.setTitle(R.string.warn);
-                dialog.setMessage(context.getString(R.string.vip_add_tag,VipType.getCompanyInstance().name,info.book_tag_num));
-                dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
+                dialog.setMessage(context.getString(R.string.vip_add_tag, VipType.getCompanyInstance().name, info.book_tag_num));
+                dialog.setPositiveButton(R.string.update_right_now, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        toMyPrivilegeActivity(context);
+                    }
+                });
+                dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
+                break;
+            }
+            case STYLE_INFO_DELETED:
+            {
+                dialog.setTitle(R.string.warn);
+                dialog.setMessage(R.string.info_has_deleted);
+                dialog.setPositiveButton(R.string.i_know, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.finish();
+                    }
+                });
+                break;
+            }
+            case STYLE_CANNOT_SCAN_DEMAND_COMPANY_INFO:
+            {
+                dialog.setTitle(R.string.warn);
+                dialog.setMessage(context.getString(R.string.can_scan_demand_company_info, context.getString(R.string.vip_standard)));
+                dialog.setPositiveButton(R.string.update_right_now, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        toMyPrivilegeActivity(context);
+                    }
+                });
+                dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
             }
         }
         return dialog;
+    }
+
+    /**
+     * 跳到我的特权，并且展示下一个等级vip信息
+     * @param context
+     */
+    private static void toMyPrivilegeActivity(Context context){
+        final VipType companyVipType = VipType.getCompanyInstance();
+        VipType next = companyVipType.next();
+        if (next == null)
+            throw new RuntimeException(companyVipType.name + "is the highest Vip,can not be upgrade!");
+        Intent intent=new Intent(context,MyPrivilegeActivity.class);
+        intent.putExtra(MyPrivilegeActivity.SHOW_VIP_CODE,next.code);
+        context.startActivity(intent);
     }
 
     @Override

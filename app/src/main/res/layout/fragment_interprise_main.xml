@@ -45,16 +45,11 @@
                         android:layout_width="wrap_content"
                         style="@style/font_black_15"
                         android:textStyle="bold"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginRight="35dp"
+                        android:text="hello"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="4dp"
                         android:layout_height="wrap_content" />
 
-                    <ImageView
-                        android:id="@+id/frag_interprise_main_vip_img"
-                        android:src="@drawable/vip_1_member"
-                        android:layout_gravity="right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
                 </FrameLayout>
 
                 <LinearLayout

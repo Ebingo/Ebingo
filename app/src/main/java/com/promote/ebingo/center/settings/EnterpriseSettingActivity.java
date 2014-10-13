@@ -67,7 +67,6 @@ public class EnterpriseSettingActivity extends BaseActivity {
     private TextView tv_pick_city;
     private TextView tv_error;
     private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();//省份列表
-    private File imageTempFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,13 +363,15 @@ public class EnterpriseSettingActivity extends BaseActivity {
         Bitmap bitmap = null;
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            image_enterprise.setImageBitmap(bitmap);
+            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap,(int) Dimension.dp(48)));
             Company.getInstance().setImageUri(uri);
         } catch (IOException e) {
             e.printStackTrace();
         }
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
         parmater.put("image", ImageUtil.base64Encode(bitmap));
+        if(!bitmap.isRecycled())bitmap.recycle();
+
         HttpUtil.post(HttpConstant.uploadImage, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

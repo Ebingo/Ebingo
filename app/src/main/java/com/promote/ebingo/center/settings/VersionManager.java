@@ -98,6 +98,8 @@ public class VersionManager {
             LogCat.i("--->", "versionCode=" + info.versionCode);
             LogCat.i("--->", "versionName=" + info.versionName);
             LogCat.i("--->", "packageName=" + info.packageName);
+            LogCat.i("--->", "applicationInfo=" + info.applicationInfo);
+            LogCat.i("--->", "activities=" + info.activities);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

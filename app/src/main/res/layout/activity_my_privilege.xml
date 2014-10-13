@@ -43,6 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="游客"
+                android:gravity="bottom"
+                android:drawablePadding="3dp"
                 android:textColor="@color/text_black"
                 android:textSize="15sp" />
         </LinearLayout>
