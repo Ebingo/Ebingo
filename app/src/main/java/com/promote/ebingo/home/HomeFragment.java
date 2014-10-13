@@ -1,5 +1,6 @@
 package com.promote.ebingo.home;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -53,10 +54,19 @@ import java.util.concurrent.TimeUnit;
 
 
 public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
+
+    public interface HomeFragmentListener {
+        public void moreHotMarket();
+    }
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PARAM1 = "param1";
     public static final String ARG_PARAM2 = "param2";
+    /**
+     * 主页回调函数. *
+     */
+    public HomeFragmentListener mHomeFragmentListener = null;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -179,15 +189,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
             scheduledExecutorService.shutdown();
         }
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdown();
-        }
-    }
-
 
     private void initialize(View view) {
 
@@ -639,11 +640,15 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     if (isNetworkConnected()) {
-                        HotCategory category = hot_category.get(position);
-                        Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                        intent.putExtra(CategoryActivity.ARG_ID, category.getId());
-                        intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
-                        startActivity(intent);
+                        if (position < hot_category.size()) {
+                            HotCategory category = hot_category.get(position);
+                            Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                            intent.putExtra(CategoryActivity.ARG_ID, category.getId());
+                            intent.putExtra(CategoryActivity.ARG_NAME, category.getName());
+                            startActivity(intent);
+                        } else {        //跳转到发现界面.
+                            mHomeFragmentListener.moreHotMarket();
+                        }
                     }
                 }
 
@@ -699,4 +704,26 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mHomeFragmentListener = (HomeFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (scheduledExecutorService != null) {
+            scheduledExecutorService.shutdown();
+        }
+        mHomeFragmentListener = null;
+    }
+
 }

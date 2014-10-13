@@ -2,6 +2,7 @@ package com.promote.ebingo.find;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -129,6 +130,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         searchlogoimg = (ImageView) view.findViewById(R.id.search_logo_img);
         searchbartv = (TextView) view.findViewById(R.id.search_bar_tv);
         fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
+        fragfindgv.setSelector(new BitmapDrawable());
         mNoDataView = (TextView) view.findViewById(R.id.nodate_tv);
         mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
 

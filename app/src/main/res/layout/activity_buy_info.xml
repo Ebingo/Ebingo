@@ -20,7 +20,7 @@
 
         <RelativeLayout
             android:id="@+id/buy_info_btm_ll"
-            style="@style/info_content_pad"
+            style="@style/info_btm_pad"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
@@ -46,8 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/buy_info_into_company_tv"
-                android:text="南京普爾么網絡技術有限公司" />
+                android:layout_toLeftOf="@id/buy_info_into_company_tv" />
 
         </RelativeLayout>
 

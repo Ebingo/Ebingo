@@ -51,9 +51,9 @@ public class ContextUtil {
     public static DisplayImageOptions getCircleImgOptions() {
         DisplayImageOptions circleImgOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .showImageForEmptyUri(R.drawable.circle_loading)
-                .showImageOnLoading(R.drawable.circle_loading)
-                .showImageOnFail(R.drawable.circle_loading)
+                .showImageForEmptyUri(R.drawable.adv_more)
+                .showImageOnLoading(R.drawable.adv_more)
+                .showImageOnFail(R.drawable.adv_more)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
         return circleImgOptions;

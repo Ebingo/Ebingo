@@ -10,19 +10,17 @@ import android.widget.TextView;
 
 import com.jch.lib.util.ImageManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.HotCategory;
 
 import java.util.ArrayList;
 
 /**
- *
  * 熱門市場adapter。
- *
+ * <p/>
  * Created by ACER on 2014/8/29.
  */
-public class HotMarketAdapter extends BaseAdapter{
+public class HotMarketAdapter extends BaseAdapter {
 
     private Context mContext;
 
@@ -31,7 +29,7 @@ public class HotMarketAdapter extends BaseAdapter{
 
     ArrayList<HotCategory> hotCategories = new ArrayList<HotCategory>();
 
-    public HotMarketAdapter(Context context , ArrayList<HotCategory> hotCategories, DisplayImageOptions options){
+    public HotMarketAdapter(Context context, ArrayList<HotCategory> hotCategories, DisplayImageOptions options) {
 
         this.mContext = context;
         this.hotCategories = hotCategories;
@@ -40,12 +38,19 @@ public class HotMarketAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return hotCategories.size();
+        return hotCategories.size() + 1;
     }
 
     @Override
     public Object getItem(int position) {
-        return hotCategories.get(position);
+
+        if (position < hotCategories.size()) {
+            return hotCategories.get(position);
+        } else {
+            return "last item";
+        }
+
+
     }
 
     @Override
@@ -57,28 +62,34 @@ public class HotMarketAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder = null;
-        if (convertView == null){
+        if (convertView == null) {
 
             convertView = LayoutInflater.from(mContext).inflate(R.layout.home_market_item, null);
             viewHolder = new ViewHolder();
-            viewHolder.img = (ImageView)convertView.findViewById(R.id.home_market_item_img);
-            viewHolder.tv = (TextView)convertView.findViewById(R.id.home_market_item_tv);
+            viewHolder.img = (ImageView) convertView.findViewById(R.id.home_market_item_img);
+            viewHolder.tv = (TextView) convertView.findViewById(R.id.home_market_item_tv);
             convertView.setTag(viewHolder);
-        }else {
-            viewHolder = (ViewHolder)convertView.getTag();
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        HotCategory hotCategory = hotCategories.get(position);
-        if (hotCategory != null){
-            viewHolder.tv.setText(hotCategory.getName());
-            ImageManager.load(hotCategory.getImage(), viewHolder.img, mOptions);
+
+        if (position == hotCategories.size()) {
+            viewHolder.tv.setText(mContext.getString(R.string.more));
+            viewHolder.img.setImageDrawable(mContext.getResources().getDrawable(R.drawable.adv_more));
+        } else {
+            HotCategory hotCategory = hotCategories.get(position);
+            if (hotCategory != null) {
+                viewHolder.tv.setText(hotCategory.getName());
+                ImageManager.load(hotCategory.getImage(), viewHolder.img, mOptions);
+            }
         }
 
         return convertView;
     }
 
 
-    static class ViewHolder{
+    static class ViewHolder {
         ImageView img;
         TextView tv;
     }

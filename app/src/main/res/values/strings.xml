@@ -38,7 +38,7 @@
     <string name="search_time">次</string>
     <string name="look_num">浏览量</string>
     <string name="price">价格</string>
-    <string name="start_supply">起供应</string>
+    <string name="start_supply">起供</string>
     <string name="supply_company">供应商:</string>
     <string name="enter_company">进入企业</string>
     <string name="title_product_info">产品详情</string>
@@ -47,7 +47,7 @@
     <string name="publish_time">发布时间：</string>
     <string name="buy_look">查看</string>
     <string name="buy_num">求购数量：</string>
-    <string name="contact_buy">联系买家</string>
+    <string name="contact_buy">联系卖家</string>
     <string name="serch_key">关键词:</string>
     <string name="login">登录|注册</string>
     <string name="login_">登 录</string>
@@ -212,5 +212,6 @@
     <string name="empty_notice">您当前没有发布任何%s信息。</string>
     <string name="modify">修改</string>
     <string name="title_activity_code_scan">Ebingoo</string>
+    <string name="more">更多</string>
 
 </resources>

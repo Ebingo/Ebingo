@@ -24,7 +24,8 @@
             android:id="@+id/prd_info_btm_ll"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            style="@style/info_content_pad"
+            style="@style/info_btm_pad"
+            android:gravity="center_vertical"
             android:background="@color/info_list_div"
             android:layout_height="48dp">
 
@@ -32,8 +33,8 @@
                 android:id="@+id/prd_info_into_company_tv"
                 style="@style/font_gray_15"
                 android:text="@string/enter_company"
-                android:gravity="center_vertical"
                 android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
                 android:drawableRight="@drawable/right_arro"
                 android:drawablePadding="5dp"
                 android:layout_width="wrap_content"
@@ -42,9 +43,9 @@
             <TextView
                 android:id="@+id/prd_info_company_tv"
                 style="@style/gray_15_tv"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/buy_info_into_company_tv"
+                android:text="发了里欧弄弄聊你给弄弄聊你给弄弄fdsf"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/prd_info_into_company_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

@@ -22,7 +22,7 @@ import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 
-public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener, PublishFragment.PublishCallback {
+public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener, PublishFragment.PublishCallback, HomeFragment.HomeFragmentListener {
 
     public static final String ARG_PUBLISH_TYPE = "publish_type";
     private RadioButton mainrb;
@@ -231,5 +231,10 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     protected void onRestart() {
         super.onRestart();
         LogCat.i("--->", "onRestart");
+    }
+
+    @Override
+    public void moreHotMarket() {
+        findrb.setChecked(true);
     }
 }

@@ -27,13 +27,15 @@ public class SearchDao {
      * 保存历史记录。
      *
      * @param history
+     * @param int     searchType: 搜索历史类型。DEMAND(2), SUPPLY(3), INTERPRISE(4)
      */
-    public synchronized void addHistory(String history) {
+    public synchronized void addHistory(String history, int searchType) {
 
 
         SQLiteDatabase db = mHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("history", history);
+        values.put("search_type", searchType);
         db.insert(DbOpenHelper.SEARCH_HISTORY, null, values);
         db.close();
     }
@@ -41,12 +43,15 @@ public class SearchDao {
     /**
      * 获取历史记录。
      *
+     * @param int    searchType: 搜索历史类型。DEMAND(2), SUPPLY(3), INTERPRISE(4)
+     * @param String key 搜索关键词。
      * @return ArrayList<SearchHistoryBean>
      */
-    public synchronized ArrayList<SearchHistoryBean> getHistorys() {
+    public synchronized ArrayList<SearchHistoryBean> getHistorys(int searchType, String key) {
 
         SQLiteDatabase db = mHelper.getWritableDatabase();
-        Cursor cursor = db.query(true, DbOpenHelper.SEARCH_HISTORY, new String[]{"history"}, null, null, null, null, "id desc", String.valueOf(7));
+        Cursor cursor = db.query(true, DbOpenHelper.SEARCH_HISTORY, new String[]{"history"}, "search_type=? and history like ?", new String[]{Integer.toString(searchType), "%" + key + "%"}, null, null, "id desc", String.valueOf(7));
+
         ArrayList<SearchHistoryBean> histories = new ArrayList<SearchHistoryBean>();
 
         while (cursor.moveToNext()) {
