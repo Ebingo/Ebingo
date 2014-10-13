@@ -109,10 +109,10 @@
     <string name="title_buy_detail">求购详情</string>
     <string name="title_product_detail">供应详情</string>
     <string name="look_time">查看次数:</string>
-    <string name="look_unite">次</string>
+    <string name="look_unite">查看%s次</string>
     <string name="phone_num">手机号</string>
     <string name="price_unit">元</string>
-    <string name="supply_start_num">起供应</string>
+    <string name="supply_start_num">%s起供应</string>
     <string name="no_data">没有数据！</string>
     <string name="delete">删除</string>
     <string name="yuan">元</string>
@@ -122,6 +122,8 @@
     <string name="promote">提示</string>
     <string name="vip_promote">目前只有VIP及已上用户可以一键拨号，请升级。</string>
     <string name="go_company_info_toast">查找不到当前企业信息</string>
+    <string name="vip_add_tag">您当前为%1$s,最多可以添加%2$s个订阅标签，如需添加更多标签，请升级。普通会员以上级别也可以单独购买。</string>
+    <string name="vip_add_3d">您当前为%1$s,最多可以添加%2$s个订阅标签，如需添加更多标签，请升级。普通会员以上级别也可以单独购买。</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
