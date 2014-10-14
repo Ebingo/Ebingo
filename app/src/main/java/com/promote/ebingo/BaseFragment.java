@@ -31,7 +31,7 @@ public class BaseFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(),
                 CaptureActivity.class);
-        startActivityForResult(intent, TO_SCAN);
+        getActivity().startActivityForResult(intent, TO_SCAN);
 
     }
 

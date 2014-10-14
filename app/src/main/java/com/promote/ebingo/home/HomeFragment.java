@@ -42,7 +42,7 @@ import com.promote.ebingo.bean.HotCategory;
 import com.promote.ebingo.bean.TodayNum;
 import com.promote.ebingo.category.CategoryActivity;
 import com.promote.ebingo.impl.EbingoRequest;
-import com.promote.ebingo.impl.SimleHomeBean;
+import com.promote.ebingo.impl.SimpleHomeBean;
 import com.promote.ebingo.search.SearchActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.FileUtil;
@@ -210,7 +210,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mSupplyLv.setParentScrollView(homesv);
 
         //初始化默认数据.
-        mIndexBean = SimleHomeBean.initSimpleHomeBean();
+        mIndexBean = SimpleHomeBean.initSimpleHomeBean();
 
         mBannerPagerAdapter = new BannerVagerAdapter(getActivity().getApplicationContext());
         mainfragvp.setAdapter(mBannerPagerAdapter);

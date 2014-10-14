@@ -183,6 +183,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogCat.i("--->", "requestCode:" + requestCode + " Result ok?:" + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
         if (mPublishFragment != null && mPublishFragment.isMyRequest(requestCode)) {
             LogCat.i("--->", "mPublishFragment->onActivityResult");
             mPublishFragment.onActivityResult(requestCode, resultCode, data);

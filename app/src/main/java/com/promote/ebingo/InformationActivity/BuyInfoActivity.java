@@ -46,6 +46,10 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
     private WebView buyinfodetailwv;
     private Button buyInfocontactphonetv;
     private ImageView commonbackbtn;
+    /**
+     * 企业vip标签. *
+     */
+    private ImageView mIntVipImg = null;
     private TextView commontitletv;
     private DetailInfoBean mDetailInfoBean = null;
 
@@ -65,6 +69,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyinfobtmll = (RelativeLayout) findViewById(R.id.buy_info_btm_ll);
         buyinfonametv = (TextView) findViewById(R.id.buy_info_name_tv);
         buynumtv = (TextView) findViewById(R.id.buy_num_tv);
+        mIntVipImg = (ImageView) findViewById(R.id.buy_info_btm_img);
         buyinfopublishtimetv = (TextView) findViewById(R.id.buy_info_publish_time_tv);
         publishlooknumtv = (TextView) findViewById(R.id.publish_look_num_tv);
         buyinfodetailwv = (WebView) findViewById(R.id.buy_info_detail_wv);
@@ -202,6 +207,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
         publishlooknumtv.setText(String.valueOf(mDetailInfoBean.getRead_num()));
         buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
+        mIntVipImg.setImageDrawable(ContextUtil.getVipImgByType(getResources(), mDetailInfoBean.getVip_type()));
 
         String description = mDetailInfoBean.getDescription();
         if (ContextUtil.isHtml(description)) {//根据是否为html文本，来用不同的控件显示
@@ -209,6 +215,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             buyinfodetailwv.setVisibility(View.VISIBLE);
             buyinfodetailwv.getSettings().setJavaScriptEnabled(true);
             buyinfodetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), description, "text/html", "UTF-8", "about:blank");
+
         } else {
             buyinfodetailwv.setVisibility(View.GONE);
             productinfoDetailtv.setVisibility(View.VISIBLE);

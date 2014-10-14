@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * <p/>
  * 首页默认加载数据。
  */
-public class SimleHomeBean {
+public class SimpleHomeBean {
 
     public static GetIndexBeanTools.GetIndexBean initSimpleHomeBean() {
 
@@ -22,7 +22,7 @@ public class SimleHomeBean {
         Adv adv1 = new Adv();
         advs.add(adv1);
         ArrayList<HotCategory> categories = new ArrayList<HotCategory>();
-        for (int i = 0; i <= 3; i++) {
+        for (int i = 0; i <= 6; i++) {
             HotCategory hotCategory = new HotCategory();
             hotCategory.setImage(null);
             hotCategory.setId(0);

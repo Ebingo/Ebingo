@@ -1,14 +1,15 @@
 package com.promote.ebingo.InformationActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.promote.ebingo.R;
 
-public class CodeScanOnlineActivity extends ActionBarActivity {
+public class CodeScanOnlineActivity extends Activity {
 
     private WebView scanwb;
     private String urlStr = null;
@@ -41,6 +42,18 @@ public class CodeScanOnlineActivity extends ActionBarActivity {
 
         scanwb = (WebView) findViewById(R.id.scan_wb);
         urlStr = getIntent().getStringExtra(URLSTR);
+        scanwb.getSettings().setJavaScriptEnabled(true);
+        scanwb.setWebViewClient(new MyWebViewClient());
         scanwb.loadUrl(urlStr);
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+            view.loadUrl(url);
+            return true;
+        }
     }
 }

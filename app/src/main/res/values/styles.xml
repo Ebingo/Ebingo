@@ -408,4 +408,9 @@
         <item name="android:windowEnterAnimation">@anim/pop_drop_in</item>
         <item name="android:windowExitAnimation">@anim/pop_drop_out</item>
     </style>
+
+    <style name="list_vip_img_style">
+        <item name="android:layout_width">@dimen/vip_list_img_width</item>
+        <item name="android:layout_height">@dimen/vip_list_img_height</item>
+    </style>
 </resources>
