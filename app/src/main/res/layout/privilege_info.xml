@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/info_content"
+    android:background="@color/white"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    style="@style/info_content_pad"
-    android:background="@color/gray_bg"
     android:layout_height="match_parent">
 
-
-    <ScrollView
-        android:id="@+id/info_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        style="@style/info_content_pad"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/iv_vip_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:scaleType="fitCenter"
+            android:src="@drawable/platinum_info" />
 
-            <ImageView
-                android:id="@+id/iv_vip_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:src="@drawable/platinum_info" />
-
-            <Button
-                android:id="@+id/btn_apply_vip"
-                style="@style/blue_button"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="15dp"
-                android:text="立即升级" />
-        </LinearLayout>
-    </ScrollView>
+        <Button
+            android:id="@+id/btn_apply_vip"
+            style="@style/blue_button"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:text="立即升级" />
+    </LinearLayout>
+</ScrollView>
 
 
-</LinearLayout>

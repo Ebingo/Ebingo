@@ -47,7 +47,7 @@ public class VersionManager {
      *
      * @param context
      */
-    public static void requestVersionCode(Context context) {
+    public static void requestVersionCode(Context context, final boolean showDialogIfNewest) {
         final Context mContext = context.getApplicationContext();
 
         EbingoRequestParmater param = new EbingoRequestParmater(context);
@@ -58,9 +58,6 @@ public class VersionManager {
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (result.getInt("version_code") > getLocaleVersion(mContext)) {
-                        /**
-                         * 安装事件监听
-                         */
                         final String url = result.getString("url");
                         File apkFile = getDownloadFile(mContext, url.substring(url.lastIndexOf("/") + 1));
                         DialogInterface.OnClickListener installListener = new DownloadListener(mContext, url);
@@ -76,6 +73,13 @@ public class VersionManager {
                             versionDialog.setNegativeButton(R.string.cancel, versionDialog.DEFAULT_LISTENER);
                             versionDialog.show();
                         }
+                    }else if(showDialogIfNewest){
+                        EbingoDialog versionDialog = new EbingoDialog(mContext);
+                        versionDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                        versionDialog.setMessage("已经是最新版本了！");
+                        versionDialog.setTitle(R.string.warn);
+                        versionDialog.setPositiveButton(R.string.i_know,versionDialog.DEFAULT_LISTENER);
+                        versionDialog.show();
                     }
 
                 } catch (JSONException e) {
@@ -98,8 +102,6 @@ public class VersionManager {
             LogCat.i("--->", "versionCode=" + info.versionCode);
             LogCat.i("--->", "versionName=" + info.versionName);
             LogCat.i("--->", "packageName=" + info.packageName);
-            LogCat.i("--->", "applicationInfo=" + info.applicationInfo);
-            LogCat.i("--->", "activities=" + info.activities);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

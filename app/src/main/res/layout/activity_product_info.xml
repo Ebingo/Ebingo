@@ -32,7 +32,6 @@
             <TextView
                 android:id="@+id/prd_info_into_company_tv"
                 style="@style/font_gray_15"
-                android:text="@string/enter_company"
                 android:layout_alignParentRight="true"
                 android:gravity="center_vertical"
                 android:drawableRight="@drawable/right_arro"
@@ -43,9 +42,10 @@
             <TextView
                 android:id="@+id/prd_info_company_tv"
                 style="@style/gray_15_tv"
-                android:text="发了里欧弄弄聊你给弄弄聊你给弄弄fdsf"
+                android:drawablePadding="3dp"
+                android:text="发了里弄聊你给弄弄fdsf"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/prd_info_into_company_tv"
+                android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

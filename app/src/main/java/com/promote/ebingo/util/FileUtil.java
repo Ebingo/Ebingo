@@ -27,6 +27,7 @@ public class FileUtil {
     public static final String FILE_WISH_LIST = "wishList";
     public static final String HOEM_DATA_CACh = "home_data";
     public static final String CATEGORY_CACH = "category_data";
+    public static final String FILE_CALL_RECORD = "call_record";
 
     /**
      * 读取缓存文件

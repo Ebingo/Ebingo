@@ -31,6 +31,7 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.JsonUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -48,12 +49,20 @@ import java.util.List;
 public class CallRecordActivity extends BaseListActivity implements View.OnClickListener {
     private ArrayList<CallRecord> records;
     private RecordAdapter adapter;
-
+    private static boolean REFRESH=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getCallRecord();
+        records=new ArrayList<CallRecord>();
         enableDelete(true);
+        enableCache(FileUtil.FILE_CALL_RECORD,records);
+        if (records.size()==0){
+            getCallRecord();
+        }
+    }
+
+    public static void setRefresh(){
+        REFRESH=true;
     }
 
     @Override
@@ -81,10 +90,11 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                 LogCat.i("--->", response + "");
                 try {
                     JSONArray recordsJson = response.getJSONArray("response");
-                    records = new ArrayList<CallRecord>();
+                    records.clear();
                     JsonUtil.getArray(recordsJson, CallRecord.class, records);
                     adapter = new RecordAdapter(CallRecordActivity.this, records);
                     setListAdapter(adapter);
+                    REFRESH=false;
                 } catch (JSONException e) {
                     LogCat.e("NO Call Record!");
                 }
@@ -125,6 +135,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                         records.remove(position);
                         adapter.notifyDataSetChanged();
                         refreshFooterView(true);
+                        onRefresh();
                     } else {
                         ContextUtil.toast("操作失败!");
                     }
@@ -259,6 +270,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             CallDialog.PhoneCallBack phoneCallBack = new CallDialog.PhoneCallBack() {
                 @Override
                 public void call(CallDialog dialog, String phoneNum) {
+                    LogCat.i("--->","dial:"+number);
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
                     context.startActivity(intent);
                     new CallRecordManager(context).addCallRecord(record, new JsonHttpResponseHandler());

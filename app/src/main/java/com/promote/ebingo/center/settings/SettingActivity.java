@@ -80,7 +80,7 @@ public class SettingActivity extends BaseActivity {
                 toActivity(AboutUsActivity.class);
                 break;
             case R.id.check_update: {
-                VersionManager.requestVersionCode(SettingActivity.this);
+                VersionManager.requestVersionCode(SettingActivity.this,true);
 //                downloadFile(testUrl);
                 break;
             }

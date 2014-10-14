@@ -2,8 +2,14 @@ package com.promote.ebingo.center;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
@@ -67,8 +73,14 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
                 edit_tag.setText(null);
                 break;
             case R.id.edit_add_tags:
-                ScrollView scrollView = (ScrollView) findViewById(R.id.scroll);
-                scrollView.fullScroll(View.FOCUS_DOWN);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll);
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                }, 100);
+
                 break;
             default:
                 super.onClick(v);
@@ -177,7 +189,6 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         toggleTagViewState(isChecked);
-
     }
 
     /**
@@ -186,14 +197,27 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
      * @param state 是否为删除状态
      */
     private void toggleTagViewState(boolean state) {
+
         for (int i = 0; i < tagContent.getChildCount(); i++) {
             TagView tagView = (TagView) tagContent.getChildAt(i);
+            Interpolator interpolator=new DecelerateInterpolator();
+            if (state) {
+                RotateAnimation rotateAnimation = new RotateAnimation(-3, 3, tagView.getWidth() / 2, tagView.getHeight()/2);
+                rotateAnimation.setDuration(100);
+                rotateAnimation.setInterpolator(interpolator);
+                rotateAnimation.setRepeatCount(Animation.INFINITE);
+                rotateAnimation.setRepeatMode(Animation.REVERSE);
+                tagView.startAnimation(rotateAnimation);
+            }else{
+                tagView.clearAnimation();
+            }
             tagView.setInDeleteState(state);
         }
     }
 
     @Override
     public void onDelete(TagView v) {
+        v.clearAnimation();
         tagContent.removeView(v);
     }
 

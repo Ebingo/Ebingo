@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.ScrollView;
@@ -30,17 +29,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by acer on 2014/9/4.
  */
 public class AddTagsActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TagView.OnTagClickListener {
+    public static final String CONTENT = "content";
+    private String spilt = ",";
     MultiAutoCompleteTextView edit_add_tab;
     private int tag_select_color;
     private int tag_unSelect_color;
-    private LinkedList<HotTag> tagList = new LinkedList<HotTag>();
+    private List<HotTag> tagList = new LinkedList<HotTag>();
     private AutoLineLayout tagContainer;
+    private List<String> savedTags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,15 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         tagContainer = (AutoLineLayout) findViewById(R.id.tags_container);
         edit_add_tab = (MultiAutoCompleteTextView) findViewById(R.id.edit_add_tags);
         edit_add_tab.setOnClickListener(this);
+        String added = getIntent().getStringExtra(CONTENT);
+        if (!TextUtils.isEmpty(added)) {
+            savedTags = Arrays.asList(added.split(spilt));
+            if (savedTags == null) {
+                savedTags = new LinkedList<String>();
+            }
+        } else {
+            savedTags = new LinkedList<String>();
+        }
         new Handler().postDelayed(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签
             @Override
             public void run() {
@@ -73,8 +86,15 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
                 super.onSuccess(statusCode, headers, response);
                 try {
                     JSONArray array = response.getJSONObject("response").getJSONArray("data");
+                    tagList.clear();
                     JsonUtil.getArray(array, HotTag.class, tagList);
                     for (HotTag tag : tagList) {
+                        addTagToView(tag);
+                    }
+                    for (String name : savedTags) {
+                        HotTag tag = new HotTag();
+                        tag.setSelect(true);
+                        tag.setName(name);
                         addTagToView(tag);
                     }
                 } catch (JSONException e) {
@@ -127,7 +147,7 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
                         ScrollView mScrollView = (ScrollView) findViewById(R.id.scroll);
                         mScrollView.fullScroll(View.FOCUS_DOWN);
                     }
-                },100);
+                }, 100);
 
                 break;
             case R.id.commit_title_done:
@@ -136,11 +156,12 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
                 for (int i = 0; i < tagList.size(); i++) {
                     HotTag temp = tagList.get(i);
                     if (temp.isSelect()) {
-                        selectTags.append(temp.getName());
-                        if (i < tagList.size() - 1) selectTags.append(",");
+                        selectTags.append(temp.getName() + ",");
                     }
                 }
-
+                if (selectTags.length() > 0) {
+                    selectTags.deleteCharAt(selectTags.lastIndexOf(","));
+                }
                 Intent data = new Intent();
                 data.putExtra("result", selectTags.toString());
                 setResult(RESULT_OK, data);
@@ -149,6 +170,7 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+
     /**
      * 将标签加载到视图上面
      *
@@ -156,6 +178,17 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
      */
     private void addTagToView(HotTag tag) {
         if (tag == null) return;
+        int size = tagContainer.getChildCount();
+        for (int i = 0; i < size; i++) {//判断标签是否已经加载过了
+            TagView tagView = (TagView) tagContainer.getChildAt(i);
+            HotTag temp = (HotTag) tagView.getTag();
+            if (temp.getName().equals(tag.getName())) {
+                temp.setSelect(true);
+                tagView.setDefaultColor(tag_select_color);
+                return;
+            }
+        }
+
         TagView tagView = (TagView) View.inflate(this, R.layout.sample_tag_view, null);
         tagView.setTag(tag);
         tagView.setNumber(0);
@@ -163,12 +196,6 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         tagView.setOnTagClickListener(this);
         if (tag.isSelect()) tagView.setDefaultColor(tag_select_color);
         else tagView.setDefaultColor(tag_unSelect_color);
-//        CheckBox checkBox = (CheckBox) View.inflate(this, R.layout.tag, null);
-//        checkBox.setTag(tag);
-//        checkBox.setText(tag.getName());
-//        checkBox.setChecked(tag.isSelect());
-//        checkBox.setSingleLine(false);
-//        checkBox.setOnCheckedChangeListener(this);
         tagContainer.addView(tagView);
     }
 

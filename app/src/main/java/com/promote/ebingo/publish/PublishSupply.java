@@ -528,9 +528,13 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                         if (getActivity() instanceof PublishEditActivity){
                             getActivity().finish();
                         }
+                        ContextUtil.toast("发布成功！");
+                    }else{
+                        ContextUtil.toast("发布失败！"+result.getString("msg"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    ContextUtil.toast("发布失败，数据错误。");
                 }
             }
 

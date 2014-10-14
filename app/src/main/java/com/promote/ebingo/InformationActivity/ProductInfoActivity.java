@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
@@ -25,6 +26,7 @@ import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.center.MyCollectionActivity;
+import com.promote.ebingo.center.MyPrivilegeActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
@@ -150,6 +152,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             productinfoDetailtv.setVisibility(View.VISIBLE);
             productinfoDetailtv.setText(description);
         }
+        prdinfocompanytv.setCompoundDrawables(null,null,VipType.parse(infoBean.getVip_type()).getIcon(this),null);
+
     }
 
 

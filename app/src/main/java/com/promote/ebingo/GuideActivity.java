@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.settings.VersionManager;
@@ -177,33 +179,38 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     private void setLoading() {
         setContentView(R.layout.loadpage_layout);
-        VersionManager.requestVersionCode(this);
+        VersionManager.requestVersionCode(this, false);
         loginBackground();
     }
 
     private void loginBackground() {
         String psw = ContextUtil.getCurCompanyPwd();
         String companyName = ContextUtil.getCurCompanyName();
-        new LoginManager().doLogin(companyName, psw, new LoginManager.Callback() {
-            @Override
-            public void onSuccess() {
-                toMainActivityDelay(1000);
-            }
+        if (!TextUtils.isEmpty(psw) && !TextUtils.isEmpty(companyName) && HttpUtil.isNetworkConnected(this)) {
+            new LoginManager().doLogin(companyName, psw, new LoginManager.Callback() {
+                @Override
+                public void onSuccess() {
+                    toMainActivityDelay(500);
+                }
 
-            @Override
-            public void onFail(String msg) {
-                //如果使用用户名密码登陆失败，就直接加载上一次保存的公司信息
-                Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(), FileUtil.FILE_COMPANY));
-                toMainActivityDelay(500);
-                LogCat.i("--->","Company.loadInstance:"+Company.getInstance());
-            }
+                @Override
+                public void onFail(String msg) {
+                    toMainActivityDelay(500);
+                }
 
-        });
+            });
+        } else {
+            //如果使用用户名密码登陆失败，就直接加载上一次保存的公司信息
+            Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(), FileUtil.FILE_COMPANY));
+            toMainActivityDelay(500);
+        }
+        LogCat.i("--->", "Login Company::" + Company.getInstance());
+
     }
 
     private void toMainActivityDelay(long time) {
         LogCat.w("--->", String.format("Login success,toMainActivityDelay delay %d ms...", (int) time));
-        LogCat.i("--->","Company:"+Company.getInstance());
+        LogCat.i("--->", "Company:" + Company.getInstance());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

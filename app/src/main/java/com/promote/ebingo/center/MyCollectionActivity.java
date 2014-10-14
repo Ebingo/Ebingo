@@ -52,26 +52,25 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         initialize();
     }
 
-    /**
-     * 刷新收藏列表
-     */
-    public static void setRefresh() {
-        refresh = true;
-    }
-
     private void initialize() {
         setUpRefreshable(true);
         mOptions = ContextUtil.getSquareImgOptions();
         myAdapter = new MyAdapter();
         setListAdapter(myAdapter);
         enableCache(FileUtil.FILE_WISH_LIST, mCollections);
-        if (mCollections.size() == 0 || getIntent().getBooleanExtra(ARG_REFRESH, false)||refresh){
+        if (mCollections.size() == 0 || getIntent().getBooleanExtra(ARG_REFRESH, false) || refresh) {
             onRefresh();
         }
         enableDelete(true);
         setDownRefreshable(true);
     }
 
+    /**
+     * 刷新收藏列表
+     */
+    public static void setRefresh() {
+        MyCollectionActivity.refresh = true;
+    }
 
     /**
      * 获取收藏列表.
@@ -98,6 +97,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 if (collectBeans != null && collectBeans.size() > 0) {
                     mCollections.addAll(collectBeans);
                     myAdapter.notifyDataSetChanged();
+                    refresh = false;
                 }
                 onLoadFinish();
                 dialog.dismiss();
@@ -114,6 +114,12 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 super.onFailure(statusCode, headers, responseString, throwable);
                 dialog.dismiss();
             }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                dialog.dismiss();
+            }
         });
     }
 
@@ -127,11 +133,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         }
         Intent intent = new Intent();
         intent.putExtra(ProductInfoActivity.ARG_ID, info_id);
-        if (Constant.PUBLISH_SUPPLY.equals(collect.getType())) {
-            intent.setClass(MyCollectionActivity.this, ProductInfoActivity.class);
-        } else {
-            intent.setClass(MyCollectionActivity.this, BuyInfoActivity.class);
-        }
+        intent.setClass(MyCollectionActivity.this, ProductInfoActivity.class);
         startActivity(intent);
 
 

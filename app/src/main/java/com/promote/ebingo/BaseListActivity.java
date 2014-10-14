@@ -12,8 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jch.lib.util.HttpUtil;
 import com.jch.lib.view.PullToRefreshView;
 import com.promote.ebingo.center.ItemDelteDialog;
+import com.promote.ebingo.center.MyCollectionActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -103,7 +105,6 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
                 if (adapter != null) adapter.notifyDataSetChanged();
                 lastId = mCache.size();
             }
-
         }
     }
 
@@ -210,6 +211,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
                 .toString();
     }
 
+
     /**
      * called when a delete Dialog is prepared to show,
      *
@@ -253,14 +255,11 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
      *                 false 非删除导致需要刷新页面
      */
     protected void refreshFooterView(boolean isDelete) {
-        int itemCount = getAdapter().getCount();
+
         if (isDelete) {
             lastId = 0;//如果用户删除数据，则无论用户接下来是上拉还是下拉
-            ListView lv = getListView();
-            int oneScreenItemCount = lv.getLastVisiblePosition() - lv.getFirstVisiblePosition() + 1;
-            if (oneScreenItemCount == itemCount)
-                mPullToRefreshView.setFootViewVisibility(INVISIBLE);
         } else {
+            int itemCount = getAdapter().getCount();
             mPullToRefreshView.onFooterRefreshComplete();
             if (itemCount % pageSize == 0) {
                 mPullToRefreshView.setUpRefreshable(true);
@@ -272,6 +271,21 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
                 ContextUtil.toast("数据已经加载完毕！");
             }
         }
+        if (isDataFullScreen()) {
+            mPullToRefreshView.setFootViewVisibility(INVISIBLE);
+        }
+    }
+
+    /**
+     * 判断数据有没有满屏，逻辑是 可见的item数与总数相等，说明没有满屏
+     *
+     * @return
+     */
+    private boolean isDataFullScreen() {
+        int itemCount = getAdapter().getCount();
+        ListView lv = getListView();
+        int oneScreenItemCount = lv.getLastVisiblePosition() - lv.getFirstVisiblePosition() + 1;
+        return oneScreenItemCount == itemCount;
     }
 
     public void onRefreshFinish() {
@@ -295,7 +309,11 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
             lastId = 0;
             mPullToRefreshView.setUpRefreshable(true);
             isHeadRefreshing = true;
-            onRefresh();
+            if (HttpUtil.isNetworkConnected(getApplicationContext())) {
+                onRefresh();
+            } else {
+                onLoadFinish();
+            }
         }
     };
     /**
@@ -308,7 +326,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
             if (lastId != 0) {
                 view.setFootViewVisibility(View.VISIBLE);
                 onLoadMore(lastId += pageSize);
-            }else{
+            } else {
                 onRefresh();
             }
         }

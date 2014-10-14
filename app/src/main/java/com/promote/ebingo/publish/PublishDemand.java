@@ -95,6 +95,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
             }
             case R.id.pick_tags: {
                 Intent intent = new Intent(getActivity(), AddTagsActivity.class);
+                intent.putExtra(AddTagsActivity.CONTENT,tv_tags.getText().toString());
                 getActivity().startActivityForResult(intent, PICK_FOR_DEMAND | PICK_TAGS);
                 break;
             }
@@ -191,7 +192,6 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                ContextUtil.toast(response);
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
@@ -199,16 +199,14 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                         intent.putExtra("refresh",true);
                         startActivity(intent);
                         clearText();
+                        ContextUtil.toast("发布成功！");
+                    }else{
+                        ContextUtil.toast("发布失败！"+result.getString("msg"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    ContextUtil.toast("发布失败，数据错误。");
                 }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                ContextUtil.toast(responseString);
             }
 
             @Override
