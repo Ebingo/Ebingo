@@ -71,6 +71,7 @@ public class SearchResultAdapter extends BaseAdapter {
                 viewHolder = new InterpriseViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.search_interprise_result_item_layout, null);
                 viewHolder.img = (ImageView) convertView.findViewById(R.id.search_interprise_item_iv);
+                viewHolder.vip_img = (ImageView) convertView.findViewById(R.id.search_list_vip_img);
                 viewHolder.region = (TextView) convertView.findViewById(R.id.search_result_province_tv);
                 viewHolder.name = (TextView) convertView.findViewById(R.id.search_result_black_name_tv);
                 viewHolder.Business = (TextView) convertView.findViewById(R.id.search_result_describe_tv);
@@ -85,6 +86,7 @@ public class SearchResultAdapter extends BaseAdapter {
             ImageManager.load(interpriseBean.getImage(), viewHolder.img, mOptions);
             viewHolder.region.setText(interpriseBean.getRegion());
             viewHolder.Business.setText(interpriseBean.getBusiness());
+            viewHolder.vip_img.setImageDrawable(ContextUtil.getVipImgByType(mContext.getResources(), interpriseBean.getRank()));
 
         } else if (searchTypeBean instanceof SearchSupplyBean) {
 
@@ -187,6 +189,7 @@ public class SearchResultAdapter extends BaseAdapter {
     class InterpriseViewHolder {
         TextView name;
         ImageView img;
+        ImageView vip_img;
         TextView region;//地區。
         TextView Business; //主营业务。
     }

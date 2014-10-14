@@ -13,7 +13,7 @@ public class Constant {
     public static final String VERIFY_WAITING = "0";
     public static final String VERIFY_PASS = "1";
     public static final String VERIFY_NOT_PASS = "2";
-//    通过审核为1，未通过为2，待审核为0
+    //    通过审核为1，未通过为2，待审核为0
     public static final String FAIL = "2";
     public static final String PUBLISH_SUPPLY = "2";
     public static final String PUBLISH_DEMAND = "1";
@@ -27,6 +27,35 @@ public class Constant {
     }
 
     private static final String FIRSTSTART = "first_start";
+    /**
+     * 禁用账号. *
+     */
+    public static final int VIP_STOP = -2;
+    /**
+     * 过期账号. *
+     */
+    public static final int VIP_OVER = -1;
+    /**
+     * 体验账号. *
+     */
+    public static final int VIP_PRACTICE = 0;
+    /**
+     * 普通账号. *
+     */
+    public static final int VIP_1 = 1;
+    /**
+     * 银牌账号. *
+     */
+    public static final int VIP_2 = 2;
+    /**
+     * 金牌账号. *
+     */
+    public static final int VIP_3 = 3;
+    /**
+     * 铂金账号. *
+     */
+    public static final int VIP_4 = 4;
+
 
     /**
      * 磁盘缓存路径. *
@@ -37,7 +66,7 @@ public class Constant {
      */
     public static final String IMG_DIR = CACHE_DIR + "/images";
 
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
     /**
      * 程序大图的尺寸。 *
      */

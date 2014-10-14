@@ -41,6 +41,7 @@ import org.json.JSONObject;
 public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
     private ImageView commonbackbtn;
+    private ImageView mIntVipImg;
     private TextView commontitletv;
     private TextView prdinfointocompanytv;
     private TextView prdinfocompanytv;
@@ -88,6 +89,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfocitytv = (TextView) findViewById(R.id.product_info_city_tv);
         productinfoDetailwv = (WebView) findViewById(R.id.product_info_detail_wv);
         productinfoDetailtv = (TextView) findViewById(R.id.product_info_detail_tv);
+        mIntVipImg = (ImageView) findViewById(R.id.product_info_btm_img);
         productinforlll.setVisibility(View.GONE);//默认隐藏拨打电话和收藏功能，等加载完详情才有可能显示
         int productId = getIntent().getIntExtra(ARG_ID, -1);
         assert (productId != -1);
@@ -128,6 +130,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         }
         productinfocollectcb.setChecked(infoBean.getInwishlist() == 1);
         productinfocitytv.setText(infoBean.getRegion());
+        mIntVipImg.setImageDrawable(ContextUtil.getVipImgByType(getResources(), infoBean.getVip_type()));
 
         if (!TextUtils.isEmpty(infoBean.getUrl_3d())) {//如果有3d图片，就只显示3D图片
             productinfoiweb.setVisibility(View.VISIBLE);

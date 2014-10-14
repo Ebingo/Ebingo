@@ -41,4 +41,7 @@
     <dimen name="login_input_height">50dp</dimen>
     <dimen name="list_pad_r_l">10dp</dimen>
     <dimen name="my_supply_vertical_spacing">3dp</dimen>
+
+    <dimen name="vip_list_img_width">15dp</dimen>
+    <dimen name="vip_list_img_height">15dp</dimen>
 </resources>

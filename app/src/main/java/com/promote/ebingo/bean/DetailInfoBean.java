@@ -98,6 +98,11 @@ public class DetailInfoBean implements Serializable {
      * 审核原因，失败原因？
      */
     private String verify_reason;
+    /**
+     * vip等级类型。
+     */
+    private int vip_type = -2;
+
 
     public int getWishlist_id() {
         return wishlist_id;
@@ -310,6 +315,24 @@ public class DetailInfoBean implements Serializable {
 
     public void setBuy_num(String buy_num) {
         this.buy_num = buy_num;
+    }
+
+    /**
+     * 设置当前vipType.
+     *
+     * @param vip_type
+     */
+    public void setVip_type(int vip_type) {
+        this.vip_type = vip_type;
+    }
+
+    /**
+     * 获得vipType。
+     *
+     * @return
+     */
+    public int getVip_type() {
+        return this.vip_type;
     }
 
     @Override

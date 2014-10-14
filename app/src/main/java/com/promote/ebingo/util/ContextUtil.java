@@ -1,11 +1,14 @@
 package com.promote.ebingo.util;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.EbingoApp;
 
 /**
@@ -44,16 +47,15 @@ public class ContextUtil {
                 .showImageOnFail(R.drawable.load_failed_big_img)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
-
         return ractangleImgOptions;
     }
 
     public static DisplayImageOptions getCircleImgOptions() {
         DisplayImageOptions circleImgOptions = new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .showImageForEmptyUri(R.drawable.adv_more)
-                .showImageOnLoading(R.drawable.adv_more)
-                .showImageOnFail(R.drawable.adv_more)
+                .showImageForEmptyUri(R.drawable.circle_loading)
+                .showImageOnLoading(R.drawable.circle_loading)
+                .showImageOnFail(R.drawable.circle_loading)
                 .cacheInMemory(true).cacheOnDisc(true).build();
 
         return circleImgOptions;
@@ -134,5 +136,37 @@ public class ContextUtil {
     public static boolean isHtml(String str) {
         if (str == null) return false;
         return str.startsWith("<") && str.endsWith(">");
+    }
+
+    /**
+     * 根据会员类型获得会员等级图标. *
+     */
+    public static Drawable getVipImgByType(Resources res, int vipType) {
+
+        switch (vipType) {
+            case Constant.VIP_OVER: {
+                return res.getDrawable(R.drawable.vip_practice_over);
+            }
+            case Constant.VIP_PRACTICE: {
+                return res.getDrawable(R.drawable.vip_practice);
+            }
+            case Constant.VIP_1: {
+                return res.getDrawable(R.drawable.vip_1_member);
+            }
+            case Constant.VIP_2: {
+                return res.getDrawable(R.drawable.vip_2_member);
+            }
+            case Constant.VIP_3: {
+                return res.getDrawable(R.drawable.vip_3_member);
+            }
+            case Constant.VIP_4: {
+                return res.getDrawable(R.drawable.vip_4_member);
+            }
+            default: {
+                return null;
+            }
+
+        }
+
     }
 }
