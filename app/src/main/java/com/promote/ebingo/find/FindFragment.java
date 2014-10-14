@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.jch.lib.util.ImageManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.BaseFragment;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.CategoryBeen;
@@ -94,12 +93,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.img_big_failed)
-                .showImageOnLoading(R.drawable.loading_waite)
-                .showImageOnFail(R.drawable.img_big_failed)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getCircleImgOptions();
 
     }
 
@@ -142,6 +136,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         searchbartv.setOnClickListener(this);
         fragfindgv.setOnItemClickListener(this);
         mNoDataView.setOnClickListener(this);
+        mScanIb.setOnClickListener(this);
         getCategoryList();
     }
 
@@ -159,6 +154,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
             case R.id.scan_ib: {
                 scan2Code();
+                break;
             }
 
             case R.id.nodate_tv: {
@@ -305,39 +301,6 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
             }
         });
 
-
-//        String urlStr = HttpConstant.getCategories;
-//        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
-//        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
-//
-//        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                super.onSuccess(statusCode, headers, response);
-//
-//                ArrayList<CategoryBeen> categoryBeens = CategoryBeanTools.getCategories(response.toString());
-//                if (categoryBeens != null && categoryBeens.size() != 0) {
-//
-//
-//                }
-//
-//                dialog.dismiss();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                super.onFailure(statusCode, headers, responseString, throwable);
-//
-//                dialog.dismiss();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                super.onFailure(statusCode, headers, throwable, errorResponse);
-//
-//                dialog.dismiss();
-//            }
-//        });
     }
 
 
