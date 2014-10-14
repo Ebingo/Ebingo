@@ -101,7 +101,7 @@ public class DetailInfoBean implements Serializable {
     /**
      * vip等级类型。
      */
-    private int vip_type = -2;
+    private int vip_type = -3;
 
 
     public int getWishlist_id() {
