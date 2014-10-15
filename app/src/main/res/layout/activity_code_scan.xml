@@ -1,12 +1,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.promote.ebingo.InformationActivity.CodeScanOnlineActivity">
+    android:background="@color/white"
+    android:orientation="vertical">
+
 
     <WebView
         android:id="@+id/scan_wb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></WebView>
 
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:id="@+id/head_layout"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/trans_gray">
+
+
+        <ImageView
+            android:id="@+id/common_back_btn"
+            style="@style/back_arro_style"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:src="@drawable/title_back" />
+
+        <TextView
+            android:id="@+id/common_title_tv"
+            style="@style/font_black_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="@color/title_divider_color" />
+    </FrameLayout>
 </RelativeLayout>
