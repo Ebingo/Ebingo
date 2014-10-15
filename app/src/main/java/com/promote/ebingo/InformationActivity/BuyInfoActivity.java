@@ -207,6 +207,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
         publishlooknumtv.setText(String.valueOf(mDetailInfoBean.getRead_num()));
         buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
+        mIntVipImg.setImageDrawable(ContextUtil.getVipImgByType(getResources(), mDetailInfoBean.getVip_type()));
 
         String description = mDetailInfoBean.getDescription();
         if (ContextUtil.isHtml(description)) {//根据是否为html文本，来用不同的控件显示
@@ -220,7 +221,6 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             productinfoDetailtv.setVisibility(View.VISIBLE);
             productinfoDetailtv.setText(description);
         }
-        mIntVipImg.setImageResource(VipType.parse(mDetailInfoBean.getVip_type()+"").drawableId);
     }
 
 
