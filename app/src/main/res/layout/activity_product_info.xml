@@ -48,6 +48,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <ImageView
+                android:scaleType="fitStart"
+                android:layout_gravity="top|right"
+                android:id="@+id/prd_info_btm_img"
+                style="@style/list_vip_img_style"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@+id/prd_info_company_tv" />
         </RelativeLayout>
 
         <View

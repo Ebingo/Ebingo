@@ -192,13 +192,13 @@ public class VersionManager {
         private Context mContext;
         private ProgressDialog dialog;
 
-        public APKDownloadTask(Context Context) {
-            this.mContext = Context;
+        public APKDownloadTask(Context context) {
+            this.mContext = context.getApplicationContext();
             dialog = new ProgressDialog(mContext);
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             dialog.setOnDismissListener(this);
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            dialog.setCancelable(false);
+
         }
 
         @Override
@@ -211,17 +211,30 @@ public class VersionManager {
             String url = params[0];
             String fileName = url.substring(url.lastIndexOf("/") + 1);
             File apkFile;
-            if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-                apkFile = new File(Environment.getExternalStorageDirectory(), fileName);
+
+            String temp_apk_path = null;
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                temp_apk_path = Environment.getExternalStorageDirectory().getPath();
             } else {
-                apkFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
+                temp_apk_path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath();
             }
 
+            File dir = new File(temp_apk_path + "/apk");
+
+
+            if (!dir.exists()){
+                dir.mkdirs();
+            }
+            apkFile = new File(dir, "Ebingoo.apk");
+            LogCat.i("install apk name--:" + apkFile.getAbsolutePath() + "---------apk name:" + apkFile.getName());
             FileOutputStream fot = null;
             InputStream is = null;
             try {
                 HttpURLConnection cnn = (HttpURLConnection) new URL(url).openConnection();
                 cnn.setDoInput(true);
+                if (!apkFile.exists()){
+                    apkFile.createNewFile();
+                }
                 fot = new FileOutputStream(apkFile);
                 is = cnn.getInputStream();
                 byte[] bytes = new byte[10 * 1024];
