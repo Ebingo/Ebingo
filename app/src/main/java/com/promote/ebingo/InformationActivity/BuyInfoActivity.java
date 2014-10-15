@@ -221,7 +221,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             productinfoDetailtv.setVisibility(View.VISIBLE);
             productinfoDetailtv.setText(description);
         }
-        buyinfocompanytv.setCompoundDrawables(null,null,VipType.parse(mDetailInfoBean.getVip_type()).getIcon(this),null);
+        buyinfocompanytv.setCompoundDrawables(null, null, VipType.parse(String.valueOf(mDetailInfoBean.getVip_type())).getIcon(this), null);
     }
 
 

@@ -103,17 +103,6 @@ public class DetailInfoBean implements Serializable {
      */
     private int vip_type = -3;
 
-
-    private String vip_type;
-
-    public String getVip_type() {
-        return vip_type;
-    }
-
-    public void setVip_type(String vip_type) {
-        this.vip_type = vip_type;
-    }
-
     public int getWishlist_id() {
         return wishlist_id;
     }

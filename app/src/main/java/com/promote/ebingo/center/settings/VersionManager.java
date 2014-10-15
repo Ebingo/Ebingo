@@ -1,6 +1,5 @@
 package com.promote.ebingo.center.settings;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,18 +11,14 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.view.WindowManager;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.EbingoApp;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.EbingoDialog;
-import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
