@@ -18,6 +18,7 @@ import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
 import com.promote.ebingo.publish.login.LoginDialog;
+import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -60,7 +61,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         super.onRestoreInstanceState(savedInstanceState);
         LogCat.i("--->", "onRestoreInstanceState");
         Company.loadInstance((Company) savedInstanceState.getSerializable("company"));
-        sendBroadcast(new Intent(CenterFragment.ACTION_INVALIDATE));
+        sendBroadcast(new Intent(LoginManager.ACTION_INVALIDATE));
     }
 
     @Override

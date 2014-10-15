@@ -13,7 +13,7 @@ import com.promote.ebingo.util.LogCat;
  */
 public enum VipType {
     VISITOR("9", "游客", 0),
-    Experience_Vip("0", "体验会员", 0),
+    Experience_Vip("0", "体验会员",R.drawable.vip_practice),
     Standard_VIP("1", "普通会员", R.drawable.vip_standard),
     Silver_VIP("2", "银牌用户", R.drawable.vip_silver),
     Gold_VIP("3", "金牌会员", R.drawable.vip_gold),

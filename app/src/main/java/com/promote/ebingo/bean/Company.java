@@ -26,6 +26,7 @@ public class Company implements Serializable{
     private String is_lock;
     private String email;
     private transient Uri imageUri;//公司图片在手机中的位置
+    private CompanyVipInfo companyVipInfo;
 
     private static Company mCompany = null;
 
@@ -44,6 +45,14 @@ public class Company implements Serializable{
 //            mCompany.setCompanyId(6);
         }
         return mCompany;
+    }
+
+    public CompanyVipInfo getVipInfo() {
+        return companyVipInfo;
+    }
+
+    public void setVipInfo(CompanyVipInfo companyVipInfo) {
+        this.companyVipInfo = companyVipInfo;
     }
 
     public String getCompany_tel() {

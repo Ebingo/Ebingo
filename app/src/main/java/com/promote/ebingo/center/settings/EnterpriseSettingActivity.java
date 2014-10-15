@@ -370,7 +370,6 @@ public class EnterpriseSettingActivity extends BaseActivity {
         }
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
         parmater.put("image", ImageUtil.base64Encode(bitmap));
-        if(!bitmap.isRecycled())bitmap.recycle();
 
         HttpUtil.post(HttpConstant.uploadImage, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override

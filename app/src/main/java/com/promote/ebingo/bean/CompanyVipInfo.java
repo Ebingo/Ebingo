@@ -5,7 +5,20 @@ import java.io.Serializable;
 /**
  * Created by acer on 2014/10/13.
  */
-public class CompanyVipInfo implements Serializable{
+public class CompanyVipInfo implements Serializable {
+    /**
+     * 是否可以拨打求购电话
+     */
+    private boolean callDemand = true;
+    private boolean callSupply = true;
+    /**
+     * 是否可以查看求购公司信息
+     */
+    private boolean canLookDemandCompany = true;
+    /**
+     * 发布求购信息
+     */
+    private boolean publish_demand_info;
     private String vip_type;//会员等级
     private int try_date;//体验剩余天数，只有为“体验会员”的时候才有此项
     private String vip_name; //对应的会员名称
@@ -15,6 +28,38 @@ public class CompanyVipInfo implements Serializable{
     private int tag_num;//标签剩余个数
     private int display_3d_num;//3d剩余个数
     private String wap_url;//E平台链接，如果有则显示，没有不显示
+
+    public boolean callSupply() {
+        return callSupply;
+    }
+
+    public void setCallSupply(boolean callSupply) {
+        this.callSupply = callSupply;
+    }
+
+    public boolean callDemand() {
+        return callDemand;
+    }
+
+    public void setCallDemand(boolean callDemand) {
+        this.callDemand = callDemand;
+    }
+
+    public boolean canLookDemandCompany() {
+        return canLookDemandCompany;
+    }
+
+    public void setCanLookDemandCompany(boolean canLookDemandCompany) {
+        this.canLookDemandCompany = canLookDemandCompany;
+    }
+
+    public boolean publishDemandInfo() {
+        return publish_demand_info;
+    }
+
+    public void setPublishDemandInfo(boolean publish_demand_info) {
+        this.publish_demand_info = publish_demand_info;
+    }
 
     public String getVip_type() {
         return vip_type;

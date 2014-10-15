@@ -19,6 +19,7 @@ import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CompanyVipInfo;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
@@ -108,16 +109,17 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
                         loginDialog.setCanceledOnTouchOutside(true);
                         loginDialog.setCancelable(true);
                         loginDialog.show();
-                    } else if (VipType.getCompanyInstance().getVipInfo().canDialDemand()) {       //vip会员.
+                    } else if (!Company.getInstance().getVipInfo().callDemand()) {//不是vip会员.
+                        EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                        dialog.setMessage(getString(R.string.cannot_call_demand, VipType.Standard_VIP.name));
+                        dialog.show();
+                    } else {
                         CallRecord record = new CallRecord();
                         record.setPhone_num(mDetailInfoBean.getPhone_num());
                         record.setTo_id(mDetailInfoBean.getCompany_id());
                         record.setCall_id(Company.getInstance().getCompanyId());
                         record.setInfoId(mDetailInfoBean.getInfo_id());
                         CallRecordActivity.CallRecordManager.dialNumber(this, record);
-                    } else {        //不是vip会员.
-                        EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_DIAL);
-                        dialog.show();
                     }
                 }
 
@@ -125,8 +127,11 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.buy_info_btm_ll: {
-                if (!VipType.getCompanyInstance().getVipInfo().can_scan_demand_company_info) {
-                    EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_SCAN_DEMAND_COMPANY_INFO).show();
+                VipType companyVip=VipType.getCompanyInstance();
+                if (companyVip.compareTo(VipType.Standard_VIP)<0) {
+                    EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                    dialog.setMessage(getString(R.string.can_scan_demand_company_info, VipType.getCompanyInstance().name));
+                    dialog.show();
                 } else if (mDetailInfoBean != null && HttpUtil.isNetworkConnected(getApplicationContext())) {
                     Intent intent = new Intent(BuyInfoActivity.this, InterpriseInfoActivity.class);
                     intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());

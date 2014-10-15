@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
@@ -22,6 +23,7 @@ import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -62,12 +64,18 @@ import java.net.URLEncoder;
  * Created by acer on 2014/9/16.
  */
 public class SettingActivity extends BaseActivity {
-    private final String testUrl = "http://www.ebingoo.com/upload/ebingoo.apk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting);
+        try {
+            String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            TextView tv_version = (TextView) findViewById(R.id.tv_version_name);
+            tv_version.setText(getString(R.string.current_version, versionName));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -80,8 +88,7 @@ public class SettingActivity extends BaseActivity {
                 toActivity(AboutUsActivity.class);
                 break;
             case R.id.check_update: {
-                VersionManager.requestVersionCode(SettingActivity.this,true);
-//                downloadFile(testUrl);
+                VersionManager.requestVersionCode(SettingActivity.this, true);
                 break;
             }
             case R.id.clear_cache: {
@@ -95,7 +102,7 @@ public class SettingActivity extends BaseActivity {
                 toActivity(SuggestionActivity.class);
                 break;
             case R.id.logout: {
-                EbingoDialog dialog=new EbingoDialog(this);
+                EbingoDialog dialog = new EbingoDialog(this);
                 dialog.setTitle(R.string.warn);
                 dialog.setMessage(R.string.confirm_logout);
                 DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
@@ -119,9 +126,6 @@ public class SettingActivity extends BaseActivity {
                 super.onClick(v);
         }
     }
-
-
-
 
 
 }

@@ -212,7 +212,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                     if (info.canDial(type)) {//这里加判断，为了防止会员过期后，此处还有通话记录
                         CallRecordManager.dialNumber(CallRecordActivity.this, record);
                     } else {
-                        EbingoDialog.newInstance(CallRecordActivity.this, EbingoDialog.DialogStyle.STYLE_CANNOT_DIAL).show();
+                        EbingoDialog.newInstance(CallRecordActivity.this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE).show();
                     }
 
                 } catch (Exception e) {

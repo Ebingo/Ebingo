@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.DialogPreference;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,7 +35,10 @@ public class EbingoDialog extends AlertDialog {
     }
 
     public enum DialogStyle {
-        STYLE_CANNOT_DIAL,
+        /**
+         * 跳转到特权页面的对话框
+         */
+        STYLE_TO_PRIVILEGE,
         /**
          * 添加订阅标签超出上限
          */
@@ -45,10 +47,6 @@ public class EbingoDialog extends AlertDialog {
          * 信息已经被删除，点击“我知道了”会关闭当前Activity
          */
         STYLE_INFO_DELETED,
-        /**
-         *不能从求购信息中链接到发布者信息
-         */
-        STYLE_CANNOT_SCAN_DEMAND_COMPANY_INFO
     }
 
     /**
@@ -61,15 +59,8 @@ public class EbingoDialog extends AlertDialog {
     public static EbingoDialog newInstance(final Activity context, DialogStyle style) {
         EbingoDialog dialog = new EbingoDialog(context);
         switch (style) {
-            case STYLE_CANNOT_DIAL:
-            {
-                dialog.setTitle(R.string.warn);
-                dialog.setMessage(R.string.vip_promote);
-                dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
-                break;
-            }
-            case STYLE_CANNOT_ADD_TAG:
-            {
+
+            case STYLE_CANNOT_ADD_TAG: {
                 VipType.VipInfo info = VipType.getCompanyInstance().getVipInfo();
                 dialog.setTitle(R.string.warn);
                 dialog.setMessage(context.getString(R.string.vip_add_tag, VipType.getCompanyInstance().name, info.book_tag_num));
@@ -82,8 +73,7 @@ public class EbingoDialog extends AlertDialog {
                 dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
                 break;
             }
-            case STYLE_INFO_DELETED:
-            {
+            case STYLE_INFO_DELETED: {
                 dialog.setTitle(R.string.warn);
                 dialog.setMessage(R.string.info_has_deleted);
                 dialog.setPositiveButton(R.string.i_know, new OnClickListener() {
@@ -94,10 +84,9 @@ public class EbingoDialog extends AlertDialog {
                 });
                 break;
             }
-            case STYLE_CANNOT_SCAN_DEMAND_COMPANY_INFO:
-            {
+            case STYLE_TO_PRIVILEGE: {
                 dialog.setTitle(R.string.warn);
-                dialog.setMessage(context.getString(R.string.can_scan_demand_company_info, context.getString(R.string.vip_standard)));
+                dialog.setMessage(context.getString(R.string.no_permission, VipType.getCompanyInstance().name));
                 dialog.setPositiveButton(R.string.update_right_now, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -105,6 +94,7 @@ public class EbingoDialog extends AlertDialog {
                     }
                 });
                 dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
+                break;
             }
         }
         return dialog;
@@ -112,15 +102,16 @@ public class EbingoDialog extends AlertDialog {
 
     /**
      * 跳到我的特权，并且展示下一个等级vip信息
+     *
      * @param context
      */
-    private static void toMyPrivilegeActivity(Context context){
+    private static void toMyPrivilegeActivity(Context context) {
         final VipType companyVipType = VipType.getCompanyInstance();
         VipType next = companyVipType.next();
         if (next == null)
             throw new RuntimeException(companyVipType.name + "is the highest Vip,can not be upgrade!");
-        Intent intent=new Intent(context,MyPrivilegeActivity.class);
-        intent.putExtra(MyPrivilegeActivity.SHOW_VIP_CODE,next.code);
+        Intent intent = new Intent(context, MyPrivilegeActivity.class);
+        intent.putExtra(MyPrivilegeActivity.SHOW_VIP_CODE, next.code);
         context.startActivity(intent);
     }
 

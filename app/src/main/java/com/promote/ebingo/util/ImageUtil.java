@@ -27,15 +27,8 @@ import java.net.URL;
  */
 public class ImageUtil {
 
-    private static File getImageFile() {
-        File dir;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            dir = new File(Environment.getExternalStorageDirectory(), "ebingoo");
-        } else {
-            ContextUtil.toast("SD卡不可用！");
-            dir = null;
-        }
-        return dir;
+    private static String getImageFile() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     /**

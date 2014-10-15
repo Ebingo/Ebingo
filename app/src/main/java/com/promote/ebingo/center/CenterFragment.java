@@ -29,6 +29,7 @@ import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginActivity;
+import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
@@ -50,7 +51,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public static final String ACTION_INVALIDATE = "com.promote.ebingo.center.ACTION_INVALIDATE";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -155,7 +156,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        getActivity().registerReceiver(invalidateReceiver, new IntentFilter(ACTION_INVALIDATE));
+        getActivity().registerReceiver(invalidateReceiver, new IntentFilter(LoginManager.ACTION_INVALIDATE));
     }
 
     @Override

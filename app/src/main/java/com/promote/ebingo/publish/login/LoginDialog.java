@@ -55,7 +55,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
                     public void onSuccess() {
                         dialog.dismiss();
                         dismiss();
-                        getContext().sendBroadcast(new Intent(CenterFragment.ACTION_INVALIDATE));
+                        getContext().sendBroadcast(new Intent(LoginManager.ACTION_INVALIDATE));
                     }
 
                     @Override

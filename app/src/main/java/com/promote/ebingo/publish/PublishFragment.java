@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CompanyVipInfo;
 import com.promote.ebingo.center.MyPrivilegeActivity;
 import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.util.ContextUtil;
@@ -72,7 +73,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
      * 预览
      */
     public static final int PREVIEW = 1 << 6;
-   /**
+    /**
      * 选择3d
      */
     public static final int APPLY_3D = 1 << 7;
@@ -90,7 +91,7 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
      */
     public static final int PICK_FOR_SUPPLY = 1 << 14;
 
-    public static final int REQUEST_MASK=0xfff;
+    public static final int REQUEST_MASK = 0xfff;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -180,8 +181,8 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         }
     }
 
-    private void showVipDialog(){
-        EbingoDialog dialog=new EbingoDialog(getActivity());
+    private void showVipDialog() {
+        EbingoDialog dialog = new EbingoDialog(getActivity());
         dialog.setMessage("您好！您目前是普通会员，没有权限发布自己的产品供应信息，您可以点击下方升级按钮进行升级。");
         dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
@@ -225,23 +226,31 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        LogCat.i("--->","onCheckedChanged");
+        LogCat.i("--->", "onCheckedChanged");
         switch (checkedId) {
             case R.id.rb_publish_demand:
                 showPage(1);
                 break;
             case R.id.rb_publish_supply:
-                showPage(0);
+                CompanyVipInfo info = Company.getInstance().getVipInfo();
+                if (info.getSupply_num() > 0) {
+                    showPage(0);
+                } else {
+                    EbingoDialog dialog = EbingoDialog.newInstance(getActivity(), EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                    dialog.setMessage(getString(R.string.supply_num_none));
+                    dialog.show();
+                }
                 break;
         }
     }
 
     /**
      * 显示一个发布页
+     *
      * @param page 0：发布求购
      *             1：发布供应
      */
-    public void showPage(int page){
+    public void showPage(int page) {
         content.setCurrentItem(page);
     }
 
@@ -272,12 +281,12 @@ public class PublishFragment extends Fragment implements RadioGroup.OnCheckedCha
         @Override
         public void onPageSelected(int i) {
             ((RadioButton) tabs.getChildAt(i)).setChecked(true);
-            if (i==1){
-                VipType.VipInfo info=VipType.getCompanyInstance().getVipInfo();
+            if (i == 1) {
+                VipType.VipInfo info = VipType.getCompanyInstance().getVipInfo();
             }
 
-            final String vipType=Company.getInstance().getVipType();
-            if(VipType.parse(vipType).compareTo(VipType.Experience_Vip)<0){
+            final String vipType = Company.getInstance().getVipType();
+            if (VipType.parse(vipType).compareTo(VipType.Experience_Vip) < 0) {
                 showVipDialog();
             }
         }

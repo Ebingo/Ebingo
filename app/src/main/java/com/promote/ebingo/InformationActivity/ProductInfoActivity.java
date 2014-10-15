@@ -190,7 +190,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     loginDialog.setCanceledOnTouchOutside(true);
                     loginDialog.setCancelable(true);
                     loginDialog.show();
-                } else if (VipType.getCompanyInstance().getVipInfo().canDialSupply()) {
+                } else if (Company.getInstance().getVipInfo().callSupply()) {
                     CallRecord record = new CallRecord();
                     record.setCall_id(Company.getInstance().getCompanyId());
                     record.setInfoId(mDetailInfoBean.getInfo_id());
@@ -198,7 +198,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     record.setPhone_num(mDetailInfoBean.getPhone_num());
                     CallRecordActivity.CallRecordManager.dialNumber(this, record);
                 } else {
-                    EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_DIAL);
+                    EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
                 }
                 break;
             case R.id.product_info_collect_cb:

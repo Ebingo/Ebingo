@@ -83,6 +83,7 @@
     <string name="find_password">找回密码</string>
     <string name="my_collect">我的收藏</string>
     <string name="my_book">我的订阅</string>
+    <string name="book">订阅</string>
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
     <string name="my_share">分享</string>
@@ -90,7 +91,8 @@
     <string name="make_call">拨 打</string>
     <string name="search_history">搜索历史</string>
     <string name="load_data_complete">加载数据完成.</string>
-
+    <string name="enterprise_settings">企业设置</string>
+    <string name="about_us">关于我们</string>
     <string-array name="interprise_info_tab">
         <item>公司首页</item>
         <item>企业动态</item>
@@ -190,6 +192,7 @@
         <item>拍照</item>
     </array>
 
+    <string name="logout">退出登录</string>
     <string name="confirm_logout">确定退出登录？</string>
     <string name="empty_notice">您当前没有发布任何%s信息。</string>
     <string name="modify">修改</string>
@@ -205,7 +208,15 @@
 
     <string name="data_error">数据错误！</string>
     <string name="info_has_deleted">信息已经被删除！</string>
-    <string name="can_scan_demand_company_info">%s及以上级别会员，才能查看求购的公司信息！</string>
+    <string name="can_scan_demand_company_info">抱歉，%s不能查看求购的公司信息,请立即升级！</string>
     <string name="apply">申请</string>
     <string name="downloaded">已经下载%d%%</string>
+    <string name="current_version">当前版本%s</string>
+    <string name="check_update">检查更新</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="download_fialed">下载失败！</string>
+    <string name="click_install">%s下载完成！点击安装！</string>
+    <string name="cannot_call_demand">只有%s及以上会员可以拨打求购电话,您需要升级才能使用本功能。</string>
+    <string name="no_permission">抱歉，%s没有权限使用此功能！</string>
+    <string name="supply_num_none">您当前剩余发布供应条数不足，请升级！</string>
 </resources>

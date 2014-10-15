@@ -67,7 +67,7 @@ public class VersionManager {
                     if (version_code > getLocaleVersion(mContext)) {
                         final String url = result.getString("url");
                         final String versionName = result.getString("version");
-                        String fileName = "Ebingoo_" + "2_1" + ".apk";
+                        String fileName = "Ebingoo" + versionName + ".apk";
                         File apkFile = getDownloadFile(mContext, fileName);
                         DialogInterface.OnClickListener installListener = new DownloadListener(mContext, url, fileName);
                         //检查是否已经下载
@@ -188,7 +188,7 @@ public class VersionManager {
     private static File getDownloadFile(Context context, String fileName) {
         File dir;
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            dir=new File(Environment.getExternalStorageDirectory(),"ebingoo");
+            dir = new File(Environment.getExternalStorageDirectory(), "ebingoo");
 
         } else {
             dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "ebingoo");
@@ -197,7 +197,7 @@ public class VersionManager {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        return new File(dir,fileName);
+        return new File(dir, fileName);
     }
 
     /**
@@ -207,6 +207,7 @@ public class VersionManager {
         private Context mContext;
         private ApkProgressDialog dialog;
         private NotificationCompat.Builder builder;
+
         public APKDownloadTask(Context context) {
             this.mContext = context.getApplicationContext();
             dialog = new ApkProgressDialog(mContext);
@@ -226,7 +227,7 @@ public class VersionManager {
             String fileName = params[1];
             File apkFile;
 
-            apkFile = getDownloadFile(mContext,fileName);
+            apkFile = getDownloadFile(mContext, fileName);
             LogCat.i("install apk name--:" + apkFile.getAbsolutePath() + "---------apk name:" + apkFile.getName());
             FileOutputStream fot = null;
             InputStream is = null;
@@ -275,25 +276,25 @@ public class VersionManager {
             showNotification(rate);
         }
 
-        private void showNotification(int rate){
-            NotificationManager manager= (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder build=getNotification();
-            build.setContentTitle(String.format("已经下载%d%%",rate));
-            build.setProgress(100,rate,false);
+        private void showNotification(int rate) {
+            NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder build = getNotification();
+            build.setContentTitle(String.format("已经下载%d%%", rate));
+            build.setProgress(100, rate, false);
+            build.setDefaults(Notification.FLAG_ONGOING_EVENT);
             //发出通知
             manager.notify(0, build.build());
         }
 
-        private NotificationCompat.Builder getNotification(){
+        private NotificationCompat.Builder getNotification() {
 
-            if (builder==null){
-                builder= new NotificationCompat.Builder(mContext);
+            if (builder == null) {
+                builder = new NotificationCompat.Builder(mContext);
                 Intent updateIntent = new Intent(mContext, MainActivity.class);
                 PendingIntent updatePendingIntent = PendingIntent.getActivity(mContext, 0, updateIntent, 0);
                 builder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_icon));
                 builder.setSmallIcon(R.drawable.app_icon);
                 builder.setTicker("正在下载");
-
                 builder.setAutoCancel(false);
                 builder.setWhen(0);
 
@@ -307,8 +308,16 @@ public class VersionManager {
         protected void onPostExecute(File file) {
             dialog.dismiss();
             if (file == null) {
-                ContextUtil.toast("下载失败！");
+                ContextUtil.toast(R.string.download_fialed);
             } else {
+                NotificationCompat.Builder build = getNotification();
+                build.setContentTitle(mContext.getString(R.string.click_install));
+                Intent intent = getInstallIntent(file);
+                build.setContentIntent(PendingIntent.getActivity(mContext, 0, intent, 0));
+                build.setAutoCancel(true);
+                build.setProgress(100, 100, false);
+                NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.notify(0, build.build());
                 showInstallDialog(mContext, file);
             }
         }
@@ -316,6 +325,15 @@ public class VersionManager {
         @Override
         public void onDismiss(DialogInterface dialog) {
         }
+    }
+
+    private static Intent getInstallIntent(File file) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file),
+                "application/vnd.android.package-archive");
+        return intent;
     }
 
     /**
@@ -330,15 +348,11 @@ public class VersionManager {
         EbingoDialog installDialog = new EbingoDialog(context);
         installDialog.setTitle(R.string.warn);
         installDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        installDialog.setMessage(file.getName() + "已经下载完毕，请立即安装！");
+        installDialog.setMessage(context.getString(R.string.click_install,file.getName()));
         installDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(android.content.Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(f),
-                        "application/vnd.android.package-archive");
+                Intent intent = getInstallIntent(f);
                 mContext.startActivity(intent);
                 dialog.dismiss();
             }

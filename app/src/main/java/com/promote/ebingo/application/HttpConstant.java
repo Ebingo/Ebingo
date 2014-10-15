@@ -7,7 +7,7 @@ public class HttpConstant {
 
     private static final String TEST_RHOST = "http://218.244.149.129"; //remote
 
-    private static final boolean LOCALHOST = false;
+    private static final boolean LOCALHOST = true;
 
     private static final String TEST_HOST = "http://192.168.1.161";
 
@@ -174,5 +174,7 @@ public class HttpConstant {
      * 获取最新版
      */
     public static final String getNewestVersion = getRootUrl() + "getNewestVersion";
+    public static final String getCompanyVipInfo=getRootUrl()+"getCompanyVipInfo";
+
 
 }
