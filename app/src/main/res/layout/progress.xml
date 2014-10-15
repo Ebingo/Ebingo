@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/ebingo_dialog_background"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/info_content_pad">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:id="@+id/progressBar" />
+
+        <TextView
+            android:id="@+id/progressText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/font_gray_14"
+            android:text="已下载0%"
+            android:layout_marginTop="4dp"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/ebingo_button_divider" />
+
+    <TextView
+        android:id="@+id/btn_hide"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/ebingo_dialog_btn"
+        android:gravity="center"
+        android:text="隐藏"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:textSize="@dimen/ebingo_button_textSize"
+        android:textColor="@color/ebingo_button_textColor" />
+</LinearLayout>

@@ -253,8 +253,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         Integer category_id = (Integer) tv_pick_category.getTag();
         String region_name = tv_pick_region.getText().toString().trim();
         String price = edit_price.getText().toString().trim();
-        String image_url = picked_image.getContentDescription() + "";
-        String description = tv_pick_description.getContentDescription().toString();
+        String image_url = (String) picked_image.getContentDescription();
+        String description = (String) tv_pick_description.getContentDescription();
         String title = edit_title.getText().toString().trim();
         String contacts = edit_contact.getText().toString().trim();
         String contacts_phone = edit_phone.getText().toString().trim();

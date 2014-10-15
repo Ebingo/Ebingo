@@ -207,4 +207,5 @@
     <string name="info_has_deleted">信息已经被删除！</string>
     <string name="can_scan_demand_company_info">%s及以上级别会员，才能查看求购的公司信息！</string>
     <string name="apply">申请</string>
+    <string name="downloaded">已经下载%d%%</string>
 </resources>

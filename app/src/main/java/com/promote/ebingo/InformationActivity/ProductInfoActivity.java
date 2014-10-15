@@ -154,8 +154,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             productinfoDetailtv.setVisibility(View.VISIBLE);
             productinfoDetailtv.setText(description);
         }
-        prd_info_btm_img.setImageResource(VipType.parse(infoBean.getVip_type()+"").drawableId);
-
+        prd_info_btm_img.setImageResource(VipType.parse(String.valueOf(infoBean.getVip_type())).drawableId);
+        LogCat.i("--->PRD vip: "+infoBean.getVip_type());
     }
 
 

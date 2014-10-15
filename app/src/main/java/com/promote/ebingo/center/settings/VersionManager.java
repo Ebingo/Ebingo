@@ -2,22 +2,27 @@ package com.promote.ebingo.center.settings;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.WindowManager;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.MainActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.EbingoApp;
 import com.promote.ebingo.application.HttpConstant;
@@ -57,10 +62,13 @@ public class VersionManager {
                 LogCat.i("--->", response + "");
                 try {
                     JSONObject result = response.getJSONObject("response");
-                    if (result.getInt("version_code") > getLocaleVersion(mContext)) {
+                    int version_code = result.getInt("version_code");
+                    if (version_code > getLocaleVersion(mContext)) {
                         final String url = result.getString("url");
-                        File apkFile = getDownloadFile(mContext, url.substring(url.lastIndexOf("/") + 1));
-                        DialogInterface.OnClickListener installListener = new DownloadListener(mContext, url);
+                        final String versionName = result.getString("version");
+                        String fileName = "Ebingoo_" + versionName + ".apk";
+                        File apkFile = getDownloadFile(mContext, fileName);
+                        DialogInterface.OnClickListener installListener = new DownloadListener(mContext, url, fileName);
                         //检查是否已经下载
                         if (apkFile.exists()) {
                             showInstallDialog(mContext, apkFile);
@@ -73,12 +81,12 @@ public class VersionManager {
                             versionDialog.setNegativeButton(R.string.cancel, versionDialog.DEFAULT_LISTENER);
                             versionDialog.show();
                         }
-                    }else if(showDialogIfNewest){
+                    } else if (showDialogIfNewest) {
                         EbingoDialog versionDialog = new EbingoDialog(mContext);
                         versionDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                         versionDialog.setMessage("已经是最新版本了！");
                         versionDialog.setTitle(R.string.warn);
-                        versionDialog.setPositiveButton(R.string.i_know,versionDialog.DEFAULT_LISTENER);
+                        versionDialog.setPositiveButton(R.string.i_know, versionDialog.DEFAULT_LISTENER);
                         versionDialog.show();
                     }
 
@@ -115,10 +123,12 @@ public class VersionManager {
 
         private Context mContext;
         private String url;
+        private String fileName;
 
-        DownloadListener(Context context, String url) {
+        DownloadListener(Context context, String url, String fileName) {
             this.mContext = context;
             this.url = url;
+            this.fileName = fileName;
         }
 
         @Override
@@ -130,7 +140,7 @@ public class VersionManager {
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE: {
-                            mTask.execute(url);
+                            mTask.execute(url, fileName);
                             break;
                         }
                         case DialogInterface.BUTTON_NEGATIVE: {
@@ -151,7 +161,7 @@ public class VersionManager {
                 wifiDialog.show();
                 return;
             } else {
-                mTask.execute(url);
+                mTask.execute(url, fileName);
             }
 
         }
@@ -175,14 +185,18 @@ public class VersionManager {
      * @return
      */
     private static File getDownloadFile(Context context, String fileName) {
-        File apkFile;
+        File dir;
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            apkFile = new File(Environment.getExternalStorageDirectory(), fileName);
+            dir=new File(Environment.getExternalStorageDirectory(),"com.ebingoo");
+
         } else {
-            apkFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
+            dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "com.ebingoo");
         }
-        LogCat.i("--->", apkFile.getAbsolutePath());
-        return apkFile;
+
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return new File(dir,fileName);
     }
 
     /**
@@ -190,15 +204,13 @@ public class VersionManager {
      */
     public static class APKDownloadTask extends AsyncTask<String, Integer, File> implements Dialog.OnDismissListener {
         private Context mContext;
-        private ProgressDialog dialog;
+        private ApkProgressDialog dialog;
 
         public APKDownloadTask(Context context) {
             this.mContext = context.getApplicationContext();
-            dialog = new ProgressDialog(mContext);
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog = new ApkProgressDialog(mContext);
             dialog.setOnDismissListener(this);
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-
         }
 
         @Override
@@ -209,30 +221,18 @@ public class VersionManager {
         @Override
         protected File doInBackground(String... params) {
             String url = params[0];
-            String fileName = url.substring(url.lastIndexOf("/") + 1);
+//            String fileName = url.substring(url.lastIndexOf("/") + 1);
+            String fileName = params[1];
             File apkFile;
 
-            String temp_apk_path = null;
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                temp_apk_path = Environment.getExternalStorageDirectory().getPath();
-            } else {
-                temp_apk_path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath();
-            }
-
-            File dir = new File(temp_apk_path + "/apk");
-
-
-            if (!dir.exists()){
-                dir.mkdirs();
-            }
-            apkFile = new File(dir, "Ebingoo.apk");
+            apkFile = getDownloadFile(mContext,fileName);
             LogCat.i("install apk name--:" + apkFile.getAbsolutePath() + "---------apk name:" + apkFile.getName());
             FileOutputStream fot = null;
             InputStream is = null;
             try {
                 HttpURLConnection cnn = (HttpURLConnection) new URL(url).openConnection();
                 cnn.setDoInput(true);
-                if (!apkFile.exists()){
+                if (!apkFile.exists()) {
                     apkFile.createNewFile();
                 }
                 fot = new FileOutputStream(apkFile);
@@ -270,14 +270,36 @@ public class VersionManager {
             int download = values[0];
             int total = values[1];
             int rate = (int) ((download / (float) total) * 100);
-            dialog.setMessage("已完成" + rate + "%");
             dialog.setProgress(rate);
+            showNotification(rate);
+        }
+
+        private void showNotification(int rate){
+            Intent updateIntent = new Intent(mContext, MainActivity.class);
+            PendingIntent updatePendingIntent = PendingIntent.getActivity(mContext, 0, updateIntent, 0);
+            NotificationCompat.Builder builder=new NotificationCompat.Builder(mContext);
+            builder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_icon));
+            builder.setSmallIcon(R.drawable.app_icon);
+            builder.setTicker("正在下载");
+            builder.setContentTitle(String.format("已经下载%d%%",rate));
+            builder.setAutoCancel(false);
+            builder.setWhen(0);
+            builder.setContentIntent(updatePendingIntent);
+            NotificationManager manager= (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            //设置通知栏显示内容
+            builder.setProgress(100,rate,false);
+            //发出通知
+            manager.notify(0, builder.build());
         }
 
         @Override
         protected void onPostExecute(File file) {
             dialog.dismiss();
-            showInstallDialog(mContext, file);
+            if (file == null) {
+                ContextUtil.toast("下载失败！");
+            } else {
+                showInstallDialog(mContext, file);
+            }
         }
 
         @Override

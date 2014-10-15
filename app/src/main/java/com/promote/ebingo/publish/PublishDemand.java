@@ -104,7 +104,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                 Integer category_id = (Integer) tv_pick_category.getTag();
                 String title = edit_title.getText().toString().trim();
                 String tags = tv_tags.getText().toString().trim();
-                String description = tv_pick_description.getContentDescription().toString();
+                String description = (String) tv_pick_description.getContentDescription();
                 String contacts = edit_contact.getText().toString().trim();
                 String contact_phone = edit_phone.getText().toString().trim();
                 String demand_num = edit_demand_num.getText().toString().trim();

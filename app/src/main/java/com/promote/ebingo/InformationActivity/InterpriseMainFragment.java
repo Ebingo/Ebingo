@@ -30,6 +30,7 @@ import com.promote.ebingo.bean.InterpriseInfoBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -51,6 +52,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     // TODO: Rename and change types of parameters
     private String mParam1;
     private ImageView interprismainimg;
+    private ImageView iv_vip_icon;
     private TextView fraginterprisemainnametv;
     private TextView fraginterprisemainaddrtv;
     private TextView fraginterprisemainhttpaddrtv;
@@ -116,6 +118,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     private void initialize(View containerView) {
 
         interprismainimg = (ImageView) containerView.findViewById(R.id.interpris_main_img);
+        iv_vip_icon = (ImageView) containerView.findViewById(R.id.iv_vip_icon);
         fraginterprisemainnametv = (TextView) containerView.findViewById(R.id.frag_interprise_main_name_tv);
         fraginterprisemainaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_addr_tv);
         fraginterprisemainhttpaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_httpaddr_tv);
@@ -207,8 +210,9 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         fraginterprisemaintelltv.setText(infoBean.getTel());
         fraginterprisemainabstracttv.setText(infoBean.getIntroduction());
         fraginterprisemainrangetv.setText(infoBean.getMainRun());
-        VipType vipType = VipType.parse(infoBean.getViptype() + "");
-        fraginterprisemainnametv.setCompoundDrawables(null, null, vipType.getIcon(getActivity()), null);
+        VipType vipType = VipType.parse(String.valueOf(infoBean.getViptype()));
+        LogCat.i("--->Enterprise vip: " + vipType.code);
+        iv_vip_icon.setImageDrawable(vipType.getIcon(getActivity()));
         if (infoBean.getInfoarray() != null) {
             currentSupplyBeans.clear();
             currentSupplyBeans.addAll(infoBean.getInfoarray());
