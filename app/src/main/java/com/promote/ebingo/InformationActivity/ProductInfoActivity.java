@@ -208,6 +208,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     loginDialog.setCanceledOnTouchOutside(true);
                     loginDialog.setCancelable(true);
                     loginDialog.show();
+                    productinfocollectcb.setChecked(!productinfocollectcb.isChecked());
                 } else if (productinfocollectcb.isChecked()) {
                     addCollection(mDetailInfoBean.getInfo_id());
                 } else {

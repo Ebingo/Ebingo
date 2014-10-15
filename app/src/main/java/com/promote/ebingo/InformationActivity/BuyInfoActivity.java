@@ -83,7 +83,6 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyInfocontactphonetv.setOnClickListener(this);
         buyinfobtmll.setOnClickListener(this);
         getInfoDetail();
-
     }
 
 

@@ -2,6 +2,7 @@ package com.promote.ebingo.center.settings;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -66,7 +67,7 @@ public class VersionManager {
                     if (version_code > getLocaleVersion(mContext)) {
                         final String url = result.getString("url");
                         final String versionName = result.getString("version");
-                        String fileName = "Ebingoo_" + versionName + ".apk";
+                        String fileName = "Ebingoo_" + "2_1" + ".apk";
                         File apkFile = getDownloadFile(mContext, fileName);
                         DialogInterface.OnClickListener installListener = new DownloadListener(mContext, url, fileName);
                         //检查是否已经下载
@@ -187,10 +188,10 @@ public class VersionManager {
     private static File getDownloadFile(Context context, String fileName) {
         File dir;
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            dir=new File(Environment.getExternalStorageDirectory(),"com.ebingoo");
+            dir=new File(Environment.getExternalStorageDirectory(),"ebingoo");
 
         } else {
-            dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "com.ebingoo");
+            dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "ebingoo");
         }
 
         if (!dir.exists()) {
@@ -205,7 +206,7 @@ public class VersionManager {
     public static class APKDownloadTask extends AsyncTask<String, Integer, File> implements Dialog.OnDismissListener {
         private Context mContext;
         private ApkProgressDialog dialog;
-
+        private NotificationCompat.Builder builder;
         public APKDownloadTask(Context context) {
             this.mContext = context.getApplicationContext();
             dialog = new ApkProgressDialog(mContext);
@@ -275,21 +276,31 @@ public class VersionManager {
         }
 
         private void showNotification(int rate){
-            Intent updateIntent = new Intent(mContext, MainActivity.class);
-            PendingIntent updatePendingIntent = PendingIntent.getActivity(mContext, 0, updateIntent, 0);
-            NotificationCompat.Builder builder=new NotificationCompat.Builder(mContext);
-            builder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_icon));
-            builder.setSmallIcon(R.drawable.app_icon);
-            builder.setTicker("正在下载");
-            builder.setContentTitle(String.format("已经下载%d%%",rate));
-            builder.setAutoCancel(false);
-            builder.setWhen(0);
-            builder.setContentIntent(updatePendingIntent);
             NotificationManager manager= (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            //设置通知栏显示内容
-            builder.setProgress(100,rate,false);
+            NotificationCompat.Builder build=getNotification();
+            build.setContentTitle(String.format("已经下载%d%%",rate));
+            build.setProgress(100,rate,false);
             //发出通知
-            manager.notify(0, builder.build());
+            manager.notify(0, build.build());
+        }
+
+        private NotificationCompat.Builder getNotification(){
+
+            if (builder==null){
+                builder= new NotificationCompat.Builder(mContext);
+                Intent updateIntent = new Intent(mContext, MainActivity.class);
+                PendingIntent updatePendingIntent = PendingIntent.getActivity(mContext, 0, updateIntent, 0);
+                builder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.app_icon));
+                builder.setSmallIcon(R.drawable.app_icon);
+                builder.setTicker("正在下载");
+
+                builder.setAutoCancel(false);
+                builder.setWhen(0);
+
+                builder.setContentIntent(updatePendingIntent);
+                //设置通知栏显示内容
+            }
+            return builder;
         }
 
         @Override
@@ -329,6 +340,7 @@ public class VersionManager {
                 intent.setDataAndType(Uri.fromFile(f),
                         "application/vnd.android.package-archive");
                 mContext.startActivity(intent);
+                dialog.dismiss();
             }
         });
         installDialog.show();
