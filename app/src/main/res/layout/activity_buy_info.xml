@@ -64,7 +64,7 @@
                         android:layout_gravity="top|right"
                         android:id="@+id/buy_info_btm_img"
                         style="@style/list_vip_img_style"
-                        android:src="@drawable/vip_1_member" />
+                         />
                 </FrameLayout>
             </LinearLayout>
 
