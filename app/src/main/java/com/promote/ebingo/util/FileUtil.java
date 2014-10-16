@@ -28,6 +28,8 @@ public class FileUtil {
     public static final String HOEM_DATA_CACh = "home_data";
     public static final String CATEGORY_CACH = "category_data";
     public static final String FILE_CALL_RECORD = "call_record";
+    public static final String PUBLISH_DEMAND_MODULE = "publish_demand_module";
+    public static final String PUBLISH_SUPPLY_MODULE = "publish_supply_module";
 
     /**
      * 读取缓存文件
@@ -83,7 +85,7 @@ public class FileUtil {
             ObjectInputStream ois = new ObjectInputStream(is);
             obj = ois.readObject();
         } catch (Exception e) {
-            Log.w("FileUtil",e.getMessage());
+            Log.w("FileUtil", e.getMessage());
         }
         LogCat.i("--->", "read:" + file + "===" + obj);
         return obj;
@@ -117,9 +119,9 @@ public class FileUtil {
         if (!file.isDirectory()) {
             file.delete();
         } else {
-            for (File f : file.listFiles()){
+            for (File f : file.listFiles()) {
                 delete(f);
-                LogCat.d("delete file ---->"+f.getName());
+                LogCat.d("delete file ---->" + f.getName());
             }
         }
     }

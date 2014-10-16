@@ -104,7 +104,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
                         addTag(books.get(i));
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    LogCat.w(e.getLocalizedMessage());
                 }
             }
 
@@ -167,10 +167,12 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
      */
     private void addTag(BookBean bookBean) {
         int tagNum = tagContent.getChildCount();
-        VipType.VipInfo info = VipType.getCompanyInstance().getVipInfo();
-        int maxTagNum = info.book_tag_num;
+        int maxTagNum = Company.getInstance().getVipInfo().getTag_num();
+        LogCat.i("--->","addTag("+tagNum+"/="+maxTagNum+")");
         if (tagNum >= maxTagNum) {
-            EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_CANNOT_ADD_TAG).show();
+            EbingoDialog dialog=EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+            dialog.setMessage(getString(R.string.vip_add_tag, VipType.getCompanyInstance().name,maxTagNum));
+            dialog.show();
             return;
         }
         String name = bookBean.getName();

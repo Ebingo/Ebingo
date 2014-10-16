@@ -39,7 +39,6 @@ import java.util.ArrayList;
 public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
     ViewPager pager;
     ArrayList<View> views = new ArrayList<View>();
-    RadioGroup indicator_group;
     final int LOGIN = 1;
 
     @Override
@@ -50,8 +49,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         if (Constant.isFirstStart(getApplicationContext())) {
             setContentView(R.layout.activity_guide);
             pager = (ViewPager) findViewById(R.id.guide_pager);
-            indicator_group = (RadioGroup) findViewById(R.id.indicator_group);
-            indicator_group.setOnCheckedChangeListener(this);
+//            ((RadioGroup) findViewById(R.id.indicator_group)).setOnCheckedChangeListener(this);
             views.add(getImage(R.drawable.guide1));
             views.add(getImage(R.drawable.guide2));
             views.add(getImage(R.drawable.guide3));
@@ -63,6 +61,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         } else {
             setLoading();
         }
+        VersionManager.requestVersionCode(this, false);
     }
 
     /**
@@ -174,12 +173,12 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     }
 
     private void showDot(int index) {
-        ((RadioButton) (indicator_group.getChildAt(index))).setChecked(true);
+//        ((RadioButton) (((RadioGroup) findViewById(R.id.indicator_group)).getChildAt(index))).setChecked(true);
     }
 
     private void setLoading() {
         setContentView(R.layout.loadpage_layout);
-        VersionManager.requestVersionCode(this, false);
+
         loginBackground();
     }
 
@@ -204,8 +203,6 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
             Company.loadInstance((Company) new FileUtil().readFile(getApplicationContext(), FileUtil.FILE_COMPANY));
             toMainActivityDelay(500);
         }
-        LogCat.i("--->", "Login Company::" + Company.getInstance());
-
     }
 
     private void toMainActivityDelay(long time) {

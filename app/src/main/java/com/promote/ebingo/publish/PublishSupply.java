@@ -38,12 +38,13 @@ import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CompanyVipInfo;
 import com.promote.ebingo.bean.DetailInfoBean;
-import com.promote.ebingo.center.MyPrivilegeActivity;
 import com.promote.ebingo.center.MySupplyActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -90,6 +91,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
     private String info_id;
     private final String CAMERA_PICTURE_NAME = "supply_image.png";
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.publish_supply, null);
@@ -108,13 +110,16 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 
         picked_image = (ImageView) v.findViewById(R.id.picked_image);
         upload_3d_cb = (CheckBox) v.findViewById(R.id.upload_3d_cb);
+
         tv_pick_category.setOnClickListener(this);
         tv_pick_description.setOnClickListener(this);
         tv_pick_region.setOnClickListener(this);
         tv_pick_image.setOnClickListener(this);
+
         picked_image.setOnClickListener(this);
         upload_3d_cb.setOnClickListener(this);
         v.findViewById(R.id.btn_publish).setOnClickListener(this);
+        mDetailInfo= (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_SUPPLY_MODULE);
         edit(mDetailInfo);
         LogCat.i("--->", "onCreateView edit");
         return v;
@@ -214,28 +219,11 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      * @return
      */
     private boolean has3dPermission() {
-        String vipCode = Company.getInstance().getVipType();
-        VipType vipType = VipType.getCompanyInstance();
-        VipType.VipInfo info = vipType.getVipInfo();
-        if (info.display_3d == 0) {
-            EbingoDialog dialog = new EbingoDialog(getActivity());
-            dialog.setTitle("尊敬的" + VipType.nameOf(vipCode));
-            dialog.setMessage("很抱歉，您没有权限上传3D图片，普通会员以上级别可购买上传3D图片次数。金牌会员赠送1次，铂金会员赠送5次。买请先升级");
-            dialog.setPositiveButton("升 级", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getActivity(), MyPrivilegeActivity.class);
-                    intent.putExtra(MyPrivilegeActivity.SHOW_VIP_CODE, VipType.Gold_VIP.code);
-                    upload_3d_cb.setChecked(false);
-                    startActivity(intent);
-                }
-            });
-            dialog.setNegativeButton("取 消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    upload_3d_cb.setChecked(false);
-                }
-            });
+        CompanyVipInfo info = Company.getInstance().getVipInfo();
+        if (info.getDisplay_3d_num() <= 0) {
+            upload_3d_cb.setChecked(false);
+            EbingoDialog dialog = EbingoDialog.newInstance(getActivity(), EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+            dialog.setMessage(getString(R.string.notice_3d));
             dialog.show();
             return false;
         }
@@ -492,16 +480,16 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      * 清空文字
      */
     private void clearText() {
-        tv_pick_category.setText(null);
-        tv_pick_region.setText(null);
+//        tv_pick_category.setText(null);
+//        tv_pick_region.setText(null);
         edit_price.setText(null);
 
         tv_pick_description.setText(null);
         edit_title.setText(null);
 
         edit_min_sell_num.setText(null);
-        edit_contact.setText(null);
-        edit_phone.setText(null);
+//        edit_contact.setText(null);
+//        edit_phone.setText(null);
         picked_image.setVisibility(View.GONE);
         picked_image.setImageBitmap(null);
         picked_image.setContentDescription(null);
@@ -517,13 +505,13 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                ContextUtil.toast(response);
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         Intent intent = new Intent(getActivity(), MySupplyActivity.class);
                         intent.putExtra(BaseListActivity.ARG_REFRESH, true);
                         startActivity(intent);
+                        saveUsualData();
                         clearText();
                         if (getActivity() instanceof PublishEditActivity){
                             getActivity().finish();
@@ -551,6 +539,21 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             }
         });
     }
+
+    /**
+     * 保存常用数据
+     */
+    private void saveUsualData() {
+        DetailInfoBean saveBean=new DetailInfoBean();
+        saveBean.setCategory_id((Integer) tv_pick_category.getTag());
+        saveBean.setCategory_name(tv_pick_category.getText().toString());
+        saveBean.setContacts(edit_contact.getText().toString());
+        saveBean.setPhone_num(edit_phone.getText().toString());
+        saveBean.setRegion(tv_pick_region.getText().toString());
+        FileUtil.saveCache(getActivity(), FileUtil.PUBLISH_SUPPLY_MODULE,saveBean);
+    }
+
+
 
     @Override
     public void edit(DetailInfoBean infoBean) {

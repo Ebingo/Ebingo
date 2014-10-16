@@ -132,4 +132,23 @@ public class CompanyVipInfo implements Serializable {
     public void setWap_url(String wap_url) {
         this.wap_url = wap_url;
     }
+
+    @Override
+    public String toString() {
+        return "CompanyVipInfo{" +
+                "callDemand=" + callDemand +
+                ", callSupply=" + callSupply +
+                ", canLookDemandCompany=" + canLookDemandCompany +
+                ", publish_demand_info=" + publish_demand_info +
+                ", vip_type='" + vip_type + '\'' +
+                ", try_date=" + try_date +
+                ", vip_name='" + vip_name + '\'' +
+                ", vip_date=" + vip_date +
+                ", supply_num=" + supply_num +
+                ", keywords_num=" + keywords_num +
+                ", tag_num=" + tag_num +
+                ", display_3d_num=" + display_3d_num +
+                ", wap_url='" + wap_url + '\'' +
+                '}';
+    }
 }

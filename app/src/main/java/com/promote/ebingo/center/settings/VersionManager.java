@@ -53,7 +53,7 @@ public class VersionManager {
      *
      * @param context
      */
-    public static void requestVersionCode(Context context, final boolean showDialogIfNewest) {
+    public static void requestVersionCode(final Context context, final boolean showDialogIfNewest) {
         final Context mContext = context.getApplicationContext();
 
         EbingoRequestParmater param = new EbingoRequestParmater(context);
@@ -65,11 +65,10 @@ public class VersionManager {
                     JSONObject result = response.getJSONObject("response");
                     int version_code = result.getInt("version_code");
                     if (version_code > getLocaleVersion(mContext)) {
-                        final String url = result.getString("url");
-                        final String versionName = result.getString("version");
+                        String url = result.getString("url");
+                        String versionName = result.getString("version");
                         String fileName = "Ebingoo" + versionName + ".apk";
                         File apkFile = getDownloadFile(mContext, fileName);
-                        DialogInterface.OnClickListener installListener = new DownloadListener(mContext, url, fileName);
                         //检查是否已经下载
                         if (apkFile.exists()) {
                             showInstallDialog(mContext, apkFile);
@@ -78,16 +77,14 @@ public class VersionManager {
                             versionDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                             versionDialog.setTitle(mContext.getString(R.string.find_new_version, apkFile.getName()));
                             versionDialog.setMessage(result.getString("msg"));
-                            versionDialog.setPositiveButton(R.string.update_right_now, installListener);
+                            versionDialog.setPositiveButton(R.string.update_right_now, new DownloadListener(mContext, url, fileName));
                             versionDialog.setNegativeButton(R.string.cancel, versionDialog.DEFAULT_LISTENER);
                             versionDialog.show();
                         }
                     } else if (showDialogIfNewest) {
-                        EbingoDialog versionDialog = new EbingoDialog(mContext);
+                        EbingoDialog versionDialog = EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_I_KNOW);
                         versionDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                         versionDialog.setMessage("已经是最新版本了！");
-                        versionDialog.setTitle(R.string.warn);
-                        versionDialog.setPositiveButton(R.string.i_know, versionDialog.DEFAULT_LISTENER);
                         versionDialog.show();
                     }
 

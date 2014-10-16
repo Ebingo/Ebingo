@@ -39,14 +39,16 @@ public class EbingoDialog extends AlertDialog {
          * 跳转到特权页面的对话框
          */
         STYLE_TO_PRIVILEGE,
-        /**
-         * 添加订阅标签超出上限
-         */
-        STYLE_CANNOT_ADD_TAG,
+
         /**
          * 信息已经被删除，点击“我知道了”会关闭当前Activity
          */
         STYLE_INFO_DELETED,
+        /**
+         * title:温馨提示
+         * 点击:我知道了
+         */
+        STYLE_I_KNOW
     }
 
     /**
@@ -56,37 +58,27 @@ public class EbingoDialog extends AlertDialog {
      * @param style
      * @return
      */
-    public static EbingoDialog newInstance(final Activity context, DialogStyle style) {
+    public static EbingoDialog newInstance(final Context context, DialogStyle style) {
         EbingoDialog dialog = new EbingoDialog(context);
         switch (style) {
 
-            case STYLE_CANNOT_ADD_TAG: {
-                VipType.VipInfo info = VipType.getCompanyInstance().getVipInfo();
-                dialog.setTitle(R.string.warn);
-                dialog.setMessage(context.getString(R.string.vip_add_tag, VipType.getCompanyInstance().name, info.book_tag_num));
-                dialog.setPositiveButton(R.string.update_right_now, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        toMyPrivilegeActivity(context);
-                    }
-                });
-                dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
-                break;
-            }
             case STYLE_INFO_DELETED: {
                 dialog.setTitle(R.string.warn);
                 dialog.setMessage(R.string.info_has_deleted);
                 dialog.setPositiveButton(R.string.i_know, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        context.finish();
+                       if (context instanceof Activity){
+                           ((Activity)context).finish();
+                       }
                     }
                 });
                 break;
             }
             case STYLE_TO_PRIVILEGE: {
-                dialog.setTitle(R.string.warn);
-                dialog.setMessage(context.getString(R.string.no_permission, VipType.getCompanyInstance().name));
+                String vipName = VipType.getCompanyInstance().name;
+                dialog.setTitle(context.getString(R.string.dear_somebody, vipName));
+                dialog.setMessage(context.getString(R.string.no_permission, vipName));
                 dialog.setPositiveButton(R.string.update_right_now, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -96,6 +88,13 @@ public class EbingoDialog extends AlertDialog {
                 dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
                 break;
             }
+
+            case STYLE_I_KNOW:{
+                dialog.setTitle(R.string.warn);
+                dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
+                break;
+            }
+
         }
         return dialog;
     }

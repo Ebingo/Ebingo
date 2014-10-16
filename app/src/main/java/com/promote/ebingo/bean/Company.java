@@ -229,6 +229,7 @@ public class Company implements Serializable{
                 ", is_lock='" + is_lock + '\'' +
                 ", email='" + email + '\'' +
                 ", imageUri=" + imageUri +
+                ", companyVipInfo=" + companyVipInfo +
                 '}';
     }
 }

@@ -209,7 +209,9 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                     VipType vipType = VipType.parse(Company.getInstance().getVipType());
                     VipType.VipInfo info = vipType.getVipInfo();
                     String type = record.getType();
-                    if (info.canDial(type)) {//这里加判断，为了防止会员过期后，此处还有通话记录
+                    boolean canDial=true;
+//                    canDial=info.canDial(type);
+                    if (canDial) {//这里加判断，为了防止会员过期后，此处还有通话记录
                         CallRecordManager.dialNumber(CallRecordActivity.this, record);
                     } else {
                         EbingoDialog.newInstance(CallRecordActivity.this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE).show();

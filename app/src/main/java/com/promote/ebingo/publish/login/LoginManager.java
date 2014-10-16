@@ -33,6 +33,7 @@ import org.json.JSONObject;
  */
 public class LoginManager {
     public static final String ACTION_INVALIDATE = "com.promote.ebingo.center.ACTION_INVALIDATE";
+
     /**
      * 获取验证码
      *
@@ -111,25 +112,29 @@ public class LoginManager {
                     HttpUtil.post(HttpConstant.getCompanyVipInfo, parmater, new EbingoHandler() {
                         @Override
                         public void onSuccess(int statusCode, JSONObject response) {
-                            callback.onSuccess();
-                            CompanyVipInfo vipInfo = JsonUtil.get(String.valueOf(response), CompanyVipInfo.class);
+                            CompanyVipInfo vipInfo = null;
+                            try {
+                                vipInfo = JsonUtil.get(String.valueOf(response.getJSONObject("data")), CompanyVipInfo.class);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             VipType companyVip = VipType.getCompanyInstance();
-                            switch (companyVip){
-                                case VISITOR:{//禁用：发布求购信息、拨打供应电话
+                            switch (companyVip) {
+                                case VISITOR: {//禁用：发布求购信息、拨打供应电话
                                     vipInfo.setPublishDemandInfo(false);
                                     vipInfo.setCallSupply(false);
                                 }
-                                case Experience_Vip:{//禁用查看求购信息、拨打求购电话
+                                case Experience_Vip: {//禁用查看求购信息、拨打求购电话
                                     vipInfo.setCanLookDemandCompany(false);
                                     vipInfo.setCallDemand(false);
                                 }
-                                case Standard_VIP:{
+                                case Standard_VIP: {
 
                                     break;
                                 }
                             }
-
                             Company.getInstance().setVipInfo(vipInfo);
+                            callback.onSuccess();
                         }
 
                         @Override

@@ -24,6 +24,7 @@ import com.promote.ebingo.center.MyDemandActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -58,7 +59,8 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.publish_demand, container, false);
         init(view);
-        if (mDetailInfo!=null)edit(mDetailInfo);
+        mDetailInfo = (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_DEMAND_MODULE);
+        if (mDetailInfo != null) edit(mDetailInfo);
         return view;
     }
 
@@ -95,7 +97,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
             }
             case R.id.pick_tags: {
                 Intent intent = new Intent(getActivity(), AddTagsActivity.class);
-                intent.putExtra(AddTagsActivity.CONTENT,tv_tags.getText().toString());
+                intent.putExtra(AddTagsActivity.CONTENT, tv_tags.getText().toString());
                 getActivity().startActivityForResult(intent, PICK_FOR_DEMAND | PICK_TAGS);
                 break;
             }
@@ -125,7 +127,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                     Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
                 else if (TextUtils.isEmpty(contact_phone))
                     Error.showError(edit_phone, Error.PHONE_EMPTY);
-                else if (!LoginManager.isMobile(contact_phone)&&!LoginManager.isPhone(contact_phone))
+                else if (!LoginManager.isMobile(contact_phone) && !LoginManager.isPhone(contact_phone))
                     Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
                 else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
                 else {
@@ -183,10 +185,11 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
 
     /**
      * 提交发布信息
+     *
      * @param parmater
      */
     public void startPublish(EbingoRequestParmater parmater) {
-        if (mDetailInfo != null)parmater.put("info_id",mDetailInfo.getInfo_id());
+        if (mDetailInfo != null) parmater.put("info_id", mDetailInfo.getInfo_id());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
         HttpUtil.post(HttpConstant.saveInfo, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
@@ -196,12 +199,13 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
                         Intent intent = new Intent(getActivity(), MyDemandActivity.class);
-                        intent.putExtra("refresh",true);
+                        intent.putExtra("refresh", true);
                         startActivity(intent);
+                        saveUsualData();
                         clearText();
                         ContextUtil.toast("发布成功！");
-                    }else{
-                        ContextUtil.toast("发布失败！"+result.getString("msg"));
+                    } else {
+                        ContextUtil.toast("发布失败！" + result.getString("msg"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -218,24 +222,38 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
     }
 
     /**
+     * 保存常用数据
+     */
+    private void saveUsualData() {
+        DetailInfoBean saveBean = new DetailInfoBean();
+        saveBean.setCategory_id((Integer) tv_pick_category.getTag());
+        saveBean.setCategory_name(tv_pick_category.getText().toString());
+        saveBean.setContacts(edit_contact.getText().toString());
+        saveBean.setPhone_num(edit_phone.getText().toString());
+        FileUtil.saveCache(getActivity(), FileUtil.PUBLISH_DEMAND_MODULE, saveBean);
+    }
+
+    /**
      * 清空文字
      */
     private void clearText() {
 
         edit_demand_num.setText(null);
-        tv_pick_category.setText(null);
         edit_title.setText(null);
         tv_pick_description.setText(null);
-        edit_contact.setText(null);
-        edit_phone.setText(null);
         tv_tags.setText(null);
-        edit_unit.setText(null );
+        edit_unit.setText(null);
+
+        /*tv_pick_category.setText(null);
+        tv_pick_category.setTag(null);
+        edit_contact.setText(null);
+        edit_phone.setText(null);*/
     }
 
     @Override
     public void edit(DetailInfoBean infoBean) {
-        mDetailInfo=infoBean;
-        if (tv_pick_category!=null) {
+        mDetailInfo = infoBean;
+        if (tv_pick_category != null) {
             tv_pick_category.setTag(infoBean.getCategory_id());
             tv_pick_category.setText(infoBean.getCategory_name());
             edit_title.setText(infoBean.getTitle());

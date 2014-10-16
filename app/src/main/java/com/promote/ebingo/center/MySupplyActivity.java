@@ -90,7 +90,7 @@ public class MySupplyActivity extends BaseListActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MySupplyActivity.this, PublishEditActivity.class);
-                intent.putExtra(PublishEditActivity.TYPE, Constant.PUBLISH_DEMAND);
+                intent.putExtra(PublishEditActivity.TYPE, Constant.PUBLISH_SUPPLY);
                 startActivity(intent);
             }
         });
