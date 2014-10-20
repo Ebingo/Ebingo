@@ -4,36 +4,36 @@
 
     <scale
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:duration="100"
+        android:duration="80"
         android:pivotX="50%"
         android:pivotY="50%"
         android:fromXScale="1.0"
-        android:toXScale="0.7"
+        android:toXScale="0.8"
         android:fromYScale="1.0"
-        android:toYScale="0.7"></scale>
+        android:toYScale="0.8"></scale>
 
     <scale
         android:interpolator="@android:anim/decelerate_interpolator"
-        android:duration="120"
-        android:startOffset="100"
+        android:duration="90"
+        android:startOffset="80"
         android:pivotY="50%"
         android:pivotX="50%"
-        android:fromYScale="0.7"
-        android:toYScale="1.2"
-        android:fromXScale="0.7"
-        android:toXScale="1.2" />
+        android:fromYScale="0.8"
+        android:toYScale="1.1"
+        android:fromXScale="0.8"
+        android:toXScale="1.1" />
 
 
-    <scale
+   <!-- <scale
         android:interpolator="@android:anim/decelerate_interpolator"
-        android:duration="20"
-        android:startOffset="220"
+        android:duration="10"
+        android:startOffset="170"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:fromXScale="1.2"
+        android:fromXScale="1.1"
         android:toXScale="1"
-        android:fromYScale="1.2"
-        android:toYScale="1" />
+        android:fromYScale="1.1"
+        android:toYScale="1" />-->
 
 
 </set>

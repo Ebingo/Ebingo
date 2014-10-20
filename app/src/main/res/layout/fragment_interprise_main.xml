@@ -52,12 +52,12 @@
                         android:drawablePadding="4dp"
                         android:layout_height="wrap_content" />
 
-                    <ImageView
+                    <!--<ImageView
                         android:id="@+id/iv_vip_icon"
                         android:layout_weight="1"
                         android:scaleType="centerInside"
                         style="@style/list_vip_img_style"
-                        android:layout_gravity="right|top" />
+                        android:layout_gravity="right|top" />-->
                 </LinearLayout>
 
                 <LinearLayout

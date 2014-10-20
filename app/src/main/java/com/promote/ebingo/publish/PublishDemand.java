@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethod;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -59,8 +60,10 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.publish_demand, container, false);
         init(view);
-        mDetailInfo = (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_DEMAND_MODULE);
-        if (mDetailInfo != null) edit(mDetailInfo);
+        if(getArguments()==null||!getArguments().getBoolean(PublishEditActivity.EDIT,false)){//如果是编辑，就不加载模板
+            mDetailInfo= (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_DEMAND_MODULE);
+        }
+        edit(mDetailInfo);
         return view;
     }
 
@@ -252,6 +255,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
 
     @Override
     public void edit(DetailInfoBean infoBean) {
+        if (infoBean == null) return;
         mDetailInfo = infoBean;
         if (tv_pick_category != null) {
             tv_pick_category.setTag(infoBean.getCategory_id());

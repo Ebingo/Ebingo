@@ -23,6 +23,8 @@ import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.BookBean;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CompanyVipInfo;
+import com.promote.ebingo.bean.HotTag;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.EbingoDialog;
@@ -43,6 +45,8 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
     private LinearLayout tagContent;
     private MultiAutoCompleteTextView edit_tag;
+    private ToggleButton toggleButton;
+    private int tag_remain = 0;//剩余标签数
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,9 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         save.setOnClickListener(this);
         edit_tag.setOnClickListener(this);
         getData();
-        ((ToggleButton) findViewById(R.id.arrange)).setOnCheckedChangeListener(this);
+        tag_remain = Company.getInstance().getVipInfo().getTag_num();
+        toggleButton = (ToggleButton) findViewById(R.id.arrange);
+        toggleButton.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -65,27 +71,59 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
             case R.id.commit_title_done:
                 saveData();
                 break;
-            case R.id.btn_add:
-                BookBean bookBean = new BookBean();
-                bookBean.setName(edit_tag.getText().toString().trim());
-                bookBean.setNo_read(0);
-                addTag(bookBean);
-                edit_tag.setText(null);
-                break;
-            case R.id.edit_add_tags:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll);
-                        scrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                }, 100);
+            case R.id.btn_add: {
+                int tagNum = tagContent.getChildCount();
+                LogCat.i("--->", "addTag(" + tag_remain + ")");
+                if (tag_remain <= 0) {
+                    EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                    dialog.setMessage(getString(R.string.vip_add_tag, VipType.getCompanyInstance().name, tagNum));
+                    dialog.show();
+                    return;
+                }
 
+                String tagName = edit_tag.getText().toString().trim();
+
+                if (isUniqueTag(tagName)) {
+                    BookBean bookBean = new BookBean();
+                    bookBean.setName(tagName);
+                    bookBean.setNo_read(0);
+
+                    addTag(bookBean);
+                    tag_remain--;
+                    edit_tag.setText(null);
+                } else {
+                    ContextUtil.toast(String.format("已加过\"%s\"，请勿重复添加！", tagName));
+                }
+
+            }
+            break;
+            case R.id.edit_add_tags:
+                scrollToEnd();
                 break;
             default:
                 super.onClick(v);
 
         }
+    }
+
+    private void scrollToEnd() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ScrollView scrollView = (ScrollView) findViewById(R.id.scroll);
+                scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        }, 100);
+    }
+
+    private boolean isUniqueTag(String tagName) {
+        int count = tagContent.getChildCount();
+        for (int i = 0; i < count; i++) {
+            TagView tagView = (TagView) tagContent.getChildAt(i);
+            BookBean book = (BookBean) tagView.getTag();
+            if (tagName.equals(book.getName())) return false;
+        }
+        return true;
     }
 
     /**
@@ -131,6 +169,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 ContextUtil.toast("保存成功！");
+                Company.getInstance().getVipInfo().setTag_num(tag_remain);
             }
 
             @Override
@@ -166,15 +205,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
      * @param bookBean
      */
     private void addTag(BookBean bookBean) {
-        int tagNum = tagContent.getChildCount();
-        int maxTagNum = Company.getInstance().getVipInfo().getTag_num();
-        LogCat.i("--->","addTag("+tagNum+"/="+maxTagNum+")");
-        if (tagNum >= maxTagNum) {
-            EbingoDialog dialog=EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
-            dialog.setMessage(getString(R.string.vip_add_tag, VipType.getCompanyInstance().name,maxTagNum));
-            dialog.show();
-            return;
-        }
+
         String name = bookBean.getName();
         if (TextUtils.isEmpty(name)) {
             ContextUtil.toast("请输入标签！");
@@ -186,6 +217,15 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         tagView.setNumber(bookBean.getNo_read());
         tagView.setTag(bookBean);
         tagView.setOnTagClickListener(this);
+        if (toggleButton.isChecked()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toggleTagViewState(true);
+                    scrollToEnd();
+                }
+            }, 100);
+        }
     }
 
     @Override
@@ -202,25 +242,33 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
         for (int i = 0; i < tagContent.getChildCount(); i++) {
             TagView tagView = (TagView) tagContent.getChildAt(i);
-            Interpolator interpolator=new DecelerateInterpolator();
             if (state) {
-                RotateAnimation rotateAnimation = new RotateAnimation(-3, 3, tagView.getWidth() / 2, tagView.getHeight()/2);
-                rotateAnimation.setDuration(100);
-                rotateAnimation.setInterpolator(interpolator);
-                rotateAnimation.setRepeatCount(Animation.INFINITE);
-                rotateAnimation.setRepeatMode(Animation.REVERSE);
-                tagView.startAnimation(rotateAnimation);
-            }else{
+                Animation anim;
+                if (tagView.getAnimation() == null) {
+                    RotateAnimation rotateAnimation = new RotateAnimation(-3, 3, tagView.getWidth() / 2, tagView.getHeight() / 2);
+                    rotateAnimation.setDuration(100);
+                    rotateAnimation.setInterpolator(new DecelerateInterpolator());
+                    rotateAnimation.setRepeatCount(Animation.INFINITE);
+                    rotateAnimation.setRepeatMode(Animation.REVERSE);
+                    anim = rotateAnimation;
+                } else {
+                    anim = tagView.getAnimation();
+                }
+                tagView.startAnimation(anim);
+
+            } else {
                 tagView.clearAnimation();
             }
             tagView.setInDeleteState(state);
         }
     }
 
+
     @Override
     public void onDelete(TagView v) {
         v.clearAnimation();
         tagContent.removeView(v);
+        tag_remain++;
     }
 
     @Override

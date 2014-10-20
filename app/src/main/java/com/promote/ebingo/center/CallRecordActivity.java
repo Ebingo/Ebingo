@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,20 +54,21 @@ import java.util.List;
 public class CallRecordActivity extends BaseListActivity implements View.OnClickListener {
     private ArrayList<CallRecord> records;
     private RecordAdapter adapter;
-    private static boolean REFRESH=false;
+    private static boolean REFRESH = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        records=new ArrayList<CallRecord>();
+        records = new ArrayList<CallRecord>();
         enableDelete(true);
-        enableCache(FileUtil.FILE_CALL_RECORD,records);
-        if (records.size()==0){
+        enableCache(FileUtil.FILE_CALL_RECORD, records);
+        if (records.size() == 0) {
             getCallRecord();
         }
     }
 
-    public static void setRefresh(){
-        REFRESH=true;
+    public static void setRefresh() {
+        REFRESH = true;
     }
 
     @Override
@@ -94,7 +100,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                     JsonUtil.getArray(recordsJson, CallRecord.class, records);
                     adapter = new RecordAdapter(CallRecordActivity.this, records);
                     setListAdapter(adapter);
-                    REFRESH=false;
+                    REFRESH = false;
                 } catch (JSONException e) {
                     LogCat.e("NO Call Record!");
                 }
@@ -193,11 +199,37 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             CallRecord callRecord = data.get(position);
             holder.title.setText(callRecord.getName());
             holder.contact.setText(callRecord.getContacts());
-            holder.date.setText(callRecord.getCall_time());
             holder.dial.setTag(callRecord);
             holder.dial.setOnClickListener(new DialListener());
+            try {
+                String callTime = callRecord.getCall_time();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                Date today = new Date();
+                Date callDay = simpleDateFormat.parse(callTime);
+                if (isSameDay(today, callDay)) {
+                    holder.date.setText(new SimpleDateFormat("hh:mm:ss").format(callDay));
+                } else {
+                    holder.date.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(callDay));
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
             convertView.setTag(holder);
             return convertView;
+        }
+
+        private boolean isSameDay(Date day1, Date day2) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String ds1 = sdf.format(day1);
+            String ds2 = sdf.format(day2);
+            if (ds1.equals(ds2)) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         class DialListener implements View.OnClickListener {
@@ -209,7 +241,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                     VipType vipType = VipType.parse(Company.getInstance().getVipType());
                     VipType.VipInfo info = vipType.getVipInfo();
                     String type = record.getType();
-                    boolean canDial=true;
+                    boolean canDial = true;
 //                    canDial=info.canDial(type);
                     if (canDial) {//这里加判断，为了防止会员过期后，此处还有通话记录
                         CallRecordManager.dialNumber(CallRecordActivity.this, record);
@@ -272,7 +304,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             CallDialog.PhoneCallBack phoneCallBack = new CallDialog.PhoneCallBack() {
                 @Override
                 public void call(CallDialog dialog, String phoneNum) {
-                    LogCat.i("--->","dial:"+number);
+                    LogCat.i("--->", "dial:" + number);
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
                     context.startActivity(intent);
                     new CallRecordManager(context).addCallRecord(record, new JsonHttpResponseHandler());
@@ -282,6 +314,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             CallDialog callDialog = new CallDialog(context, phoneCallBack);
             callDialog.setCallphone(context.getString(R.string.dial_number_notice, record.getPhone_num()));
             callDialog.show();
+//            EbingoDialog dialog=EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_I_KNOW)
 //            AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //            builder.setTitle("拨打电话")
 //                    .setMessage("是否拨打" + number + "?")

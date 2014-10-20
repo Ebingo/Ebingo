@@ -24,6 +24,8 @@ public class PublishEditActivity extends BaseActivity {
 
     public static final String INFO = "infoBean";
     public static final String TYPE = "type";
+    public static final String EDIT = "edit";
+
     private Fragment mFragment;
 
     @Override
@@ -54,6 +56,9 @@ public class PublishEditActivity extends BaseActivity {
                 setTitle(R.string.publish_demand);
             }
         }
+        Bundle args=new Bundle();
+        args.putBoolean(EDIT,true);
+        mFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().add(R.id.content, mFragment).commit();
         ((EditInfo) mFragment).edit(infoBean);
     }

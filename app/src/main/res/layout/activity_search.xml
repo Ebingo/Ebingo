@@ -57,6 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
+                    android:visibility="invisible"
                     android:src="@drawable/search_bar_right_shape" />
 
             </LinearLayout>

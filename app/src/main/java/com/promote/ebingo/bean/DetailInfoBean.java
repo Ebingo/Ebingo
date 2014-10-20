@@ -103,6 +103,16 @@ public class DetailInfoBean implements Serializable {
      */
     private int vip_type = -3;
 
+    private String ios_wap_url;
+
+    public String getIos_wap_url() {
+        return ios_wap_url;
+    }
+
+    public void setIos_wap_url(String ios_wap_url) {
+        this.ios_wap_url = ios_wap_url;
+    }
+
     public int getWishlist_id() {
         return wishlist_id;
     }

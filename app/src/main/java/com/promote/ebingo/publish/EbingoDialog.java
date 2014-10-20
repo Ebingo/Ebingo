@@ -48,7 +48,11 @@ public class EbingoDialog extends AlertDialog {
          * title:温馨提示
          * 点击:我知道了
          */
-        STYLE_I_KNOW
+        STYLE_I_KNOW,
+        /**
+         * 拨打电话
+         */
+        STYLE_CALL_PHONE
     }
 
     /**
@@ -68,9 +72,9 @@ public class EbingoDialog extends AlertDialog {
                 dialog.setPositiveButton(R.string.i_know, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       if (context instanceof Activity){
-                           ((Activity)context).finish();
-                       }
+                        if (context instanceof Activity) {
+                            ((Activity) context).finish();
+                        }
                     }
                 });
                 break;
@@ -89,10 +93,12 @@ public class EbingoDialog extends AlertDialog {
                 break;
             }
 
-            case STYLE_I_KNOW:{
+            case STYLE_I_KNOW: {
                 dialog.setTitle(R.string.warn);
                 dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
                 break;
+            }
+            case STYLE_CALL_PHONE:{
             }
 
         }

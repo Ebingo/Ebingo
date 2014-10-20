@@ -71,6 +71,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 Intent intent = new Intent(MyDemandActivity.this, PublishEditActivity.class);
                 intent.putExtra(PublishEditActivity.TYPE, Constant.PUBLISH_DEMAND);
                 startActivity(intent);
+                finish();
             }
         });
 

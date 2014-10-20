@@ -4,8 +4,10 @@ package com.promote.ebingo.InformationActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CurrentSupplyBean;
 import com.promote.ebingo.bean.InterpriseInfoBean;
@@ -52,7 +55,6 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     // TODO: Rename and change types of parameters
     private String mParam1;
     private ImageView interprismainimg;
-    private ImageView iv_vip_icon;
     private TextView fraginterprisemainnametv;
     private TextView fraginterprisemainaddrtv;
     private TextView fraginterprisemainhttpaddrtv;
@@ -118,7 +120,6 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     private void initialize(View containerView) {
 
         interprismainimg = (ImageView) containerView.findViewById(R.id.interpris_main_img);
-        iv_vip_icon = (ImageView) containerView.findViewById(R.id.iv_vip_icon);
         fraginterprisemainnametv = (TextView) containerView.findViewById(R.id.frag_interprise_main_name_tv);
         fraginterprisemainaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_addr_tv);
         fraginterprisemainhttpaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_httpaddr_tv);
@@ -202,17 +203,24 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
     private void initData(InterpriseInfoBean infoBean) {
 
-
         ImageManager.load(infoBean.getImage(), interprismainimg, mOptions);
         fraginterprisemainnametv.setText(infoBean.getName());
+        fraginterprisemainnametv.setText(
+                Html.fromHtml("<span style =\"height=15\"><font size=1>" + infoBean.getName()
+                                + "</font><img src=" + infoBean.getViptype()
+                                + "  ></span>",
+                        new Html.ImageGetter() {
+                            @Override
+                            public Drawable getDrawable(String source) {
+                                VipType vipType = VipType.parse(source);
+                                return vipType.getIcon(getActivity());
+                            }
+                        }, null));
         fraginterprisemainaddrtv.setText(infoBean.getAddr());
         fraginterprisemainhttpaddrtv.setText(infoBean.getWebsite());
         fraginterprisemaintelltv.setText(infoBean.getTel());
         fraginterprisemainabstracttv.setText(infoBean.getIntroduction());
         fraginterprisemainrangetv.setText(infoBean.getMainRun());
-        VipType vipType = VipType.parse(String.valueOf(infoBean.getViptype()));
-        LogCat.i("--->Enterprise vip: " + vipType.code);
-        iv_vip_icon.setImageDrawable(vipType.getIcon(getActivity()));
         if (infoBean.getInfoarray() != null) {
             currentSupplyBeans.clear();
             currentSupplyBeans.addAll(infoBean.getInfoarray());
@@ -227,7 +235,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
         CurrentSupplyBean currentSupply = currentSupplyBeans.get(position);
         Intent intent = null;
-        if (currentSupply.getType() == 1) {
+        if (currentSupply.getType() == 2) {
             intent = new Intent(getActivity(), ProductInfoActivity.class);
             intent.putExtra(ProductInfoActivity.ARG_ID, currentSupply.getId());
         } else {
@@ -299,9 +307,9 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
             CurrentSupplyBean currentSupplyBean1 = currentSupplyBeans.get(position);
             if (currentSupplyBean1.getType() == 2) {        // 供应.
-                viewHolder.img.setBackgroundResource(R.drawable.cur_demaind);
-            } else if (currentSupplyBean1.getType() == 1) {     //求购.
                 viewHolder.img.setBackgroundResource(R.drawable.cur_supply);
+            } else if (currentSupplyBean1.getType() == 1) {     //求购.
+                viewHolder.img.setBackgroundResource(R.drawable.cur_demaind);
             }
 
             viewHolder.describe.setText(currentSupplyBean1.getName());

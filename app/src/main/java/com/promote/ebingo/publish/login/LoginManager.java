@@ -86,7 +86,7 @@ public class LoginManager {
      */
     public static boolean isPhone(String input) {
         if (TextUtils.isEmpty(input)) return false;
-        else return input.matches("\\d{3}-\\d{8}|\\d{4}-\\d{7}|\\d{4}-\\d{8}");
+        else return input.matches("\\d{3,4}-\\d{7,8}");
     }
 
 

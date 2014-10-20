@@ -119,7 +119,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         picked_image.setOnClickListener(this);
         upload_3d_cb.setOnClickListener(this);
         v.findViewById(R.id.btn_publish).setOnClickListener(this);
-        mDetailInfo= (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_SUPPLY_MODULE);
+        if (getArguments() == null || !getArguments().getBoolean(PublishEditActivity.EDIT, false)) {//如果是编辑，就不加载模板
+            mDetailInfo = (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_SUPPLY_MODULE);
+        }
         edit(mDetailInfo);
         LogCat.i("--->", "onCreateView edit");
         return v;
@@ -262,7 +264,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             Error.showError(edit_min_sell_num, Error.MIN_SELL_NUM_EMPTY);
         else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
         else if (TextUtils.isEmpty(contacts_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
-        else if (!LoginManager.isMobile(contacts_phone)&&!LoginManager.isPhone(contacts_phone))
+        else if (!LoginManager.isMobile(contacts_phone) && !LoginManager.isPhone(contacts_phone))
             Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
         else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
         else {
@@ -513,12 +515,12 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                         startActivity(intent);
                         saveUsualData();
                         clearText();
-                        if (getActivity() instanceof PublishEditActivity){
+                        if (getActivity() instanceof PublishEditActivity) {
                             getActivity().finish();
                         }
                         ContextUtil.toast("发布成功！");
-                    }else{
-                        ContextUtil.toast("发布失败！"+result.getString("msg"));
+                    } else {
+                        ContextUtil.toast("发布失败！" + result.getString("msg"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -544,15 +546,14 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      * 保存常用数据
      */
     private void saveUsualData() {
-        DetailInfoBean saveBean=new DetailInfoBean();
+        DetailInfoBean saveBean = new DetailInfoBean();
         saveBean.setCategory_id((Integer) tv_pick_category.getTag());
         saveBean.setCategory_name(tv_pick_category.getText().toString());
         saveBean.setContacts(edit_contact.getText().toString());
         saveBean.setPhone_num(edit_phone.getText().toString());
         saveBean.setRegion(tv_pick_region.getText().toString());
-        FileUtil.saveCache(getActivity(), FileUtil.PUBLISH_SUPPLY_MODULE,saveBean);
+        FileUtil.saveCache(getActivity(), FileUtil.PUBLISH_SUPPLY_MODULE, saveBean);
     }
-
 
 
     @Override

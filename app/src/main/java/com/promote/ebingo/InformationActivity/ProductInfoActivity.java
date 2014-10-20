@@ -148,7 +148,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             productinfoDetailtv.setVisibility(View.GONE);
             productinfoDetailwv.setVisibility(View.VISIBLE);
             productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
-            productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
+            productinfoDetailwv.loadUrl(mDetailInfoBean.getIos_wap_url());
+//            productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
         } else {
             productinfoDetailwv.setVisibility(View.GONE);
             productinfoDetailtv.setVisibility(View.VISIBLE);

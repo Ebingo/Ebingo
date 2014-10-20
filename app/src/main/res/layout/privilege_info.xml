@@ -17,7 +17,7 @@
             android:id="@+id/iv_vip_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
+            android:scaleType="matrix"
             android:src="@drawable/platinum_info" />
 
         <Button

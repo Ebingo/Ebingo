@@ -92,6 +92,7 @@ public class MySupplyActivity extends BaseListActivity {
                 Intent intent = new Intent(MySupplyActivity.this, PublishEditActivity.class);
                 intent.putExtra(PublishEditActivity.TYPE, Constant.PUBLISH_SUPPLY);
                 startActivity(intent);
+                finish();
             }
         });
 
