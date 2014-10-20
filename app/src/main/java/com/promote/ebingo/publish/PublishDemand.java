@@ -37,7 +37,7 @@ import static com.promote.ebingo.publish.PublishFragment.PICK_DESCRIPTION;
 import static com.promote.ebingo.publish.PublishFragment.PICK_FOR_DEMAND;
 import static com.promote.ebingo.publish.PublishFragment.PICK_TAGS;
 import static com.promote.ebingo.publish.PublishFragment.TYPE_DEMAND;
-import static com.promote.ebingo.publish.PublishFragment.Error;
+import static com.promote.ebingo.publish.PublishFragment.PublishController;
 
 /**
  * 发布求购
@@ -55,13 +55,14 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
     EditText edit_demand_num;
 
     EditText edit_unit;
+    PublishController controller = new PublishController();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.publish_demand, container, false);
         init(view);
-        if(getArguments()==null||!getArguments().getBoolean(PublishEditActivity.EDIT,false)){//如果是编辑，就不加载模板
-            mDetailInfo= (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_DEMAND_MODULE);
+        if (getArguments() == null || !getArguments().getBoolean(PublishEditActivity.EDIT, false)) {//如果是编辑，就不加载模板
+            mDetailInfo = (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_DEMAND_MODULE);
         }
         edit(mDetailInfo);
         return view;
@@ -106,46 +107,20 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
             }
 
             case R.id.btn_publish: {
-                Integer category_id = (Integer) tv_pick_category.getTag();
-                String title = edit_title.getText().toString().trim();
-                String tags = tv_tags.getText().toString().trim();
-                String description = (String) tv_pick_description.getContentDescription();
-                String contacts = edit_contact.getText().toString().trim();
-                String contact_phone = edit_phone.getText().toString().trim();
-                String demand_num = edit_demand_num.getText().toString().trim();
-                String unit = edit_unit.getText().toString().trim();
-                Integer company_id = Company.getInstance().getCompanyId();
-
-                if (company_id == null) ContextUtil.toast("请重新登录！");
-                else if (category_id == null)
-                    Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
-                else if (TextUtils.isEmpty(title)) Error.showError(edit_title, Error.TITLE_EMPTY);
-                else if (TextUtils.isEmpty(description))
-                    Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
-                else if (TextUtils.isEmpty(demand_num))
-                    Error.showError(edit_demand_num, Error.BUY_NUM_EMPTY);
-                else if (TextUtils.isEmpty(contacts))
-                    Error.showError(edit_contact, Error.CONTACT_EMPTY);
-                else if (getChineseNum(contacts) < 2 || getChineseNum(contacts) > 4)
-                    Error.showError(edit_contact, Error.CONTACT_LENGTH_ERROR);
-                else if (TextUtils.isEmpty(contact_phone))
-                    Error.showError(edit_phone, Error.PHONE_EMPTY);
-                else if (!LoginManager.isMobile(contact_phone) && !LoginManager.isPhone(contact_phone))
-                    Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
-                else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
-                else {
-                    EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
-                    parmater.put("type", TYPE_DEMAND);
-                    parmater.put("company_id", company_id);
-                    parmater.put("category_id", category_id);
-                    parmater.put("title", title);
-                    parmater.put("tags", tags);
-                    parmater.put("description", description);
-                    parmater.put("contacts", contacts);
-                    parmater.put("contacts_phone", contact_phone);
-                    parmater.put("buy_num", demand_num);
-                    parmater.put("unit", unit);
-                    startPublish(parmater);
+                controller.category_id = (Integer) tv_pick_category.getTag();
+                controller.title = edit_title.getText().toString().trim();
+                controller.tags = tv_tags.getText().toString().trim();
+                controller.description = (String) tv_pick_description.getContentDescription();
+                controller.contacts = edit_contact.getText().toString().trim();
+                controller.contacts_phone = edit_phone.getText().toString().trim();
+                controller.buy_num = edit_demand_num.getText().toString().trim();
+                controller.unit = edit_unit.getText().toString().trim();
+                controller.company_id = Company.getInstance().getCompanyId();
+                int code = controller.checkDemand();
+                if (code > 0) {
+                    controller.showError(code);
+                }else{
+                    startPublish(controller.getDemandParams(getActivity()));
                 }
 
                 break;

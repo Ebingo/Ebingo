@@ -45,7 +45,7 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
     private List<HotTag> tagList = new LinkedList<HotTag>();
     private AutoLineLayout tagContainer;
     private List<String> savedTags;
-
+    private ScrollHandler scrollHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,11 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         tag_unSelect_color = getResources().getColor(R.color.tag_default_color);
         tag_select_color = getResources().getColor(R.color.tag_color);
         init();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void init() {
@@ -69,12 +74,13 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         } else {
             savedTags = new LinkedList<String>();
         }
-        new Handler().postDelayed(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签
+        scrollHandler=new ScrollHandler((ScrollView) findViewById(R.id.scroll));
+        scrollHandler.post(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签
             @Override
             public void run() {
                 getData(AddTagsActivity.this);
             }
-        }, 10);
+        });
     }
 
     private void getData(Context context) {
@@ -141,20 +147,14 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.edit_add_tags:
                 LogCat.i("--->", "edit_add_tags");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ScrollView mScrollView = (ScrollView) findViewById(R.id.scroll);
-                        mScrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                }, 100);
-
+                scrollHandler.scrollToEnd(100);
                 break;
             case R.id.commit_title_done:
 
                 StringBuilder selectTags = new StringBuilder();
-                for (int i = 0; i < tagList.size(); i++) {
-                    HotTag temp = tagList.get(i);
+                int count = tagContainer.getChildCount();
+                for (int i = 0; i < count; i++) {
+                    HotTag temp = (HotTag) tagContainer.getChildAt(i).getTag();
                     if (temp.isSelect()) {
                         selectTags.append(temp.getName() + ",");
                     }
@@ -169,6 +169,25 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
+
+    public static class ScrollHandler extends Handler{
+        private ScrollView scrollView;
+
+        public ScrollHandler(ScrollView scrollView) {
+            this.scrollView = scrollView;
+        }
+
+        public void scrollToEnd(long delay) {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                }
+            },delay);
+        }
+    }
+
 
 
     /**
@@ -197,7 +216,9 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         if (tag.isSelect()) tagView.setDefaultColor(tag_select_color);
         else tagView.setDefaultColor(tag_unSelect_color);
         tagContainer.addView(tagView);
+        scrollHandler.scrollToEnd(0);
     }
+
 
     /**
      * 判断所选的标签是否超过最大值
@@ -206,10 +227,11 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
      */
     private boolean isTagsMax() {
         int selectTagNum = 0;
-        for (HotTag tag : tagList) {
-            if (tag.isSelect()) {
-                selectTagNum++;
-            }
+        int size = tagContainer.getChildCount();
+        for (int i = 0; i < size; i++) {//判断标签是否已经加载过了
+            TagView tagView = (TagView) tagContainer.getChildAt(i);
+            HotTag temp = (HotTag) tagView.getTag();
+            if (temp.isSelect()) selectTagNum++;
         }
         return selectTagNum >= 10;
     }

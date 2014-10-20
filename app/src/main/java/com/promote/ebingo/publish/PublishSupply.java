@@ -57,7 +57,6 @@ import java.io.IOException;
 
 import static com.promote.ebingo.publish.PublishFragment.APPLY_3D;
 import static com.promote.ebingo.publish.PublishFragment.CROP;
-import static com.promote.ebingo.publish.PublishFragment.Error;
 import static com.promote.ebingo.publish.PublishFragment.PICK_CAMERA;
 import static com.promote.ebingo.publish.PublishFragment.PICK_CATEGORY;
 import static com.promote.ebingo.publish.PublishFragment.PICK_DESCRIPTION;
@@ -66,7 +65,7 @@ import static com.promote.ebingo.publish.PublishFragment.PICK_IMAGE;
 import static com.promote.ebingo.publish.PublishFragment.PICK_REGION;
 import static com.promote.ebingo.publish.PublishFragment.PREVIEW;
 import static com.promote.ebingo.publish.PublishFragment.TYPE_SUPPLY;
-
+import static com.promote.ebingo.publish.PublishFragment.PublishController;
 /**
  * Created by acer on 2014/9/2.
  */
@@ -90,7 +89,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
     private TextView tv_3d_notice;
     private String info_id;
     private final String CAMERA_PICTURE_NAME = "supply_image.png";
-
+    PublishController controller = new PublishController();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -238,55 +237,26 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      * @return
      */
     private EbingoRequestParmater checkInformation() {
-        EbingoRequestParmater parmater = null;
-        Integer company_id = Company.getInstance().getCompanyId();
-        Integer category_id = (Integer) tv_pick_category.getTag();
-        String region_name = tv_pick_region.getText().toString().trim();
-        String price = edit_price.getText().toString().trim();
-        String image_url = (String) picked_image.getContentDescription();
-        String description = (String) tv_pick_description.getContentDescription();
-        String title = edit_title.getText().toString().trim();
-        String contacts = edit_contact.getText().toString().trim();
-        String contacts_phone = edit_phone.getText().toString().trim();
-        String min_sell_num = edit_min_sell_num.getText().toString().trim();
-        String unit = edit_unit.getText().toString().trim();
-        LogCat.i("--->", "publish categoryId:" + tv_pick_category.getTag());
-        if (company_id == null) ContextUtil.toast("请重新登录！");
-        else if (category_id == null) Error.showError(tv_pick_category, Error.CATEGORY_EMPTY);
-        else if (TextUtils.isEmpty(region_name))
-            Error.showError(tv_pick_region, Error.REGION_EMPTY);
-        else if (TextUtils.isEmpty(title)) Error.showError(edit_title, Error.TITLE_EMPTY);
-        else if (TextUtils.isEmpty(price)) Error.showError(edit_price, Error.PRICE_EMPTY);
-        else if (TextUtils.isEmpty(image_url)) Error.showError(tv_pick_image, Error.IMAGE_EMPTY);
-        else if (TextUtils.isEmpty(description))
-            Error.showError(tv_pick_description, Error.DESCRIPTION_EMPTY);
-        else if (TextUtils.isEmpty(min_sell_num))
-            Error.showError(edit_min_sell_num, Error.MIN_SELL_NUM_EMPTY);
-        else if (TextUtils.isEmpty(contacts)) Error.showError(edit_contact, Error.CONTACT_EMPTY);
-        else if (TextUtils.isEmpty(contacts_phone)) Error.showError(edit_phone, Error.PHONE_EMPTY);
-        else if (!LoginManager.isMobile(contacts_phone) && !LoginManager.isPhone(contacts_phone))
-            Error.showError(edit_phone, Error.PHONE_FORMAT_ERROR);
-        else if (TextUtils.isEmpty(unit)) Error.showError(edit_unit, Error.NULL_UNIT);
-        else {
-            parmater = new EbingoRequestParmater(getActivity());
-            parmater.put("type", TYPE_SUPPLY);
-            parmater.put("company_id", company_id);
 
-            parmater.put("category_id", category_id);
-            parmater.put("region_name", region_name);
-            parmater.put("price", price);
+        controller.company_id = Company.getInstance().getCompanyId();
+        controller.category_id = (Integer) tv_pick_category.getTag();
+        controller.region_name = tv_pick_region.getText().toString().trim();
+        controller.price = edit_price.getText().toString().trim();
+        controller.image_url = (String) picked_image.getContentDescription();
+        controller.description = (String) tv_pick_description.getContentDescription();
+        controller.title = edit_title.getText().toString().trim();
+        controller.contacts = edit_contact.getText().toString().trim();
+        controller.contacts_phone = edit_phone.getText().toString().trim();
+        controller.min_sell_num = edit_min_sell_num.getText().toString().trim();
+        controller.unit = edit_unit.getText().toString().trim();
 
-            parmater.put("image_url", image_url);
-            parmater.put("description", description);
-            parmater.put("title", title);
-
-            parmater.put("min_sell_num", min_sell_num);
-            parmater.put("contacts", contacts);
-            parmater.put("contacts_phone", contacts_phone);
-            parmater.put("unit", unit);
-            LogCat.i("--->" + parmater);
+        int code = controller.checkSupply();
+        if (code > 0) {
+            controller.showError(code);
+            return null;
         }
-        return parmater;
+
+        return controller.getSupplyParams(getActivity());
     }
 
     @Override

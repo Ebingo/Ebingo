@@ -207,7 +207,7 @@
             android:label="@string/title_suggestion"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateUnspecified|adjustPan" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".center.TagInfoListActivity"
             android:configChanges="keyboardHidden|orientation"

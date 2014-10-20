@@ -83,6 +83,7 @@ public class InterpriseSupplyInfo extends CommonListFragment implements AdapterV
 
 
     private void getData(int lastId) {
+        LogCat.d("--->","enterprise_id="+enterprise_id);
         EbingoRequest.getSupplyInfoList(getActivity(), lastId, enterprise_id, 20, new MyRequest(lastId));  //网络请求.
     }
 

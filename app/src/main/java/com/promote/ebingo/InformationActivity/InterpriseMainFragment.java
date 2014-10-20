@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.promote.ebingo.bean.InterpriseInfoBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -132,6 +134,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
         interpisemainsupdemlv.setOnItemClickListener(this);
+        interpisemainsupdemlv.setEmptyView(containerView.findViewById(R.id.empty));
         if (mInterpriseInfoBean != null) {    //只有当首次加载界面时加载listView。
             initData(mInterpriseInfoBean);
         }
@@ -166,6 +169,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
         parmater.put("company_id", getInterprsetId());
+        LogCat.d("--->MainFragment id=="+getInterprsetId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
 
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("utf-8") {
@@ -205,17 +209,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
         ImageManager.load(infoBean.getImage(), interprismainimg, mOptions);
         fraginterprisemainnametv.setText(infoBean.getName());
-        fraginterprisemainnametv.setText(
-                Html.fromHtml("<span style =\"height=15\"><font size=1>" + infoBean.getName()
-                                + "</font><img src=" + infoBean.getViptype()
-                                + "  ></span>",
-                        new Html.ImageGetter() {
-                            @Override
-                            public Drawable getDrawable(String source) {
-                                VipType vipType = VipType.parse(source);
-                                return vipType.getIcon(getActivity());
-                            }
-                        }, null));
+        fraginterprisemainnametv.setText(getTitle(infoBean.getName(), infoBean.getViptype()));
         fraginterprisemainaddrtv.setText(infoBean.getAddr());
         fraginterprisemainhttpaddrtv.setText(infoBean.getWebsite());
         fraginterprisemaintelltv.setText(infoBean.getTel());
@@ -228,6 +222,29 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         myAdapter.notifyDataSetChanged();
         enterpriseinfopsv.smoothScrollTo(0, 0);
 
+    }
+
+    private android.text.Spanned getTitle(String companyName, int vipType) {
+
+        StringBuilder html = new StringBuilder();
+        html.append("<span style = \"font-family:arial;color:black;font-weight:bolder;")
+                .append("font-size:").append(Dimension.sp(14))
+                .append("px\">")
+                .append(companyName)
+                .append("<img src=" + vipType + ">")
+                .append("</span>");
+
+
+        return Html.fromHtml(html.toString(),
+                new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String source) {
+                        VipType vipType = VipType.parse(source);
+                        Drawable icon = vipType.getIcon(getActivity());
+                        icon.setBounds(0, 0, (int) Dimension.dp(14), (int) Dimension.dp(19));
+                        return icon;
+                    }
+                }, null);
     }
 
     @Override

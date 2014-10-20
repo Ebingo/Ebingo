@@ -5,11 +5,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.center.MyPrivilegeActivity;
 
 /**
@@ -99,6 +103,9 @@ public class EbingoDialog extends AlertDialog {
                 break;
             }
             case STYLE_CALL_PHONE:{
+                dialog.setMesIcon(R.drawable.tell);
+                dialog.setNegativeButton(R.string.cancel,dialog.DEFAULT_LISTENER);
+                break;
             }
 
         }
@@ -129,6 +136,15 @@ public class EbingoDialog extends AlertDialog {
         mPositiveButton = (TextView) findViewById(android.R.id.button1);
         mNegativeButton = (TextView) findViewById(android.R.id.button2);
         btn_divider = findViewById(R.id.btn_divider);
+    }
+
+    public void setMesIcon(int icon){
+        P.msgIcon = icon;
+        if (mMessage != null) {
+            Drawable ic=getContext().getResources().getDrawable(P.msgIcon);
+            ic.setBounds(0, 0, ic.getMinimumWidth(), ic.getMinimumHeight());
+            mMessage.setCompoundDrawables(ic,null,null,null);
+        }
     }
 
     @Override
@@ -173,6 +189,11 @@ public class EbingoDialog extends AlertDialog {
 
         if (P.mPositiveListener == null || P.mNativeListener == null)
             btn_divider.setVisibility(View.GONE);
+        if (P.msgIcon!=0){
+            Drawable ic=getContext().getResources().getDrawable(P.msgIcon);
+            ic.setBounds(0, 0, ic.getMinimumWidth(), ic.getMinimumHeight());
+            mMessage.setCompoundDrawables(ic,null,null,null);
+        }
     }
 
     public void setPositiveButton(int textId, OnClickListener positiveListener) {
@@ -208,6 +229,7 @@ public class EbingoDialog extends AlertDialog {
         OnClickListener mNativeListener;
         CharSequence title;
         CharSequence message;
+        int msgIcon;
     }
 
     private class CustomListener implements View.OnClickListener {

@@ -119,6 +119,7 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
                         record.setTo_id(mDetailInfoBean.getCompany_id());
                         record.setCall_id(Company.getInstance().getCompanyId());
                         record.setInfoId(mDetailInfoBean.getInfo_id());
+                        record.setContacts(mDetailInfoBean.getContacts());
                         CallRecordActivity.CallRecordManager.dialNumber(this, record);
                     }
                 }

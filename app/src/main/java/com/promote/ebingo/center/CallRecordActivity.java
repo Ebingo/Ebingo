@@ -3,6 +3,7 @@ package com.promote.ebingo.center;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -238,10 +239,11 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             public void onClick(View v) {
                 try {
                     CallRecord record = (CallRecord) v.getTag();
-                    VipType vipType = VipType.parse(Company.getInstance().getVipType());
-                    VipType.VipInfo info = vipType.getVipInfo();
-                    String type = record.getType();
+
                     boolean canDial = true;
+//                    VipType vipType = VipType.parse(Company.getInstance().getVipType());
+//                    VipType.VipInfo info = vipType.getVipInfo();
+//                    String type = record.getType();
 //                    canDial=info.canDial(type);
                     if (canDial) {//这里加判断，为了防止会员过期后，此处还有通话记录
                         CallRecordManager.dialNumber(CallRecordActivity.this, record);
@@ -254,15 +256,6 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                 }
             }
         }
-
-        private View.OnClickListener dialListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallRecord record = (CallRecord) v.getTag();
-                CallRecordManager.dialNumber(CallRecordActivity.this, record);
-            }
-        };
-
 
         class ViewHolder {
             TextView title;
@@ -279,7 +272,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             this.context = context;
         }
 
-        public void addCallRecord(CallRecord record, JsonHttpResponseHandler handler) {
+        public static void addCallRecord(Context context,CallRecord record, JsonHttpResponseHandler handler) {
             EbingoRequestParmater parmater = new EbingoRequestParmater(context);
             parmater.put("call_id", record.getCall_id());
             parmater.put("to_id", record.getTo_id());
@@ -301,28 +294,21 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
         public static void dialNumber(final Activity context, final CallRecord record) {
             final String number = record.getPhone_num();
             if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return;
-            CallDialog.PhoneCallBack phoneCallBack = new CallDialog.PhoneCallBack() {
+
+            EbingoDialog dialog=EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_CALL_PHONE);
+            dialog.setTitle(record.getContacts());
+            dialog.setMessage(context.getString(R.string.dial_number_notice, record.getPhone_num()));
+            dialog.setPositiveButton(R.string.make_call,new DialogInterface.OnClickListener() {
                 @Override
-                public void call(CallDialog dialog, String phoneNum) {
+                public void onClick(DialogInterface dialog, int which) {
                     LogCat.i("--->", "dial:" + number);
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
                     context.startActivity(intent);
-                    new CallRecordManager(context).addCallRecord(record, new JsonHttpResponseHandler());
+                    CallRecordManager.addCallRecord(context, record, new JsonHttpResponseHandler());
                     dialog.dismiss();
                 }
-            };
-            CallDialog callDialog = new CallDialog(context, phoneCallBack);
-            callDialog.setCallphone(context.getString(R.string.dial_number_notice, record.getPhone_num()));
-            callDialog.show();
-//            EbingoDialog dialog=EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_I_KNOW)
-//            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//            builder.setTitle("拨打电话")
-//                    .setMessage("是否拨打" + number + "?")
-//                    .setPositiveButton("拨打", l)
-//                    .setNegativeButton("取消", l)
-//                    .show();
-
-
+            });
+            dialog.show();
         }
 
     }

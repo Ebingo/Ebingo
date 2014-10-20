@@ -106,7 +106,7 @@
     <string name="interprise_range">【主营范围】</string>
     <string name="interprise_abstrace">【公司简介】</string>
     <string name="interprise_sup_dem">【近期供求】</string>
-    <string name="no_history">沒有搜索记录</string>
+    <string name="no_history">没有搜索记录</string>
     <string name="no_search_data">没有搜索到数据</string>
     <string name="title_buy_detail">求购详情</string>
     <string name="title_product_detail">供应详情</string>
@@ -184,7 +184,7 @@
     <string name="last_update">最后更新于：</string>
     <string name="clear_success">清除成功！</string>
     <string name="warn">温馨提示</string>
-    <string name="dial_number_notice">是否拨打%s?</string>
+    <string name="dial_number_notice">拨打%s?</string>
 
     <array name="pick_picture">
         <item>相册</item>
@@ -219,4 +219,5 @@
     <string name="no_permission">抱歉，%s没有权限使用此功能！</string>
     <string name="supply_num_none">您当前剩余发布供应条数不足，请升级！</string>
     <string name="notice_3d">抱歉，您上传3D图片次数不足。\n1.普通会员以上可购买上传次数\n2.金牌会员赠送1次\n3.铂金会员赠送5次。</string>
+    <string name="no_demand_supply_info">暂无供求信息</string>
 </resources>

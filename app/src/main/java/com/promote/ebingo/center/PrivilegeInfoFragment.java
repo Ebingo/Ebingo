@@ -112,20 +112,21 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_apply_vip:
-                VipType curVipType = VipType.parse(Company.getInstance().getVipType());
-                if (getDisplayVipType().compareTo(curVipType) <= 0) {
-                    ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
-                } else if (getDisplayVipType().compareTo(VipType.Experience_Vip) == 0) {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
-                } else {
-                    startApply();
-                }
+                startApply();
                 break;
         }
     }
 
-    private void startApply() {
+    public void startApply() {
+        VipType curVipType = VipType.parse(Company.getInstance().getVipType());
+        if (getDisplayVipType().compareTo(curVipType) <= 0) {
+            ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
+            return;
+        } else if (getDisplayVipType().compareTo(VipType.Experience_Vip) == 0) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
         final Dialog dialog = DialogUtil.waitingDialog(getActivity(), "正在提交申请...");
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity());
         parmater.put("company_id", Company.getInstance().getCompanyId());

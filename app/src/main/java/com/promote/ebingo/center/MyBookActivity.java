@@ -6,9 +6,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -23,8 +21,6 @@ import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.BookBean;
 import com.promote.ebingo.bean.Company;
-import com.promote.ebingo.bean.CompanyVipInfo;
-import com.promote.ebingo.bean.HotTag;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.EbingoDialog;
@@ -38,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.promote.ebingo.publish.AddTagsActivity.ScrollHandler;
 /**
  * 订阅标签、热门标签等
  */
@@ -47,7 +44,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     private MultiAutoCompleteTextView edit_tag;
     private ToggleButton toggleButton;
     private int tag_remain = 0;//剩余标签数
-
+    private ScrollHandler scrollHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +59,8 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         tag_remain = Company.getInstance().getVipInfo().getTag_num();
         toggleButton = (ToggleButton) findViewById(R.id.arrange);
         toggleButton.setOnCheckedChangeListener(this);
+        scrollHandler=new ScrollHandler((ScrollView) findViewById(R.id.scroll));
+
     }
 
     @Override
@@ -98,22 +97,12 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
             }
             break;
             case R.id.edit_add_tags:
-                scrollToEnd();
+                scrollHandler.scrollToEnd(100);
                 break;
             default:
                 super.onClick(v);
 
         }
-    }
-
-    private void scrollToEnd() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ScrollView scrollView = (ScrollView) findViewById(R.id.scroll);
-                scrollView.fullScroll(View.FOCUS_DOWN);
-            }
-        }, 100);
     }
 
     private boolean isUniqueTag(String tagName) {
@@ -218,14 +207,9 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         tagView.setTag(bookBean);
         tagView.setOnTagClickListener(this);
         if (toggleButton.isChecked()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toggleTagViewState(true);
-                    scrollToEnd();
-                }
-            }, 100);
+            toggleTagViewState(true);
         }
+        scrollHandler.scrollToEnd(0);
     }
 
     @Override

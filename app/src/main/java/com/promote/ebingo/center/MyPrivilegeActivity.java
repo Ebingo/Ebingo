@@ -44,6 +44,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         setContentView(R.layout.activity_my_privilege);
         ((RadioGroup) findViewById(R.id.rb_group)).setOnCheckedChangeListener(this);
         ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
+        ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.update_right_now);
         findViewById(R.id.common_back_btn).setOnClickListener(this);
         tv_vipType = (TextView) findViewById(R.id.tv_vipType);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -57,7 +58,7 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         if (company.getCompanyId() == null) return;
         VipType vipType = VipType.getCompanyInstance();
         tv_vipType.setText(vipType.name);
-        tv_vipType.setCompoundDrawables(null,null,vipType.getIcon(this),null);
+        tv_vipType.setCompoundDrawables(null, null, vipType.getIcon(this), null);
         if (!TextUtils.isEmpty(company.getName())) tv_name.setText(company.getName());
         setHeadImage(company.getImageUri());
     }
@@ -132,18 +133,14 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         cur = to;
     }
 
-    /**
-     * @param vipType 要展示的vipType
-     */
-    public static void startFrom(Context context,VipType vipType){
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.common_back_btn:
                 finish();
+                break;
+            case R.id.commit_title_done:
+                fragments[cur].startApply();
                 break;
         }
     }

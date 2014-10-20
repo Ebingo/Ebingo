@@ -140,10 +140,10 @@
 
 
     <style name="info_content_pad">
-        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
-        <item name="android:paddingLeft">22dp</item>
-        <item name="android:paddingRight">22dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
     </style>
 
     <style name="info_btm_pad">

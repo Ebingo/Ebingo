@@ -5,9 +5,10 @@
     android:background="@color/gray_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/common_head_layout" />
+    <include layout="@layout/common_head_layout_2" />
 
     <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -24,9 +25,10 @@
                 android:text="反馈内容" />
 
             <EditText
-                android:id="@+id/content"
+                android:id="@+id/edit_content"
+                android:onClick="onClick"
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="200dp"
                 android:background="@drawable/corner_frame"
                 android:ems="10"
                 android:gravity="top"

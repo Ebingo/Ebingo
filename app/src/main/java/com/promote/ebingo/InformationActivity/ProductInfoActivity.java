@@ -197,6 +197,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                     record.setInfoId(mDetailInfoBean.getInfo_id());
                     record.setTo_id(mDetailInfoBean.getCompany_id());
                     record.setPhone_num(mDetailInfoBean.getPhone_num());
+                    record.setContacts(mDetailInfoBean.getContacts());
                     CallRecordActivity.CallRecordManager.dialNumber(this, record);
                 } else {
                     EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
