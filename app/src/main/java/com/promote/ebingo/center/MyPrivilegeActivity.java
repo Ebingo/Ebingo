@@ -44,7 +44,6 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         setContentView(R.layout.activity_my_privilege);
         ((RadioGroup) findViewById(R.id.rb_group)).setOnCheckedChangeListener(this);
         ((TextView) findViewById(R.id.common_title_tv)).setText(getTitle());
-        ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.update_right_now);
         findViewById(R.id.common_back_btn).setOnClickListener(this);
         tv_vipType = (TextView) findViewById(R.id.tv_vipType);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -138,9 +137,6 @@ public class MyPrivilegeActivity extends FragmentActivity implements RadioGroup.
         switch (v.getId()) {
             case R.id.common_back_btn:
                 finish();
-                break;
-            case R.id.commit_title_done:
-                fragments[cur].startApply();
                 break;
         }
     }

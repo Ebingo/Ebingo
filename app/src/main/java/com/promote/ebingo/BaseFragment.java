@@ -1,12 +1,16 @@
 package com.promote.ebingo;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.jch.d2code.CaptureActivity;
 import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.InformationActivity.CodeScanOnlineActivity;
+
+import java.net.URI;
 
 /**
  * Created by jch on 2014/8/27.
@@ -42,11 +46,12 @@ public class BaseFragment extends Fragment {
 
         switch (requestCode) {
             case TO_SCAN:
-                if (resultCode == getActivity().RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     String scanStr = data.getStringExtra("RESULT");
 //                  //TODO 判断扫描结果的类型.
-                    Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
-                    intent.putExtra(CodeScanOnlineActivity.URLSTR, scanStr);
+//                    Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
+//                    intent.putExtra(CodeScanOnlineActivity.URLSTR, scanStr);
+                    Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(scanStr));
                     startActivity(intent);
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
                     Toast.makeText(getActivity(), "扫描取消",

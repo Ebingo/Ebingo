@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
@@ -95,8 +96,10 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         try {
             CameraManager.get().openDriver(surfaceHolder);
         } catch (IOException ioe) {
+            ioe.printStackTrace();
             return;
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return;
         }
         if (handler == null) {

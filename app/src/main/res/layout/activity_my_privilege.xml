@@ -6,7 +6,7 @@
     android:background="@color/gray_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/common_head_layout_2" />
+    <include layout="@layout/common_head_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"

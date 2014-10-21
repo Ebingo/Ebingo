@@ -17,7 +17,7 @@
 
         <Button
             android:id="@+id/btn_album"
-            style="@style/blue_button"
+            style="@style/yellow_button"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
@@ -34,6 +34,7 @@
         <Button
             android:id="@+id/btn_cancel"
             style="@style/blue_button"
+            android:background="#808080"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
