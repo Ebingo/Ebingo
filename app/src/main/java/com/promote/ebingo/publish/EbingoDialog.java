@@ -25,7 +25,9 @@ public class EbingoDialog extends AlertDialog {
     private TextView mMessage;
     private TextView mPositiveButton;
     private TextView mNegativeButton;
-    private View btn_divider;
+    private TextView mNeutralButton;
+    private View btn_divider1;
+    private View btn_divider2;
     public OnClickListener DEFAULT_LISTENER = new OnClickListener() {
 
         @Override
@@ -90,7 +92,13 @@ public class EbingoDialog extends AlertDialog {
                 dialog.setPositiveButton(R.string.update_right_now, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        toMyPrivilegeActivity(context);
+                        final VipType companyVipType = VipType.getCompanyInstance();
+                        VipType next = companyVipType.next();
+                        if (next == null)
+                            throw new RuntimeException(companyVipType.name + "is the highest Vip,can not be upgrade!");
+                        Intent intent = new Intent(context, MyPrivilegeActivity.class);
+                        intent.putExtra(MyPrivilegeActivity.SHOW_VIP_CODE, next.code);
+                        context.startActivity(intent);
                     }
                 });
                 dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
@@ -102,9 +110,9 @@ public class EbingoDialog extends AlertDialog {
                 dialog.setPositiveButton(R.string.i_know, dialog.DEFAULT_LISTENER);
                 break;
             }
-            case STYLE_CALL_PHONE:{
+            case STYLE_CALL_PHONE: {
                 dialog.setMesIcon(R.drawable.tell);
-                dialog.setNegativeButton(R.string.cancel,dialog.DEFAULT_LISTENER);
+                dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
                 break;
             }
 
@@ -112,20 +120,6 @@ public class EbingoDialog extends AlertDialog {
         return dialog;
     }
 
-    /**
-     * 跳到我的特权，并且展示下一个等级vip信息
-     *
-     * @param context
-     */
-    private static void toMyPrivilegeActivity(Context context) {
-        final VipType companyVipType = VipType.getCompanyInstance();
-        VipType next = companyVipType.next();
-        if (next == null)
-            throw new RuntimeException(companyVipType.name + "is the highest Vip,can not be upgrade!");
-        Intent intent = new Intent(context, MyPrivilegeActivity.class);
-        intent.putExtra(MyPrivilegeActivity.SHOW_VIP_CODE, next.code);
-        context.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,17 +127,19 @@ public class EbingoDialog extends AlertDialog {
         setContentView(R.layout.ebingo_dialog);
         mTitleView = (TextView) findViewById(android.R.id.title);
         mMessage = (TextView) findViewById(android.R.id.message);
-        mPositiveButton = (TextView) findViewById(android.R.id.button1);
-        mNegativeButton = (TextView) findViewById(android.R.id.button2);
-        btn_divider = findViewById(R.id.btn_divider);
+        mPositiveButton = (TextView) findViewById(R.id.btn_positive);
+        mNegativeButton = (TextView) findViewById(R.id.button_negative);
+        mNeutralButton = (TextView) findViewById(R.id.button_neutral);
+        btn_divider1 = findViewById(R.id.btn_divider1);
+        btn_divider2 = findViewById(R.id.btn_divider2);
     }
 
-    public void setMesIcon(int icon){
+    public void setMesIcon(int icon) {
         P.msgIcon = icon;
         if (mMessage != null) {
-            Drawable ic=getContext().getResources().getDrawable(P.msgIcon);
+            Drawable ic = getContext().getResources().getDrawable(P.msgIcon);
             ic.setBounds(0, 0, ic.getMinimumWidth(), ic.getMinimumHeight());
-            mMessage.setCompoundDrawables(ic,null,null,null);
+            mMessage.setCompoundDrawables(ic, null, null, null);
         }
     }
 
@@ -173,26 +169,31 @@ public class EbingoDialog extends AlertDialog {
         super.onStart();
         if (P.title != null) mTitleView.setText(P.title);
         if (P.message != null) mMessage.setText(P.message);
-        if (P.textPositive != null)
-            mPositiveButton.setText(P.textPositive);
-
-        if (P.textNegative != null)
-            mNegativeButton.setText(P.textNegative);
 
         if (P.mPositiveListener != null) {
-            mPositiveButton.setOnClickListener(new CustomListener(this, P.mPositiveListener, BUTTON_POSITIVE));
-        } else mPositiveButton.setVisibility(View.GONE);
+            setPositiveButton(P.textPositive, P.mPositiveListener);
+        } else {
+            mPositiveButton.setVisibility(View.GONE);
+        }
+
+        if (P.mNeutralListener != null) {
+            setNeutralButton(P.textNeutral, P.mNeutralListener);
+        } else {
+            mNeutralButton.setVisibility(View.GONE);
+            btn_divider1.setVisibility(View.GONE);
+        }
 
         if (P.mNativeListener != null) {
-            mNegativeButton.setOnClickListener(new CustomListener(this, P.mNativeListener, BUTTON_NEGATIVE));
-        } else mNegativeButton.setVisibility(View.GONE);
+            setNegativeButton(P.textNegative, P.mNativeListener);
+        } else {
+            mNegativeButton.setVisibility(View.GONE);
+            btn_divider2.setVisibility(View.GONE);
+        }
 
-        if (P.mPositiveListener == null || P.mNativeListener == null)
-            btn_divider.setVisibility(View.GONE);
-        if (P.msgIcon!=0){
-            Drawable ic=getContext().getResources().getDrawable(P.msgIcon);
+        if (P.msgIcon != 0) {
+            Drawable ic = getContext().getResources().getDrawable(P.msgIcon);
             ic.setBounds(0, 0, ic.getMinimumWidth(), ic.getMinimumHeight());
-            mMessage.setCompoundDrawables(ic,null,null,null);
+            mMessage.setCompoundDrawables(ic, null, null, null);
         }
     }
 
@@ -222,11 +223,27 @@ public class EbingoDialog extends AlertDialog {
         }
     }
 
+    public void setNeutralButton(int textId, OnClickListener neutralListener) {
+        setNeutralButton(getContext().getResources().getString(textId), neutralListener);
+    }
+
+    public void setNeutralButton(CharSequence text, OnClickListener neutralListener) {
+        P.textNeutral = text;
+        P.mNeutralListener = neutralListener;
+        if (mNeutralButton != null) {
+            mNeutralButton.setText(text);
+            mNeutralButton.setOnClickListener(new CustomListener(this, neutralListener, BUTTON_NEUTRAL));
+        }
+    }
+
+
     private class P {
         CharSequence textPositive;
+        CharSequence textNeutral;
         CharSequence textNegative;
         OnClickListener mPositiveListener;
         OnClickListener mNativeListener;
+        OnClickListener mNeutralListener;
         CharSequence title;
         CharSequence message;
         int msgIcon;

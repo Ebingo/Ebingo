@@ -23,6 +23,7 @@
     <string name="interprise">企 业</string>
     <string name="buy">求 购</string>
     <string name="supply">供 应</string>
+    <string name="purchase">购买</string>
     <string name="choose_trade">选择分类</string>
     <string name="collect">收藏</string>
     <string name="message">消息</string>
@@ -167,7 +168,7 @@
     <string name="customer_service_number">025-68713202</string>
     <string name="company">公司</string>
     <string name="qq_group">问题反馈QQ群：32111452</string>
-    <string name="dear_somebody">尊敬%s</string>
+    <string name="dear_somebody">尊敬的%s</string>
     <string name="hint_edit_phone">请输入手机号</string>
     <string name="hint_edit_psw">请输入密码</string>
     <string name="hint_edit_verify">请输入验证码</string>
@@ -218,6 +219,6 @@
     <string name="cannot_call_demand">只有%s及以上会员可以拨打求购电话,您需要升级才能使用本功能。</string>
     <string name="no_permission">抱歉，%s没有权限使用此功能！</string>
     <string name="supply_num_none">您当前剩余发布供应条数不足，请升级！</string>
-    <string name="notice_3d">抱歉，您上传3D图片次数不足。\n1.普通会员以上可购买上传次数\n2.金牌会员赠送1次\n3.铂金会员赠送5次。</string>
+    <string name="notice_3d">您上传3D图片次数不足。\n1.普通会员及以上可购买上传次数\n2.金牌会员赠送1次\n3.铂金会员赠送5次。</string>
     <string name="no_demand_supply_info">暂无供求信息</string>
 </resources>

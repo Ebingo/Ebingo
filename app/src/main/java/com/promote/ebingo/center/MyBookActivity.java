@@ -1,5 +1,6 @@
 package com.promote.ebingo.center;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,12 +56,16 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         save.setText("保存");
         save.setOnClickListener(this);
         edit_tag.setOnClickListener(this);
-        getData();
         tag_remain = Company.getInstance().getVipInfo().getTag_num();
         toggleButton = (ToggleButton) findViewById(R.id.arrange);
         toggleButton.setOnCheckedChangeListener(this);
         scrollHandler=new ScrollHandler((ScrollView) findViewById(R.id.scroll));
-
+        scrollHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getData();
+            }
+        },100);
     }
 
     @Override
@@ -75,6 +80,13 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
                 LogCat.i("--->", "addTag(" + tag_remain + ")");
                 if (tag_remain <= 0) {
                     EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                    dialog.setNeutralButton(R.string.purchase,new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent=new Intent().setClass(MyBookActivity.this,BuyTagActivity.class);
+                            startActivity(intent);
+                        }
+                    });
                     dialog.setMessage(getString(R.string.vip_add_tag, VipType.getCompanyInstance().name, tagNum));
                     dialog.show();
                     return;

@@ -77,7 +77,7 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
         } else {
             v.findViewById(R.id.btn_apply_vip).setOnClickListener(this);
         }
-        ImageView iv= (ImageView) v.findViewById(R.id.iv_vip_info);
+        ImageView iv = (ImageView) v.findViewById(R.id.iv_vip_info);
         switch (displayVipType) {
             case VISITOR:
                 iv.setImageResource(R.drawable.visitor_info);
@@ -119,7 +119,10 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
 
     public void startApply() {
         VipType curVipType = VipType.parse(Company.getInstance().getVipType());
-        if (getDisplayVipType().compareTo(curVipType) <= 0) {
+        VipType disPlayVip = getDisplayVipType();
+        if (disPlayVip == VipType.VISITOR) {
+            return;
+        } else if (disPlayVip.compareTo(curVipType) <= 0) {
             ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
             return;
         } else if (getDisplayVipType().compareTo(VipType.Experience_Vip) == 0) {

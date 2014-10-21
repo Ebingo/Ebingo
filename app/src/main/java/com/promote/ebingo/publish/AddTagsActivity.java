@@ -172,20 +172,24 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
 
     public static class ScrollHandler extends Handler{
         private ScrollView scrollView;
-
+        private Runnable scroll;
         public ScrollHandler(ScrollView scrollView) {
             this.scrollView = scrollView;
         }
 
         public void scrollToEnd(long delay) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
+            if (scroll==null){
+                scroll=new Runnable() {
+                    @Override
+                    public void run() {
 
-                    scrollView.fullScroll(View.FOCUS_DOWN);
-                }
-            },delay);
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                };
+            }
+            postDelayed(scroll,delay);
         }
+
     }
 
 

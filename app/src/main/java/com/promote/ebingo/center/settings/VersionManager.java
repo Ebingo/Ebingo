@@ -184,7 +184,7 @@ public class VersionManager {
      */
     private static File getDownloadFile(Context context, String fileName) {
         File dir;
-        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+        if ( Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             dir = new File(Environment.getExternalStorageDirectory(), "ebingoo");
 
         } else {
@@ -278,7 +278,6 @@ public class VersionManager {
             NotificationCompat.Builder build = getNotification();
             build.setContentTitle(String.format("已经下载%d%%", rate));
             build.setProgress(100, rate, false);
-            build.setDefaults(Notification.FLAG_ONGOING_EVENT);
             //发出通知
             manager.notify(0, build.build());
         }
@@ -294,7 +293,6 @@ public class VersionManager {
                 builder.setTicker("正在下载");
                 builder.setAutoCancel(false);
                 builder.setWhen(0);
-
                 builder.setContentIntent(updatePendingIntent);
                 //设置通知栏显示内容
             }
@@ -308,7 +306,7 @@ public class VersionManager {
                 ContextUtil.toast(R.string.download_fialed);
             } else {
                 NotificationCompat.Builder build = getNotification();
-                build.setContentTitle(mContext.getString(R.string.click_install));
+                build.setContentTitle(mContext.getString(R.string.click_install,file.getName()));
                 Intent intent = getInstallIntent(file);
                 build.setContentIntent(PendingIntent.getActivity(mContext, 0, intent, 0));
                 build.setAutoCancel(true);

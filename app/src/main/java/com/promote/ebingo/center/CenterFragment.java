@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -73,7 +74,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private TextView centsettingtv;
     private TextView centprofiletv;
     private TextView centShare;
-
+    private Handler handler=new Handler();
+    private InvalidateData invalidateData=new InvalidateData();
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -181,8 +183,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -226,7 +226,15 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        invalidateData();
+        handler.postDelayed(invalidateData,100);
+    }
+
+    private class InvalidateData implements  Runnable{
+
+        @Override
+        public void run() {
+            invalidateData();
+        }
     }
 
     /**

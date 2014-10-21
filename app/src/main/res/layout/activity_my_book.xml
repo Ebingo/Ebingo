@@ -65,6 +65,7 @@
                     android:background="@color/light_gray" />
 
                 <TextView
+                    android:id="@+id/tv_tag_add"
                     style="@style/text_deep_gray_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

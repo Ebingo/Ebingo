@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -80,6 +81,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     private ArrayList<SearchTypeBean> mCategoryBean = new ArrayList<SearchTypeBean>();
     private PullToRefreshView categoryrefreshview;
     private TextView nodatatv;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +122,34 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         categorylv.setAdapter(mListAdapter);
         categorylv.setOnItemClickListener(this);
         //TODO 访问默认数据
-        if (mCurType == CategoryType.SUPPLY) {
-            getSupplyInfoList(0);
+
+        if (mCurType == CategoryType.SUPPLY) {//延迟加载数据，让UI界面先出来
+            handler.postDelayed(initSupplyInfoList, 100);
         } else {
-            getDemandInfoList(0);
+            handler.postDelayed(initDemandInfoList, 100);
         }
 
+    }
+    /**初始化供应列表*/
+    private Runnable initSupplyInfoList = new Runnable() {
+        @Override
+        public void run() {
+            getSupplyInfoList(0);
+        }
+    };
+    /**初始化求购列表*/
+    private Runnable initDemandInfoList = new Runnable() {
+        @Override
+        public void run() {
+            getDemandInfoList(0);
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(initSupplyInfoList);
+        handler.removeCallbacks(initDemandInfoList);
     }
 
     @Override
@@ -381,6 +405,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         public void onDismiss() {
             categoryrightcb.setChecked(false);
         }
+
     }
 
     private String getRank() {

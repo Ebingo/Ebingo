@@ -249,7 +249,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         controller.contacts_phone = edit_phone.getText().toString().trim();
         controller.min_sell_num = edit_min_sell_num.getText().toString().trim();
         controller.unit = edit_unit.getText().toString().trim();
-
+        controller.apply_3d=upload_3d_cb.isChecked();
         int code = controller.checkSupply();
         if (code > 0) {
             controller.showError(code);

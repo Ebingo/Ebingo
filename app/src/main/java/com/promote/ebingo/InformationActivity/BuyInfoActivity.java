@@ -128,8 +128,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.buy_info_btm_ll: {
-                VipType companyVip=VipType.getCompanyInstance();
-                if (companyVip.compareTo(VipType.Standard_VIP)<0) {
+                VipType companyVip = VipType.getCompanyInstance();
+                if (companyVip.compareTo(VipType.Standard_VIP) < 0) {
                     EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
                     dialog.setMessage(getString(R.string.can_scan_demand_company_info, VipType.getCompanyInstance().name));
                     dialog.show();
@@ -198,24 +198,39 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
     private void initData() {
         Integer sellerId = mDetailInfoBean.getCompany_id();
         if (sellerId == null) {
+            //根据发布信息的公司id是否为空，来判断信息是否被删除。
             EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_INFO_DELETED).show();
             return;
         }
+
+        //如果发布信息的公司id与本公司相同，隐藏拨号按钮
         if (mDetailInfoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
             buyInfocontactphonetv.setVisibility(View.GONE);
         }
+
+        //如果审核不通过就弹出提示
         if (!Constant.VERIFY_PASS.equals(mDetailInfoBean.getVerify_result())) {
             popError(mDetailInfoBean.getVerify_reason());
         }
+        //设置求购信息标题
         buyinfonametv.setText(mDetailInfoBean.getTitle());
+        //设置求购数量
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
+        //设置发布时间
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
+        //设置浏览次数
         publishlooknumtv.setText(String.valueOf(mDetailInfoBean.getRead_num()));
-        buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
+        //如果为体验会员就不显示公司名称
+        if (VipType.getCompanyInstance().compareTo(VipType.Experience_Vip) <= 0) {
+            buyinfocompanytv.setText("****公司");
+        } else {
+            buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
+        }
         mIntVipImg.setImageDrawable(ContextUtil.getVipImgByType(getResources(), mDetailInfoBean.getVip_type()));
 
         String description = mDetailInfoBean.getDescription();
-        if (ContextUtil.isHtml(description)) {//根据是否为html文本，来用不同的控件显示
+        //根据是否为html文本，来用不同的控件显示
+        if (ContextUtil.isHtml(description)) {
             productinfoDetailtv.setVisibility(View.GONE);
             buyinfodetailwv.setVisibility(View.VISIBLE);
             buyinfodetailwv.getSettings().setJavaScriptEnabled(true);
@@ -227,7 +242,6 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             productinfoDetailtv.setText(description);
         }
     }
-
 
     private void popError(String msg) {
         final TextView tv_warn = (TextView) findViewById(R.id.tv_warn);
