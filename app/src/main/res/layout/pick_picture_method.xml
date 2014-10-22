@@ -34,7 +34,7 @@
         <Button
             android:id="@+id/btn_cancel"
             style="@style/blue_button"
-            android:background="#808080"
+            android:background="@drawable/btn_gray"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"

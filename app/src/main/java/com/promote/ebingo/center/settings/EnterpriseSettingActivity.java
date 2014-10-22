@@ -509,7 +509,10 @@ public class EnterpriseSettingActivity extends BaseActivity {
         }
 
         boolean check(Context context) {
-
+            if (TextUtils.isEmpty(name)){
+                showError(getString(R.string.company_name_null));
+                return false;
+            }
             if (!LoginManager.isMobile(company_tel)&&!LoginManager.isPhone(company_tel)) {
                 showError(getString(R.string.tel_format_error));
                 return false;

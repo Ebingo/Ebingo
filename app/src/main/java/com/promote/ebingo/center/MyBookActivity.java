@@ -80,13 +80,13 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
                 LogCat.i("--->", "addTag(" + tag_remain + ")");
                 if (tag_remain <= 0) {
                     EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
-                    dialog.setNeutralButton(R.string.purchase,new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent=new Intent().setClass(MyBookActivity.this,BuyTagActivity.class);
-                            startActivity(intent);
-                        }
-                    });
+//                    dialog.setNeutralButton(R.string.purchase,new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            Intent intent=new Intent().setClass(MyBookActivity.this,BuyTagActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
                     dialog.setMessage(getString(R.string.vip_add_tag, VipType.getCompanyInstance().name, tagNum));
                     dialog.show();
                     return;

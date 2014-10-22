@@ -197,6 +197,7 @@
     <string name="empty_notice">您当前没有发布任何%s信息。</string>
     <string name="modify">修改</string>
     <string name="tel_format_error">电话格式错误，如：0558-7211314或010-88888888或138********</string>
+    <string name="company_name_null">请输入公司名称</string>
     <string name="visitor">游客</string>
     <string name="vip_experience">体验会员</string>
     <string name="vip_standard">普通会员</string>
@@ -221,4 +222,6 @@
     <string name="supply_num_none">您当前剩余发布供应条数不足，请升级！</string>
     <string name="notice_3d">您上传3D图片次数不足。\n1.普通会员及以上可购买上传次数\n2.金牌会员赠送1次\n3.铂金会员赠送5次。</string>
     <string name="no_demand_supply_info">暂无供求信息</string>
+    <string name="delete_apk_notice">%1$s(%2$.2fM)安装完毕，是否删除以节省空间？</string>
+    <string name="deleted_apk_notice">%1$s已经删除，节省空间 %2$.2fM</string>
 </resources>

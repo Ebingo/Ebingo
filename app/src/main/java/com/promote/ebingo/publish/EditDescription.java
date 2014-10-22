@@ -31,7 +31,6 @@ public class EditDescription extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.commit_title_done:
-            case R.id.commit:
                 Intent result=new Intent();
                 result.putExtra("result",edit_description.getText().toString().trim());
                 setResult(RESULT_OK,result);

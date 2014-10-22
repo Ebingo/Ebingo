@@ -221,7 +221,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         //设置浏览次数
         publishlooknumtv.setText(String.valueOf(mDetailInfoBean.getRead_num()));
         //如果为体验会员就不显示公司名称
-        if (VipType.getCompanyInstance().compareTo(VipType.Experience_Vip) <= 0) {
+        VipType vipType = VipType.getCompanyInstance();
+        if (vipType.compareTo(VipType.Experience_Vip) <= 0&&!mDetailInfoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
             buyinfocompanytv.setText("****公司");
         } else {
             buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());

@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.Spannable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CurrentSupplyBean;
 import com.promote.ebingo.bean.InterpriseInfoBean;
@@ -39,6 +38,7 @@ import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -64,6 +64,9 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     private TextView fraginterprisemainrangetv;
     private TextView fraginterprisemainabstracttv;
     private ScrollListView interpisemainsupdemlv;
+    private View website_layout;
+    private View address_layout;
+    private View tel_layout;
     private ArrayList<CurrentSupplyBean> currentSupplyBeans = new ArrayList<CurrentSupplyBean>();
     private MyAdapter myAdapter = null;
     private InterpriseInfoBean mInterpriseInfoBean = null;
@@ -130,6 +133,9 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         fraginterprisemainabstracttv = (TextView) containerView.findViewById(R.id.frag_interprise_main_abstract_tv);
         interpisemainsupdemlv = (ScrollListView) containerView.findViewById(R.id.interpise_main_sup_dem_lv);
         enterpriseinfopsv = (PagerScrollView) containerView.findViewById(R.id.enterprise_info_psv);
+        website_layout =  containerView.findViewById(R.id.website_layout);
+        tel_layout =  containerView.findViewById(R.id.tel_layout);
+        address_layout =  containerView.findViewById(R.id.address_layout);
 //        enterpriseinfopsv.smoothScrollTo(0, 0);
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
@@ -210,9 +216,11 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         ImageManager.load(infoBean.getImage(), interprismainimg, mOptions);
         fraginterprisemainnametv.setText(infoBean.getName());
         fraginterprisemainnametv.setText(getTitle(infoBean.getName(), infoBean.getViptype()));
-        fraginterprisemainaddrtv.setText(infoBean.getAddr());
-        fraginterprisemainhttpaddrtv.setText(infoBean.getWebsite());
-        fraginterprisemaintelltv.setText(infoBean.getTel());
+
+        setText(address_layout,fraginterprisemainaddrtv,infoBean.getAddr());
+        setText(website_layout,fraginterprisemainhttpaddrtv,infoBean.getWebsite());
+        setText(tel_layout,fraginterprisemaintelltv,infoBean.getTel());
+
         fraginterprisemainabstracttv.setText(infoBean.getIntroduction());
         fraginterprisemainrangetv.setText(infoBean.getMainRun());
         if (infoBean.getInfoarray() != null) {
@@ -222,6 +230,17 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         myAdapter.notifyDataSetChanged();
         enterpriseinfopsv.smoothScrollTo(0, 0);
 
+    }
+
+    /**
+     * 如果text为空就隐藏container，否则就用tv展示text
+     */
+    private void setText(View container,TextView tv,CharSequence text){
+        if (TextUtils.isEmpty(text)){
+            container.setVisibility(View.GONE);
+        }else{
+            tv.setText(text);
+        }
     }
 
     private android.text.Spanned getTitle(String companyName, int vipType) {
@@ -241,7 +260,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
                     public Drawable getDrawable(String source) {
                         VipType vipType = VipType.parse(source);
                         Drawable icon = vipType.getIcon(getActivity());
-                        icon.setBounds(0, 0, (int) Dimension.dp(14), (int) Dimension.dp(19));
+                        if(icon!=null)icon.setBounds(0, 0, (int) Dimension.dp(14), (int) Dimension.dp(19));
                         return icon;
                     }
                 }, null);

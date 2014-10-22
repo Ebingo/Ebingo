@@ -67,8 +67,7 @@ public class VersionManager {
                     if (version_code > getLocaleVersion(mContext)) {
                         String url = result.getString("url");
                         String versionName = result.getString("version");
-                        String fileName = "Ebingoo" + versionName + ".apk";
-                        File apkFile = getDownloadFile(mContext, fileName);
+                        File apkFile = getDownloadFile(mContext, versionName);
                         //检查是否已经下载
                         if (apkFile.exists()) {
                             showInstallDialog(mContext, apkFile);
@@ -77,7 +76,7 @@ public class VersionManager {
                             versionDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                             versionDialog.setTitle(mContext.getString(R.string.find_new_version, apkFile.getName()));
                             versionDialog.setMessage(result.getString("msg"));
-                            versionDialog.setPositiveButton(R.string.update_right_now, new DownloadListener(mContext, url, fileName));
+                            versionDialog.setPositiveButton(R.string.update_right_now, new DownloadListener(mContext, url, versionName));
                             versionDialog.setNegativeButton(R.string.cancel, versionDialog.DEFAULT_LISTENER);
                             versionDialog.show();
                         }
@@ -177,16 +176,15 @@ public class VersionManager {
     }
 
     /**
-     * 检查文件是否已经下载
+     * 根据版本名创建文件
      *
      * @param context
      * @return
      */
-    private static File getDownloadFile(Context context, String fileName) {
+    public static File getDownloadFile(Context context, String version) {
         File dir;
         if ( Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             dir = new File(Environment.getExternalStorageDirectory(), "ebingoo");
-
         } else {
             dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "ebingoo");
         }
@@ -194,6 +192,7 @@ public class VersionManager {
         if (!dir.exists()) {
             dir.mkdirs();
         }
+        String fileName = "Ebingoo" + version + ".apk";
         return new File(dir, fileName);
     }
 
@@ -249,7 +248,10 @@ public class VersionManager {
                 is.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                return null;
+                if (apkFile!=null){
+                    apkFile.delete();
+                }
+                apkFile=null;
             } finally {
                 if (fot != null)
                     try {
@@ -293,6 +295,7 @@ public class VersionManager {
                 builder.setTicker("正在下载");
                 builder.setAutoCancel(false);
                 builder.setWhen(0);
+                builder.setSound(null);
                 builder.setContentIntent(updatePendingIntent);
                 //设置通知栏显示内容
             }

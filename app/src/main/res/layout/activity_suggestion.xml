@@ -44,14 +44,6 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/qq_group" />
 
-            <Button
-                android:id="@+id/commit"
-                style="@style/blue_button"
-                android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:onClick="onClick"
-                android:text="提 交" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
