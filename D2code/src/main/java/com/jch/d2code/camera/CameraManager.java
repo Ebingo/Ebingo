@@ -16,6 +16,7 @@
 
 package com.jch.d2code.camera;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -120,6 +121,7 @@ public final class CameraManager {
      * @param holder The surface object which the camera will draw preview frames into.
      * @throws java.io.IOException Indicates the camera driver failed to open.
      */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public void openDriver(SurfaceHolder holder) throws IOException {
         if (camera == null) {
             camera = Camera.open();
@@ -139,7 +141,7 @@ public final class CameraManager {
 //      if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false)) {
 //        FlashlightManager.enableFlashlight();
 //      }
-            FlashlightManager.enableFlashlight();
+//            FlashlightManager.enableFlashlight();
         }
     }
 

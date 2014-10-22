@@ -49,9 +49,9 @@ public class BaseFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     String scanStr = data.getStringExtra("RESULT");
 //                  //TODO 判断扫描结果的类型.
-//                    Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
-//                    intent.putExtra(CodeScanOnlineActivity.URLSTR, scanStr);
-                    Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(scanStr));
+                    Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
+                    intent.putExtra(CodeScanOnlineActivity.URLSTR, scanStr);
+//                    Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(scanStr));
                     startActivity(intent);
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
                     Toast.makeText(getActivity(), "扫描取消",

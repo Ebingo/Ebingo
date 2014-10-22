@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.promote.ebingo.R;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.LogCat;
 
 public class CodeScanOnlineActivity extends Activity implements View.OnClickListener {
 
@@ -52,7 +55,21 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
         urlStr = getIntent().getStringExtra(URLSTR);
         scanwb.getSettings().setJavaScriptEnabled(true);
         scanwb.setWebViewClient(new MyWebViewClient());
+        scanwb.setDownloadListener(new MyDownLoadListener());
         scanwb.loadUrl(urlStr);
+    }
+
+    private class MyDownLoadListener implements DownloadListener{
+
+        @Override
+        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+            LogCat.i("--->url="+url);
+            LogCat.i("--->userAgent="+userAgent);
+            LogCat.i("--->contentDisposition="+contentDisposition);
+            LogCat.i("--->mimetype="+mimetype);
+            LogCat.i("--->contentLength="+contentLength);
+            ContextUtil.toast("这是一个下载链接！");
+        }
     }
 
     @Override

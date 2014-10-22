@@ -97,9 +97,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             CameraManager.get().openDriver(surfaceHolder);
         } catch (IOException ioe) {
             ioe.printStackTrace();
+            CameraManager.get().closeDriver();
             return;
         } catch (RuntimeException e) {
             e.printStackTrace();
+            CameraManager.get().closeDriver();
             return;
         }
         if (handler == null) {
@@ -125,7 +127,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         hasSurface = false;
-
+        CameraManager.get().closeDriver();
     }
 
     public ViewfinderView getViewfinderView() {
