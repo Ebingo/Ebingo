@@ -6,13 +6,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.DownloadListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.promote.ebingo.R;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
+
+import org.w3c.dom.Text;
 
 public class CodeScanOnlineActivity extends Activity implements View.OnClickListener {
 
@@ -23,11 +27,12 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
      * 回退按钮. *
      */
     private ImageView mBackIv = null;
-
+    private TextView titleTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scan);
+        titleTv= (TextView) findViewById(R.id.common_title_tv);
         initialize();
     }
 
@@ -53,8 +58,15 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
         mBackIv = (ImageView) findViewById(R.id.common_back_btn);
         mBackIv.setOnClickListener(this);
         urlStr = getIntent().getStringExtra(URLSTR);
+        LogCat.d("CodeScan","url="+urlStr);
         scanwb.getSettings().setJavaScriptEnabled(true);
         scanwb.setWebViewClient(new MyWebViewClient());
+        scanwb.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                titleTv.setText(title);
+            }
+        });
         scanwb.setDownloadListener(new MyDownLoadListener());
         scanwb.loadUrl(urlStr);
     }
@@ -63,11 +75,6 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
         @Override
         public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-            LogCat.i("--->url="+url);
-            LogCat.i("--->userAgent="+userAgent);
-            LogCat.i("--->contentDisposition="+contentDisposition);
-            LogCat.i("--->mimetype="+mimetype);
-            LogCat.i("--->contentLength="+contentLength);
             ContextUtil.toast("这是一个下载链接！");
         }
     }

@@ -22,6 +22,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
     public static final int REQUEST_CODE = 1001;
     private EditText edit_phone;
     private EditText edit_password;
+    private int[] lineSelector;
 
     public LoginDialog(Context context) {
         super(context);
@@ -36,14 +37,35 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initWidgets() {
+        lineSelector = new int[]{getContext().getResources().getColor(R.color.center_divider), 0xff069dd4};
         edit_phone = (EditText) findViewById(R.id.edit_user_name);
         edit_password = (EditText) findViewById(R.id.edit_password);
+        edit_password.setOnFocusChangeListener(fcl);
+        edit_phone.setOnFocusChangeListener(fcl);
         edit_phone.setText(((EbingoApp) getContext().getApplicationContext()).getCurCompanyName());
         edit_password.setText(((EbingoApp) getContext().getApplicationContext()).getCurCompanyPwd());
         findViewById(R.id.commit_title_done).setOnClickListener(this);
         findViewById(R.id.tv_reg).setOnClickListener(this);
         findViewById(R.id.tv_forget_password).setOnClickListener(this);
     }
+
+    private View.OnFocusChangeListener fcl = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            View divider_user = findViewById(R.id.divider_user_name);
+            View divider_password = findViewById(R.id.divider_password);
+            switch (v.getId()) {
+                case R.id.edit_user_name:
+                    divider_user.setBackgroundColor(lineSelector[1]);
+                    divider_password.setBackgroundColor(lineSelector[0]);
+                    break;
+                case R.id.edit_password:
+                    divider_password.setBackgroundColor(lineSelector[1]);
+                    divider_user.setBackgroundColor(lineSelector[0]);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {

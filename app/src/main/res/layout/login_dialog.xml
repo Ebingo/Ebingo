@@ -25,6 +25,7 @@
         android:textSize="@dimen/font_15" />
 
     <View
+        android:id="@+id/divider_user_name"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/center_divider" />
@@ -45,6 +46,7 @@
         android:textSize="@dimen/font_15" />
 
     <View
+        android:id="@+id/divider_password"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/center_divider" />

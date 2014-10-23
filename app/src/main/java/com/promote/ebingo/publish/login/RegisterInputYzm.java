@@ -206,6 +206,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             case R.id.commit_title_done:
                 Intent intent=new Intent(this,LoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
     }
