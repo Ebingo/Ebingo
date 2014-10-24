@@ -31,7 +31,7 @@
                 android:layout_width="0dp"
                 android:orientation="vertical"
                 android:layout_weight="3"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="7dp"
                 android:layout_height="wrap_content">
 
                 <LinearLayout
@@ -116,6 +116,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/e_plat"
                     android:layout_marginTop="5dp"
                     android:src="@drawable/e_platform"
                     android:layout_width="wrap_content"

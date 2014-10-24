@@ -15,7 +15,7 @@
 -->
 
 <gridLayoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
-    android:rowDelay="75%"
+    android:rowDelay="90%"
     android:columnDelay="0%"
     android:directionPriority="none"
-    android:animation="@anim/wave" />
+    android:animation="@anim/adv_item_click" />

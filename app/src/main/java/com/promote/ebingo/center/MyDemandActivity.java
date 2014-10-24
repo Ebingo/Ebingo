@@ -81,7 +81,6 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
 
         String urlStr = HttpConstant.getDemandInfoList;
         final EbingoRequestParmater parma = new EbingoRequestParmater(getApplicationContext());
-        final ProgressDialog dialog = new ProgressDialog(MyDemandActivity.this);
         parma.put("lastid", lastId);
         parma.put("pagesize", pageSize);
         parma.put("condition", getCondition());
@@ -98,19 +97,16 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                     adapter.notifyDataSetChanged();
                 }
                 onLoadFinish();
-                dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                dialog.dismiss();
             }
         });
     }

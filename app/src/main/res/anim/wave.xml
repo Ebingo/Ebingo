@@ -19,7 +19,7 @@
         android:fromAlpha="0.0"
         android:toAlpha="1.0"
         android:duration="100" />
-    <scale
+    <!--<scale
         android:fromXScale="0.5" android:toXScale="1.5"
         android:fromYScale="0.5" android:toYScale="1.5"
         android:pivotX="50%" android:pivotY="50%"
@@ -29,5 +29,25 @@
         android:fromYScale="1.5" android:toYScale="1.0"
         android:pivotX="50%" android:pivotY="50%"
         android:startOffset="200"
-        android:duration="100" />
+        android:duration="100" />-->
+    <scale
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:duration="200"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromXScale="1.0"
+        android:toXScale="0.8"
+        android:fromYScale="1.0"
+        android:toYScale="0.8"></scale>
+
+    <scale
+        android:interpolator="@android:anim/decelerate_interpolator"
+        android:duration="150"
+        android:startOffset="200"
+        android:pivotY="50%"
+        android:pivotX="50%"
+        android:fromYScale="0.8"
+        android:toYScale="1.1"
+        android:fromXScale="0.8"
+        android:toXScale="1.1" />
 </set>

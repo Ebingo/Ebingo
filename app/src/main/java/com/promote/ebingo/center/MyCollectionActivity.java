@@ -77,14 +77,13 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
      *
      * @param lastId 刷新下表.
      */
-    public void getWishlist(int lastId) {
+    public void getWishlist(final int lastId) {
 
         String urlStr = HttpConstant.getWishlist;
         EbingoRequestParmater parama = new EbingoRequestParmater(getApplicationContext());
         parama.put("lastid", lastId);
         parama.put("pagesize", pageSize);
         parama.put("company_id", Company.getInstance().getCompanyId());
-        final ProgressDialog dialog = DialogUtil.waitingDialog(MyCollectionActivity.this);
         LogCat.i("--->", parama + "");
         HttpUtil.post(urlStr, parama, new JsonHttpResponseHandler("utf-8") {
 
@@ -95,30 +94,27 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 ArrayList<CollectBean> collectBeans = CollectBeanTools.getCollections(response.toString());
 
                 if (collectBeans != null && collectBeans.size() > 0) {
+                    if (lastId==0)mCollections.clear();
                     mCollections.addAll(collectBeans);
                     myAdapter.notifyDataSetChanged();
                     refresh = false;
                 }
                 onLoadFinish();
-                dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                dialog.dismiss();
             }
 
             @Override
             public void onFinish() {
                 super.onFinish();
-                dialog.dismiss();
             }
         });
     }
@@ -231,7 +227,6 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
 
     @Override
     protected void onRefresh() {
-        mCollections.clear();
         getWishlist(0);
     }
 

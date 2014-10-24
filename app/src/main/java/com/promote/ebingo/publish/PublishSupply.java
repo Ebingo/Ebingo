@@ -131,7 +131,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             tv_3d_notice.setVisibility(View.GONE);
             return;
         }
-        String prefix = "上传3D图片需要大量素材，发布成功后请等待我们与您联系，或现在";
+        String prefix = "上传全景图片需要大量素材，发布成功后请等待我们与您联系，或现在";
         String link = "联系我们";
         String content = prefix + link;
         SpannableString ss = new SpannableString(content);

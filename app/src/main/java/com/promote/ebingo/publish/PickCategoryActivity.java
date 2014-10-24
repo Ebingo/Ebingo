@@ -1,7 +1,6 @@
 package com.promote.ebingo.publish;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,19 +8,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CategoryBeen;
-import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
@@ -35,7 +31,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.view.ViewGroup.LayoutParams.*;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Created by acer on 2014/9/2.
@@ -52,7 +49,6 @@ public class PickCategoryActivity extends BaseListActivity {
     private void initData() {
         ((TextView) findViewById(R.id.common_title_tv)).setText(getString(R.string.choose_trade));
         findViewById(R.id.common_back_btn).setOnClickListener(this);
-        final ProgressDialog dialog = DialogUtil.waitingDialog(this);
         EbingoRequestParmater params = new EbingoRequestParmater(this);
         HttpUtil.post(HttpConstant.getCategories, params, new JsonHttpResponseHandler("utf-8") {
 
@@ -86,7 +82,6 @@ public class PickCategoryActivity extends BaseListActivity {
             @Override
             public void onFinish() {
                 super.onFinish();
-                dialog.dismiss();
             }
         });
     }

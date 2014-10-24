@@ -1,6 +1,5 @@
 package com.promote.ebingo.center;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,20 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
-import com.promote.ebingo.MainActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
@@ -31,8 +26,9 @@ import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.PublishEditActivity;
-import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
+import com.promote.ebingo.util.FormatUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -125,10 +121,9 @@ public class MySupplyActivity extends BaseListActivity {
         });
     }
 
-    private void getMySupply(int lastId) {
+    private void getMySupply(final int lastId) {
         String urlStr = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater param = new EbingoRequestParmater(getApplicationContext());
-        final ProgressDialog dialog = DialogUtil.waitingDialog(MySupplyActivity.this);
         param.put("lastid", lastId);
         param.put("pagesize", pageSize);
         try {
@@ -152,24 +147,22 @@ public class MySupplyActivity extends BaseListActivity {
                 LogCat.i("--->", response.toString());
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
                 if (searchSupplyBeans != null && searchSupplyBeans.size() > 0) {
+                    if (lastId==0)mSupplyBeans.clear();
                     mSupplyBeans.addAll(searchSupplyBeans);
                     adapter.notifyDataSetChanged();
                 }
                 onLoadFinish();
-                dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                dialog.dismiss();
                 LogCat.i("--->", errorResponse + "");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                dialog.dismiss();
                 LogCat.i("--->", responseString);
             }
         });
@@ -224,12 +217,14 @@ public class MySupplyActivity extends BaseListActivity {
             }
             SearchSupplyBean supplyBean = mSupplyBeans.get(position);
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
+
             viewHolder.nameTv.setText(supplyBean.getName());
-            viewHolder.priceTv.setText(supplyBean.getPrice()+"元");
-            if (!TextUtils.isEmpty(supplyBean.getUnit()))
-                viewHolder.priceTv.append("/" + supplyBean.getUnit());
+            viewHolder.priceTv.setText(FormatUtil.formatPrice(supplyBean.getPrice(),supplyBean.getUnit()));
             viewHolder.timeTv.setText(supplyBean.getDate());
-            viewHolder.startTv.setText(getString(R.string.supply_start_num,supplyBean.getMin_supply_num()));
+
+            String minNum=FormatUtil.formatSellNum(supplyBean.getMin_supply_num(),supplyBean.getUnit());
+            viewHolder.startTv.setText(getString(R.string.supply_start_num,minNum));
+
             String verify_result=supplyBean.getVerify_result();
             if (Constant.VERIFY_WAITING.equals(verify_result)){
                 viewHolder.verifyTv.setVisibility(View.VISIBLE);
@@ -264,7 +259,6 @@ public class MySupplyActivity extends BaseListActivity {
 
     @Override
     protected void onRefresh() {
-        mSupplyBeans.clear();
         getMySupply(0);
     }
 }

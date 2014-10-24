@@ -19,7 +19,7 @@ public class SearchSupplyBean extends SearchTypeBean implements Serializable{
 
     private String unit;
     /**起购标准**/
-    private String min_supply_num;
+    private String min_supply_num="0";
     /**查看次数**/
     private int read_num;
     /**企业等级**/

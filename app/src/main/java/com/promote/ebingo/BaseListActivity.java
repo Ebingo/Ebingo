@@ -2,6 +2,7 @@ package com.promote.ebingo;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.View;
@@ -61,6 +62,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
 
     private boolean isHeadRefreshing = false;
 
+    private Handler mHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -310,7 +312,7 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
             mPullToRefreshView.setUpRefreshable(true);
             isHeadRefreshing = true;
             if (HttpUtil.isNetworkConnected(getApplicationContext())) {
-                onRefresh();
+                startRefresh();
             } else {
                 onLoadFinish();
             }
@@ -325,12 +327,36 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
 
             if (lastId != 0) {
                 view.setFootViewVisibility(View.VISIBLE);
-                onLoadMore(lastId += pageSize);
+                startLoadMore();
             } else {
-                onRefresh();
+                startRefresh();
             }
         }
     };
+
+    public void startRefresh(){
+        if (mHandler==null){
+            mHandler=new Handler();
+        }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onRefresh();
+            }
+        },100);
+    }
+
+    public void startLoadMore(){
+        if (mHandler==null){
+            mHandler=new Handler();
+        }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onLoadMore(lastId+=pageSize);
+            }
+        },100);
+    }
 
     /**
      * 加载更多

@@ -14,10 +14,20 @@ public class InterpriseInfoBean {
     private String website = null;
     private String tel = null;
     private String introduction = null;
+    private String e_url = null;
     //    /**
 //     * 联系人. *
 //     */
 //    private String contacts = null;
+
+    public String getE_url() {
+        return e_url;
+    }
+
+    public void setE_url(String e_url) {
+        this.e_url = e_url;
+    }
+
     private String mainRun = null;
     private ArrayList<CurrentSupplyBean> infoarray = null;
 

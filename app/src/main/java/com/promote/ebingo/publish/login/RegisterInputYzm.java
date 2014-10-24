@@ -84,15 +84,17 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
 
     private void commit() {
         final String yzm = edit_yzm.getText().toString().trim();
-        String password = edit_password.getText().toString().trim();
 
         if (!checkVerify(yzm)) {
             ContextUtil.toast("验证码错误！");
             return;
         }
+        final String password = edit_password.getText().toString().trim();
+        final String phoneNum = getIntent().getStringExtra("phonenum");
+
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
         parmater.put("yzm", yzm);
-        parmater.put("phonenum", getIntent().getStringExtra("phonenum"));
+        parmater.put("phonenum", phoneNum);
         parmater.put("password", password);
         final ProgressDialog dialog = DialogUtil.waitingDialog(this);
         HttpUtil.post(HttpConstant.register, parmater, new EbingoHandler() {
@@ -101,8 +103,8 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
                 try {
                     Company.getInstance().setCompanyId(response.getInt("company_id"));
                     Company.getInstance().setVipType(response.getString("vip_type"));
-                    Intent intent = new Intent(RegisterInputYzm.this, EnterpriseSettingActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    doLogin(phoneNum,password);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -116,6 +118,23 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             @Override
             public void onFinish() {
                 dialog.dismiss();
+            }
+        });
+    }
+
+    private void doLogin(String phone,String password){
+        new LoginManager().doLogin(phone,password,new LoginManager.Callback() {
+            @Override
+            public void onSuccess() {
+                Intent intent = new Intent(RegisterInputYzm.this, EnterpriseSettingActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                setResult(RESULT_OK,new Intent());
+                finish();
+            }
+
+            @Override
+            public void onFail(String msg) {
+                super.onFail(msg);
             }
         });
     }

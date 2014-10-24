@@ -1,5 +1,6 @@
 package com.promote.ebingo.find;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.GridLayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -21,6 +26,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingo.BaseFragment;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.CategoryBeen;
+import com.promote.ebingo.bean.HotCategory;
 import com.promote.ebingo.category.CategoryActivity;
 import com.promote.ebingo.impl.EbingoRequest;
 import com.promote.ebingo.search.SearchActivity;
@@ -110,9 +116,9 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-//        if (!hidden) {
-//            getCategoryList();
-//        }
+        if (!hidden) {
+//            fragfindgv.startLayoutAnimation();
+        }
     }
 
     @Override
@@ -132,7 +138,6 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         String[] categorys = getResources().getStringArray(R.array.category_data);
         adapter = new MyGrideAdapter(getActivity().getApplicationContext());
         fragfindgv.setAdapter(adapter);
-
         searchbartv.setOnClickListener(this);
         fragfindgv.setOnItemClickListener(this);
         mNoDataView.setOnClickListener(this);
@@ -170,11 +175,29 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), CategoryActivity.class);
-        intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getId());
-        intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getName());
-        startActivity(intent);
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        Animation animation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.adv_item_click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getId());
+                intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getName());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.startAnimation(animation);
+
 
     }
 

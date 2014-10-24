@@ -57,6 +57,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     // TODO: Rename and change types of parameters
     private String mParam1;
     private ImageView interprismainimg;
+    private ImageView e_plat;
     private TextView fraginterprisemainnametv;
     private TextView fraginterprisemainaddrtv;
     private TextView fraginterprisemainhttpaddrtv;
@@ -77,7 +78,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
     private DisplayImageOptions mOptions;
     private PagerScrollView enterpriseinfopsv;
-
+    private int[] e_plat_drawable=new int[]{R.drawable.e_plat_disabled,R.drawable.e_plat};
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -125,6 +126,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     private void initialize(View containerView) {
 
         interprismainimg = (ImageView) containerView.findViewById(R.id.interpris_main_img);
+        e_plat = (ImageView) containerView.findViewById(R.id.e_plat);
         fraginterprisemainnametv = (TextView) containerView.findViewById(R.id.frag_interprise_main_name_tv);
         fraginterprisemainaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_addr_tv);
         fraginterprisemainhttpaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_httpaddr_tv);
@@ -133,9 +135,9 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         fraginterprisemainabstracttv = (TextView) containerView.findViewById(R.id.frag_interprise_main_abstract_tv);
         interpisemainsupdemlv = (ScrollListView) containerView.findViewById(R.id.interpise_main_sup_dem_lv);
         enterpriseinfopsv = (PagerScrollView) containerView.findViewById(R.id.enterprise_info_psv);
-        website_layout =  containerView.findViewById(R.id.website_layout);
-        tel_layout =  containerView.findViewById(R.id.tel_layout);
-        address_layout =  containerView.findViewById(R.id.address_layout);
+        website_layout = containerView.findViewById(R.id.website_layout);
+        tel_layout = containerView.findViewById(R.id.tel_layout);
+        address_layout = containerView.findViewById(R.id.address_layout);
 //        enterpriseinfopsv.smoothScrollTo(0, 0);
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
@@ -175,7 +177,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
         parmater.put("company_id", getInterprsetId());
-        LogCat.d("--->MainFragment id=="+getInterprsetId());
+        LogCat.d("--->MainFragment id==" + getInterprsetId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
 
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("utf-8") {
@@ -211,15 +213,15 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
     }
 
 
-    private void initData(InterpriseInfoBean infoBean) {
+    private void initData(final InterpriseInfoBean infoBean) {
 
         ImageManager.load(infoBean.getImage(), interprismainimg, mOptions);
         fraginterprisemainnametv.setText(infoBean.getName());
         fraginterprisemainnametv.setText(getTitle(infoBean.getName(), infoBean.getViptype()));
 
-        setText(address_layout,fraginterprisemainaddrtv,infoBean.getAddr());
-        setText(website_layout,fraginterprisemainhttpaddrtv,infoBean.getWebsite());
-        setText(tel_layout,fraginterprisemaintelltv,infoBean.getTel());
+        setText(address_layout, fraginterprisemainaddrtv, infoBean.getAddr());
+        setText(website_layout, fraginterprisemainhttpaddrtv, infoBean.getWebsite());
+        setText(tel_layout, fraginterprisemaintelltv, infoBean.getTel());
 
         fraginterprisemainabstracttv.setText(infoBean.getIntroduction());
         fraginterprisemainrangetv.setText(infoBean.getMainRun());
@@ -229,16 +231,33 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         }
         myAdapter.notifyDataSetChanged();
         enterpriseinfopsv.smoothScrollTo(0, 0);
-
+        final String e_url = infoBean.getE_url();
+        if (TextUtils.isEmpty(e_url)) {
+            e_plat.setImageResource(e_plat_drawable[0]);
+        }else{
+            e_plat.setImageResource(e_plat_drawable[1]);
+        }
+        e_plat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(e_url)) {
+                    ContextUtil.toast("该企业还没有开通e平台。");
+                } else {
+                    Intent intent = new Intent().setClass(getActivity(), CodeScanOnlineActivity.class);
+                    intent.putExtra(CodeScanOnlineActivity.URLSTR, infoBean.getE_url());
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     /**
      * 如果text为空就隐藏container，否则就用tv展示text
      */
-    private void setText(View container,TextView tv,CharSequence text){
-        if (TextUtils.isEmpty(text)){
+    private void setText(View container, TextView tv, CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
             container.setVisibility(View.GONE);
-        }else{
+        } else {
             tv.setText(text);
         }
     }
@@ -260,7 +279,8 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
                     public Drawable getDrawable(String source) {
                         VipType vipType = VipType.parse(source);
                         Drawable icon = vipType.getIcon(getActivity());
-                        if(icon!=null)icon.setBounds(0, 0, (int) Dimension.dp(14), (int) Dimension.dp(19));
+                        if (icon != null)
+                            icon.setBounds(0, 0, (int) Dimension.dp(14), (int) Dimension.dp(19));
                         return icon;
                     }
                 }, null);

@@ -9,6 +9,7 @@
     <include layout="@layout/common_head_search_layout" />
 
     <GridView
+        android:layoutAnimation="@anim/wave_scale"
         android:id="@+id/frag_find_gv"
         android:numColumns="3"
         android:scrollbars="none"

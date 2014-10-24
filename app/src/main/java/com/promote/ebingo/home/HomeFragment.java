@@ -32,6 +32,7 @@ import com.jch.lib.view.ScrollListView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingo.BaseFragment;
 import com.promote.ebingo.InformationActivity.BuyInfoActivity;
+import com.promote.ebingo.InformationActivity.CodeScanOnlineActivity;
 import com.promote.ebingo.InformationActivity.InterpriseInfoActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
@@ -438,11 +439,13 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                         case 4: {        //外聯web頁面.
 
                             if (isNetworkConnected()) {
-                                Intent intent = new Intent();
-                                intent.setAction("android.intent.action.VIEW");
-                                Uri content_uri = Uri.parse(content);
-                                intent.setData(content_uri);
+                                Intent intent = new Intent(getActivity(),CodeScanOnlineActivity.class);
+//                                intent.setAction("android.intent.action.VIEW");
+//                                Uri content_uri = Uri.parse(content);
+//                                intent.setData(content_uri);
+                                intent.putExtra(CodeScanOnlineActivity.URLSTR,content);
                                 startActivity(intent);
+
 
                             }
                             break;

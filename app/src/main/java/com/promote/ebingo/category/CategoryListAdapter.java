@@ -15,6 +15,7 @@ import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchTypeBean;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FormatUtil;
 import com.promote.ebingo.util.LogCat;
 
 import java.util.ArrayList;
@@ -98,8 +99,8 @@ public class CategoryListAdapter extends BaseAdapter {
             SearchSupplyBean supplyBean = (SearchSupplyBean) categroyItemBean;
             supplyViewHolder.lookNumTv.setText(Integer.toString(supplyBean.getRead_num()));
             LogCat.d("num:"+supplyBean.getMin_supply_num()+" unit"+supplyBean.getUnit());
-            supplyViewHolder.startTv.setText(supplyBean.getMin_supply_num()+supplyBean.getUnit());
-            supplyViewHolder.priceTv.setText(supplyBean.getPrice());
+            supplyViewHolder.startTv.setText(FormatUtil.formatSellNum(supplyBean.getMin_supply_num(),supplyBean.getUnit()));
+            supplyViewHolder.priceTv.setText(FormatUtil.formatPrice(supplyBean.getPrice()));
             supplyViewHolder.nameTv.setText(supplyBean.getName());
             supplyViewHolder.providerTv.setText(supplyBean.getCompany());
             //TODO img
