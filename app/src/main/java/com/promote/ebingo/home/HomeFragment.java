@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -131,7 +130,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      */
     private HoteBeanAdapter mHotSupplyAdapter = null;
 
-    private Point imageSize = new Point(720, 256);
+    private Point imageSize = new Point(320, 118);
+
+    private Point hote_d_s_imgSize = new Point(300, 118);
 
     private ScrollListView mHotBuyLv = null;
     private ScrollListView mSupplyLv = null;
@@ -227,12 +228,12 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mHotMarketGv.setAdapter(hotMarketAdapter);
 
         hot_demand.addAll(mIndexBean.getHot_demand());
-        mHotBuyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_demand, imageSize);
+        mHotBuyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_demand, hote_d_s_imgSize);
         mHotBuyLv.setAdapter(mHotBuyAdapter);
         mHotBuyLv.setOnItemClickListener(new HotBuyOCL());
 
         hot_supply.addAll(mIndexBean.getHot_supply());
-        mHotSupplyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_supply, imageSize);
+        mHotSupplyAdapter = new HoteBeanAdapter(getActivity(), mOptions, mCircleImageOptions, hot_supply, hote_d_s_imgSize);
         mSupplyLv.setAdapter(mHotSupplyAdapter);
         mSupplyLv.setOnItemClickListener(new HotSupplyOCL());
 
@@ -439,11 +440,11 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                         case 4: {        //外聯web頁面.
 
                             if (isNetworkConnected()) {
-                                Intent intent = new Intent(getActivity(),CodeScanOnlineActivity.class);
+                                Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
 //                                intent.setAction("android.intent.action.VIEW");
 //                                Uri content_uri = Uri.parse(content);
 //                                intent.setData(content_uri);
-                                intent.putExtra(CodeScanOnlineActivity.URLSTR,content);
+                                intent.putExtra(CodeScanOnlineActivity.URLSTR, content);
                                 startActivity(intent);
 
 

@@ -122,7 +122,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         categorylv.setAdapter(mListAdapter);
         categorylv.setOnItemClickListener(this);
         //TODO 访问默认数据
-
+        if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
+            netNotAvalible();
+            return;
+        }
         if (mCurType == CategoryType.SUPPLY) {//延迟加载数据，让UI界面先出来
             handler.postDelayed(initSupplyInfoList, 100);
         } else {
@@ -130,14 +133,19 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         }
 
     }
-    /**初始化供应列表*/
+
+    /**
+     * 初始化供应列表
+     */
     private Runnable initSupplyInfoList = new Runnable() {
         @Override
         public void run() {
             getSupplyInfoList(0);
         }
     };
-    /**初始化求购列表*/
+    /**
+     * 初始化求购列表
+     */
     private Runnable initDemandInfoList = new Runnable() {
         @Override
         public void run() {
@@ -175,6 +183,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 mTypePop.dismiss();
                 categoryrefreshview.setUpRefreshable(true);
+                if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
+                    netNotAvalible();
+                    return;
+                }
                 getDemandInfoList(0);
 
                 break;
@@ -189,6 +201,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 mTypePop.dismiss();
                 categoryrefreshview.setUpRefreshable(true);
+                if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
+                    netNotAvalible();
+                    return;
+                }
                 getSupplyInfoList(0);
                 break;
             }
@@ -198,6 +214,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 mCurRankType = CategoryRankType.LOOKNUM;
                 mRankPop.dismiss();
                 categoryrefreshview.setUpRefreshable(true);
+                if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
+                    netNotAvalible();
+                    return;
+                }
                 if (mCurType == CategoryType.DEMAND) {
                     getDemandInfoList(0);
                 } else {
@@ -219,6 +239,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                     mCurRankType = CategoryRankType.PRICE;
                 }
                 mRankPop.dismiss();
+                if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
+                    netNotAvalible();
+                    return;
+                }
                 if (mCurType == CategoryType.DEMAND) {
                     getDemandInfoList(0);
                 } else {
@@ -232,26 +256,32 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
             }
         }
-
     }
 
     /**
      *
      */
     private void hasData() {
-
         categoryrefreshview.setVisibility(View.VISIBLE);
         nodatatv.setVisibility(View.GONE);
-
     }
 
     /**
-     *
+     * 网络没有数据。
      */
     private void noData() {
+        categoryrefreshview.setVisibility(View.GONE);
+        nodatatv.setText(getString(R.string.no_data));
+        nodatatv.setVisibility(View.VISIBLE);
+    }
 
+    /**
+     * 网络连接失败。
+     */
+    private void netNotAvalible() {
         categoryrefreshview.setVisibility(View.GONE);
         nodatatv.setVisibility(View.VISIBLE);
+        nodatatv.setText(getString(R.string.no_network));
     }
 
     /**
@@ -405,7 +435,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         public void onDismiss() {
             categoryrightcb.setChecked(false);
         }
-
     }
 
     private String getRank() {
