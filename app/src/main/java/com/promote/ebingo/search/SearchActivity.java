@@ -469,6 +469,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case HISTORY: {          //當前顯示搜索記錄。
 
                 SearchHistoryBean historyBean = (SearchHistoryBean) mHistoryBeans.get(position);
+                searchbaret.clearFocus();
                 searchbaret.setText(historyBean.getHistory());
                 onSearch();
                 break;
