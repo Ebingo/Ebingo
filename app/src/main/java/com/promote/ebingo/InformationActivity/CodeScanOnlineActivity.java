@@ -1,8 +1,12 @@
 package com.promote.ebingo.InformationActivity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +21,11 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jch.lib.util.VaildUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
+import com.promote.ebingo.center.CallRecordActivity;
+import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -77,7 +85,7 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                LogCat.i("--------------url"+url);
+                LogCat.i("--------------url" + url);
                 return false;
             }
 
@@ -123,28 +131,51 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
     private class JavaInterface {
         @JavascriptInterface()
-        public String jumpToSupply(int id) {
+        public void jumpToSupply(int id) {
             LogCat.i("---------jumpToSupply");
-            Intent intent=new Intent(CodeScanOnlineActivity.this,ProductInfoActivity.class);
-            intent.putExtra(ProductInfoActivity.ARG_ID,id);
+            Intent intent = new Intent(CodeScanOnlineActivity.this, ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID, id);
             startActivity(intent);
-            return "test";
         }
 
         @JavascriptInterface()
         public void jumpToDemand(int id) {
-            LogCat.i("---------jumpToSupply");
-            Intent intent=new Intent(CodeScanOnlineActivity.this,BuyInfoActivity.class);
-            intent.putExtra(BuyInfoActivity.DEMAND_ID,id);
+            LogCat.i("---------jumpToDemand");
+            Intent intent = new Intent(CodeScanOnlineActivity.this, BuyInfoActivity.class);
+            intent.putExtra(BuyInfoActivity.DEMAND_ID, id);
             startActivity(intent);
         }
 
         @JavascriptInterface()
         public void jumpToCompany(int id) {
-            LogCat.i("---------jumpToSupply");
-            Intent intent=new Intent(CodeScanOnlineActivity.this,InterpriseInfoActivity.class);
-            intent.putExtra(InterpriseInfoActivity.ARG_ID,id);
+            LogCat.i("---------jumpToCompany");
+            Intent intent = new Intent(CodeScanOnlineActivity.this, InterpriseInfoActivity.class);
+            intent.putExtra(InterpriseInfoActivity.ARG_ID, id);
             startActivity(intent);
+        }
+
+        @JavascriptInterface
+        public void callPhone(final String number, String contacts) {
+            final Context context = CodeScanOnlineActivity.this;
+            if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return;
+
+            EbingoDialog dialog = EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_CALL_PHONE);
+            dialog.setTitle(contacts);
+            dialog.setMessage(context.getString(R.string.dial_number_notice, number));
+            dialog.setPositiveButton(R.string.make_call, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    LogCat.i("--->", "dial:" + number);
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+
+        public void share() {
+
         }
     }
 }
