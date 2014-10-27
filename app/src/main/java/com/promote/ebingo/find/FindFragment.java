@@ -196,7 +196,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
             }
         });
-        view.startAnimation(animation);
+        view.findViewById(R.id.find_item_ll).startAnimation(animation);
 
 
     }

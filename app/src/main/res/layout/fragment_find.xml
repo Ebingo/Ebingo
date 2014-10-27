@@ -13,6 +13,8 @@
         android:id="@+id/frag_find_gv"
         android:numColumns="3"
         android:scrollbars="none"
+        android:horizontalSpacing="1px"
+        android:verticalSpacing="1px"
         android:listSelector="@null"
         android:visibility="gone"
         android:background="@drawable/find_bg"

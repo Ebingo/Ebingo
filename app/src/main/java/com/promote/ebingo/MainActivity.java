@@ -20,6 +20,7 @@ import com.promote.ebingo.publish.PublishFragment;
 import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
 
@@ -217,6 +218,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         long curTime = System.currentTimeMillis();
         if (curTime - lastTime < 1500) {
             super.onBackPressed();
+            FileUtil.saveFile(ContextUtil.getContext(), FileUtil.FILE_COMPANY, Company.getInstance());
         } else {
             ContextUtil.toast("再按一次退出！");
             lastTime = curTime;

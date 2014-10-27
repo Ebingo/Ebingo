@@ -105,7 +105,7 @@ public class LoginManager {
                     Company company = JsonUtil.get(data.toString(), Company.class);
                     Company.loadInstance(company);
 
-                    FileUtil.saveFile(ContextUtil.getContext(), FileUtil.FILE_COMPANY, company);
+
                     ContextUtil.saveCurCompanyName(phone);
                     ContextUtil.saveCurCompanyPwd(password);
                     parmater.put("company_id", Company.getInstance().getCompanyId());
@@ -134,6 +134,7 @@ public class LoginManager {
                                 }
                             }
                             Company.getInstance().setVipInfo(vipInfo);
+                            FileUtil.saveFile(ContextUtil.getContext(), FileUtil.FILE_COMPANY, Company.getInstance());
                             callback.onSuccess();
                         }
 

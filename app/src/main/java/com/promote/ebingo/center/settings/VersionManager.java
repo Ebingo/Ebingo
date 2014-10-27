@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.WindowManager;
@@ -27,12 +29,14 @@ import com.promote.ebingo.MainActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.EbingoApp;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,6 +44,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -50,38 +55,45 @@ public class VersionManager {
 
     /**
      * 请求版本信息
+     * 1.如果文件已存在就检查文件是否下载完成
+     * 2.如果文件不存在就提示下载
+     * 3.文件名是用Ebingoo+版本名来命名的，如Ebingoo3.1.1.apk
      *
      * @param context
+     * @param showDialogIfNewest true如果最新就弹出提示框，false 不弹出提示框
      */
-    public static void requestVersionCode(final Context context, final boolean showDialogIfNewest) {
-        final Context mContext = context.getApplicationContext();
+    public static void requestVersionCode(Context context, boolean showDialogIfNewest) {
 
+        final Context mContext = context.getApplicationContext();
+        final boolean showNewest = showDialogIfNewest;
         EbingoRequestParmater param = new EbingoRequestParmater(context);
+
         HttpUtil.post(HttpConstant.getNewestVersion, param, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                LogCat.i("--->", response + "");
+                LogCat.i(response + "");
                 try {
-                    JSONObject result = response.getJSONObject("response");
-                    int version_code = result.getInt("version_code");
-                    if (version_code > getLocaleVersion(mContext)) {
-                        String url = result.getString("url");
-                        String versionName = result.getString("version");
+                    response = response.getJSONObject("response");
+                    int remoteVersion = response.getInt("version_code");
+                    if (remoteVersion > getLocaleVersion(mContext)) {
+
+                        String url = response.getString("url");
+                        String versionName = response.getString("version");
                         File apkFile = getDownloadFile(mContext, versionName);
                         //检查是否已经下载
                         if (apkFile.exists()) {
-                            showInstallDialog(mContext, apkFile);
+                            checkFileSize(mContext, url, versionName);
                         } else {//已经下载，用户可以直接安装
                             EbingoDialog versionDialog = new EbingoDialog(mContext);
                             versionDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                             versionDialog.setTitle(mContext.getString(R.string.find_new_version, apkFile.getName()));
-                            versionDialog.setMessage(result.getString("msg"));
+                            versionDialog.setMessage(response.getString("msg"));
                             versionDialog.setPositiveButton(R.string.update_right_now, new DownloadListener(mContext, url, versionName));
                             versionDialog.setNegativeButton(R.string.cancel, versionDialog.DEFAULT_LISTENER);
                             versionDialog.show();
                         }
-                    } else if (showDialogIfNewest) {
-                        EbingoDialog versionDialog = EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_I_KNOW);
+                    } else if (showNewest) {
+                        EbingoDialog versionDialog = EbingoDialog.newInstance(mContext, EbingoDialog.DialogStyle.STYLE_I_KNOW);
                         versionDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                         versionDialog.setMessage("已经是最新版本了！");
                         versionDialog.show();
@@ -94,10 +106,71 @@ public class VersionManager {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
+                super.onFailure(statusCode, headers, responseString, throwable);
+                ContextUtil.toast(R.string.net_error);
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                ContextUtil.toast(R.string.net_error);
+            }
+
+
         });
     }
+
+    /**
+     * 比较本地文件和远程文件大小
+     * 如果本地文件小于远程文件大小，则断点续传
+     *
+     * @param url
+     */
+    private static void checkFileSize(final Context context, final String url, final String versionName) {
+        final File file = getDownloadFile(context, versionName);
+        final Handler handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+
+                final long localeSize = file.length();
+                final long remoteSize = (Long) msg.obj;
+                LogCat.d("remoteSize = " + remoteSize + "  localeSize = " + localeSize);
+                if (remoteSize <= localeSize) {
+                    showInstallDialog(context, file);
+                } else {
+                    EbingoDialog dialog = new EbingoDialog(context);
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    dialog.setTitle(R.string.warn);
+                    int rate= (int) (localeSize/(float)remoteSize*100);
+                    dialog.setMessage(context.getString(R.string.continue_download,rate));
+                    dialog.setPositiveButton(R.string.continue_, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new APKDownloadTask(context, localeSize).execute(url, versionName);
+                        }
+                    });
+                    dialog.setNegativeButton(R.string.cancel,dialog.DEFAULT_LISTENER);
+                    dialog.show();
+                }
+                return false;
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.sendMessage(handler.obtainMessage(1, getRemoteFileSize(url)));
+            }
+        }).start();
+
+    }
+
+    /**
+     * 获取本地版本号
+     *
+     * @param context
+     * @return
+     */
 
     private static int getLocaleVersion(Context context) {
         int localeVersion = 0;
@@ -120,24 +193,24 @@ public class VersionManager {
 
         private Context mContext;
         private String url;
-        private String fileName;
+        private String versionName;
 
-        DownloadListener(Context context, String url, String fileName) {
+        DownloadListener(Context context, String url, String versionName) {
             this.mContext = context;
             this.url = url;
-            this.fileName = fileName;
+            this.versionName = versionName;
         }
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
 
-            final APKDownloadTask mTask = new APKDownloadTask(mContext);
             DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE: {
-                            mTask.execute(url, fileName);
+                            APKDownloadTask mTask = new APKDownloadTask(mContext, 0l);
+                            mTask.execute(url, versionName);
                             break;
                         }
                         case DialogInterface.BUTTON_NEGATIVE: {
@@ -158,7 +231,8 @@ public class VersionManager {
                 wifiDialog.show();
                 return;
             } else {
-                mTask.execute(url, fileName);
+                APKDownloadTask mTask = new APKDownloadTask(mContext, 0l);
+                mTask.execute(url, versionName);
             }
 
         }
@@ -183,7 +257,7 @@ public class VersionManager {
      */
     public static File getDownloadFile(Context context, String version) {
         File dir;
-        if ( Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             dir = new File(Environment.getExternalStorageDirectory(), "ebingoo");
         } else {
             dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "ebingoo");
@@ -197,86 +271,113 @@ public class VersionManager {
     }
 
     /**
-     * 下载apk，需要传入url
+     * 下载apk，需要传入url和版本名
      */
-    public static class APKDownloadTask extends AsyncTask<String, Integer, File> implements Dialog.OnDismissListener {
+    public static class APKDownloadTask extends AsyncTask<String, Long, File> implements Dialog.OnDismissListener {
         private Context mContext;
         private ApkProgressDialog dialog;
         private NotificationCompat.Builder builder;
+        private Boolean pause = false;
+        /*下载开始位置*/
+        private Long start;
+        NotificationManager manager;
 
-        public APKDownloadTask(Context context) {
+        /**
+         *
+         * @param context
+         * @param start 文件流的开始位置
+         */
+        public APKDownloadTask(Context context, Long start) {
             this.mContext = context.getApplicationContext();
-            dialog = new ApkProgressDialog(mContext);
-            dialog.setOnDismissListener(this);
-            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            this.start = start;
+            manager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
         @Override
         protected void onPreExecute() {
+            dialog = new ApkProgressDialog(mContext) {
+                @Override
+                public void onPausePressed() {
+                    synchronized (pause){
+                        pause = true;
+                    }
+                }
+            };
+            dialog.setOnDismissListener(this);
+            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             dialog.show();
         }
 
         @Override
         protected File doInBackground(String... params) {
             String url = params[0];
-//            String fileName = url.substring(url.lastIndexOf("/") + 1);
             String fileName = params[1];
-            File apkFile;
+            File apkFile = getDownloadFile(mContext, fileName);
+            byte[] bytes = new byte[10 * 1024];
+            int len = 0;
+            Long downloadLength = start;
+            Long remoteSize = getRemoteFileSize(url);
+            publishProgress(downloadLength, remoteSize);
+            String range = "bytes=" + start + "-" + remoteSize;
 
-            apkFile = getDownloadFile(mContext, fileName);
-            LogCat.i("install apk name--:" + apkFile.getAbsolutePath() + "---------apk name:" + apkFile.getName());
-            FileOutputStream fot = null;
-            InputStream is = null;
             try {
+                RandomAccessFile randomAccessFile = new RandomAccessFile(apkFile, "rw");
+                randomAccessFile.seek(start);
                 HttpURLConnection cnn = (HttpURLConnection) new URL(url).openConnection();
-                cnn.setDoInput(true);
-                if (!apkFile.exists()) {
-                    apkFile.createNewFile();
-                }
-                fot = new FileOutputStream(apkFile);
-                is = cnn.getInputStream();
-                byte[] bytes = new byte[10 * 1024];
+                cnn.setRequestProperty("User-Agent", "Net");
+                cnn.setRequestProperty("RANGE", range);
+                InputStream is = cnn.getInputStream();
+                LogCat.i("install apk name:" + apkFile.getName() + " range=" + range);
 
-                int len;
-                int contentLength = cnn.getContentLength();
-                int downloadLength = 0;
-                while ((len = is.read(bytes)) != -1) {
-                    fot.write(bytes, 0, len);
+                while ((len = is.read(bytes)) != -1 && !isPause()) {
+                    randomAccessFile.write(bytes, 0, len);
                     downloadLength += len;
-                    publishProgress(downloadLength, contentLength);
+                    publishProgress(downloadLength, remoteSize);
+
                 }
                 is.close();
+                cnn.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
-                if (apkFile!=null){
+                if (apkFile != null) {
                     apkFile.delete();
                 }
-                apkFile=null;
-            } finally {
-                if (fot != null)
-                    try {
-                        fot.flush();
-                        fot.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                apkFile = null;
             }
-
             return apkFile;
         }
 
+        private boolean isPause(){
+            synchronized (pause){
+                return pause;
+            }
+        }
+
+        /**
+         * 三个参数：
+         * values[0]已经下载的大小
+         * values[1]总大小
+         *
+         * @param values
+         */
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            int download = values[0];
-            int total = values[1];
+        protected void onProgressUpdate(Long... values) {
+            if (!dialog.isShowing()) {
+                dialog.show();
+            }
+            Long download = values[0];
+            Long total = values[1];
             int rate = (int) ((download / (float) total) * 100);
             dialog.setProgress(rate);
             showNotification(rate);
         }
 
+        @Override
+        protected void onCancelled(File file) {
+            if (file != null) file.delete();
+        }
+
         private void showNotification(int rate) {
-            NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder build = getNotification();
             build.setContentTitle(String.format("已经下载%d%%", rate));
             build.setProgress(100, rate, false);
@@ -307,9 +408,9 @@ public class VersionManager {
             dialog.dismiss();
             if (file == null) {
                 ContextUtil.toast(R.string.download_fialed);
-            } else {
+            } else if (!pause) {
                 NotificationCompat.Builder build = getNotification();
-                build.setContentTitle(mContext.getString(R.string.click_install,file.getName()));
+                build.setContentTitle(mContext.getString(R.string.click_install, file.getName()));
                 Intent intent = getInstallIntent(file);
                 build.setContentIntent(PendingIntent.getActivity(mContext, 0, intent, 0));
                 build.setAutoCancel(true);
@@ -325,6 +426,25 @@ public class VersionManager {
         }
     }
 
+    /**
+     * 获取远程文件大小
+     *
+     * @param url
+     * @return
+     */
+    private static long getRemoteFileSize(String url) {
+        long size = 0;
+        try {
+            HttpURLConnection httpUrl = (HttpURLConnection) (new URL(url)).openConnection();
+            size = httpUrl.getContentLength();
+            httpUrl.disconnect();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return size;
+    }
+
     private static Intent getInstallIntent(File file) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -333,6 +453,7 @@ public class VersionManager {
                 "application/vnd.android.package-archive");
         return intent;
     }
+
 
     /**
      * 安装
@@ -346,7 +467,7 @@ public class VersionManager {
         EbingoDialog installDialog = new EbingoDialog(context);
         installDialog.setTitle(R.string.warn);
         installDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        installDialog.setMessage(context.getString(R.string.click_install,file.getName()));
+        installDialog.setMessage(context.getString(R.string.click_install, file.getName()));
         installDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

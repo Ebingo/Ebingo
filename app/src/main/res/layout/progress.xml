@@ -6,6 +6,24 @@
     android:background="@color/ebingo_dialog_background"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@android:id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="22dp"
+        android:text="更新进度"
+        android:textColor="@color/ebingo_dialog_title_color"
+        android:textSize="@dimen/ebingo_dialog_title_textSize" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/ebingo_dialog_title_color" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +34,8 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/progress_bar"
+            android:background="@color/gray"
             android:max="100"
             android:id="@+id/progressBar" />
 
@@ -35,15 +55,35 @@
         android:layout_marginTop="4dp"
         android:background="@color/ebingo_button_divider" />
 
-    <TextView
-        android:id="@+id/btn_hide"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/ebingo_dialog_btn"
-        android:gravity="center"
-        android:text="隐藏"
-        android:textStyle="bold"
-        android:clickable="true"
-        android:textSize="@dimen/ebingo_button_textSize"
-        android:textColor="@color/ebingo_button_textColor" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btn_pause"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="@drawable/ebingo_dialog_btn"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:textSize="@dimen/ebingo_button_textSize"
+            android:textColor="@color/ebingo_button_textColor" />
+
+        <TextView
+            android:id="@+id/btn_hide"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="@drawable/ebingo_dialog_btn"
+            android:gravity="center"
+            android:text="隐藏"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:textSize="@dimen/ebingo_button_textSize"
+            android:textColor="@color/ebingo_button_textColor" />
+    </LinearLayout>
 </LinearLayout>
