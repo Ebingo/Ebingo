@@ -122,7 +122,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         categorylv.setAdapter(mListAdapter);
         categorylv.setOnItemClickListener(this);
         //TODO 访问默认数据
-
         if (mCurType == CategoryType.SUPPLY) {//延迟加载数据，让UI界面先出来
             handler.postDelayed(initSupplyInfoList, 100);
         } else {
@@ -130,14 +129,19 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         }
 
     }
-    /**初始化供应列表*/
+
+    /**
+     * 初始化供应列表
+     */
     private Runnable initSupplyInfoList = new Runnable() {
         @Override
         public void run() {
             getSupplyInfoList(0);
         }
     };
-    /**初始化求购列表*/
+    /**
+     * 初始化求购列表
+     */
     private Runnable initDemandInfoList = new Runnable() {
         @Override
         public void run() {
@@ -405,7 +409,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         public void onDismiss() {
             categoryrightcb.setChecked(false);
         }
-
     }
 
     private String getRank() {
