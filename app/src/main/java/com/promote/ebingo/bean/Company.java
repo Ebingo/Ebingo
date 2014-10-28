@@ -27,7 +27,7 @@ public class Company implements Serializable{
     private String email;
     private transient Uri imageUri;//公司图片在手机中的位置
     private CompanyVipInfo companyVipInfo;
-
+    private String e_url;//e平台url
     private static Company mCompany = null;
 
     private Company() {
@@ -45,6 +45,14 @@ public class Company implements Serializable{
 //            mCompany.setCompanyId(6);
         }
         return mCompany;
+    }
+
+    public String getE_url() {
+        return e_url;
+    }
+
+    public void setE_url(String e_url) {
+        this.e_url = e_url;
     }
 
     public CompanyVipInfo getVipInfo() {

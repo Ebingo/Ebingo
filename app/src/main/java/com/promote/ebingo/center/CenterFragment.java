@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.InformationActivity.CodeScanOnlineActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -65,6 +66,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private TextView centerdemandnumtv;
     private TextView centercollectnumtv;
     private TextView centermsgnumtv;
+    private View btn_ePlat;
     private TextView centsupplytv;
     private TextView centdemandtv;
     private TextView centcollettv;
@@ -74,8 +76,9 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private TextView centsettingtv;
     private TextView centprofiletv;
     private TextView centShare;
-    private Handler handler=new Handler();
-    private InvalidateData invalidateData=new InvalidateData();
+    private Handler handler = new Handler();
+    private InvalidateData invalidateData = new InvalidateData();
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -140,9 +143,15 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             centerloginbtn.setBackgroundResource(0);
             centerloginbtn.setText(companyName);
         }
+        String e_url=Company.getInstance().getE_url();
+        if(TextUtils.isEmpty(e_url)){
+            btn_ePlat.setVisibility(View.INVISIBLE);
+        }else{
+            btn_ePlat.setVisibility(View.VISIBLE);
+        }
 
-        Drawable icon=VipType.getCompanyInstance().getIcon(getActivity());
-        LogCat.i("set vip icon:"+icon);
+        Drawable icon = VipType.getCompanyInstance().getIcon(getActivity());
+        LogCat.i("set vip icon:" + icon);
         centerloginbtn.setCompoundDrawables(null, null, icon, null);
 
         setHeadImage(Company.getInstance().getImageUri());
@@ -221,15 +230,17 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.cent_supply_bar).setOnClickListener(this);
         view.findViewById(R.id.cent_collect_bar).setOnClickListener(this);
         view.findViewById(R.id.cent_msg_bar).setOnClickListener(this);
+        btn_ePlat=view.findViewById(R.id.commit_title_done);
+        btn_ePlat.setOnClickListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        handler.postDelayed(invalidateData,100);
+        handler.postDelayed(invalidateData, 100);
     }
 
-    private class InvalidateData implements  Runnable{
+    private class InvalidateData implements Runnable {
 
         @Override
         public void run() {
@@ -340,6 +351,14 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 startActivity(Intent.createChooser(intent, "选择分享"));
                 break;
             }
+
+            case R.id.commit_title_done: {
+                Intent intent=new Intent(getActivity(),CodeScanOnlineActivity.class);
+                intent.putExtra(CodeScanOnlineActivity.URLSTR,Company.getInstance().getE_url());
+                startActivity(intent);
+                break;
+            }
+
             default: {
 
             }

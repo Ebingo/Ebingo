@@ -105,7 +105,6 @@ public class LoginManager {
                     Company company = JsonUtil.get(data.toString(), Company.class);
                     Company.loadInstance(company);
 
-
                     ContextUtil.saveCurCompanyName(phone);
                     ContextUtil.saveCurCompanyPwd(password);
                     parmater.put("company_id", Company.getInstance().getCompanyId());
