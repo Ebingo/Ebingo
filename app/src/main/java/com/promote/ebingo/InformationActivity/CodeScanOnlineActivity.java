@@ -35,13 +35,13 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
     private WebView scanwb;
     private String urlStr = null;
+    private String curUrl=null;//当前页面url
     public static final String URLSTR = "urlStr";
     /**
      * 回退按钮. *
      */
     private ImageView mBackIv = null;
     private TextView titleTv;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +123,7 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
+            curUrl=url;
             view.loadUrl(url);
             return true;
         }
@@ -174,8 +174,13 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
             dialog.show();
         }
 
+        @JavascriptInterface
         public void share() {
-
+            Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
+            intent.setType("text/plain"); // 分享发送的数据类型
+            intent.putExtra(Intent.EXTRA_SUBJECT, scanwb.getTitle()); // 分享的主题
+            intent.putExtra(Intent.EXTRA_TEXT, scanwb.getTitle()+scanwb.getUrl()); // 分享的内容
+            startActivity(Intent.createChooser(intent, "分享到"));
         }
     }
 }

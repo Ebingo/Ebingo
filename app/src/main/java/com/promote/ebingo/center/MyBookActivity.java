@@ -1,11 +1,12 @@
 package com.promote.ebingo.center;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -33,9 +34,11 @@ import com.promote.ebingo.util.LogCat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import static com.promote.ebingo.publish.AddTagsActivity.ScrollHandler;
+
 /**
  * 订阅标签、热门标签等
  */
@@ -46,6 +49,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     private ToggleButton toggleButton;
     private int tag_remain = 0;//剩余标签数
     private ScrollHandler scrollHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,16 +60,48 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         save.setText("保存");
         save.setOnClickListener(this);
         edit_tag.setOnClickListener(this);
+        edit_tag.addTextChangedListener(new LengthLimitWatcher(10));
         tag_remain = Company.getInstance().getVipInfo().getTag_num();
         toggleButton = (ToggleButton) findViewById(R.id.arrange);
         toggleButton.setOnCheckedChangeListener(this);
-        scrollHandler=new ScrollHandler((ScrollView) findViewById(R.id.scroll));
+        scrollHandler = new ScrollHandler((ScrollView) findViewById(R.id.scroll));
         scrollHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 getData();
             }
-        },100);
+        }, 100);
+    }
+
+    private class LengthLimitWatcher implements TextWatcher {
+
+        private int maxLength;
+        private CharSequence old = null;
+
+        private LengthLimitWatcher(int maxLength) {
+            this.maxLength = maxLength;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            try {
+                if (s.toString().getBytes("UTF-8").length > maxLength * 3) {
+                    s.delete(s.length() - 1, s.length());
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override
@@ -94,6 +130,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
                 String tagName = edit_tag.getText().toString().trim();
 
+
                 if (isUniqueTag(tagName)) {
                     BookBean bookBean = new BookBean();
                     bookBean.setName(tagName);
@@ -116,6 +153,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
         }
     }
+
 
     private boolean isUniqueTag(String tagName) {
         int count = tagContent.getChildCount();
@@ -219,7 +257,12 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         tagView.setTag(bookBean);
         tagView.setOnTagClickListener(this);
         if (toggleButton.isChecked()) {
-            toggleTagViewState(true);
+            scrollHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toggleTagViewState(true);
+                }
+            },100);
         }
         scrollHandler.scrollToEnd(0);
     }
@@ -241,9 +284,11 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
             if (state) {
                 Animation anim;
                 if (tagView.getAnimation() == null) {
-                    RotateAnimation rotateAnimation = new RotateAnimation(-3, 3, tagView.getWidth() / 2, tagView.getHeight() / 2);
-                    rotateAnimation.setDuration(100);
-                    rotateAnimation.setInterpolator(new DecelerateInterpolator());
+                    int centerX=tagView.getWidth()/2;
+                    float degree=180*5/(3.1415f*centerX);
+                    RotateAnimation rotateAnimation = new RotateAnimation(-degree, degree, centerX, tagView.getHeight() / 2);
+                    rotateAnimation.setDuration(200);
+                    rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
                     rotateAnimation.setRepeatCount(Animation.INFINITE);
                     rotateAnimation.setRepeatMode(Animation.REVERSE);
                     anim = rotateAnimation;

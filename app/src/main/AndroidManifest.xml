@@ -234,7 +234,7 @@
         <activity
             android:name="com.jch.d2code.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity

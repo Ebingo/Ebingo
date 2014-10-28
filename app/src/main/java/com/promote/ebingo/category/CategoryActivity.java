@@ -58,7 +58,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     /**
      * 分页最大加载数。 *
      */
-    private int pageSize = 8;
+    private int pageSize = 20;
     /**
      * 类别选择弹出window. *
      */

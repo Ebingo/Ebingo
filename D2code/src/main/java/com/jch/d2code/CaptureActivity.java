@@ -12,6 +12,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
@@ -199,5 +200,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             mediaPlayer.seekTo(0);
         }
     };
+
+    public void onClick(View v){
+        onBackPressed();
+    }
 
 }

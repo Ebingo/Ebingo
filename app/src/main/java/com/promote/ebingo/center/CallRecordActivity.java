@@ -202,22 +202,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             holder.contact.setText(callRecord.getContacts());
             holder.dial.setTag(callRecord);
             holder.dial.setOnClickListener(new DialListener());
-            try {
-                String callTime = callRecord.getCall_time();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                Date today = new Date();
-                Date callDay = simpleDateFormat.parse(callTime);
-                if (isSameDay(today, callDay)) {
-                    holder.date.setText(new SimpleDateFormat("hh:mm:ss").format(callDay));
-                } else {
-                    holder.date.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(callDay));
-                }
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-
+            holder.date.setText(callRecord.getCall_time());
             convertView.setTag(holder);
             return convertView;
         }

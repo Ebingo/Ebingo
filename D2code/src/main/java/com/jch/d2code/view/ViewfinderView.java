@@ -60,7 +60,6 @@ public final class ViewfinderView extends View {
 
     private final Paint paint;
     private final Paint laserPaint;
-    private Bitmap laser;
     private Bitmap resultBitmap;
     private final int maskColor;
     private final int resultColor;
@@ -68,13 +67,14 @@ public final class ViewfinderView extends View {
     private final int laserColor;
     private final int resultPointColor;
     private final int cornerColor;
+    private final float TEXT_MARGIN_TOP;
     private int scannerAlpha;
     private float saved_line;
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
     private Xfermode xfermode;
     private Interpolator interpolator;
-
+    private String text;
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -86,6 +86,7 @@ public final class ViewfinderView extends View {
         paint.setDither(true);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setTextAlign(Paint.Align.CENTER);
 
         laserPaint=new Paint(Paint.DITHER_FLAG);
         laserPaint.setMaskFilter(new BlurMaskFilter(20, BlurMaskFilter.Blur.NORMAL));
@@ -100,16 +101,16 @@ public final class ViewfinderView extends View {
         possibleResultPoints = new HashSet<ResultPoint>(5);
         xfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         interpolator = new OvershootInterpolator();
+        text=resources.getString(R.string.code_2_notice);
+
+        paint.setTextSize(15*resources.getDisplayMetrics().scaledDensity+0.5f);
+        TEXT_MARGIN_TOP=resources.getDisplayMetrics().density*40+0.5f;
+
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        laser = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas laserCanvas = new Canvas(laser);
-        RectF rectF=new RectF(0, 0, 20, 5);
-        paint.setColor(laserColor);
-        laserCanvas.drawOval(rectF, paint);
     }
 
     @Override
@@ -144,17 +145,18 @@ public final class ViewfinderView extends View {
             paint.setStrokeWidth(0);
             paint.setStyle(Paint.Style.STROKE);
             canvas.drawRect(frame.left, frame.top, frame.right, frame.bottom, paint);
-
+            paint.setColor(0xffffffff);
+            canvas.drawText(text,frame.left+frame.width()/2,frame.bottom+TEXT_MARGIN_TOP,paint);
             // Draw a red "laser scanner" line through the middle to show
             // decoding is active
             paint.setColor(laserColor);
             paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
             scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
 
-            saved_line = (saved_line + 13) % frame.width();
-            int laserPosition = (int) (frame.left + saved_line*interpolator.getInterpolation(saved_line/(float)frame.width()));
+            saved_line = (saved_line + 13) % frame.height();
+            int laserPosition = (int) (frame.top + saved_line*interpolator.getInterpolation(saved_line/(float)frame.height()));
             paint.setStyle(Paint.Style.FILL);
-            RectF rect=new RectF(laserPosition,frame.top+3,laserPosition+5,frame.bottom-3);
+            RectF rect=new RectF(frame.left+3,laserPosition,frame.right-3,laserPosition+4);
             canvas.drawOval(rect,paint);
 
             paint.setAlpha(0xff);
@@ -192,8 +194,10 @@ public final class ViewfinderView extends View {
         }
     }
 
+
+
     private void drawCorner(Canvas canvas, Rect frame) {
-        int corner = frame.left / 6;
+        int corner = frame.width() / 6;
         drawAngle(canvas, frame.left - 1, frame.top - 1, frame.left - 1 + corner, frame.top - 1);
         drawAngle(canvas, frame.right + 1, frame.top - 1, frame .right + 1, frame.top + corner - 1);
         drawAngle(canvas, frame.right + 1, frame.bottom + 1, frame.right - corner + 1, frame.bottom + 1);

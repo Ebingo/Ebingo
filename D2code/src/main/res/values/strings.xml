@@ -3,5 +3,6 @@
 
     <string name="app_name">Test2Code</string>
     <string name="hello_world">Hello world!</string>
+    <string name="code_2_notice">将二维码放入框内，即可自动扫描！</string>
 
 </resources>
