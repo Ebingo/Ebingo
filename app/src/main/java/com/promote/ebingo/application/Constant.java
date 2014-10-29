@@ -20,7 +20,7 @@ public class Constant {
     /**
      * 设置是否为debug模式。 *
      */
-    public static boolean mReleaseAble = false;
+    public static boolean mReleaseAble = true;
 
     public static boolean isReleaseAble() {
         return mReleaseAble;

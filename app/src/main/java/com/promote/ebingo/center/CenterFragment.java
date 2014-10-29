@@ -138,15 +138,15 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             centerloginbtn.setText(R.string.login);
         } else if ("".equals(companyName)) {//已经登录，还没有设置用户名
             centerloginbtn.setBackgroundResource(0);
-            centerloginbtn.setText("未设置公司名");
+            centerloginbtn.setText(R.string.not_set_company_name);
         } else {
             centerloginbtn.setBackgroundResource(0);
             centerloginbtn.setText(companyName);
         }
-        String e_url=Company.getInstance().getE_url();
-        if(TextUtils.isEmpty(e_url)){
+        String e_url = Company.getInstance().getE_url();
+        if (TextUtils.isEmpty(e_url)) {
             btn_ePlat.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             btn_ePlat.setVisibility(View.VISIBLE);
         }
 
@@ -230,7 +230,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.cent_supply_bar).setOnClickListener(this);
         view.findViewById(R.id.cent_collect_bar).setOnClickListener(this);
         view.findViewById(R.id.cent_msg_bar).setOnClickListener(this);
-        btn_ePlat=view.findViewById(R.id.commit_title_done);
+        btn_ePlat = view.findViewById(R.id.commit_title_done);
         btn_ePlat.setOnClickListener(this);
     }
 
@@ -279,7 +279,9 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         int id = v.getId();
         //除了"我的特权"以外，所有选项都必须在登录状态下，才可以使用
-        if (id != R.id.cent_privilege_tv && Company.getInstance().getCompanyId() == null) {
+        if (Company.getInstance().getCompanyId() == null
+                && id != R.id.cent_setting_tv
+                && id != R.id.cent_privilege_tv) {
             gotoLogin();
             return;
         }
@@ -346,15 +348,15 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             case R.id.cent_share: {
                 Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
                 intent.setType("text/plain"); // 分享发送的数据类型
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Ebingoo--指尖商机"); // 分享的主题
-                intent.putExtra(Intent.EXTRA_TEXT, "Ebingoo--指尖商机 用手指做生意.打造全新电商平台。网址：www.ebingoo.com"); // 分享的内容
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject)); // 分享的主题
+                intent.putExtra(Intent.EXTRA_TEXT,getString(R.string.share_text) ); // 分享的内容
                 startActivity(Intent.createChooser(intent, "选择分享"));
                 break;
             }
 
             case R.id.commit_title_done: {
-                Intent intent=new Intent(getActivity(),CodeScanOnlineActivity.class);
-                intent.putExtra(CodeScanOnlineActivity.URLSTR,Company.getInstance().getE_url());
+                Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
+                intent.putExtra(CodeScanOnlineActivity.URLSTR, Company.getInstance().getE_url());
                 startActivity(intent);
                 break;
             }

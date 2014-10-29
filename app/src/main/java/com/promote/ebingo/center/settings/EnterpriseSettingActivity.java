@@ -74,6 +74,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
         setContentView(R.layout.enterprise_setting);
         image_enterprise = findImage(R.id.image_enterprise);
 
+
         edit_enterprise_name = findEdit(R.id.edit_enterprise_name);
         edit_enterprise_address = findEdit(R.id.edit_enterprise_address);
         edit_enterprise_phone = findEdit(R.id.edit_enterprise_phone);

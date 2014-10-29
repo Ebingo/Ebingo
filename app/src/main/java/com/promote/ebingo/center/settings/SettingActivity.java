@@ -80,9 +80,15 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.company_setting:
-                toActivity(EnterpriseSettingActivity.class);
+                if (Company.getInstance().getCompanyId()==null){
+                    toActivity(LoginActivity.class);
+                    finish();
+                }else{
+                    toActivity(EnterpriseSettingActivity.class);
+                }
                 break;
             case R.id.about_us:
                 toActivity(AboutUsActivity.class);
