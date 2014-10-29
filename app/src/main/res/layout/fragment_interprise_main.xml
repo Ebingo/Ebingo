@@ -45,7 +45,6 @@
                         style="@style/font_black_15"
                         android:textStyle="bold"
                         android:layout_weight="7"
-                        android:text="hello"
                         android:gravity="center_vertical"
                         android:drawablePadding="4dp"
                         android:layout_height="wrap_content" />
@@ -213,6 +212,8 @@
                 android:dividerHeight="0.5dp"
                 android:layout_marginTop="5dp"
                 android:scrollbars="none"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
                 android:layout_height="match_parent" />
 
             <TextView

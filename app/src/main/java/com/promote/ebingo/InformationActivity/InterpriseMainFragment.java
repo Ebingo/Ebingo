@@ -27,6 +27,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.CurrentSupplyBean;
 import com.promote.ebingo.bean.InterpriseInfoBean;
 import com.promote.ebingo.bean.InterpriseInfoBeanTools;
@@ -38,7 +39,6 @@ import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -78,7 +78,8 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
     private DisplayImageOptions mOptions;
     private PagerScrollView enterpriseinfopsv;
-    private int[] e_plat_drawable=new int[]{R.drawable.e_plat_disabled,R.drawable.e_plat};
+    private int[] e_plat_drawable = new int[]{R.drawable.e_plat_disabled, R.drawable.e_plat};
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -138,7 +139,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         website_layout = containerView.findViewById(R.id.website_layout);
         tel_layout = containerView.findViewById(R.id.tel_layout);
         address_layout = containerView.findViewById(R.id.address_layout);
-//        enterpriseinfopsv.smoothScrollTo(0, 0);
+        enterpriseinfopsv.smoothScrollTo(0, 0);
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
         interpisemainsupdemlv.setOnItemClickListener(this);
@@ -146,14 +147,13 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         if (mInterpriseInfoBean != null) {    //只有当首次加载界面时加载listView。
             initData(mInterpriseInfoBean);
         }
-//        interpisemainsupdemlv.smoothScrollByOffset(0);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        enterpriseinfopsv.smoothScrollTo(-200, 0);
+        enterpriseinfopsv.smoothScrollTo(0, 0);
     }
 
     /**
@@ -177,6 +177,8 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
         parmater.put("company_id", getInterprsetId());
+        Integer login_id = Company.getInstance().getCompanyId();
+        parmater.put("login_id", login_id == null ? 0 : login_id.intValue());
         LogCat.d("--->MainFragment id==" + getInterprsetId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
 
@@ -234,7 +236,7 @@ public class InterpriseMainFragment extends Fragment implements AdapterView.OnIt
         final String e_url = infoBean.getE_url();
         if (TextUtils.isEmpty(e_url)) {
             e_plat.setImageResource(e_plat_drawable[0]);
-        }else{
+        } else {
             e_plat.setImageResource(e_plat_drawable[1]);
         }
         e_plat.setOnClickListener(new View.OnClickListener() {
