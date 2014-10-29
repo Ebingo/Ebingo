@@ -33,7 +33,6 @@ public class GetInfoDetail {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-
                 DetailInfoBean detailInfo = null;
                 try {
                     response=response.getJSONObject("response");

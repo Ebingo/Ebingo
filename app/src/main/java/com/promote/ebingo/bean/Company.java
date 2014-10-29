@@ -26,7 +26,8 @@ public class Company implements Serializable{
     private String is_lock;
     private String email;
     private transient Uri imageUri;//公司图片在手机中的位置
-
+    private CompanyVipInfo companyVipInfo;
+    private String e_url;//e平台url
     private static Company mCompany = null;
 
     private Company() {
@@ -46,12 +47,20 @@ public class Company implements Serializable{
         return mCompany;
     }
 
-    public String getCompany_name() {
-        return company_name;
+    public String getE_url() {
+        return e_url;
     }
 
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
+    public void setE_url(String e_url) {
+        this.e_url = e_url;
+    }
+
+    public CompanyVipInfo getVipInfo() {
+        return companyVipInfo;
+    }
+
+    public void setVipInfo(CompanyVipInfo companyVipInfo) {
+        this.companyVipInfo = companyVipInfo;
     }
 
     public String getCompany_tel() {
@@ -209,4 +218,26 @@ public class Company implements Serializable{
         mCompany=null;
     }
 
+    @Override
+    public String toString() {
+        return "Company{" +
+                "company_id=" + company_id +
+                ", image='" + image + '\'' +
+                ", company_name='" + company_name + '\'' +
+                ", head='" + head + '\'' +
+                ", headPhone='" + headPhone + '\'' +
+                ", company_tel='" + company_tel + '\'' +
+                ", address='" + address + '\'' +
+                ", website='" + website + '\'' +
+                ", province_id=" + province_id +
+                ", province_name='" + province_name + '\'' +
+                ", city_name='" + city_name + '\'' +
+                ", city_id=" + city_id +
+                ", viptype='" + viptype + '\'' +
+                ", is_lock='" + is_lock + '\'' +
+                ", email='" + email + '\'' +
+                ", imageUri=" + imageUri +
+                ", companyVipInfo=" + companyVipInfo +
+                '}';
+    }
 }

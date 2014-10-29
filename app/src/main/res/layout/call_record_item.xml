@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/contact"
-        style="@style/font_gray_14"
+        style="@style/font_gray_12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -38,12 +38,12 @@
 
     <TextView
         android:id="@+id/date"
-        style="@style/font_gray_14"
+        style="@style/font_gray_12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/dial"
         android:layout_marginRight="4dp"
         android:layout_toLeftOf="@+id/dial"
         android:layout_toStartOf="@+id/dial"
-        android:text="2014-9-16" />
+       />
 </RelativeLayout>

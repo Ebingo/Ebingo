@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/click_gray_bg"
     style="@style/list_item_pad"
     android:layout_height="wrap_content">
 
@@ -24,7 +24,6 @@
             style="@style/gray_15_tv"
             android:id="@+id/category_lv_item_name_tv"
             android:layout_width="wrap_content"
-            android:text="那就哦了蜜農啊誒哦那個您啦"
             android:layout_height="wrap_content" />
 
         <LinearLayout
@@ -42,14 +41,12 @@
                 android:id="@+id/category_lv_item_price_tv"
                 style="@style/orange_15_tv"
                 android:layout_width="wrap_content"
-                android:text="265"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/category_lv_item_min_num_tv"
                 android:layout_marginLeft="20dp"
                 style="@style/font_gray_12"
-                android:text="12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -70,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/font_gray_12"
+                android:visibility="gone"
                 android:layout_alignParentLeft="true"
                 android:text="@string/supply_company" />
 
@@ -91,7 +89,6 @@
                 <TextView
                     android:id="@+id/catgory_lv_look_num_tv"
                     style="@style/font_gray_12"
-                    android:text="16813"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -104,12 +101,11 @@
 
             <TextView
                 android:id="@+id/category_lv_item_privater_tv"
+                android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/category_lv_item_right_ll"
-                android:layout_toRightOf="@id/category_supply_tv"
                 android:layout_width="wrap_content"
                 style="@style/gray_12_tv"
                 android:layout_marginLeft="2dp"
-                android:text="深圳市雅典娜主播啊"
                 android:layout_height="wrap_content" />
 
         </RelativeLayout>

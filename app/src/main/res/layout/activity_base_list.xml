@@ -7,6 +7,7 @@
     <include layout="@layout/common_head_layout" />
 
     <FrameLayout
+        android:id="@+id/frame_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -26,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/center_divider"
-                android:dividerHeight="1dp" />
+                android:dividerHeight="1px" />
         </com.jch.lib.view.PullToRefreshView>
     </FrameLayout>
 </LinearLayout>

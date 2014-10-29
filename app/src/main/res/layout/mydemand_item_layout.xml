@@ -4,7 +4,7 @@
     style="@style/list_item_pad"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@drawable/click_gray_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,37 +12,41 @@
         android:layout_marginRight="10dp"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/mydemand_name_tv"
-            style="@style/black_15_tv"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="求购衣物挂求购挂物挂求购衣物挂" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/mydemand_name_tv"
+                style="@style/black_15_tv"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="求购衣物挂求购挂物挂求购衣物挂" />
+
+            <TextView
+                android:id="@+id/tv_verify_result"
+                style="@style/font_orange_15"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="待审核" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="@dimen/my_supply_vertical_spacing"
             android:orientation="horizontal">
-
-            <TextView
-                style="@style/font_gray_12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/buy_look" />
 
             <TextView
                 android:id="@+id/mydemand_look_num_tv"
                 style="@style/font_gray_12"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:text="2000" />
-
-            <TextView
-                style="@style/font_gray_12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/look_unite" />
+                android:text="查看200次" />
 
             <TextView
                 android:id="@+id/mydemand_time_tv"
@@ -50,7 +54,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
                 android:text="2014-07-10" />
 
         </LinearLayout>

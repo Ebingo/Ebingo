@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="wrap_content"
-              android:id="@+id/cate_type_pop_content_ll"
-              android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:id="@+id/cate_type_pop_content_ll"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,13 +14,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            >
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/pop_arro"/>
+                android:src="@drawable/pop_arro" />
 
         </LinearLayout>
 
@@ -31,18 +30,20 @@
             android:background="@color/gray_bg">
 
             <TextView
-                android:id="@+id/category_item_buy"
-                style="@style/category_tv_style"
-                android:text="@string/buy_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
                 android:id="@+id/category_item_supply"
                 style="@style/category_tv_style"
                 android:text="@string/supply_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/category_item_buy"
+                style="@style/category_tv_style"
+                android:text="@string/buy_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

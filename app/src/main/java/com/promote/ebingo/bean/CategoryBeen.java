@@ -1,16 +1,14 @@
 package com.promote.ebingo.bean;
 
-import com.google.gson.Gson;
+import java.io.Serializable;
 
 /**
  * Created by acer on 2014/9/2.
  * 分类实例。
- *
  */
 
 
-
-    public class CategoryBeen{
+public class CategoryBeen implements Serializable {
     Integer id;
     String name;
     String image;

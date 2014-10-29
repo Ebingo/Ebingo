@@ -2,6 +2,7 @@ package com.promote.ebingo.InformationActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,10 @@ import android.widget.TextView;
 import com.jch.lib.util.ImageManager;
 import com.jch.lib.view.PullToRefreshView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.impl.EbingoRequest;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import java.lang.reflect.Field;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  * Use the {@link InterpriseSupplyInfo#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
+public class InterpriseSupplyInfo extends CommonListFragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,41 +76,29 @@ public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItem
             enterprise_id = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getSquareImgOptions();
         myAdapter = new MyAdapter();
         getData(0);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_interprise_supply_info, container, false);
-
-        initialize(view);
-
-        return view;
-    }
 
     private void getData(int lastId) {
-        EbingoRequest.getSupplyInfoList(getActivity(), lastId, enterprise_id, 20, new MyRequest());  //网络请求.
+        LogCat.d("--->","enterprise_id="+enterprise_id);
+        EbingoRequest.getSupplyInfoList(getActivity(), lastId, enterprise_id, 20, new MyRequest(lastId));  //网络请求.
     }
 
-    private void initialize(View view) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
-        enterprisesupplyitemlv = (ListView) view.findViewById(R.id.enterprise_supply_item_lv);
-        itprsupplypulltorefresh = (PullToRefreshView) view.findViewById(R.id.itpr_supply_pulltorefresh);
-        itprsupplypulltorefresh.setUpRefreshable(true);
-        itprsupplypulltorefresh.setDownRefreshable(false);
-        itprsupplypulltorefresh.setOnFooterRefreshListener(this);
-        enterprisesupplyitemlv.setAdapter(myAdapter);
-        enterprisesupplyitemlv.setOnItemClickListener(this);
+        setAddMaxNum(20);
+        setOnItemClickListener(this);
+        setDownRefreshAble(false);
+        setUpRefreshAble(true);
+        setAdapter(myAdapter);
 
+        super.onActivityCreated(savedInstanceState);
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -128,18 +117,52 @@ public class InterpriseSupplyInfo extends Fragment implements AdapterView.OnItem
      */
     private class MyRequest implements EbingoRequest.RequestCallBack<ArrayList<SearchSupplyBean>> {
 
+        int lastId = 0;
+
+        public MyRequest(int lastId) {
+            this.lastId = lastId;
+        }
 
         @Override
         public void onFaild(int resultCode, String msg) {
-            itprsupplypulltorefresh.onFooterRefreshComplete();
+            if (itprsupplypulltorefresh != null)
+                itprsupplypulltorefresh.onFooterRefreshComplete();
         }
 
         @Override
         public void onSuccess(ArrayList<SearchSupplyBean> resultObj) {
-            itprsupplypulltorefresh.onFooterRefreshComplete();
+
+
             if (resultObj != null) {
+                int loadNum = resultObj.size();
+                if (lastId != 0) {      //刷新家在更多.
+                    if (loadNum < getAddMaxeNum()) {        //加载到最后一页
+                        loadMore(false, true);
+                        haseData();
+                    } else {
+                        loadMore(true, true);
+                        haseData();
+                    }
+                } else {     //首次加载
+                    if (loadNum == 0) {
+                        noData();
+                        loadMore(false, false);
+                    } else if (loadNum > 0 && loadNum < getAddMaxeNum()) {      //首次只加载不到一页的内容。
+                        loadMore(false, false);
+                        haseData();
+                    } else {
+                        loadMore(true, false);
+                    }
+
+                }
                 mSearchSupplys.addAll(resultObj);
                 myAdapter.notifyDataSetChanged();
+            } else {
+                if (lastId == 0) {
+                    noData();
+                }
+                loadMore(false, false);
+
             }
         }
     }

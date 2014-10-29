@@ -30,7 +30,7 @@ public class VerifyCreator {
     private static final int DEFAULT_CODE_LENGTH = 4;
     private static final int DEFAULT_FONT_SIZE = 25;
     private static final int DEFAULT_LINE_NUMBER = 2;
-    private static final int BASE_PADDING_LEFT = 3, RANGE_PADDING_LEFT = 15, BASE_PADDING_TOP = 20, RANGE_PADDING_TOP = 10;
+    private static final int BASE_PADDING_LEFT = 15, RANGE_PADDING_LEFT = 6, BASE_PADDING_TOP = 20, RANGE_PADDING_TOP = 10;
     private static final int DEFAULT_WIDTH = 60, DEFAULT_HEIGHT = 40;
 
     //settings decided by the layout xml
@@ -64,7 +64,7 @@ public class VerifyCreator {
 
         for (int i = 0; i < code.length(); i++) {
             randomTextStyle(paint);
-            randomPadding();
+            randomPadding(i);
             c.drawText(code.charAt(i) + "", padding_left, padding_top, paint);
         }
 
@@ -116,15 +116,15 @@ public class VerifyCreator {
         int color = randomColor();
         paint.setColor(color);
         paint.setFakeBoldText(random.nextBoolean());  //true为粗体，false为非粗体
-        float skewX = random.nextInt(11) / 10;
+        float skewX = random.nextInt(4) / 8f;
         skewX = random.nextBoolean() ? skewX : -skewX;
         paint.setTextSkewX(skewX); //float类型参数，负数表示右斜，整数左斜
 //		paint.setUnderlineText(true); //true为下划线，false为非下划线
 //		paint.setStrikeThruText(true); //true为删除线，false为非删除线
     }
 
-    private void randomPadding() {
-        padding_left += base_padding_left + random.nextInt(range_padding_left);
+    private void randomPadding(int position) {
+        padding_left = base_padding_left*position + random.nextInt(range_padding_left);
         padding_top = base_padding_top + random.nextInt(range_padding_top);
     }
 }

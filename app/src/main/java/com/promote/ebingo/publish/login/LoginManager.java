@@ -1,8 +1,6 @@
 package com.promote.ebingo.publish.login;
 
-import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,36 +8,31 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
-import com.jch.lib.util.ImageManager;
-import com.jch.lib.util.MD5;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.promote.ebingo.application.EbingoApp;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CompanyVipInfo;
+import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.VipType;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.JsonUtil;
-import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.URLConnection;
-
 /**
  * 从服务端获取验证短信
  */
 public class LoginManager {
+    public static final String ACTION_INVALIDATE = "com.promote.ebingo.center.ACTION_INVALIDATE";
 
     /**
      * 获取验证码
@@ -53,102 +46,124 @@ public class LoginManager {
             EbingoRequestParmater parmater = new EbingoRequestParmater(context);
             parmater.put("phonenum", phonenum);
             final ProgressDialog dialog = DialogUtil.waitingDialog(context);
-            HttpUtil.post(HttpConstant.getYzm, parmater, new JsonHttpResponseHandler("utf-8") {
+            HttpUtil.post(HttpConstant.getYzm, parmater, new EbingoHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    try {
-                        if (HttpConstant.CODE_OK.equals(response.getJSONObject("response").getString("code"))) {
-                            mCallback.onSuccess();
-                        } else {
-                            mCallback.onFail("获取验证码失败" + response);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        mCallback.onFail("获取验证码失败" + response);
-                    }
-
+                public void onSuccess(int statusCode, JSONObject response) {
+                    mCallback.onSuccess();
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
-                    mCallback.onFail("String:" + responseString);
+                public void onFail(int statusCode, String msg) {
+                    mCallback.onFail(msg);
                 }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    mCallback.onFail("JSONObject:" + errorResponse);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    mCallback.onFail("JSONArray:" + errorResponse);
-                }
-
 
                 @Override
                 public void onFinish() {
-                    super.onFinish();
                     dialog.dismiss();
                 }
             });
         }
     }
 
-
+    /**
+     * 校验手机号
+     *
+     * @param input
+     * @return
+     */
     public static boolean isMobile(String input) {
+        String a = "^1[34578][0-9]\\d{8}";
+        String b = "^((13[0-9])|(14[0-9])|(15[^4,\\D])|(18[0-9])|(17[0-9]))\\d{8}$";
         if (TextUtils.isEmpty(input)) return false;
-        else return input.matches("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+        else return input.matches(a);
     }
+
+    /**
+     * 校验固话
+     *
+     * @param input
+     * @return
+     */
+    public static boolean isPhone(String input) {
+        if (TextUtils.isEmpty(input)) return false;
+        else return input.matches("\\d{3,4}-\\d{7,8}");
+    }
+
 
     public void doLogin(final String phone, final String password, final Callback callback) {
 
-        EbingoRequestParmater parmater = new EbingoRequestParmater(ContextUtil.getContext());
+        final EbingoRequestParmater parmater = new EbingoRequestParmater(ContextUtil.getContext());
 //        final String md5Pwd = new MD5().getStrToMD5(password);
         parmater.put("phonenum", phone);
         parmater.put("password", password);
-        HttpUtil.post(HttpConstant.login, parmater, new JsonHttpResponseHandler("utf-8") {
-
+        HttpUtil.post(HttpConstant.login, parmater, new EbingoHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
+            public void onSuccess(int statusCode, JSONObject response) {
+                JSONObject data = null;
                 try {
-                    JSONObject result = response.getJSONObject("response");
+                    data = response.getJSONObject("data");
+                    Company company = JsonUtil.get(data.toString(), Company.class);
+                    Company.loadInstance(company);
 
-                    if (HttpConstant.CODE_OK.equals(result.getString("code"))) {
-                        LogCat.i(response + "");
-                        JSONObject data = result.getJSONObject("data");
-                        Company company= JsonUtil.get(data.toString(),Company.class);
-                        Company.loadInstance(company);
-                        ((EbingoApp) ContextUtil.getContext()).saveCurCompanyName(phone);
-                        ((EbingoApp) ContextUtil.getContext()).saveCurCompanyPwd(password);
-                        if (company.getImage() != null)loadHeadImage(company.getImage(), new Handler(new Handler.Callback() {
-                                @Override
-                                public boolean handleMessage(Message msg) {
-                                    Company.getInstance().setImageUri((Uri) msg.obj);
-                                    callback.onSuccess();
-                                    return false;
+                    ContextUtil.saveCurCompanyName(phone);
+                    ContextUtil.saveCurCompanyPwd(password);
+                    parmater.put("company_id", Company.getInstance().getCompanyId());
+                    HttpUtil.post(HttpConstant.getCompanyVipInfo, parmater, new EbingoHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, JSONObject response) {
+                            CompanyVipInfo vipInfo = null;
+                            try {
+                                vipInfo = JsonUtil.get(String.valueOf(response.getJSONObject("data")), CompanyVipInfo.class);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            VipType companyVip = VipType.getCompanyInstance();
+                            switch (companyVip) {
+                                case VISITOR: {//禁用：发布求购信息、拨打供应电话
+                                    vipInfo.setPublishDemandInfo(false);
+                                    vipInfo.setCallSupply(false);
                                 }
-                            }));
+                                case Experience_Vip: {//禁用查看求购信息、拨打求购电话
+                                    vipInfo.setCanLookDemandCompany(false);
+                                    vipInfo.setCallDemand(false);
+                                }
+                                case Standard_VIP: {
 
-                    } else {
-                        callback.onFail("" + response);
-                    }
+                                    break;
+                                }
+                            }
+                            Company.getInstance().setVipInfo(vipInfo);
+                            FileUtil.saveFile(ContextUtil.getContext(), FileUtil.FILE_COMPANY, Company.getInstance());
+                            callback.onSuccess();
+                        }
+
+                        @Override
+                        public void onFail(int statusCode, String msg) {
+                            callback.onFail(msg);
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+                    });
                 } catch (JSONException e) {
-                    callback.onFail(response + "");
                     e.printStackTrace();
                 }
+
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                callback.onFail(errorResponse + "");
+            public void onFail(int statusCode, String msg) {
+                callback.onFail(msg + "");
+            }
+
+            @Override
+            public void onFinish() {
+
             }
         });
+
     }
 
     /**
@@ -157,13 +172,13 @@ public class LoginManager {
      * @param url
      * @param handler
      */
-    private void loadHeadImage(final String url,final Handler handler) {
+    private void loadHeadImage(final String url, final Handler handler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ActivityManager manager;
                 Bitmap bitmap = ImageUtil.getImageFromWeb(url);
                 Uri uri = ImageUtil.saveBitmap(bitmap, "company_image.png");
+                Company.getInstance().setImageUri(uri);
                 handler.sendMessage(handler.obtainMessage(1, uri));
             }
         }).start();
@@ -184,7 +199,7 @@ public class LoginManager {
          * 回调方法，获取失败时调用
          */
         public void onFail(String msg) {
-            ContextUtil.toast("FAIL:" + msg);
+            ContextUtil.toast("" + msg);
         }
     }
 }

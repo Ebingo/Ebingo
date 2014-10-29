@@ -20,7 +20,7 @@ public class SearchHistoryListAdapter extends BaseAdapter {
 
     private Context mContext;
 
-    private ArrayList<SearchHistoryBean> mSearchTypeBeans = null;
+    private ArrayList<SearchHistoryBean> mSearchTypeBeans = new ArrayList<SearchHistoryBean>();
 
     /**
      * @param context
@@ -29,9 +29,16 @@ public class SearchHistoryListAdapter extends BaseAdapter {
     public SearchHistoryListAdapter(Context context, ArrayList<SearchHistoryBean> searchTypeBeans) {
 
         this.mContext = context;
-        if (searchTypeBeans != null) {
-            this.mSearchTypeBeans = searchTypeBeans;
+        if (searchTypeBeans != null && searchTypeBeans.size() != 0) {
+            this.mSearchTypeBeans.addAll(searchTypeBeans);
         }
+
+    }
+
+    public void notifyDataSetChanged(ArrayList<SearchHistoryBean> searchTypeBeans) {
+        this.mSearchTypeBeans.clear();
+        this.mSearchTypeBeans.addAll(searchTypeBeans);
+        super.notifyDataSetChanged();
 
     }
 

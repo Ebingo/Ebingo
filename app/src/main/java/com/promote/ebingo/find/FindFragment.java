@@ -1,37 +1,37 @@
 package com.promote.ebingo.find;
 
-import android.app.ProgressDialog;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.GridLayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jch.lib.util.DialogUtil;
-import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.promote.ebingo.BaseFragment;
 import com.promote.ebingo.R;
-import com.promote.ebingo.application.HttpConstant;
-import com.promote.ebingo.bean.CategoryBeanTools;
 import com.promote.ebingo.bean.CategoryBeen;
+import com.promote.ebingo.bean.HotCategory;
 import com.promote.ebingo.category.CategoryActivity;
-import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.impl.EbingoRequest;
 import com.promote.ebingo.search.SearchActivity;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,7 @@ import java.util.ArrayList;
  * Use the {@link com.promote.ebingo.find.FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener{
+public class FindFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -51,11 +51,16 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    /**
+     * 二维码扫描按钮。 *
+     */
+    private ImageButton mScanIb = null;
 
     private GridView fragfindgv;
     private LinearLayout searchll;
     private ImageView searchlogoimg;
     private TextView searchbartv;
+    private TextView mNoDataView;
     private ArrayList<CategoryBeen> mCategoryBeens = new ArrayList<CategoryBeen>();
 
     private MyGrideAdapter adapter = null;
@@ -94,15 +99,9 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getCircleImgOptions();
 
     }
-
 
 
     @Override
@@ -117,6 +116,9 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if (!hidden) {
+//            fragfindgv.startLayoutAnimation();
+        }
     }
 
     @Override
@@ -128,12 +130,18 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         searchlogoimg = (ImageView) view.findViewById(R.id.search_logo_img);
         searchbartv = (TextView) view.findViewById(R.id.search_bar_tv);
         fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
+        fragfindgv.setSelector(new BitmapDrawable());
+        mNoDataView = (TextView) view.findViewById(R.id.nodate_tv);
+        mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
+
+        mNoDataView.setText(getResources().getString(R.string.refresh));
         String[] categorys = getResources().getStringArray(R.array.category_data);
         adapter = new MyGrideAdapter(getActivity().getApplicationContext());
         fragfindgv.setAdapter(adapter);
-
         searchbartv.setOnClickListener(this);
         fragfindgv.setOnItemClickListener(this);
+        mNoDataView.setOnClickListener(this);
+        mScanIb.setOnClickListener(this);
         getCategoryList();
     }
 
@@ -141,14 +149,25 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     public void onClick(View v) {
 
         int id = v.getId();
-        switch (id){
-            case R.id.search_bar_tv:{
+        switch (id) {
+            case R.id.search_bar_tv: {
 
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
                 break;
             }
-            default:{
+
+            case R.id.scan_ib: {
+                scan2Code();
+                break;
+            }
+
+            case R.id.nodate_tv: {
+
+                getCategoryList();
+                break;
+            }
+            default: {
 
             }
         }
@@ -156,12 +175,29 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        Animation animation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.adv_item_click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
-        Intent intent = new Intent(getActivity(), CategoryActivity.class);
-        intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getId());
-        intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getName());
-        startActivity(intent);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(getActivity(), CategoryActivity.class);
+                intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getId());
+                intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getName());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.findViewById(R.id.find_item_ll).startAnimation(animation);
+
 
     }
 
@@ -169,11 +205,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
     /**
      * category gridview adapter.
      */
-    private class MyGrideAdapter extends BaseAdapter{
+    private class MyGrideAdapter extends BaseAdapter {
 
         Context context = null;
 
-        public MyGrideAdapter( Context context){
+        public MyGrideAdapter(Context context) {
 
             this.context = context;
         }
@@ -198,15 +234,17 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder = null;
-            if (convertView == null){
+            if (convertView == null) {
 
                 holder = new ViewHolder();
                 convertView = (View) LayoutInflater.from(this.context).inflate(R.layout.find_gridview_item, null);
                 holder.imgView = (ImageView) convertView.findViewById(R.id.find_grid_item_img);
-                holder.text = (TextView)convertView.findViewById(R.id.find_grid_item_tv);
+                holder.text = (TextView) convertView.findViewById(R.id.find_grid_item_tv);
                 convertView.setTag(holder);
-            }else {
-                holder = (ViewHolder)convertView.getTag();
+                convertView.setOnTouchListener(new GradItemCLS());
+
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
             CategoryBeen categoryBeen = mCategoryBeens.get(position);
@@ -218,53 +256,84 @@ public class FindFragment extends Fragment implements View.OnClickListener, Adap
 
     }
 
+    private class GradItemCLS implements View.OnTouchListener {
+
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+
+            int action = event.getAction();
+            switch (action) {
+
+                case MotionEvent.ACTION_DOWN: {
+
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+
+                    break;
+                }
+
+                default: {
+
+                }
+            }
+
+            return false;
+        }
+    }
+
+    private void noData() {
+        mNoDataView.setVisibility(View.VISIBLE);
+        fragfindgv.setVisibility(View.GONE);
+    }
+
+    private void haseData() {
+        mNoDataView.setVisibility(View.GONE);
+        fragfindgv.setVisibility(View.VISIBLE);
+    }
+
     /**
      * 从网络获取数据。
      */
-    private void getCategoryList(){
-
-        String urlStr = HttpConstant.getCategories;
-        final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
-        EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
-
-        HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler(){
+    private void getCategoryList() {
+        haseData();
+        EbingoRequest.getCategoryList(getActivity(), new EbingoRequest.RequestCallBack<ArrayList<CategoryBeen>>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
+            public void onFaild(int resultCode, String msg) {
 
-                ArrayList<CategoryBeen> categoryBeens = CategoryBeanTools.getCategories(response.toString());
-                if (categoryBeens != null && categoryBeens.size() != 0){
+                ArrayList<CategoryBeen> categoryBeens = (ArrayList<CategoryBeen>) ContextUtil.read(FileUtil.CATEGORY_CACH);
 
+                if (categoryBeens == null || categoryBeens.size() == 0) {
+                    //nodata
+                    noData();
+                } else {
                     mCategoryBeens.clear();
                     mCategoryBeens.addAll(categoryBeens);
                     adapter.notifyDataSetChanged();
+
                 }
-
-                dialog.dismiss();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-
-                dialog.dismiss();
+            public void onSuccess(ArrayList<CategoryBeen> resultObj) {
+                mCategoryBeens.clear();
+                mCategoryBeens.addAll(resultObj);
+                adapter.notifyDataSetChanged();
             }
         });
+
     }
 
 
-
-
-    static class ViewHolder{
+    static class ViewHolder {
         ImageView imgView;
         TextView text;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

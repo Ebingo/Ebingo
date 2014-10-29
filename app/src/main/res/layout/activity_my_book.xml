@@ -1,98 +1,106 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    tools:context="com.promote.ebingo.center.MyBookActivity">
+    android:id="@+id/scroll"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <include layout="@layout/common_head_layout_2" />
-
-    <ScrollView
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.promote.ebingo.center.MyBookActivity">
 
-        <LinearLayout
-            style="@style/info_content_pad"
+        <include layout="@layout/common_head_layout_2" />
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <FrameLayout
+            <LinearLayout
+                style="@style/info_content_pad"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_deep_gray_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:drawableLeft="@drawable/ic_my_tag"
+                        android:drawablePadding="@dimen/ic_padding"
+                        android:text="我的订阅标签："
+                        android:textSize="16sp" />
+
+                    <ToggleButton
+                        android:id="@+id/arrange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/widget_height"
+                        android:layout_gravity="right"
+                        android:background="@null"
+                        android:checked="false"
+                        android:textColor="@color/text_black"
+                        android:textOn="【取消】"
+                        android:textOff="【管理】"
+                        android:textSize="16sp" />
+                </FrameLayout>
+                <!-- 设置一个padding=5dp，防止抖动动画时，子view超出边界 -->
+                <com.promote.ebingo.publish.AutoLineLayout
+                    android:id="@+id/tag_content"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
 
                 <TextView
+                    style="@style/divider_horizontal"
+                    android:layout_marginBottom="33dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/light_gray" />
+
+                <TextView
+                    android:id="@+id/tv_tag_add"
                     style="@style/text_deep_gray_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/ic_my_tag"
+                    android:drawableLeft="@drawable/ic_new_tag"
                     android:drawablePadding="@dimen/ic_padding"
-                    android:text="我的订阅标签："
+                    android:text="新增标签："
                     android:textSize="16sp" />
 
-                <ToggleButton
-                    android:id="@+id/arrange"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/widget_height"
-                    android:layout_gravity="right"
-                    android:background="@null"
-                    android:checked="false"
-                    android:textColor="@color/text_black"
-                    android:textOn="【取消】"
-                    android:textOff="【管理】"
-                    android:textSize="16sp" />
-            </FrameLayout>
-
-            <com.promote.ebingo.publish.AutoLineLayout
-                android:id="@+id/tag_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-
-            <TextView
-                style="@style/divider_horizontal"
-                android:layout_marginBottom="33dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/light_gray" />
-
-            <TextView
-                style="@style/text_deep_gray_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_new_tag"
-                android:drawablePadding="@dimen/ic_padding"
-                android:text="新增标签："
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
-                android:orientation="vertical">
-
-                <MultiAutoCompleteTextView
-                    android:id="@+id/edit_add_tags"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/widget_height"
-                    android:background="@drawable/corner_frame_light"
-                    android:hint="请输入您要添加的标签"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="3dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_add"
-                    style="@style/blue_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/widget_height"
-                    android:layout_marginTop="25dp"
-                    android:gravity="center"
-                    android:onClick="onClick"
-                    android:text="添 加" />
+                    <MultiAutoCompleteTextView
+                        android:id="@+id/edit_add_tags"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/widget_height"
+                        android:background="@drawable/corner_frame_light"
+                        android:hint="请输入您要添加的标签"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="3dp" />
+
+                    <Button
+                        android:id="@+id/btn_add"
+                        style="@style/blue_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/widget_height"
+                        android:layout_marginTop="25dp"
+                        android:gravity="center"
+                        android:onClick="onClick"
+                        android:text="添 加" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-    </ScrollView>
-</LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</ScrollView>

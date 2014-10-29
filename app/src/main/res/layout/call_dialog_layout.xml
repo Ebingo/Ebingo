@@ -29,11 +29,16 @@
         android:textColor="@color/black"
         android:drawableLeft="@drawable/tell" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/ebingo_button_divider" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/divide_gray">
+        android:background="@color/ebingo_button_divider">
 
         <TextView
             android:id="@+id/call_dialog_call_btn"
@@ -42,12 +47,17 @@
             android:textSize="@dimen/font_15"
             android:textColor="@color/black"
             android:text="@string/make_call"
-            android:layout_marginTop="0.5dp"
             android:gravity="center"
             android:layout_marginRight="0.5dp"
             android:background="@drawable/blue_selector"
             style="@style/info_content_pad"
             android:layout_height="wrap_content" />
+
+        <View
+            android:id="@+id/btn_divider"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/ebingo_button_divider" />
 
         <TextView
             android:id="@+id/call_dialog_cancel_btn"
@@ -57,7 +67,6 @@
             android:gravity="center"
             android:text="@string/cancel"
             android:textSize="@dimen/font_15"
-            android:layout_marginTop="0.5dp"
             android:background="@drawable/blue_selector"
             style="@style/info_content_pad"
             android:layout_height="wrap_content" />

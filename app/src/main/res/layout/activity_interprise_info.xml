@@ -39,7 +39,7 @@
         app:tabtextSize="@dimen/font_15"
         app:curTabtextSize="@dimen/font_15"
         app:tabtextAllCaps="false"
-        app:underlineColor="@color/divide_gray"
+        app:underlineColor="@color/center_divider"
         app:tabtextColor="@color/info_name_gray"
         app:curTabtextColor="@color/base_blue"
         app:underlineHeight="1dp"

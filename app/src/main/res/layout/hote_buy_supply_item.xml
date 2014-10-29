@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:gravity="center_vertical"
     style="@style/home_item_style"
-    android:background="@color/gray_bg"
+    android:background="@drawable/trans_gray_selector"
     android:layout_height="wrap_content">
 
 
@@ -44,10 +44,10 @@
 
     <ImageView
         android:id="@+id/main_hot_1get_img"
-        android:src="@drawable/circle_img"
+        android:src="@drawable/loading_waite"
         android:scaleType="centerCrop"
         android:layout_alignParentRight="true"
-        android:layout_width="@dimen/common_circl_img_size"
+        android:layout_width="@dimen/home_item_img_width"
         android:layout_height="@dimen/common_circl_img_size" />
 
 </RelativeLayout>

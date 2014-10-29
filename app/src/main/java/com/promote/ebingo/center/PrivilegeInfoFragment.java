@@ -8,12 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
@@ -22,6 +22,7 @@ import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.EbingoDialog;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginActivity;
 import com.promote.ebingo.util.ContextUtil;
@@ -41,7 +42,12 @@ import java.util.Map;
  */
 public class PrivilegeInfoFragment extends Fragment implements View.OnClickListener {
 
-    private Map<String, Integer> resMap = new HashMap<String, Integer>();
+
+    public static PrivilegeInfoFragment newInstance(VipType vipType) {
+        PrivilegeInfoFragment fragment = new PrivilegeInfoFragment();
+        fragment.setDisplayVipType(vipType);
+        return fragment;
+    }
 
     private VipType displayVipType;
 
@@ -53,32 +59,44 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
         this.displayVipType = vipType;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        resMap.put(VipType.VISITOR.code, R.array.privilege_info_visitor);
-        resMap.put(VipType.NORMAL_VIP.code, R.array.privilege_info_normal_vip);
-        resMap.put(VipType.VIP.code, R.array.privilege_info_vip);
-        resMap.put(VipType.VVIP.code, R.array.privilege_info_vvip);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if (displayVipType == null) {
-            try {
-                displayVipType = VipType.values()[savedInstanceState.getInt("displayVipType")];
-            } catch (NullPointerException e) {
-                throw new RuntimeException(PrivilegeInfoFragment.class.getName() + ":displayVipType is null!");
-            }
+            displayVipType = VipType.parse(savedInstanceState.getString("displayVipType"));
         }
-        String[] info = getResources().getStringArray(resMap.get(displayVipType.code));
         View v = inflater.inflate(R.layout.privilege_info, null);
-        addItem((LinearLayout) v.findViewById(R.id.info_content), info, inflater);
-        if (displayVipType.compareTo(VipType.parse(Company.getInstance().getVipType())) <= 0) {
+        if (displayVipType.compareTo(VipType.getCompanyInstance()) <= 0) {
             v.findViewById(R.id.btn_apply_vip).setVisibility(View.GONE);
         } else {
             v.findViewById(R.id.btn_apply_vip).setOnClickListener(this);
+        }
+        ImageView iv = (ImageView) v.findViewById(R.id.iv_vip_info);
+        switch (displayVipType) {
+            case VISITOR:
+                iv.setImageResource(R.drawable.visitor_info);
+                break;
+            case Experience_Vip:
+                iv.setImageResource(R.drawable.experience_info);
+                break;
+            case Standard_VIP:
+                iv.setImageResource(R.drawable.standard_info);
+                break;
+            case Silver_VIP:
+                iv.setImageResource(R.drawable.silver_info);
+                break;
+            case Gold_VIP:
+                iv.setImageResource(R.drawable.gold_info);
+                break;
+            case Platinum_VIP:
+                iv.setImageResource(R.drawable.platinum_info);
+                break;
         }
 
         return v;
@@ -87,46 +105,35 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("displayVipType", displayVipType.ordinal());
-    }
-
-    private void addItem(LinearLayout content, String[] items, LayoutInflater inflater) {
-        if (items == null) return;
-        for (String str : items) {
-            TagView tagView = (TagView) inflater.inflate(R.layout.sample_tag_view, null);
-            tagView.setNumber(0);
-            tagView.setText(str);
-            tagView.setTextSize(13);
-            content.addView(tagView);
-        }
-    }
-
-    private int dp(int value) {
-        return (int) Dimension.dp(value);
+        outState.putString("displayVipType", displayVipType.code);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_apply_vip:
-                VipType curVipType = VipType.parse(Company.getInstance().getVipType());
-                if (getDisplayVipType().compareTo(curVipType) <= 0) {
-                    ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
-                } else if (getDisplayVipType().compareTo(VipType.NORMAL_VIP) == 0) {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
-                } else {
-                    startApply();
-                }
+                startApply();
                 break;
         }
     }
 
-    private void startApply() {
+    public void startApply() {
+        VipType curVipType = VipType.parse(Company.getInstance().getVipType());
+        VipType disPlayVip = getDisplayVipType();
+        if (disPlayVip == VipType.VISITOR) {
+            return;
+        } else if (disPlayVip.compareTo(curVipType) <= 0) {
+            ContextUtil.toast("您当前为" + curVipType.name + ",不需要再申请" + getDisplayVipType().name + "。");
+            return;
+        } else if (getDisplayVipType().compareTo(VipType.Experience_Vip) == 0) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
         final Dialog dialog = DialogUtil.waitingDialog(getActivity(), "正在提交申请...");
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity());
         parmater.put("company_id", Company.getInstance().getCompanyId());
-        parmater.put("apply_type", "");
+        parmater.put("apply_type", displayVipType.code);
         HttpUtil.post(HttpConstant.applyVip, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -156,14 +163,15 @@ public class PrivilegeInfoFragment extends Fragment implements View.OnClickListe
     }
 
     private void showDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("温馨提示")
-                .setMessage("提交申请成功！请耐心等待工作人员处理。")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+        EbingoDialog dialog = new EbingoDialog(getActivity());
+        dialog.setTitle(R.string.warn);
+        dialog.setMessage("提交申请成功！请耐心等待工作人员处理。");
+        dialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

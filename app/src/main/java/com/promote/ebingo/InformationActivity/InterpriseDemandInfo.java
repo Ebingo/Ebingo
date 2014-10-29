@@ -2,6 +2,7 @@ package com.promote.ebingo.InformationActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  * Use the {@link InterpriseDemandInfo#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
+public class InterpriseDemandInfo extends CommonListFragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -74,57 +75,63 @@ public class InterpriseDemandInfo extends Fragment implements AdapterView.OnItem
         getData(0);
     }
 
-    private void getData(int lastId) {
+    private void getData(final int lastId) {
 
         EbingoRequest.getDemandInfoList(getActivity(), lastId, enterprise_id, 20, new EbingoRequest.RequestCallBack<ArrayList<SearchDemandBean>>() {
             @Override
             public void onFaild(int resultCode, String msg) {
-                itprdemandpulltorefresh.onFooterRefreshComplete();
+                if (itprdemandpulltorefresh != null)
+                    itprdemandpulltorefresh.onFooterRefreshComplete();
             }
 
             @Override
             public void onSuccess(ArrayList<SearchDemandBean> resultObj) {
-
-                itprdemandpulltorefresh.onFooterRefreshComplete();
                 if (resultObj != null) {
+                    int loadNum = resultObj.size();
+                    if (lastId != 0) {      //刷新家在更多.
+                        if (loadNum < getAddMaxeNum()) {        //加载到最后一页
+                            loadMore(false, true);
+                            haseData();
+                        } else {
+                            loadMore(true, true);
+                            haseData();
+                        }
+                    } else {     //首次加载
+                        if (loadNum == 0) {
+                            noData();
+                            loadMore(false, false);
+                        } else if (loadNum > 0 && loadNum < getAddMaxeNum()) {      //首次只加载不到一页的内容。
+                            loadMore(false, false);
+                            haseData();
+                        } else {
+                            loadMore(true, false);
+                        }
+
+                    }
                     mSearchDemands.addAll(resultObj);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    if (lastId == 0) {
+                        noData();
+                    }
+                    loadMore(false, false);
+
                 }
 
-                if (adapter != null)
-                    adapter.notifyDataSetChanged();
+
             }
         });
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_interprise_demand_info, container, false);
-
-        initialize(view);
-
-        return view;
-    }
-
-
-    /**
-     * 初始化view。
-     *
-     * @param view
-     */
-    private void initialize(View view) {
-
-        entprdemandlv = (ListView) view.findViewById(R.id.entpr_demand_lv);
-        itprdemandpulltorefresh = (PullToRefreshView) view.findViewById(R.id.itpr_demand_pulltorefresh);
-
-        itprdemandpulltorefresh.setOnFooterRefreshListener(this);
-        itprdemandpulltorefresh.setUpRefreshable(true);
-        itprdemandpulltorefresh.setDownRefreshable(false);
-        entprdemandlv.setAdapter(adapter);
-
-        entprdemandlv.setOnItemClickListener(this);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        setUpRefreshAble(true);
+        setDownRefreshAble(false);
+        setOnItemClickListener(this);
+        setAdapter(adapter);
+        setAddMaxNum(20);
+        super.onActivityCreated(savedInstanceState);
     }
 
 

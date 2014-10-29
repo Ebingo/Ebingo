@@ -12,19 +12,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
+import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
+import com.promote.ebingo.center.MyCollectionActivity;
+import com.promote.ebingo.center.MyPrivilegeActivity;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.publish.EbingoDialog;
+import com.promote.ebingo.publish.PublishEditActivity;
+import com.promote.ebingo.publish.VipType;
+import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
@@ -33,8 +42,8 @@ import org.json.JSONObject;
 
 public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
-    public static final String ARG_COLLECT_ID = "collectId";
     private ImageView commonbackbtn;
+    private ImageView prd_info_btm_img;
     private TextView commontitletv;
     private TextView prdinfointocompanytv;
     private TextView prdinfocompanytv;
@@ -52,8 +61,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     private LinearLayout productinfonameleftll;
     private TextView productinfocitytv;
     private WebView productinfoDetailwv;
+    private TextView productinfoDetailtv;
     private DetailInfoBean mDetailInfoBean = null;
-    private int collectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +72,13 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
     private void initialize() {
-        collectId = getIntent().getIntExtra(ARG_COLLECT_ID, -1);
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
-
         prdinfointocompanytv = (TextView) findViewById(R.id.prd_info_into_company_tv);//进入公司
         prdinfocompanytv = (TextView) findViewById(R.id.prd_info_company_tv);//公司名
         prdinfobtmll = (RelativeLayout) findViewById(R.id.prd_info_btm_ll);
         productinfoimg = (ImageView) findViewById(R.id.product_info_img);
+        prd_info_btm_img = (ImageView) findViewById(R.id.prd_info_btm_img);
         productinfoiweb = (WebView) findViewById(R.id.product_info_web);
         productinfotelcb = (CheckBox) findViewById(R.id.product_info_tel_cb);//电话咨询
         productinfocollectcb = (CheckBox) findViewById(R.id.product_info_collect_cb);//收藏
@@ -83,6 +91,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfonameleftll = (LinearLayout) findViewById(R.id.product_info_name_left_ll);
         productinfocitytv = (TextView) findViewById(R.id.product_info_city_tv);
         productinfoDetailwv = (WebView) findViewById(R.id.product_info_detail_wv);
+        productinfoDetailtv = (TextView) findViewById(R.id.product_info_detail_tv);
+        productinforlll.setVisibility(View.GONE);//默认隐藏拨打电话和收藏功能，等加载完详情才有可能显示
         int productId = getIntent().getIntExtra(ARG_ID, -1);
         assert (productId != -1);
         //網絡訪問
@@ -92,21 +102,30 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfotelcb.setOnClickListener(this);
         prdinfointocompanytv.setOnClickListener(this);
         productinfocollectcb.setOnClickListener(this);
-
+        prdinfobtmll.setOnClickListener(this);
     }
 
     private void setData(DetailInfoBean infoBean) {
-        LogCat.i("--->", " infoBean.getCompany_id=" + infoBean.getCompany_id());
-        LogCat.i("--->", " Company.getInstance().getCompanyId()=" + Company.getInstance().getCompanyId());
-        LogCat.i("--->", " productinforlll=" + productinforlll);
-        if (infoBean.getCompany_id().equals(Company.getInstance().getCompanyId()))
+        Integer sellerId = mDetailInfoBean.getCompany_id();
+        if (sellerId == null) {
+            EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_INFO_DELETED).show();
+            return;
+        }
+        if (!Constant.VERIFY_PASS.equals(infoBean.getVerify_result())) {
+            //弹出审核未通过提示
+            popError(infoBean.getVerify_reason());
+        }
+        if (!infoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
+            //如果不是自己发布的信息，则显示拨打电话和收藏功能
+            productinforlll.setVisibility(View.VISIBLE);
+        } else {
             productinforlll.setVisibility(View.GONE);
-        else productinforlll.setVisibility(View.VISIBLE);
+        }
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
         pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
         productinfolooknumtv.setText(infoBean.getRead_num() + "");
-        if (infoBean.getType() == 1) {
+        if (infoBean.getUnit() != null) {//起售标准
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "" + infoBean.getUnit());
         } else {
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "");
@@ -114,7 +133,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         productinfocollectcb.setChecked(infoBean.getInwishlist() == 1);
         productinfocitytv.setText(infoBean.getRegion());
 
-        if (!TextUtils.isEmpty(infoBean.getUrl_3d())) {
+        if (!TextUtils.isEmpty(infoBean.getUrl_3d())) {//如果有3d图片，就只显示3D图片
             productinfoiweb.setVisibility(View.VISIBLE);
             productinfoimg.setVisibility(View.GONE);
             productinfoiweb.getSettings().setJavaScriptEnabled(true);
@@ -124,9 +143,22 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             productinfoiweb.setVisibility(View.GONE);
             ImageManager.load(infoBean.getImage(), productinfoimg);
         }
-        productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
-        productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
+        String description = infoBean.getDescription();
+        if (ContextUtil.isHtml(description)) {//根据是否为html文本，来用不同的控件显示
+            productinfoDetailtv.setVisibility(View.GONE);
+            productinfoDetailwv.setVisibility(View.VISIBLE);
+            productinfoDetailwv.getSettings().setJavaScriptEnabled(true);
+            productinfoDetailwv.loadUrl(mDetailInfoBean.getIos_wap_url());
+//            productinfoDetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), infoBean.getDescription(), "text/html", "UTF-8", "about:blank");
+        } else {
+            productinfoDetailwv.setVisibility(View.GONE);
+            productinfoDetailtv.setVisibility(View.VISIBLE);
+            productinfoDetailtv.setText(description);
+        }
+        prd_info_btm_img.setImageResource(VipType.parse(String.valueOf(infoBean.getVip_type())).drawableId);
+        LogCat.i("--->PRD vip: "+infoBean.getVip_type());
     }
+
 
     @Override
     public void onClick(View v) {
@@ -140,29 +172,59 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 finish();
                 break;
             }
+            case R.id.prd_info_btm_ll: {
+                if (HttpUtil.isNetworkConnected(getApplicationContext()) && mDetailInfoBean != null) {
+                    Intent intent = new Intent(this, InterpriseInfoActivity.class);
+                    intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+                    intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.go_company_info_toast), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case R.id.product_info_tel_cb:
+                Company company = Company.getInstance();
+                if (company == null || company.getCompanyId() == null) {//用户没有登录。
+                    LoginDialog loginDialog = new LoginDialog(ProductInfoActivity.this);
+                    loginDialog.setOwnerActivity(this);
+                    loginDialog.setCanceledOnTouchOutside(true);
+                    loginDialog.setCancelable(true);
+                    loginDialog.show();
+                } else if (Company.getInstance().getVipInfo().callSupply()) {
+                    CallRecord record = new CallRecord();
+                    record.setCall_id(Company.getInstance().getCompanyId());
+                    record.setInfoId(mDetailInfoBean.getInfo_id());
+                    record.setTo_id(mDetailInfoBean.getCompany_id());
+                    record.setPhone_num(mDetailInfoBean.getPhone_num());
+                    record.setContacts(mDetailInfoBean.getContacts());
+                    CallRecordActivity.CallRecordManager.dialNumber(this, record);
+                } else {
+                    EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                }
+                break;
+            case R.id.product_info_collect_cb:
+                if (Company.getInstance().getCompanyId() == null) {
+                    LoginDialog loginDialog = new LoginDialog(ProductInfoActivity.this);
+                    loginDialog.setOwnerActivity(this);
+                    loginDialog.setCanceledOnTouchOutside(true);
+                    loginDialog.setCancelable(true);
+                    loginDialog.show();
+                    productinfocollectcb.setChecked(!productinfocollectcb.isChecked());
+                } else if (productinfocollectcb.isChecked()) {
+                    addCollection(mDetailInfoBean.getInfo_id());
+                } else {
+                    cancelCollection(mDetailInfoBean.getWishlist_id());
+                }
+                break;
             case R.id.prd_info_into_company_tv: {
-
                 Intent intent = new Intent(this, InterpriseInfoActivity.class);
                 intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
                 intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
                 startActivity(intent);
                 break;
             }
-            case R.id.product_info_tel_cb:
-                CallRecord record = new CallRecord();
-                record.setCall_id(Company.getInstance().getCompanyId());
-                record.setInfoId(mDetailInfoBean.getInfo_id());
-                record.setTo_id(mDetailInfoBean.getCompany_id());
-                record.setPhone_num(mDetailInfoBean.getPhone_num());
-                CallRecordActivity.CallRecordManager.dialNumber(this, record);
-                break;
-            case R.id.product_info_collect_cb:
-                if (productinfocollectcb.isChecked()) {
-                    addCollection(mDetailInfoBean.getInfo_id());
-                } else {
-                    cancelCollection(collectId);
-                }
-                break;
+
             default: {
             }
         }
@@ -182,7 +244,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             public void onSuccess(int statusCode, JSONObject response) {
                 ContextUtil.toast("添加收藏成功！");
                 try {
-                    collectId = response.getJSONObject("data").getInt("wishlistid");
+                    mDetailInfoBean.setWishlist_id(response.getJSONObject("data").getInt("wishlistid"));
+                    MyCollectionActivity.setRefresh();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -190,7 +253,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
 
             @Override
             public void onFail(int statusCode, String msg) {
-                ContextUtil.toast("添加收藏失败！" + msg);
+                LogCat.w("--->", msg);
                 productinfocollectcb.setChecked(false);
             }
 
@@ -214,11 +277,11 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 ContextUtil.toast("取消收藏成功！");
+                MyCollectionActivity.setRefresh();
             }
 
             @Override
             public void onFail(int statusCode, String msg) {
-                ContextUtil.toast("取消收藏失败！" + msg);
                 productinfocollectcb.setChecked(true);
             }
 
@@ -232,8 +295,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     /**
      * 獲得詳情。
      */
-    private void getInfoDetail(int demandId) {
-
+    private void getInfoDetail(int productId) {
+        LogCat.i("--->", "info_id" + productId);
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         Company company = Company.getInstance();
         if (company.getCompanyId() != null) {
@@ -241,7 +304,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         } else {
             parmater.put("company_id", "0");    //游客
         }
-        parmater.put("info_id", demandId);
+        parmater.put("info_id", productId);
 
         final ProgressDialog dialog = DialogUtil.waitingDialog(ProductInfoActivity.this);
 
@@ -263,4 +326,22 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
     }
 
 
+    private void popError(String result) {
+        final TextView tv_warn = (TextView) findViewById(R.id.tv_warn);
+        tv_warn.setText(result);
+        tv_warn.setVisibility(View.VISIBLE);
+        tv_warn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductInfoActivity.this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.INFO, mDetailInfoBean);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

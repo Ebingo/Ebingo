@@ -10,14 +10,24 @@ public class InterpriseInfoBean {
     private String name = null;
     private String image = null;
     private String addr = null;
-    private int viptype = -1;
+    private int vip_type = -1;
     private String website = null;
     private String tel = null;
     private String introduction = null;
+    private String e_url = null;
     //    /**
 //     * 联系人. *
 //     */
 //    private String contacts = null;
+
+    public String getE_url() {
+        return e_url;
+    }
+
+    public void setE_url(String e_url) {
+        this.e_url = e_url;
+    }
+
     private String mainRun = null;
     private ArrayList<CurrentSupplyBean> infoarray = null;
 
@@ -39,11 +49,11 @@ public class InterpriseInfoBean {
 
 
     public int getViptype() {
-        return viptype;
+        return vip_type;
     }
 
     public void setViptype(int viptype) {
-        this.viptype = viptype;
+        this.vip_type = viptype;
     }
 
     public String getWebsite() {

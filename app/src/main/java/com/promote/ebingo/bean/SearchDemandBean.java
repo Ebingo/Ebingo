@@ -1,12 +1,14 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ACER on 2014/9/2.
  *
  * 求购实体类。
  *
  */
-public class SearchDemandBean extends SearchTypeBean {
+public class SearchDemandBean extends SearchTypeBean implements Serializable{
     /**发布日期. **/
     private String date = null;
     /**求购简介. **/
@@ -15,6 +17,15 @@ public class SearchDemandBean extends SearchTypeBean {
     private String read_num = null;
     /** 求購數量. **/
     private String buy_num = null;
+    private String verify_result;
+
+    public String getVerify_result() {
+        return verify_result;
+    }
+
+    public void setVerify_result(String verify_result) {
+        this.verify_result = verify_result;
+    }
 
     public String getBuy_num() {
         return buy_num;

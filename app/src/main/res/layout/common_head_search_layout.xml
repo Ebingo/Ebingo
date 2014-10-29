@@ -42,9 +42,25 @@
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/scan_ib"
+            android:layout_width="wrap_content"
+            android:src="@drawable/scan_btn_sel"
+            android:background="@null"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 
+
+    <View
+        style="@style/divider_horizontal"
+        android:layout_gravity="bottom" />
 </FrameLayout>
 
 

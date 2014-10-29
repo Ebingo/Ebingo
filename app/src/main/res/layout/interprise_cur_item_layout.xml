@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/info_content_pad"
-    android:background="@color/white">
+    android:background="@drawable/click_gray_bg">
 
 
     <ImageView
@@ -21,10 +21,10 @@
         android:layout_alignParentRight="true"
         android:text="05-06"
         android:layout_centerVertical="true"
-        style="@style/font_gray_12" />
+        style="@style/font_gray_14" />
 
     <TextView
-        style="@style/gray_12_tv"
+        style="@style/gray_14_tv"
         android:id="@+id/interprise_cur_item_describe_tv"
         android:layout_toLeftOf="@id/interprise_cur_item_time_tv"
         android:layout_width="wrap_content"

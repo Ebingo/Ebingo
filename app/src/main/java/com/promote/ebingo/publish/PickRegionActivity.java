@@ -20,10 +20,22 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.bean.RegionBeen;
+import com.promote.ebingo.impl.EbingoHandler;
+import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
+import com.promote.ebingo.util.FileUtil;
+import com.promote.ebingo.util.JsonUtil;
 import com.promote.ebingo.util.LogCat;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +51,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  */
 public class PickRegionActivity extends BaseListActivity {
 
-    private List<String> regionList = new ArrayList<String>();
+    private List<RegionBeen> regionList = new ArrayList<RegionBeen>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,37 +59,38 @@ public class PickRegionActivity extends BaseListActivity {
         init();
     }
 
-    private void init() {
-        regionList.add("安徽");
-        regionList.add("山西");
-        regionList.add("四川");
-        regionList.add("重庆");
-        regionList.add("江苏");
-        regionList.add("浙江");
-        regionList.add("天津");
-        regionList.add("上海");
-        regionList.add("北京");
-        setListAdapter(new RegionAdapter(this));
-        new Thread(new Runnable() {
+    private void getProvinceList(){
+        HttpUtil.post(HttpConstant.getProvinceList,new EbingoRequestParmater(this),new EbingoHandler() {
             @Override
-            public void run() {
-//                LogCat.i("--->", "city:" + "");
-//                String city = getCurrentCityName();
-//                handler.sendMessage(handler.obtainMessage(1, city));
-//                LogCat.i("--->", "city:" + city);
+            public void onSuccess(int statusCode, JSONObject response) {
+                JSONArray array = null;
+                try {
+                    array = response.getJSONArray("data");
+                    JsonUtil.getArray(array, RegionBeen.class, regionList);
+                    getAdapter().notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
-        }).start();
+
+            @Override
+            public void onFail(int statusCode, String msg) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
     }
 
-    Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            regionList.add(msg.obj + "");
-            LogCat.i("--->", msg.obj + "");
-            ((RegionAdapter) getListAdapter()).notifyDataSetChanged();
-            return false;
-        }
-    });
+    private void init() {
+        setListAdapter(new RegionAdapter(this));
+        enableCache(FileUtil.FILE_PROVINCE_LIST,regionList);
+        if (regionList.size()==0)getProvinceList();
+    }
 
     public String getCurrentCityName() {
         String cityName = null;
@@ -120,7 +133,7 @@ public class PickRegionActivity extends BaseListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent data = new Intent();
-        data.putExtra("result", regionList.get(position));
+        data.putExtra("result", regionList.get(position).getName());
         setResult(RESULT_OK, data);
         finish();
     }
@@ -167,7 +180,7 @@ public class PickRegionActivity extends BaseListActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.tv.setText(regionList.get(position));
+            holder.tv.setText(regionList.get(position).getName());
             convertView.setTag(holder);
             return convertView;
         }

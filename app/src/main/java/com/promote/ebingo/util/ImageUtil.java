@@ -1,41 +1,15 @@
 package com.promote.ebingo.util;
 
-import android.app.Dialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Xfermode;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
-
-import com.jch.lib.util.DialogUtil;
-import com.jch.lib.util.HttpUtil;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.promote.ebingo.application.HttpConstant;
-import com.promote.ebingo.impl.EbingoRequestParmater;
-
-import org.apache.http.Header;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HttpContext;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,14 +35,15 @@ public class ImageUtil {
      * 保存方法
      */
     public static Uri saveBitmap(Bitmap bm, String picName) {
-        if (TextUtils.isEmpty(picName)||bm==null)return null;
+        if (TextUtils.isEmpty(picName) || bm == null) return null;
         File f = new File(getImageFile(), picName);
-        if (f.exists()) {
-            f.delete();
-        }
+
         try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
             FileOutputStream out = new FileOutputStream(f);
-            bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
         } catch (FileNotFoundException e) {
@@ -149,14 +124,14 @@ public class ImageUtil {
         canvas.drawBitmap(resizeSrc, 0, 0, paint);
         canvas.restore();
 
-        if (result!=resizeSrc&&!resizeSrc.isRecycled())resizeSrc.recycle();
-        if (result!=src&&!src.isRecycled())src.recycle();
+        if (result != resizeSrc && !resizeSrc.isRecycled()) resizeSrc.recycle();
 
         return result;
     }
 
     /**
      * 耗时方法，不可放在UI线程上
+     *
      * @param path
      * @return
      */

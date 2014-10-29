@@ -12,18 +12,21 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.jch.lib.util.DialogUtil;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.center.CenterFragment;
 import com.promote.ebingo.find.FindFragment;
 import com.promote.ebingo.home.HomeFragment;
 import com.promote.ebingo.publish.PublishFragment;
 import com.promote.ebingo.publish.login.LoginDialog;
-import com.promote.ebingo.publish.login.RegisterActivity;
+import com.promote.ebingo.publish.login.LoginManager;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.LogCat;
 
 
-public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener,PublishFragment.PublishCallback {
+public class MainActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener, CenterFragment.OnFragmentInteractionListener, PublishFragment.PublishCallback, HomeFragment.HomeFragmentListener {
+
+    public static final String ARG_PUBLISH_TYPE = "publish_type";
     private RadioButton mainrb;
     private RadioButton findrb;
     private RadioButton publishrb;
@@ -49,6 +52,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogCat.i("--->", "onCreate");
         setContentView(R.layout.activity_main);
         initialize();
     }
@@ -56,16 +60,16 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        LogCat.i("--->","onRestoreInstanceState");
+        LogCat.i("--->", "onRestoreInstanceState");
         Company.loadInstance((Company) savedInstanceState.getSerializable("company"));
-        sendBroadcast(new Intent(CenterFragment.ACTION_INVALIDATE));
+        sendBroadcast(new Intent(LoginManager.ACTION_INVALIDATE));
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("company", Company.getInstance());
-        LogCat.i("--->","onSaveInstanceState");
+        LogCat.i("--->", "onSaveInstanceState");
     }
 
     private void initialize() {
@@ -181,6 +185,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogCat.i("--->", "requestCode:" + requestCode + " Result ok?:" + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
         if (mPublishFragment != null && mPublishFragment.isMyRequest(requestCode)) {
             LogCat.i("--->", "mPublishFragment->onActivityResult");
             mPublishFragment.onActivityResult(requestCode, resultCode, data);
@@ -190,12 +195,50 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
             }
             changeFrag(mCenterFragment, mCurFragment);
             centerrb.setChecked(true);
+        } else if (requestCode == BaseFragment.TO_SCAN) {
+            if (!mMainFramgent.isHidden()) {
+                mMainFramgent.onActivityResult(requestCode, resultCode, data);
+            } else if (!mFindFrament.isHidden()) {
+                mFindFrament.onActivityResult(requestCode, resultCode, data);
+            }
         }
+
 
     }
 
     @Override
     public void onLoginCancel() {
         mainrb.setChecked(true);
+    }
+
+    private long lastTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        long curTime = System.currentTimeMillis();
+        if (curTime - lastTime < 1500) {
+            super.onBackPressed();
+            FileUtil.saveFile(ContextUtil.getContext(), FileUtil.FILE_COMPANY, Company.getInstance());
+        } else {
+            ContextUtil.toast("再按一次退出！");
+            lastTime = curTime;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogCat.i("--->", "onResume");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LogCat.i("--->", "onRestart");
+    }
+
+    @Override
+    public void moreHotMarket() {
+        findrb.setChecked(true);
     }
 }

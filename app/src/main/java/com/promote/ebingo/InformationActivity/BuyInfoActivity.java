@@ -10,18 +10,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.HttpUtil;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.CallRecord;
 import com.promote.ebingo.bean.Company;
+import com.promote.ebingo.bean.CompanyVipInfo;
 import com.promote.ebingo.bean.DetailInfoBean;
 import com.promote.ebingo.center.CallRecordActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.GetInfoDetail;
+import com.promote.ebingo.publish.EbingoDialog;
+import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginDialog;
+import com.promote.ebingo.util.ContextUtil;
 
 /**
  * 求购信息详情。
@@ -36,9 +43,14 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
     private TextView buynumtv;
     private TextView buyinfopublishtimetv;
     private TextView publishlooknumtv;
-    private WebView buyinfodetailtv;
+    private TextView productinfoDetailtv;
+    private WebView buyinfodetailwv;
     private Button buyInfocontactphonetv;
     private ImageView commonbackbtn;
+    /**
+     * 企业vip标签. *
+     */
+    private ImageView mIntVipImg = null;
     private TextView commontitletv;
     private DetailInfoBean mDetailInfoBean = null;
 
@@ -49,7 +61,6 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         initialize();
     }
 
-
     private void initialize() {
 
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
@@ -59,9 +70,11 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         buyinfobtmll = (RelativeLayout) findViewById(R.id.buy_info_btm_ll);
         buyinfonametv = (TextView) findViewById(R.id.buy_info_name_tv);
         buynumtv = (TextView) findViewById(R.id.buy_num_tv);
+        mIntVipImg = (ImageView) findViewById(R.id.buy_info_btm_img);
         buyinfopublishtimetv = (TextView) findViewById(R.id.buy_info_publish_time_tv);
         publishlooknumtv = (TextView) findViewById(R.id.publish_look_num_tv);
-        buyinfodetailtv = (WebView) findViewById(R.id.buy_info_detail_tv);
+        buyinfodetailwv = (WebView) findViewById(R.id.buy_info_detail_wv);
+        productinfoDetailtv = (TextView) findViewById(R.id.buy_info_detail_tv);
         buyInfocontactphonetv = (Button) findViewById(R.id.buy_info_contact_phone_tv);
 
         int demandId = getIntent().getIntExtra(DEMAND_ID, -1);
@@ -69,9 +82,8 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(getString(R.string.title_buy_detail));
         buyInfocontactphonetv.setOnClickListener(this);
-        buyinfointocompanytv.setOnClickListener(this);
+        buyinfobtmll.setOnClickListener(this);
         getInfoDetail();
-
     }
 
 
@@ -90,26 +102,25 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             case R.id.buy_info_contact_phone_tv: {
 
                 if (mDetailInfoBean != null) {
-
                     Company company = Company.getInstance();
                     if (company == null || company.getCompanyId() == null) {//用户没有登录。
-
                         LoginDialog loginDialog = new LoginDialog(BuyInfoActivity.this);
                         loginDialog.setOwnerActivity(this);
                         loginDialog.setCanceledOnTouchOutside(true);
                         loginDialog.setCancelable(true);
                         loginDialog.show();
-
-                    } else if (isVip(company.getVipType())) {       //vip会员.
+                    } else if (!Company.getInstance().getVipInfo().callDemand()) {//不是vip会员.
+                        EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                        dialog.setMessage(getString(R.string.cannot_call_demand, VipType.Standard_VIP.name));
+                        dialog.show();
+                    } else {
                         CallRecord record = new CallRecord();
                         record.setPhone_num(mDetailInfoBean.getPhone_num());
                         record.setTo_id(mDetailInfoBean.getCompany_id());
                         record.setCall_id(Company.getInstance().getCompanyId());
                         record.setInfoId(mDetailInfoBean.getInfo_id());
+                        record.setContacts(mDetailInfoBean.getContacts());
                         CallRecordActivity.CallRecordManager.dialNumber(this, record);
-                    } else {        //不是vip会员.
-                        VipDialog vipDialog = new VipDialog(BuyInfoActivity.this);
-                        vipDialog.show();
                     }
                 }
 
@@ -117,41 +128,35 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
             }
 
             case R.id.buy_info_btm_ll: {
-                if (mDetailInfoBean != null) {
+                VipType companyVip = VipType.getCompanyInstance();
+                if (companyVip.compareTo(VipType.Standard_VIP) < 0) {
+                    EbingoDialog dialog = EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+                    dialog.setMessage(getString(R.string.can_scan_demand_company_info, VipType.getCompanyInstance().name));
+                    dialog.show();
+                } else if (mDetailInfoBean != null && HttpUtil.isNetworkConnected(getApplicationContext())) {
                     Intent intent = new Intent(BuyInfoActivity.this, InterpriseInfoActivity.class);
                     intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+                    intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
                     startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.go_company_info_toast), Toast.LENGTH_SHORT).show();
                 }
 
                 break;
 
             }
-            case R.id.buy_info_into_company_tv: {
-
-                Intent intent = new Intent(this, InterpriseInfoActivity.class);
-                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
-                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
-                startActivity(intent);
-                break;
-            }
+//            case R.id.buy_info_into_company_tv: {
+//                Intent intent = new Intent(this, InterpriseInfoActivity.class);
+//                intent.putExtra(InterpriseInfoActivity.ARG_ID, mDetailInfoBean.getCompany_id());
+//                intent.putExtra(InterpriseInfoActivity.ARG_NAME, mDetailInfoBean.getCompany_name());
+//                startActivity(intent);
+//                break;
+//            }
             default: {
 
             }
 
         }
-
-    }
-
-    /**
-     * 判断是否为vip会员.
-     *
-     * @param vipType
-     * @return true 是vip会员.
-     */
-    public boolean isVip(String vipType) {
-
-        assert vipType == null;
-        return VipType.parse(vipType).compareTo(VipType.NORMAL_VIP) > 0;
 
     }
 
@@ -191,13 +196,70 @@ public class BuyInfoActivity extends Activity implements View.OnClickListener {
      * 填充详细信息数据.
      */
     private void initData() {
+        Integer sellerId = mDetailInfoBean.getCompany_id();
+        if (sellerId == null) {
+            //根据发布信息的公司id是否为空，来判断信息是否被删除。
+            EbingoDialog.newInstance(this, EbingoDialog.DialogStyle.STYLE_INFO_DELETED).show();
+            return;
+        }
+
+        //如果发布信息的公司id与本公司相同，隐藏拨号按钮
+        if (mDetailInfoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
+            buyInfocontactphonetv.setVisibility(View.GONE);
+        }
+
+        //如果审核不通过就弹出提示
+        if (!Constant.VERIFY_PASS.equals(mDetailInfoBean.getVerify_result())) {
+            popError(mDetailInfoBean.getVerify_reason());
+        }
+        //设置求购信息标题
         buyinfonametv.setText(mDetailInfoBean.getTitle());
+        //设置求购数量
         buynumtv.setText(String.valueOf(mDetailInfoBean.getBuy_num()));
+        //设置发布时间
         buyinfopublishtimetv.setText(mDetailInfoBean.getCreate_time());
+        //设置浏览次数
         publishlooknumtv.setText(String.valueOf(mDetailInfoBean.getRead_num()));
-        buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
-        buyinfodetailtv.getSettings().setJavaScriptEnabled(true);
-        buyinfodetailtv.loadDataWithBaseURL(HttpConstant.getRootUrl(), mDetailInfoBean.getDescription(), "text/html", "UTF-8", "about:blank");
+        //如果为体验会员就不显示公司名称
+        VipType vipType = VipType.getCompanyInstance();
+        if (vipType.compareTo(VipType.Experience_Vip) <= 0&&!mDetailInfoBean.getCompany_id().equals(Company.getInstance().getCompanyId())) {
+            buyinfocompanytv.setText("****公司");
+        } else {
+            buyinfocompanytv.setText(mDetailInfoBean.getCompany_name());
+        }
+        mIntVipImg.setImageDrawable(ContextUtil.getVipImgByType(getResources(), mDetailInfoBean.getVip_type()));
+
+        String description = mDetailInfoBean.getDescription();
+        //根据是否为html文本，来用不同的控件显示
+        if (ContextUtil.isHtml(description)) {
+            productinfoDetailtv.setVisibility(View.GONE);
+            buyinfodetailwv.setVisibility(View.VISIBLE);
+            buyinfodetailwv.getSettings().setJavaScriptEnabled(true);
+            buyinfodetailwv.loadDataWithBaseURL(HttpConstant.getRootUrl(), description, "text/html", "UTF-8", "about:blank");
+
+        } else {
+            buyinfodetailwv.setVisibility(View.GONE);
+            productinfoDetailtv.setVisibility(View.VISIBLE);
+            productinfoDetailtv.setText(description);
+        }
     }
 
+    private void popError(String msg) {
+        final TextView tv_warn = (TextView) findViewById(R.id.tv_warn);
+        tv_warn.setText(msg);
+        tv_warn.setVisibility(View.VISIBLE);
+        tv_warn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BuyInfoActivity.this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.INFO, mDetailInfoBean);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

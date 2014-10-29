@@ -4,16 +4,17 @@ package com.promote.ebingo.InformationActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.view.PullToRefreshView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
@@ -27,12 +28,12 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link InterpriseDynamicFragment#newInstance} factory method to
+ * Use the {@link com.promote.ebingo.InformationActivity.InterpriseDynamicFragment#newInstance} factory method to
  * create an instance of this fragment.
  * <p/>
- * 企業動態。
+ * 企業動態列表。
  */
-public class InterpriseDynamicFragment extends InterpriseBaseFragment implements AdapterView.OnItemClickListener {
+public class InterpriseDynamicFragment extends CommonListFragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener, InterpriseBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -41,9 +42,9 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private ListView ipriseinfodynamiclv;
     private ArrayList<ComanyNewsListBeanTools.CompanyNewListBean> mCompanyNewListBeans = new ArrayList<ComanyNewsListBeanTools.CompanyNewListBean>();
     private MyAdapter myAdapter = null;
+    private int mCompanyId = 0;
 
     /**
      * Use this factory method to create a new instance of
@@ -71,27 +72,28 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
+        myAdapter = new MyAdapter();
         getCompanyNewsList(0);
+    }
 
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setUpRefreshAble(true);
+        setDownRefreshAble(false);
+        setOnItemClickListener(this);
+        setAdapter(myAdapter);
+        setAddMaxNum(20);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onResume() {
 
-        View view = inflater.inflate(R.layout.fragment_interprise_dynamic, container, false);
-        initialize(view);
-        return view;
+
+        super.onResume();
     }
 
-    private void initialize(View view) {
-
-        ipriseinfodynamiclv = (ListView) view.findViewById(R.id.iprise_info_dynamic_lv);
-        myAdapter = new MyAdapter();
-        ipriseinfodynamiclv.setAdapter(myAdapter);
-        ipriseinfodynamiclv.setOnItemClickListener(this);
-
-    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -101,6 +103,22 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
         intent.putExtra(InterpriseNewActivity.ARG_ID, companyNewListBean.getId());
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onFooterRefresh(PullToRefreshView view) {
+
+        getCompanyNewsList(mCompanyNewListBeans.size());
+    }
+
+    @Override
+    public int getInterprsetId() {
+        return mCompanyId;
+    }
+
+    @Override
+    public void setInterprsetId(int interpriseId) {
+        this.mCompanyId = interpriseId;
     }
 
     /**
@@ -162,14 +180,14 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
     /**
      * 获取网络数据。
      */
-    private void getCompanyNewsList(int last_id) {
+    private void getCompanyNewsList(final int last_id) {
 
         String urlStr = HttpConstant.getCompanyNewsList;
 
         EbingoRequestParmater param = new EbingoRequestParmater(getActivity().getApplicationContext());
         param.put("company_id", getInterprsetId());
         param.put("last_id", last_id);
-        param.put("pagesize", 20);
+        param.put("pagesize", getAddMaxeNum());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
 
         HttpUtil.post(urlStr, param, new JsonHttpResponseHandler("utf-8") {
@@ -177,10 +195,41 @@ public class InterpriseDynamicFragment extends InterpriseBaseFragment implements
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                 ArrayList<ComanyNewsListBeanTools.CompanyNewListBean> companyNewListBeans = ComanyNewsListBeanTools.getCompanyNewsListBeans(response.toString());
+
+
                 if (companyNewListBeans != null) {
+                    int loadNum = companyNewListBeans.size();
+                    if (last_id != 0) {      //刷新家在更多.
+                        if (loadNum < getAddMaxeNum()) {        //加载到最后一页
+                            loadMore(false, true);
+                            haseData();
+                        } else {
+                            loadMore(true, true);
+                            haseData();
+                        }
+                    } else {     //首次加载
+                        if (loadNum == 0) {
+                            noData();
+                            loadMore(false, false);
+                        } else if (loadNum > 0 && loadNum < getAddMaxeNum()) {      //首次只加载不到一页的内容。
+                            loadMore(false, false);
+                            haseData();
+                        } else {
+                            loadMore(true, false);
+                        }
+
+                    }
                     mCompanyNewListBeans.addAll(companyNewListBeans);
                     myAdapter.notifyDataSetChanged();
+                } else {
+                    if (last_id == 0) {
+                        noData();
+                    }
+                    loadMore(false, false);
+
                 }
+
+
                 dialog.dismiss();
                 super.onSuccess(statusCode, headers, response);
             }

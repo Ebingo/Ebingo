@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CaptureActivity">
+
+
+
+    <SurfaceView
+        android:id="@+id/preview_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center" />
+
+    <com.jch.d2code.view.ViewfinderView
+        android:id="@+id/viewfinder_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/transparent" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="top"
+        android:layout_height="48dp"
+        android:background="#29241e">
+s
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:id="@+id/common_back_btn"
+            android:clickable="true"
+            android:scaleType="center"
+            android:layout_gravity="center_vertical"
+            android:onClick="onClick"
+            android:src="@drawable/back_arro" />
+
+        <TextView
+            android:id="@+id/common_title_tv"
+            android:textColor="#ffffff"
+            android:text="扫描二维码"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+    <TextView
+        android:id="@+id/txtResult"
+        android:textColor="#ffffff"
+
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="66dp"
+        android:textSize="14sp" />
+
+</FrameLayout>

@@ -7,9 +7,9 @@ public class HttpConstant {
 
     private static final String TEST_RHOST = "http://218.244.149.129"; //remote
 
-    private static final boolean LOCALHOST = true;
+    private static final boolean LOCALHOST = false;
 
-    private static final String TEST_HOST = "http://192.168.1.161";
+    private static final String TEST_HOST = "http://192.168.1.155";
 
     private static final String HOST = "";
 
@@ -170,5 +170,17 @@ public class HttpConstant {
      * 获取全国省份列表
      */
     public static final String getProvinceList = getRootUrl() + "getProvinceList";
+    /**
+     * 获取最新版
+     */
+    public static final String getNewestVersion = getRootUrl() + "getNewestVersion";
+    /**
+     *获取会员信息
+     */
+    public static final String getCompanyVipInfo = getRootUrl() + "getCompanyVipInfo";
+    /**
+     * 获取供应信息数量
+     */
+    public static final String canPublishSupplyInfo = getRootUrl() + "canPublishSupplyInfo";
 
 }

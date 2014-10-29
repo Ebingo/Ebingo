@@ -54,4 +54,12 @@
             style="@style/listview_style"
             android:layout_height="match_parent" />
     </com.jch.lib.view.PullToRefreshView>
+
+    <TextView
+        android:id="@+id/nodata_tv"
+        android:gravity="center"
+        android:text="@string/no_data"
+        style="@style/font_gray_18"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

@@ -211,7 +211,7 @@ public class TagView extends View {
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setColor(checkedColor);
             //绘制矩形框
-            canvas.drawRect(0, height_offset_half, content_width, getHeight() - 2, mPaint);
+            canvas.drawRect(2, height_offset_half, content_width, getHeight() - 2, mPaint);
             //绘制文字内容
             canvas.drawText(text, (content_width - mTextWidth) / 2, height_offset_half + content_height / 2 - getBaseLineOffset(mPaint), mPaint);
 

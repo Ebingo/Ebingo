@@ -44,7 +44,7 @@
                 <EditText
                     android:id="@+id/edit_title"
                     style="@style/publish_edit"
-                    android:hint="8-28字" />
+                    android:hint="15字以内" />
             </TableRow>
 
             <View style="@style/divider_horizontal" />

@@ -1,6 +1,5 @@
 package com.promote.ebingo.center;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,23 +11,24 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
-import com.jch.lib.view.PullToRefreshView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.BaseListActivity;
 import com.promote.ebingo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingo.R;
+import com.promote.ebingo.application.Constant;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.PublishEditActivity;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
+import com.promote.ebingo.util.FormatUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -40,9 +40,10 @@ import java.util.ArrayList;
 
 public class MySupplyActivity extends BaseListActivity {
 
-    private ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
+    private final ArrayList<SearchSupplyBean> mSupplyBeans = new ArrayList<SearchSupplyBean>();
     private DisplayImageOptions mOptions;
     private MyAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,21 +58,41 @@ public class MySupplyActivity extends BaseListActivity {
     }
 
     private void initialize() {
+        addEmptyView();
         setUpRefreshable(true);
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
-
-
-        // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-
+        mOptions = ContextUtil.getSquareImgOptions();
         adapter = new MyAdapter();
         setListAdapter(adapter);
-        getMySupply(0);
+
         enableDelete(true);
+        enableCache(FileUtil.FILE_SUPPLY_LIST, mSupplyBeans);
+
+        setDownRefreshable(true);
+        setUpRefreshable(true);
+        if (mSupplyBeans.size() == 0 || getIntent().getBooleanExtra(ARG_REFRESH, false))
+            onRefresh();
+
+    }
+
+    /**
+     * 添加一个emptyView,如果不添加则使用默认的
+     */
+    private void addEmptyView() {
+        View empty_view = View.inflate(this, R.layout.empty_layout, null);
+        TextView notice= (TextView) empty_view.findViewById(R.id.tv_empty_notice);
+        notice.setText(getString(R.string.empty_notice,"供应"));
+        empty_view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MySupplyActivity.this, PublishEditActivity.class);
+                intent.putExtra(PublishEditActivity.TYPE, Constant.PUBLISH_SUPPLY);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        setEmptyView(empty_view);
     }
 
     private void delete(final int posotion) {
@@ -85,6 +106,7 @@ public class MySupplyActivity extends BaseListActivity {
                 mSupplyBeans.remove(posotion);
                 adapter.notifyDataSetChanged();
                 ContextUtil.toast("删除成功！");
+                refreshFooterView(true);
             }
 
             @Override
@@ -99,10 +121,9 @@ public class MySupplyActivity extends BaseListActivity {
         });
     }
 
-    private void getMySupply(int lastId) {
+    private void getMySupply(final int lastId) {
         String urlStr = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater param = new EbingoRequestParmater(getApplicationContext());
-        final ProgressDialog dialog = DialogUtil.waitingDialog(MySupplyActivity.this);
         param.put("lastid", lastId);
         param.put("pagesize", pageSize);
         try {
@@ -111,6 +132,8 @@ public class MySupplyActivity extends BaseListActivity {
                     .append(makeCondition("company_id", Company.getInstance().getCompanyId()))
                     .append(",")
                     .append(makeCondition("sort", "time"))
+                    .append(",")
+                    .append(makeCondition("verify", 3))
                     .append("}");
             param.put("condition", URLEncoder.encode(sb.toString(), "utf-8"));
         } catch (UnsupportedEncodingException e) {
@@ -124,27 +147,22 @@ public class MySupplyActivity extends BaseListActivity {
                 LogCat.i("--->", response.toString());
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
                 if (searchSupplyBeans != null && searchSupplyBeans.size() > 0) {
+                    if (lastId==0)mSupplyBeans.clear();
                     mSupplyBeans.addAll(searchSupplyBeans);
                     adapter.notifyDataSetChanged();
-                    onLoadMoreFinish(true);
-                }else{
-                    onLoadMoreFinish(false);
                 }
-                dialog.dismiss();
-
+                onLoadFinish();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                dialog.dismiss();
-                LogCat.i("--->", errorResponse.toString());
+                LogCat.i("--->", errorResponse + "");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                dialog.dismiss();
                 LogCat.i("--->", responseString);
             }
         });
@@ -187,26 +205,38 @@ public class MySupplyActivity extends BaseListActivity {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.mysupply_item, null);
                 viewHolder = new ViewHolder();
-
                 viewHolder.img = (ImageView) convertView.findViewById(R.id.mysupply_item_img);
                 viewHolder.nameTv = (TextView) convertView.findViewById(R.id.mysupply_item_name);
                 viewHolder.priceTv = (TextView) convertView.findViewById(R.id.mysupply_price_tv);
                 viewHolder.startTv = (TextView) convertView.findViewById(R.id.mysupply_supply_num_tv);
                 viewHolder.timeTv = (TextView) convertView.findViewById(R.id.mysupply_time);
-
+                viewHolder.verifyTv = (TextView) convertView.findViewById(R.id.tv_verify_result);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             SearchSupplyBean supplyBean = mSupplyBeans.get(position);
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
-            viewHolder.nameTv.setText(supplyBean.getName());
-            viewHolder.priceTv.setText(supplyBean.getPrice());
-            if (!TextUtils.isEmpty(supplyBean.getUnit()))
-                viewHolder.priceTv.append("/" + supplyBean.getUnit());
-            viewHolder.timeTv.setText(supplyBean.getDate());
-            viewHolder.startTv.setText(supplyBean.getMin_supply_num());
 
+            viewHolder.nameTv.setText(supplyBean.getName());
+            viewHolder.priceTv.setText(FormatUtil.formatPrice(supplyBean.getPrice(),supplyBean.getUnit()));
+            viewHolder.timeTv.setText(supplyBean.getDate());
+
+            String minNum=FormatUtil.formatSellNum(supplyBean.getMin_supply_num(),supplyBean.getUnit());
+            viewHolder.startTv.setText(getString(R.string.supply_start_num,minNum));
+
+            String verify_result=supplyBean.getVerify_result();
+            if (Constant.VERIFY_WAITING.equals(verify_result)){
+                viewHolder.verifyTv.setVisibility(View.VISIBLE);
+                viewHolder.verifyTv.setText("待审核");
+                viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.orange_my));
+            }else if(Constant.VERIFY_NOT_PASS.equals(verify_result)){
+                viewHolder.verifyTv.setVisibility(View.VISIBLE);
+                viewHolder.verifyTv.setText("未通过");
+                viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.gray));
+            }else{
+                viewHolder.verifyTv.setVisibility(View.INVISIBLE);
+            }
             return convertView;
         }
 
@@ -219,10 +249,16 @@ public class MySupplyActivity extends BaseListActivity {
         TextView priceTv;
         TextView startTv;
         TextView timeTv;
+        TextView verifyTv;
     }
 
     @Override
     protected void onLoadMore(int lastId) {
         getMySupply(lastId);
+    }
+
+    @Override
+    protected void onRefresh() {
+        getMySupply(0);
     }
 }

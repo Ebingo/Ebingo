@@ -1,17 +1,15 @@
 package com.promote.ebingo.center;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,9 +19,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.InformationActivity.CodeScanOnlineActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -31,7 +29,9 @@ import com.promote.ebingo.center.settings.EnterpriseSettingActivity;
 import com.promote.ebingo.center.settings.SettingActivity;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
+import com.promote.ebingo.publish.VipType;
 import com.promote.ebingo.publish.login.LoginActivity;
+import com.promote.ebingo.publish.login.LoginManager;
 import com.promote.ebingo.util.Dimension;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.LogCat;
@@ -39,8 +39,6 @@ import com.promote.ebingo.util.LogCat;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -55,7 +53,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public static final String ACTION_INVALIDATE="com.promote.ebingo.center.ACTION_INVALIDATE";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -68,6 +66,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private TextView centerdemandnumtv;
     private TextView centercollectnumtv;
     private TextView centermsgnumtv;
+    private View btn_ePlat;
     private TextView centsupplytv;
     private TextView centdemandtv;
     private TextView centcollettv;
@@ -77,6 +76,8 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private TextView centsettingtv;
     private TextView centprofiletv;
     private TextView centShare;
+    private Handler handler = new Handler();
+    private InvalidateData invalidateData = new InvalidateData();
 
     /**
      * Use this factory method to create a new instance of
@@ -118,6 +119,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         initialize(view);
         return view;
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -125,30 +127,35 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void invalidateData(){
+    /**
+     * 刷新数据
+     */
+    private void invalidateData() {
         String companyName = Company.getInstance().getName();
-        if (companyName == null) {
+
+        if (Company.getInstance().getCompanyId() == null) {//没有登录
+            centerloginbtn.setBackgroundResource(R.drawable.login_btn_shape);
             centerloginbtn.setText(R.string.login);
-        } else if ("".equals(companyName)) {
+        } else if ("".equals(companyName)) {//已经登录，还没有设置用户名
+            centerloginbtn.setBackgroundResource(0);
             centerloginbtn.setText("未设置公司名");
-            centerloginbtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), EnterpriseSettingActivity.class);
-                    startActivity(intent);
-                }
-            });
         } else {
+            centerloginbtn.setBackgroundResource(0);
             centerloginbtn.setText(companyName);
-            centerloginbtn.setClickable(false);
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setHeadImage(Company.getInstance().getImageUri());
-                getCurrentCompanyBaseNum();
-            }
-        }, 100);
+        String e_url=Company.getInstance().getE_url();
+        if(TextUtils.isEmpty(e_url)){
+            btn_ePlat.setVisibility(View.INVISIBLE);
+        }else{
+            btn_ePlat.setVisibility(View.VISIBLE);
+        }
+
+        Drawable icon = VipType.getCompanyInstance().getIcon(getActivity());
+        LogCat.i("set vip icon:" + icon);
+        centerloginbtn.setCompoundDrawables(null, null, icon, null);
+
+        setHeadImage(Company.getInstance().getImageUri());
+        getCurrentCompanyBaseNum();
     }
 
     @Override
@@ -160,7 +167,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-        getActivity().registerReceiver(invalidateReceiver,new IntentFilter(ACTION_INVALIDATE));
+        getActivity().registerReceiver(invalidateReceiver, new IntentFilter(LoginManager.ACTION_INVALIDATE));
     }
 
     @Override
@@ -185,8 +192,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -220,12 +225,27 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         centsettingtv.setOnClickListener(this);
         centsettingtv.setOnClickListener(this);
         centShare.setOnClickListener(this);
+        centerheadiv.setOnClickListener(this);
+        view.findViewById(R.id.cent_demand_bar).setOnClickListener(this);
+        view.findViewById(R.id.cent_supply_bar).setOnClickListener(this);
+        view.findViewById(R.id.cent_collect_bar).setOnClickListener(this);
+        view.findViewById(R.id.cent_msg_bar).setOnClickListener(this);
+        btn_ePlat=view.findViewById(R.id.commit_title_done);
+        btn_ePlat.setOnClickListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        invalidateData();
+        handler.postDelayed(invalidateData, 100);
+    }
+
+    private class InvalidateData implements Runnable {
+
+        @Override
+        public void run() {
+            invalidateData();
+        }
     }
 
     /**
@@ -234,17 +254,17 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
      * @param uri
      */
     public void setHeadImage(Uri uri) {
-        ImageDownloadTask task=new ImageDownloadTask(){
+        ImageDownloadTask task = new ImageDownloadTask() {
             @Override
             protected void onPostExecute(Bitmap bitmap) {
                 if (bitmap != null)
                     centerheadiv.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
             }
         };
-        if (uri != null) {//本地没有头像
+        if (uri != null) {//本地有头像
             task.loadBY(uri);
-        }else{
-            final String imageUrl = Company.getInstance().getImage();
+        } else {
+            String imageUrl = Company.getInstance().getImage();
             if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
                 LogCat.e("--->", "setHeadImage uriError uri=" + uri);
                 centerheadiv.setImageResource(R.drawable.center_head);
@@ -259,25 +279,15 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
         int id = v.getId();
         //除了"我的特权"以外，所有选项都必须在登录状态下，才可以使用
-        if (id != R.id.cent_privilege_tv && Company.getInstance().getCompanyId()==null) {
+        if (id != R.id.cent_privilege_tv && Company.getInstance().getCompanyId() == null) {
             gotoLogin();
             return;
         }
 
         switch (id) {
-            case R.id.center_head_iv: {
-
-                if (isLogined()) {
-
-                } else {
-
-                }
-
-                break;
-            }
-
+            case R.id.center_head_iv:
             case R.id.center_login_btn: {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Intent intent = new Intent(getActivity(), EnterpriseSettingActivity.class);
                 startActivity(intent);
                 break;
             }
@@ -286,40 +296,27 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
 
                 break;
             }
-            case R.id.center_supply_num_tv: {
 
-
-                break;
-            }
-            case R.id.center_demand_num_tv: {
-
-                break;
-            }
-            case R.id.center_collect_num_tv: {
-
-                break;
-            }
-            case R.id.center_msg_num_tv: {
-
-                break;
-            }
+            case R.id.cent_supply_bar:
             case R.id.cent_supply_tv: {
                 Intent intent = new Intent(getActivity(), MySupplyActivity.class);
                 startActivity(intent);
                 break;
             }
+            case R.id.cent_demand_bar:
             case R.id.cent_demand_tv: {
                 Intent intent = new Intent(getActivity(), MyDemandActivity.class);
                 startActivity(intent);
-
                 break;
             }
+            case R.id.cent_collect_bar:
             case R.id.cent_collet_tv: {
                 Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
                 startActivity(intent);
 
                 break;
             }
+            case R.id.cent_msg_bar:
             case R.id.cent_book_tv: {
                 Intent intent = new Intent(getActivity(), MyBookActivity.class);
                 startActivity(intent);
@@ -346,21 +343,28 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             }
-            case R.id.cent_share:{
+            case R.id.cent_share: {
                 Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
                 intent.setType("text/plain"); // 分享发送的数据类型
-                intent.putExtra(Intent.EXTRA_SUBJECT, "分享Ebingoo"); // 分享的主题
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Ebingoo--指尖商机"); // 分享的主题
                 intent.putExtra(Intent.EXTRA_TEXT, "Ebingoo--指尖商机 用手指做生意.打造全新电商平台。网址：www.ebingoo.com"); // 分享的内容
                 startActivity(Intent.createChooser(intent, "选择分享"));
                 break;
             }
+
+            case R.id.commit_title_done: {
+                Intent intent=new Intent(getActivity(),CodeScanOnlineActivity.class);
+                intent.putExtra(CodeScanOnlineActivity.URLSTR,Company.getInstance().getE_url());
+                startActivity(intent);
+                break;
+            }
+
             default: {
 
             }
         }
 
     }
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -441,7 +445,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
-    private BroadcastReceiver invalidateReceiver=new BroadcastReceiver() {
+    private BroadcastReceiver invalidateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             invalidateData();

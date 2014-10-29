@@ -1,9 +1,11 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ACER on 2014/8/28.
  */
-public class TodayNum {
+public class TodayNum implements Serializable {
 
     private int supply_num;
     private int demand_num;

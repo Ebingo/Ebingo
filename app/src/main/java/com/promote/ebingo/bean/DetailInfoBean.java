@@ -1,11 +1,17 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ACER on 2014/9/12.
  */
-public class DetailInfoBean {
-
-
+public class DetailInfoBean implements Serializable {
+    /**
+     * 从哪个平台过来
+     * 值：android,ios,pc
+     */
+    private String from;
+    private String category_name;
     /**
      * 信息 id *
      */
@@ -47,9 +53,9 @@ public class DetailInfoBean {
      */
     private String region;
     /**
-     * 供应还是求购 *
+     * 供应还是求购 1 求购 2 供应
      */
-    private int type;
+    private String type;
     /**
      * 图片地址 *
      */
@@ -71,6 +77,7 @@ public class DetailInfoBean {
      */
     private int inwishlist;
 
+    private int wishlist_id;
     /**
      * 求购数量. *
      */
@@ -79,6 +86,84 @@ public class DetailInfoBean {
      * 公司名称. *
      */
     private String company_name;
+    /**
+     * 审核时间
+     */
+    private String verify_time;
+    /**
+     * 审核结果
+     */
+    private String verify_result;
+    /**
+     * 审核原因，失败原因？
+     */
+    private String verify_reason;
+    /**
+     * vip等级类型。
+     */
+    private int vip_type = -3;
+
+    private String ios_wap_url;
+
+    public String getIos_wap_url() {
+        return ios_wap_url;
+    }
+
+    public void setIos_wap_url(String ios_wap_url) {
+        this.ios_wap_url = ios_wap_url;
+    }
+
+    public int getWishlist_id() {
+        return wishlist_id;
+    }
+
+    public void setWishlist_id(int wishlist_id) {
+        this.wishlist_id = wishlist_id;
+    }
+
+    public String getVerify_time() {
+        return verify_time;
+    }
+
+    public void setVerify_time(String verify_time) {
+        this.verify_time = verify_time;
+    }
+
+    public String getVerify_result() {
+        return verify_result;
+    }
+
+    public void setVerify_result(String verify_result) {
+        this.verify_result = verify_result;
+    }
+
+    public String getVerify_reason() {
+        return verify_reason;
+    }
+
+    public void setVerify_reason(String verify_reason) {
+        this.verify_reason = verify_reason;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
+    }
+
+    public void setCompany_id(Integer company_id) {
+        this.company_id = company_id;
+    }
 
     public String getUnit() {
         return unit;
@@ -185,11 +270,11 @@ public class DetailInfoBean {
         this.region = region;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -239,6 +324,24 @@ public class DetailInfoBean {
 
     public void setBuy_num(String buy_num) {
         this.buy_num = buy_num;
+    }
+
+    /**
+     * 设置当前vipType.
+     *
+     * @param vip_type
+     */
+    public void setVip_type(int vip_type) {
+        this.vip_type = vip_type;
+    }
+
+    /**
+     * 获得vipType。
+     *
+     * @return
+     */
+    public int getVip_type() {
+        return this.vip_type;
     }
 
     @Override

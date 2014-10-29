@@ -7,18 +7,29 @@
     android:orientation="vertical"
     tools:context="com.promote.ebingo.center.CenterFragment">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_height"
         android:background="@color/title_color"
-        android:gravity="center">
+        >
 
         <TextView
             style="@style/font_black_20"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tab_center" />
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/commit_title_done"
+            style="@style/font_blue_15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_title_done"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="15dp"
+            android:text="E平台" />
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
@@ -70,6 +81,8 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/login_btn_shape"
                         android:padding="5dp"
+                        android:gravity="bottom"
+                        android:drawablePadding="3dp"
                         android:text="@string/login" />
 
                 </LinearLayout>
@@ -87,7 +100,9 @@
                     android:background="@color/trans_black"
                     android:weightSum="4">
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_supply_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_supply_num_tv"
@@ -103,7 +118,9 @@
                             android:text="@string/supply" />
                     </LinearLayout>
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_demand_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_demand_num_tv"
@@ -119,7 +136,9 @@
                             android:text="@string/buy" />
                     </LinearLayout>
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_collect_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_collect_num_tv"
@@ -135,7 +154,9 @@
                             android:text="@string/collect" />
                     </LinearLayout>
 
-                    <LinearLayout style="@style/center_num_style">
+                    <LinearLayout
+                        android:id="@+id/cent_msg_bar"
+                        style="@style/center_num_style">
 
                         <TextView
                             android:id="@+id/center_msg_num_tv"
@@ -148,7 +169,7 @@
                             style="@style/font_white_15"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/message" />
+                            android:text="@string/book" />
                     </LinearLayout>
 
 

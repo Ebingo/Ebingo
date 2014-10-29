@@ -29,12 +29,6 @@
                 android:lineSpacingMultiplier="1.2"
                 android:padding="3dp" />
 
-            <Button
-                android:id="@+id/commit"
-                style="@style/blue_button"
-                android:layout_marginTop="10dp"
-                android:onClick="onClick"
-                android:text="确定" />
 
         </LinearLayout>
     </ScrollView>

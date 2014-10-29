@@ -1,7 +1,11 @@
 package com.promote.ebingo.impl;
 
+import android.text.TextUtils;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -19,17 +23,18 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
     }
 
     @Override
-   final public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+    final public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
         LogCat.i("--->", response + "");
         try {
             response = response.getJSONObject("response");
             if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
                 onSuccess(statusCode, response);
             } else {
-                onFail(statusCode, response.getString("msg"));
+                showError(statusCode, response.getString("msg"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            showError(statusCode,e.getLocalizedMessage());
         }
     }
 
@@ -43,21 +48,57 @@ public abstract class EbingoHandler extends JsonHttpResponseHandler {
 
     @Override
     final public void onFailure(int statusCode, org.apache.http.Header[] headers, java.lang.String s, java.lang.Throwable throwable) {
-        onFail(statusCode, s);
+        if (s!=null){
+            showError(statusCode,"访问出错了");
+        }else{
+            showError(statusCode,null);
+        }
+        LogCat.w("EbingooHandler error:"+s);
     }
 
     @Override
-    final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-        onFail(statusCode, errorResponse+"");
+    final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) { LogCat.w("EbingooHandler error:"+errorResponse);
+        if (errorResponse!=null){
+            showError(statusCode,"数据异常");
+        }else{
+            showError(statusCode,null);
+        }
+        LogCat.i("--->", errorResponse + "");
     }
 
     @Override
-    final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-        onFail(statusCode,errorResponse+"");
+    final public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) { LogCat.w("EbingooHandler error:"+errorResponse);
+        if (errorResponse!=null){
+            showError(statusCode,"数据异常");
+        }else{
+            showError(statusCode,null);
+        }
+
+        LogCat.i("--->", errorResponse + "");
     }
 
+    private void showError(int statusCode,String msg) {
+        if (TextUtils.isEmpty(msg)){
+            msg= ContextUtil.getString(R.string.net_error);
+        }
+        onFail(statusCode, msg);
+        ContextUtil.toast(msg);
+    }
+
+    /**
+     * 当返回code=100时，调用此方法
+     *
+     * @param statusCode
+     * @param response
+     */
     public abstract void onSuccess(int statusCode, JSONObject response);
 
+    /**
+     * 当code!=100时，调用此方法
+     *
+     * @param statusCode
+     * @param msg
+     */
     public abstract void onFail(int statusCode, String msg);
 
     @Override

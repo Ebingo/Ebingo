@@ -10,23 +10,26 @@ import android.widget.TextView;
 
 import com.jch.lib.util.ImageManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.promote.ebingo.R;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.bean.SearchSupplyBean;
 import com.promote.ebingo.bean.SearchTypeBean;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FormatUtil;
+import com.promote.ebingo.util.LogCat;
 
 import java.util.ArrayList;
 
 /**
  * Created by ACER on 2014/9/9.
- *
- *行业分类list adapter。
- *
+ * <p/>
+ * 行业分类list adapter。
  */
 public class CategoryListAdapter extends BaseAdapter {
 
-    /** 上下文。 **/
+    /**
+     * 上下文。 *
+     */
     private Context mContenxt;
 
     private ArrayList<SearchTypeBean> mCategoryBeans = null;
@@ -36,12 +39,12 @@ public class CategoryListAdapter extends BaseAdapter {
     private DisplayImageOptions mOptions;
 
 
-    public CategoryListAdapter(Context context, ArrayList<SearchTypeBean> categoryBeans){
+    public CategoryListAdapter(Context context, ArrayList<SearchTypeBean> categoryBeans) {
 
         this.mContenxt = context;
-        if (categoryBeans != null){
+        if (categoryBeans != null) {
             mCategoryBeans = categoryBeans;
-        }else {
+        } else {
             try {
                 throw new Exception("adapter data should not be null.");
             } catch (Exception e) {
@@ -50,19 +53,13 @@ public class CategoryListAdapter extends BaseAdapter {
         }
 
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
-
+        mOptions = ContextUtil.getSquareImgOptions();
     }
 
     @Override
     public int getCount() {
         return mCategoryBeans.size();
-}
+    }
 
     @Override
     public Object getItem(int position) {
@@ -78,10 +75,10 @@ public class CategoryListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         SearchTypeBean categroyItemBean = mCategoryBeans.get(position);
-        if (categroyItemBean != null && categroyItemBean instanceof SearchSupplyBean){
+        if (categroyItemBean != null && categroyItemBean instanceof SearchSupplyBean) {
 
             SupplyViewHolder supplyViewHolder = null;
-            if (convertView == null || !(convertView.getTag() instanceof SupplyViewHolder)){
+            if (convertView == null || !(convertView.getTag() instanceof SupplyViewHolder)) {
 
                 convertView = LayoutInflater.from(mContenxt).inflate(R.layout.category_item_layout, null);
                 supplyViewHolder = new SupplyViewHolder();
@@ -95,23 +92,24 @@ public class CategoryListAdapter extends BaseAdapter {
 
                 convertView.setTag(supplyViewHolder);
 
-            }else {
-                supplyViewHolder = (SupplyViewHolder)convertView.getTag();
+            } else {
+                supplyViewHolder = (SupplyViewHolder) convertView.getTag();
             }
 
-            SearchSupplyBean supplyBean = (SearchSupplyBean)categroyItemBean;
+            SearchSupplyBean supplyBean = (SearchSupplyBean) categroyItemBean;
             supplyViewHolder.lookNumTv.setText(Integer.toString(supplyBean.getRead_num()));
-            supplyViewHolder.startTv.setText(supplyBean.getMin_supply_num());
-            supplyViewHolder.priceTv.setText(supplyBean.getPrice());
+            LogCat.d("num:"+supplyBean.getMin_supply_num()+" unit"+supplyBean.getUnit());
+            supplyViewHolder.startTv.setText(FormatUtil.formatSellNum(supplyBean.getMin_supply_num(),supplyBean.getUnit()));
+            supplyViewHolder.priceTv.setText(FormatUtil.formatPrice(supplyBean.getPrice()));
             supplyViewHolder.nameTv.setText(supplyBean.getName());
             supplyViewHolder.providerTv.setText(supplyBean.getCompany());
             //TODO img
             ImageManager.load(supplyBean.getImage(), supplyViewHolder.img, mOptions);
 
-        }else if (categroyItemBean != null && categroyItemBean instanceof SearchDemandBean){
+        } else if (categroyItemBean != null && categroyItemBean instanceof SearchDemandBean) {
 
             DemandViewHolder demandViewHolder = null;
-            if (convertView == null || !(convertView.getTag() instanceof DemandViewHolder)){
+            if (convertView == null || !(convertView.getTag() instanceof DemandViewHolder)) {
 
                 convertView = LayoutInflater.from(mContenxt).inflate(R.layout.category_demand_item_layout, null);
                 demandViewHolder = new DemandViewHolder();
@@ -123,11 +121,11 @@ public class CategoryListAdapter extends BaseAdapter {
                 demandViewHolder.describeTv = (TextView) convertView.findViewById(R.id.cate_demand_ite_deiscribe_tv);
 
                 convertView.setTag(demandViewHolder);
-            }else {
+            } else {
                 demandViewHolder = (DemandViewHolder) convertView.getTag();
             }
 
-            SearchDemandBean demandBean = (SearchDemandBean)categroyItemBean;
+            SearchDemandBean demandBean = (SearchDemandBean) categroyItemBean;
             demandViewHolder.timeTv.setText(demandBean.getDate());
             demandViewHolder.nameTv.setText(demandBean.getName());
             demandViewHolder.numTv.setText(demandBean.getBuy_num());
@@ -139,7 +137,7 @@ public class CategoryListAdapter extends BaseAdapter {
     }
 
 
-    static class SupplyViewHolder{
+    static class SupplyViewHolder {
 
         ImageView img;
         TextView nameTv;
@@ -149,7 +147,7 @@ public class CategoryListAdapter extends BaseAdapter {
         TextView lookNumTv;
     }
 
-    static class DemandViewHolder{
+    static class DemandViewHolder {
 
         TextView nameTv;
         TextView timeTv;

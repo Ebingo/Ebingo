@@ -4,7 +4,11 @@ package com.promote.ebingo.InformationActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +31,14 @@ import com.promote.ebingo.bean.CurrentSupplyBean;
 import com.promote.ebingo.bean.InterpriseInfoBean;
 import com.promote.ebingo.bean.InterpriseInfoBeanTools;
 import com.promote.ebingo.impl.EbingoRequestParmater;
+import com.promote.ebingo.publish.VipType;
+import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.Dimension;
+import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -39,7 +48,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  * 公司首页。
  */
-public class InterpriseMainFragment extends InterpriseBaseFragment implements AdapterView.OnItemClickListener {
+public class InterpriseMainFragment extends Fragment implements AdapterView.OnItemClickListener, InterpriseBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -48,24 +57,28 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
     // TODO: Rename and change types of parameters
     private String mParam1;
     private ImageView interprismainimg;
+    private ImageView e_plat;
     private TextView fraginterprisemainnametv;
-    private ImageView fraginterprisemainvipimg;
     private TextView fraginterprisemainaddrtv;
     private TextView fraginterprisemainhttpaddrtv;
     private TextView fraginterprisemaintelltv;
     private TextView fraginterprisemainrangetv;
     private TextView fraginterprisemainabstracttv;
     private ScrollListView interpisemainsupdemlv;
+    private View website_layout;
+    private View address_layout;
+    private View tel_layout;
     private ArrayList<CurrentSupplyBean> currentSupplyBeans = new ArrayList<CurrentSupplyBean>();
     private MyAdapter myAdapter = null;
     private InterpriseInfoBean mInterpriseInfoBean = null;
     private boolean mScrollAble = true;     //viewpager 防止滑动时重绘view
 
     private OnFragmentInteractionListener mListener;
+    private int companyId = -1;
 
     private DisplayImageOptions mOptions;
     private PagerScrollView enterpriseinfopsv;
-
+    private int[] e_plat_drawable=new int[]{R.drawable.e_plat_disabled,R.drawable.e_plat};
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -91,12 +104,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        mOptions = new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnLoading(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading)
-                .cacheInMemory(true).cacheOnDisc(true).build();
+        mOptions = ContextUtil.getSquareImgOptions();
         getDataInfo();
         mScrollAble = true;
 
@@ -118,8 +126,8 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
     private void initialize(View containerView) {
 
         interprismainimg = (ImageView) containerView.findViewById(R.id.interpris_main_img);
+        e_plat = (ImageView) containerView.findViewById(R.id.e_plat);
         fraginterprisemainnametv = (TextView) containerView.findViewById(R.id.frag_interprise_main_name_tv);
-        fraginterprisemainvipimg = (ImageView) containerView.findViewById(R.id.frag_interprise_main_vip_img);
         fraginterprisemainaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_addr_tv);
         fraginterprisemainhttpaddrtv = (TextView) containerView.findViewById(R.id.frag_interprise_main_httpaddr_tv);
         fraginterprisemaintelltv = (TextView) containerView.findViewById(R.id.frag_interprise_main_tell_tv);
@@ -127,14 +135,25 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
         fraginterprisemainabstracttv = (TextView) containerView.findViewById(R.id.frag_interprise_main_abstract_tv);
         interpisemainsupdemlv = (ScrollListView) containerView.findViewById(R.id.interpise_main_sup_dem_lv);
         enterpriseinfopsv = (PagerScrollView) containerView.findViewById(R.id.enterprise_info_psv);
+        website_layout = containerView.findViewById(R.id.website_layout);
+        tel_layout = containerView.findViewById(R.id.tel_layout);
+        address_layout = containerView.findViewById(R.id.address_layout);
+//        enterpriseinfopsv.smoothScrollTo(0, 0);
         myAdapter = new MyAdapter();
         interpisemainsupdemlv.setAdapter(myAdapter);
         interpisemainsupdemlv.setOnItemClickListener(this);
+        interpisemainsupdemlv.setEmptyView(containerView.findViewById(R.id.empty));
         if (mInterpriseInfoBean != null) {    //只有当首次加载界面时加载listView。
             initData(mInterpriseInfoBean);
         }
 //        interpisemainsupdemlv.smoothScrollByOffset(0);
-        enterpriseinfopsv.smoothScrollTo(0, 0);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        enterpriseinfopsv.smoothScrollTo(-200, 0);
     }
 
     /**
@@ -158,6 +177,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity().getApplicationContext());
         parmater.put("company_id", getInterprsetId());
+        LogCat.d("--->MainFragment id==" + getInterprsetId());
         final ProgressDialog dialog = DialogUtil.waitingDialog(getActivity());
 
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler("utf-8") {
@@ -193,27 +213,77 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
     }
 
 
-    private void initData(InterpriseInfoBean infoBean) {
-
+    private void initData(final InterpriseInfoBean infoBean) {
 
         ImageManager.load(infoBean.getImage(), interprismainimg, mOptions);
         fraginterprisemainnametv.setText(infoBean.getName());
-        fraginterprisemainaddrtv.setText(infoBean.getAddr());
-        fraginterprisemainhttpaddrtv.setText(infoBean.getWebsite());
-        fraginterprisemaintelltv.setText(infoBean.getTel());
+        fraginterprisemainnametv.setText(getTitle(infoBean.getName(), infoBean.getViptype()));
+
+        setText(address_layout, fraginterprisemainaddrtv, infoBean.getAddr());
+        setText(website_layout, fraginterprisemainhttpaddrtv, infoBean.getWebsite());
+        setText(tel_layout, fraginterprisemaintelltv, infoBean.getTel());
+
         fraginterprisemainabstracttv.setText(infoBean.getIntroduction());
         fraginterprisemainrangetv.setText(infoBean.getMainRun());
-        if (infoBean.getViptype() == 1) {
-            fraginterprisemainvipimg.setVisibility(View.VISIBLE);
-        } else {
-            fraginterprisemainvipimg.setVisibility(View.GONE);
-        }
         if (infoBean.getInfoarray() != null) {
             currentSupplyBeans.clear();
             currentSupplyBeans.addAll(infoBean.getInfoarray());
         }
         myAdapter.notifyDataSetChanged();
+        enterpriseinfopsv.smoothScrollTo(0, 0);
+        final String e_url = infoBean.getE_url();
+        if (TextUtils.isEmpty(e_url)) {
+            e_plat.setImageResource(e_plat_drawable[0]);
+        }else{
+            e_plat.setImageResource(e_plat_drawable[1]);
+        }
+        e_plat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(e_url)) {
+                    ContextUtil.toast("该企业还没有开通e平台。");
+                } else {
+                    Intent intent = new Intent().setClass(getActivity(), CodeScanOnlineActivity.class);
+                    intent.putExtra(CodeScanOnlineActivity.URLSTR, infoBean.getE_url());
+                    startActivity(intent);
+                }
+            }
+        });
+    }
 
+    /**
+     * 如果text为空就隐藏container，否则就用tv展示text
+     */
+    private void setText(View container, TextView tv, CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            container.setVisibility(View.GONE);
+        } else {
+            tv.setText(text);
+        }
+    }
+
+    private android.text.Spanned getTitle(String companyName, int vipType) {
+
+        StringBuilder html = new StringBuilder();
+        html.append("<span style = \"font-family:arial;color:black;font-weight:bolder;")
+                .append("font-size:").append(Dimension.sp(14))
+                .append("px\">")
+                .append(companyName)
+                .append("<img src=" + vipType + ">")
+                .append("</span>");
+
+
+        return Html.fromHtml(html.toString(),
+                new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String source) {
+                        VipType vipType = VipType.parse(source);
+                        Drawable icon = vipType.getIcon(getActivity());
+                        if (icon != null)
+                            icon.setBounds(0, 0, (int) Dimension.dp(14), (int) Dimension.dp(19));
+                        return icon;
+                    }
+                }, null);
     }
 
     @Override
@@ -221,7 +291,7 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
 
         CurrentSupplyBean currentSupply = currentSupplyBeans.get(position);
         Intent intent = null;
-        if (currentSupply.getType() == 1) {
+        if (currentSupply.getType() == 2) {
             intent = new Intent(getActivity(), ProductInfoActivity.class);
             intent.putExtra(ProductInfoActivity.ARG_ID, currentSupply.getId());
         } else {
@@ -230,6 +300,16 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
         }
 
         startActivity(intent);
+    }
+
+    @Override
+    public int getInterprsetId() {
+        return companyId;
+    }
+
+    @Override
+    public void setInterprsetId(int interprsetId) {
+        companyId = interprsetId;
     }
 
     /**
@@ -283,9 +363,9 @@ public class InterpriseMainFragment extends InterpriseBaseFragment implements Ad
 
             CurrentSupplyBean currentSupplyBean1 = currentSupplyBeans.get(position);
             if (currentSupplyBean1.getType() == 2) {        // 供应.
-                viewHolder.img.setBackgroundResource(R.drawable.cur_demaind);
-            } else if (currentSupplyBean1.getType() == 1) {     //求购.
                 viewHolder.img.setBackgroundResource(R.drawable.cur_supply);
+            } else if (currentSupplyBean1.getType() == 1) {     //求购.
+                viewHolder.img.setBackgroundResource(R.drawable.cur_demaind);
             }
 
             viewHolder.describe.setText(currentSupplyBean1.getName());

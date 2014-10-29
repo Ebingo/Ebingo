@@ -122,7 +122,7 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
             }
             mFragements[index] = fragment;
 
-            return fragment;
+            return (Fragment) fragment;
         }
 
         @Override

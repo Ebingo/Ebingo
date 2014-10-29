@@ -66,7 +66,7 @@ public class ItemDelteDialog extends Dialog {
                 dismiss();
             }
         });
-        this.setCanceledOnTouchOutside(false);
+        this.setCanceledOnTouchOutside(true);
         centerdeldeltetv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

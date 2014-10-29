@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import com.jch.lib.util.DialogUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.util.ImageUtil;
+import com.promote.ebingo.util.LogCat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -72,9 +74,8 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
      * 根据Uri来加载一个图片，并压缩
      */
     private class LoadImageTask extends AsyncTask<Uri, Void, Bitmap> {
-        private int width=640;
-        private int height=236;
-        private final int max_size = 600 * 1024;
+
+        private final int max_size = 200 * 1024;//图片大小
         private ProgressDialog dialog;
 
         private LoadImageTask() {
@@ -89,20 +90,19 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
 
         @Override
         protected Bitmap doInBackground(Uri... params) {
-            ContentResolver resolver = getContentResolver();
-            Bitmap src = null;
             Bitmap result = null;
             try {
-                src = MediaStore.Images.Media.getBitmap(resolver, params[0]);
-                ByteArrayOutputStream bao = new ByteArrayOutputStream();
-                src.compress(Bitmap.CompressFormat.PNG, 100, bao);
-                int size = bao.toByteArray().length;
+                BitmapFactory.Options options=new BitmapFactory.Options();
+                options.inJustDecodeBounds=true;
+                BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]),null,options);
+                int size = options.outWidth*options.outHeight;
+                LogCat.i("--->","size="+size+" size/max="+(size /max_size));
                 if (size > max_size) {
-                    float scale = size / (float) max_size;
-                    result = Bitmap.createScaledBitmap(src, (int) (src.getWidth() / scale), (int) (src.getHeight() / scale), false);
-//                    if (src != result && !src.isRecycled()) src.recycle();
+                    options.inSampleSize = size /max_size;
+                    options.inJustDecodeBounds=false;
+                    result = BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]),null,options);
                 } else {
-                    result = src;
+                    result = BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]));
                 }
             } catch (IOException e) {
                 e.printStackTrace();

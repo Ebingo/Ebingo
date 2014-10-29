@@ -84,15 +84,17 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
 
     private void commit() {
         final String yzm = edit_yzm.getText().toString().trim();
-        String password = edit_password.getText().toString().trim();
 
         if (!checkVerify(yzm)) {
             ContextUtil.toast("验证码错误！");
             return;
         }
+        final String password = edit_password.getText().toString().trim();
+        final String phoneNum = getIntent().getStringExtra("phonenum");
+
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
         parmater.put("yzm", yzm);
-        parmater.put("phonenum", getIntent().getStringExtra("phonenum"));
+        parmater.put("phonenum", phoneNum);
         parmater.put("password", password);
         final ProgressDialog dialog = DialogUtil.waitingDialog(this);
         HttpUtil.post(HttpConstant.register, parmater, new EbingoHandler() {
@@ -100,8 +102,9 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             public void onSuccess(int statusCode, JSONObject response) {
                 try {
                     Company.getInstance().setCompanyId(response.getInt("company_id"));
-                    Intent intent = new Intent(RegisterInputYzm.this, EnterpriseSettingActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    Company.getInstance().setVipType(response.getString("vip_type"));
+                    doLogin(phoneNum,password);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -115,7 +118,23 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             @Override
             public void onFinish() {
                 dialog.dismiss();
+            }
+        });
+    }
 
+    private void doLogin(String phone,String password){
+        new LoginManager().doLogin(phone,password,new LoginManager.Callback() {
+            @Override
+            public void onSuccess() {
+                Intent intent = new Intent(RegisterInputYzm.this, EnterpriseSettingActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                setResult(RESULT_OK,new Intent());
+                finish();
+            }
+
+            @Override
+            public void onFail(String msg) {
+                super.onFail(msg);
             }
         });
     }
@@ -191,21 +210,22 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
             case R.id.common_back_btn:
                 finish();
                 break;
-            case R.id.btn_next:
-                new LoginManager().getYzm(RegisterInputYzm.this, getIntent().getStringExtra("phonenum"), new LoginManager.Callback() {
-
-                    @Override
-                    public void onSuccess() {
-                        startTimer2InvalidateButton();
-                    }
-                });
-                break;
+//            case R.id.btn_next:
+//                new LoginManager().getYzm(RegisterInputYzm.this, getIntent().getStringExtra("phonenum"), new LoginManager.Callback() {
+//
+//                    @Override
+//                    public void onSuccess() {
+//                        startTimer2InvalidateButton();
+//                    }
+//                });
+//                break;
             case R.id.image_verify:
                 invalidateVerify();
                 break;
             case R.id.commit_title_done:
                 Intent intent=new Intent(this,LoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
     }

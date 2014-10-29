@@ -1,11 +1,13 @@
 package com.promote.ebingo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by jch on 2014/8/28.
  * <p/>
  * 首頁熱點供應，熱點需求 共通类。
  */
-public class HotBean {
+public class HotBean implements Serializable {
 
     private String image = null;
     /**  **/

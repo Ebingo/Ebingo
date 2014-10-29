@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Ebingoo</string>
+    <string name="app_name">易宾购</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -23,10 +23,13 @@
     <string name="interprise">企 业</string>
     <string name="buy">求 购</string>
     <string name="supply">供 应</string>
+    <string name="purchase">购买</string>
     <string name="choose_trade">选择分类</string>
     <string name="collect">收藏</string>
     <string name="message">消息</string>
     <string name="cancel">取消</string>
+    <string name="yes">确定</string>
+    <string name="ok">好的</string>
     <string name="interprise_info">企业信息</string>
     <string name="buy_info">求购信息</string>
     <string name="supply_info">供应信息</string>
@@ -37,7 +40,7 @@
     <string name="search_time">次</string>
     <string name="look_num">浏览量</string>
     <string name="price">价格</string>
-    <string name="start_supply">起供应</string>
+    <string name="start_supply">起供</string>
     <string name="supply_company">供应商:</string>
     <string name="enter_company">进入企业</string>
     <string name="title_product_info">产品详情</string>
@@ -50,6 +53,7 @@
     <string name="serch_key">关键词:</string>
     <string name="login">登录|注册</string>
     <string name="login_">登 录</string>
+    <string name="enter_now">立即体验</string>
     <string name="reg">注 册</string>
     <string name="reg_for_free">免费注册</string>
     <string name="category_spaced">分 类</string>
@@ -80,13 +84,16 @@
     <string name="find_password">找回密码</string>
     <string name="my_collect">我的收藏</string>
     <string name="my_book">我的订阅</string>
+    <string name="book">订阅</string>
     <string name="my_tell_hostory">拨号记录</string>
     <string name="my_setting">设置</string>
     <string name="my_share">分享</string>
     <string name="my_profile">企业资料</string>
     <string name="make_call">拨 打</string>
     <string name="search_history">搜索历史</string>
-
+    <string name="load_data_complete">加载数据完成.</string>
+    <string name="enterprise_settings">企业设置</string>
+    <string name="about_us">关于我们</string>
     <string-array name="interprise_info_tab">
         <item>公司首页</item>
         <item>企业动态</item>
@@ -100,15 +107,15 @@
     <string name="interprise_range">【主营范围】</string>
     <string name="interprise_abstrace">【公司简介】</string>
     <string name="interprise_sup_dem">【近期供求】</string>
-    <string name="no_history">沒有搜索记录</string>
+    <string name="no_history">没有搜索记录</string>
     <string name="no_search_data">没有搜索到数据</string>
     <string name="title_buy_detail">求购详情</string>
     <string name="title_product_detail">供应详情</string>
     <string name="look_time">查看次数:</string>
-    <string name="look_unite">次</string>
+    <string name="look_unite">查看%s次</string>
     <string name="phone_num">手机号</string>
     <string name="price_unit">元</string>
-    <string name="supply_start_num">起供应</string>
+    <string name="supply_start_num">%s起供应</string>
     <string name="no_data">没有数据！</string>
     <string name="delete">删除</string>
     <string name="yuan">元</string>
@@ -116,7 +123,9 @@
     <string name="home_newsadd">今日新增</string>
     <string name="time">时间</string>
     <string name="promote">提示</string>
-    <string name="vip_promote">目前只有VIP及已上用户可以一键拨号，请升级。</string>
+    <string name="vip_promote">目前只有VIP及以上用户可以一键拨号，请升级。</string>
+    <string name="go_company_info_toast">查找不到当前企业信息</string>
+    <string name="vip_add_tag">%1$s最多能添加%2$s个订阅标签，普通会员以上也可以单独购买。</string>
 
     <!-- test -->
     <string name="main_hote_spt_titel">掌櫃雙11的禮物你準備了嗎？</string>
@@ -153,41 +162,68 @@
     <string name="enterprise_email">企业邮箱</string>
     <string name="title_activity_my_supply">MySupplyActivity</string>
 
-    <string-array name="privilege_info_visitor">
-        <item>查看企业供求信息</item>
-        <item>发布企业详细信息</item>
-        <item>免费升级普通会员</item>
-    </string-array>
-    <string-array name="privilege_info_normal_vip">
-        <item>享受游客全部特权</item>
-        <item>发布企业求购信息</item>
-        <item>可订阅3个标签，精确推送相关求购信息</item>
-    </string-array>
-    <string-array name="privilege_info_vip">
-        <item>享受普通会员全部特权</item>
-        <item>发布企业求购信息/供应信息</item>
-        <item>可一键拨打电话咨询产品详细情况</item>
-        <item>可订阅23个标签，精确推送相关求购信息</item>
-    </string-array>
-    <string-array name="privilege_info_vvip">
-        <item>享受VIP会员全部特权</item>
-        <item>可订阅标签数不限</item>
-        <item>享受产品3D展示，全方位展示您的产品</item>
-        <item>邮件推送功能，实时获取最新供求信息</item>
-    </string-array>
-
     <string name="about_name">南京普而摩网络技术有限公司</string>
     <string name="about_contact">董小姐</string>
     <string name="about_email">kefu@chinapromo.cn</string>
     <string name="customer_service_number">025-68713202</string>
     <string name="company">公司</string>
     <string name="qq_group">问题反馈QQ群：32111452</string>
-    <string name="notice_3d">尊敬的VVIP会员：</string>
+    <string name="dear_somebody">尊敬的%s</string>
     <string name="hint_edit_phone">请输入手机号</string>
     <string name="hint_edit_psw">请输入密码</string>
     <string name="hint_edit_verify">请输入验证码</string>
     <string name="find_password_dialog_title">发送成功</string>
     <string name="find_password_dialog_message">我们已发送修改密码的链接到您的注册邮箱中，请您注意查收!</string>
     <string name="i_know">我知道了</string>
+    <string name="continue_">继续</string>
+    <string name="already_new_version">已经是最新版本了！</string>
+    <string name="update_right_now">立即升级</string>
+    <string name="find_new_version">发现新版本%s</string>
+    <string name="refresh">肿么木有数据，再刷一次。</string>
+    <string name="net_error">网络不给力，请稍后再试！</string>
+    <string name="no_network">网络错误</string>
+    <string name="last_update">最后更新于：</string>
+    <string name="clear_success">清除成功！</string>
+    <string name="warn">温馨提示</string>
+    <string name="dial_number_notice">拨打%s?</string>
 
+    <array name="pick_picture">
+        <item>相册</item>
+        <item>拍照</item>
+    </array>
+
+    <string name="logout">退出登录</string>
+    <string name="confirm_logout">确定退出登录？</string>
+    <string name="empty_notice">您当前没有发布任何%s信息。</string>
+    <string name="modify">修改</string>
+    <string name="tel_format_error">电话格式错误，如：0558-7211314或010-88888888或138********</string>
+    <string name="company_name_null">请输入公司名称</string>
+    <string name="visitor">游客</string>
+    <string name="vip_experience">体验会员</string>
+    <string name="vip_standard">普通会员</string>
+    <string name="vip_silver">银牌会员</string>
+    <string name="vip_gold">金牌会员</string>
+    <string name="vip_platinum">铂金会员</string>
+    <string name="title_activity_code_scan">Ebingoo</string>
+    <string name="more">更多</string>
+
+    <string name="data_error">数据错误！</string>
+    <string name="info_has_deleted">信息已经被删除！</string>
+    <string name="can_scan_demand_company_info">抱歉，%s不能查看求购的公司信息,请立即升级！</string>
+    <string name="apply">申请</string>
+    <string name="downloaded">已经下载%d%%</string>
+    <string name="current_version">当前版本%s</string>
+    <string name="check_update">检查更新</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="download_fialed">下载失败！</string>
+    <string name="click_install">%s下载完成！点击安装！</string>
+    <string name="cannot_call_demand">只有%s及以上会员可以拨打求购电话,您需要升级才能使用本功能。</string>
+    <string name="no_permission">抱歉，%s没有权限使用此功能！</string>
+    <string name="supply_num_none">您当前剩余发布供应条数不足，请升级！</string>
+    <string name="notice_3d">您上传全景图片次数不足。\n1.普通会员及以上可购买上传次数\n2.金牌会员赠送1次\n3.铂金会员赠送5次。</string>
+    <string name="no_demand_supply_info">暂无供求信息</string>
+    <string name="delete_apk_notice">%1$s(%2$.2fM)安装完毕，是否删除以节省空间？</string>
+    <string name="deleted_apk_notice">%1$s已经删除，节省空间 %2$.2fM</string>
+    <string name="price_zero">面议</string>
+    <string name="continue_download">上次更新没有完成，已下载%d%%，是否继续？</string>
 </resources>

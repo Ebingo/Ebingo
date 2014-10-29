@@ -43,10 +43,12 @@ public class CategoryRankPopWin extends PopupWindow {
 
         this.setFocusable(true);
 
-        // 设置SelectPicPopupWindow弹出窗体动画效果
+//        设置SelectPicPopupWindow弹出窗体动画效果
 //        this.setAnimationStyle(R.style.AnimBottom);
-        // 设置SelectPicPopupWindow弹出窗体的背景
+//        设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(new BitmapDrawable());
+        this.setAnimationStyle(R.style.popupAnimation);
+        this.update();
 
     }
 

@@ -277,6 +277,7 @@ public class PullToRefreshView extends LinearLayout {
                 // deltaY > 0 是向下运动,< 0是向上运动
                 int deltaY = y - mLastMotionY;
                 if (isRefreshViewScroll(deltaY)) {
+                    Log.i("--->", "isRefreshViewScroll true");
                     return true;
                 }
                 break;
@@ -352,9 +353,12 @@ public class PullToRefreshView extends LinearLayout {
      * @return
      */
     private boolean isRefreshViewScroll(int deltaY) {
-        if (mHeaderState == REFRESHING || mFooterState == REFRESHING) {
+        if (mHeaderState == REFRESHING || mFooterState == REFRESHING||Math.abs(deltaY)<=1) {
+            //ACTION_DOWN是不应该拦截的，但ACTION_DOWN时可能产生微小的移动，从而产生deltaY，触发ACTION_MOVE，进入此判断。
+            //此处，必须当deltaY的绝对值大于1时才视为有效移动
             return false;
         }
+
         // 对于ListView和GridView
         if (mAdapterView != null) {
             // 子view(ListView or GridView)滑动到最顶端

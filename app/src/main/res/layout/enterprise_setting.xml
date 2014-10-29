@@ -40,7 +40,7 @@
                             android:layout_width="110dp"
                             android:layout_height="110dp"
                             android:layout_gravity="right"
-                            android:scaleType="centerInside"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/default_photo" />
                     </LinearLayout>
 
@@ -106,7 +106,7 @@
 
                     <TextView
                         style="@style/publish_text_style"
-                        android:text="详细地址" />
+                        android:text="具体街道" />
 
                     <View style="@style/vertical_divider_20" />
 
@@ -127,6 +127,7 @@
                     <View style="@style/vertical_divider_20" />
 
                     <EditText
+                        android:inputType="phone"
                         android:id="@+id/edit_enterprise_phone"
                         style="@style/publish_edit" />
 
@@ -163,6 +164,15 @@
                         style="@style/publish_edit" />
                 </TableRow>
             </TableLayout>
+
+            <TextView
+                android:id="@+id/tv_error"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/font_red_12"
+                android:drawableLeft="@drawable/ic_warn"
+                android:text="电话格式错误" />
 
             <Button
                 android:id="@+id/btn_commit"

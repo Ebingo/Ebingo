@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     style="@style/info_content_pad"
-    android:background="@color/white"
+    android:background="@drawable/click_gray_bg"
     android:layout_height="wrap_content">
 
 
@@ -11,8 +11,7 @@
         android:id="@+id/search_interprise_item_iv"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/test_search_item_img" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -34,15 +33,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/search_result_black_name_tv"
+            <LinearLayout
                 android:layout_width="wrap_content"
+                android:orientation="horizontal"
                 android:layout_alignParentLeft="true"
-                style="@style/black_15_tv"
                 android:layout_toLeftOf="@id/search_result_province_tv"
-                android:text="南京普爾摩網絡有限公司"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
 
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/search_result_black_name_tv"
+                        android:layout_width="wrap_content"
+                        style="@style/black_15_tv"
+                        android:layout_marginRight="@dimen/vip_list_img_width"
+                        android:text="南京普爾摩網絡有限公司"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:scaleType="fitStart"
+                        android:layout_gravity="top|right"
+                        android:id="@+id/search_list_vip_img"
+                        style="@style/list_vip_img_style"
+                        android:src="@drawable/vip_1_member" />
+                </FrameLayout>
+            </LinearLayout>
         </RelativeLayout>
 
         <TextView
@@ -51,7 +68,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="2"
-            android:text="發年遼寧鬧死您哦iPhone跑哪裡里弄理髮wional9發你"
             style="@style/font_gray_12" />
 
     </LinearLayout>

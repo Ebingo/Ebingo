@@ -2,10 +2,11 @@ package com.promote.ebingo.center.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,7 +19,9 @@ import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
+import com.jch.lib.util.VaildUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.promote.ebingo.BaseActivity;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
@@ -27,10 +30,11 @@ import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.ImageDownloadTask;
 import com.promote.ebingo.publish.PreviewActivity;
-import com.promote.ebingo.publish.PublishBaseActivity;
-import com.promote.ebingo.util.CacheUtil;
+import com.promote.ebingo.publish.login.LoginManager;
+import com.promote.ebingo.publish.login.RegisterActivity;
 import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.Dimension;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.JsonUtil;
 import com.promote.ebingo.util.LogCat;
@@ -39,22 +43,20 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Created by acer on 2014/9/9.
+ * 企业设置
  */
-public class EnterpriseSettingActivity extends PublishBaseActivity {
+public class EnterpriseSettingActivity extends BaseActivity {
 
     private static final int PICK_IMAGE = 1;
     private static final int PICK_CAMERA = 2;
     private static final int PREVIEW = 3;
+    private static final int CROP = 4;
     private ImageView image_enterprise;
     private EditText edit_enterprise_name;
     private EditText edit_enterprise_address;
@@ -63,15 +65,13 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     private EditText edit_enterprise_email;
     private TextView tv_pick_province;
     private TextView tv_pick_city;
-    private Map<String, ArrayList> cityMap = null;
+    private TextView tv_error;
     private ArrayList<RegionBeen> provinceList = new ArrayList<RegionBeen>();//省份列表
-    private ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();//城市列表
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enterprise_setting);
-        setBackTitle("企业设置");
         image_enterprise = findImage(R.id.image_enterprise);
 
         edit_enterprise_name = findEdit(R.id.edit_enterprise_name);
@@ -82,7 +82,8 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
 
         tv_pick_province = (TextView) findViewById(R.id.pick_province);
         tv_pick_city = (TextView) findViewById(R.id.pick_city);
-
+        tv_error = (TextView) findViewById(R.id.tv_error);
+        tv_error.setVisibility(View.GONE);
         tv_pick_province.setOnClickListener(this);
         tv_pick_city.setOnClickListener(this);
         image_enterprise.setOnClickListener(this);
@@ -99,35 +100,38 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         image_enterprise.setContentDescription(company.getImage());
 
         tv_pick_province.setText(company.getProvince_name());
+        tv_pick_province.setTag(company.getProvince_id());
         tv_pick_city.setText(company.getCity_name());
+        tv_pick_city.setTag(company.getCity_id());
 
         setHeadImage(Company.getInstance().getImageUri());
     }
 
+    /**
+     * 设置头像
+     *
+     * @param uri 图片的uri
+     */
     public void setHeadImage(Uri uri) {
-        if (uri == null) {//本地没有头像
+
+        ImageDownloadTask task = new ImageDownloadTask() {
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if (bitmap != null)
+                    image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
+            }
+        };
+
+        if (uri != null) {//本地有头像
+            task.loadBY(uri);
+        } else {
             final String imageUrl = Company.getInstance().getImage();
             if (TextUtils.isEmpty(imageUrl)) {//没有头像URL
                 LogCat.e("--->", "setHeadImage uriError uri=" + uri);
                 image_enterprise.setImageResource(R.drawable.center_head);
             } else {//有远程头像URL
-                new ImageDownloadTask() {
-                    @Override
-                    protected void onPostExecute(Bitmap bitmap) {
-                        if (bitmap != null)
-                            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
-                    }
-                }.execute(imageUrl);
+                task.loadBy(imageUrl);
             }
-
-            return;
-        }
-
-        try {
-            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bm, (int) Dimension.dp(48)));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -135,7 +139,11 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_commit:
-                commit();
+                EnterPriseInfo info = getInputInfo();
+                tv_error.setVisibility(View.GONE);
+                if (info.check(getApplicationContext())) {
+                    commit(info);
+                }
                 break;
             case R.id.image_enterprise:
                 showPickDialog();
@@ -159,24 +167,23 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     private void getProvinceList() {
-        provinceList = (ArrayList<RegionBeen>) ContextUtil.read(CacheUtil.FILE_PROVINCE_LIST);
+        provinceList = (ArrayList<RegionBeen>) ContextUtil.read(FileUtil.FILE_PROVINCE_LIST);
         if (provinceList != null) {
             showProvinceDialog();
             return;
-        }else{
-            provinceList=new ArrayList<RegionBeen>();
+        } else {
+            provinceList = new ArrayList<RegionBeen>();
         }
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在加载省份列表...");
-        EbingoRequestParmater params = new EbingoRequestParmater(this);
 
-        HttpUtil.post(HttpConstant.getProvinceList, params, new EbingoHandler() {
+        HttpUtil.post(HttpConstant.getProvinceList, new EbingoRequestParmater(this), new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 try {
                     JSONArray array = response.getJSONArray("data");
                     JsonUtil.getArray(array, RegionBeen.class, provinceList);
                     showProvinceDialog();
-                    ContextUtil.save(CacheUtil.FILE_PROVINCE_LIST, provinceList);
+                    ContextUtil.saveCache(FileUtil.FILE_PROVINCE_LIST, provinceList);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -200,7 +207,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         for (int i = 0; i < length; i++) {
             provinces[i] = provinceList.get(i).getName();
         }
-        new AlertDialog.Builder(EnterpriseSettingActivity.this).setItems(provinces, new DialogInterface.OnClickListener() {
+        ListDialog dialog = ListDialog.newInstance(provinces, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!provinces[which].equals(tv_pick_province.getText().toString())) {
@@ -209,16 +216,19 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     tv_pick_province.setTag(provinceList.get(which).getId());
                 }
             }
-        }).show();
+        });
+        dialog.show(getSupportFragmentManager(), null);
     }
 
     /**
      * 获取城市列表
+     *
      * @param province_id
      */
-    private void getCityList(int province_id) {
-        cityList= (ArrayList<RegionBeen>) ContextUtil.read(CacheUtil.FILE_CITY_LIST);
-        if (cityList!=null){
+    private void getCityList(final int province_id) {
+
+        ArrayList<RegionBeen> cityList = (ArrayList<RegionBeen>) ContextUtil.read(FileUtil.FILE_CITY_LIST + province_id);
+        if (cityList != null) {
             showCityDialog(cityList);
             return;
         }
@@ -232,7 +242,9 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                     JSONArray array = response.getJSONArray("data");
                     final ArrayList<RegionBeen> cityList = new ArrayList<RegionBeen>();
                     JsonUtil.getArray(array, RegionBeen.class, cityList);
+                    ContextUtil.saveCache(FileUtil.FILE_CITY_LIST + province_id, cityList);
                     showCityDialog(cityList);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -257,15 +269,14 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         for (int i = 0; i < length; i++) {
             cities[i] = cityList.get(i).getName();
         }
-
-        new AlertDialog.Builder(this).setItems(cities, new DialogInterface.OnClickListener() {
+        ListDialog.newInstance(cities, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                RegionBeen city=cityList.get(which);
+                RegionBeen city = cityList.get(which);
                 tv_pick_city.setText(city.getName());
                 tv_pick_city.setTag(city.getId());
             }
-        }).show();
+        }).show(getSupportFragmentManager(), null);
     }
 
     private String getString(TextView tv) {
@@ -275,56 +286,23 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     /**
      * 点击提交按钮执行事件
      */
-    private void commit() {
-        EbingoRequestParmater parmater = new EbingoRequestParmater(this);
-        final Integer company_id = Company.getInstance().getCompanyId();
-        final String image_url = image_enterprise.getContentDescription() + "";
+    private void commit(final EnterPriseInfo info) {
 
-        final String name = getString(edit_enterprise_name);
-        final String company_tel = getString(edit_enterprise_phone);
-        final String address = getString(edit_enterprise_address);
-        final String website = getString(edit_enterprise_site);
-        final String email = getString(edit_enterprise_email);
-        final String province = getString(tv_pick_province);
-        final String city = getString(tv_pick_city);
-
-        parmater.put("company_id", company_id);
-        parmater.put("image", image_url);
-        parmater.put("name", name);
-        parmater.put("company_tel", company_tel);
-        parmater.put("province", tv_pick_province.getTag());
-        parmater.put("city", tv_pick_city.getTag());
-        parmater.put("address", address);
-        parmater.put("website", website);
-        parmater.put("email", email);
-        LogCat.i("--->" + parmater);
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在更新数据...");
-        HttpUtil.post(HttpConstant.updateCompanyInfo, parmater, new EbingoHandler() {
+        HttpUtil.post(HttpConstant.updateCompanyInfo, info.getParams(this), new EbingoHandler() {
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
                 Company company = Company.getInstance();
-                company.setCompanyId(company_id);
-                company.setImage(image_url);
-                company.setName(name);
-                company.setCompanyTel(company_tel);
-                company.setProvince_name(province);
-                company.setCity_name(city);
-                company.setAddress(address);
-                company.setWebsite(website);
-                company.setEmail(email);
-                setResult(RESULT_OK, new Intent());
+                info.apply(company);
                 ContextUtil.toast("修改成功！");
+                FileUtil.saveFile(getApplicationContext(), FileUtil.FILE_COMPANY, company);
+                setResult(RESULT_OK);
                 finish();
             }
 
             @Override
             public void onFail(int statusCode, String msg) {
-                try {
-                    JSONObject error = new JSONObject(msg);
-                    ContextUtil.toast(error.getString("msg"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                ContextUtil.toast(msg);
             }
 
             @Override
@@ -332,6 +310,46 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+    /**
+     * 获取用户填入的信息
+     */
+    private EnterPriseInfo getInputInfo() {
+        final EnterPriseInfo info = new EnterPriseInfo();
+
+        info.company_id = Company.getInstance().getCompanyId();
+        info.image = image_enterprise.getContentDescription() + "";
+        info.name = getString(edit_enterprise_name);
+        info.company_tel = getString(edit_enterprise_phone);
+        info.address = getString(edit_enterprise_address);
+        info.website = getString(edit_enterprise_site);
+        info.email = getString(edit_enterprise_email);
+        info.province = getString(tv_pick_province);
+        info.city = getString(tv_pick_city);
+        info.province_id = (Integer) tv_pick_province.getTag();
+        info.city_id = (Integer) tv_pick_city.getTag();
+        return info;
+    }
+
+    /**
+     * 裁剪图片
+     *
+     * @param uri
+     */
+    private void cropImage(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", 200);
+        intent.putExtra("outputY", 200);
+        intent.putExtra("output", getImageCacheUri());// 保存到原文件
+        intent.putExtra("outputFormat", "png");// 返回格式
+        intent.putExtra("return-data", false);
+        startActivityForResult(intent, CROP);
     }
 
     /**
@@ -345,17 +363,19 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
         Bitmap bitmap = null;
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            image_enterprise.setImageBitmap(bitmap);
+            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap,(int) Dimension.dp(48)));
             Company.getInstance().setImageUri(uri);
         } catch (IOException e) {
             e.printStackTrace();
         }
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
         parmater.put("image", ImageUtil.base64Encode(bitmap));
+
         HttpUtil.post(HttpConstant.uploadImage, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                LogCat.i("--->",response+"");
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code")))
@@ -377,7 +397,7 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
      */
     private void showPickDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("企业形象").setItems(new String[]{"相册", "拍照"}, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.enterprise_image).setItems(getResources().getStringArray(R.array.pick_picture), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -413,93 +433,102 @@ public class EnterpriseSettingActivity extends PublishBaseActivity {
     }
 
     private Uri getImageCacheUri() {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "EbingooPics");
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                LogCat.e("--->", "create Image File failed!!");
-            }
-        }
-        return Uri.fromFile(file);
+        return Uri.fromFile(new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "company_image.png"));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LogCat.i("--->", "onActivityResult " + " " + requestCode + " " + resultCode + " " + data);
         if (resultCode != RESULT_OK) return;
-        if (data == null) return;
-        Uri uri = data.getData();
+
         switch (requestCode) {
             case PICK_CAMERA:
-                LogCat.i("--->", uri.toString());
-                if (uri != null) {
-                    toPreviewActivity(uri);
-                }
+                cropImage(getImageCacheUri());
                 break;
             case PICK_IMAGE:
+                Uri uri = data.getData();
                 LogCat.i("--->", uri.toString());
                 if (uri != null) {
-                    toPreviewActivity(uri);
+                    cropImage(uri);
                 }
                 break;
             case PREVIEW:
                 if (data == null) return;
                 uploadImage(data.getData());
                 break;
-        }
-    }
-
-    /**
-     * 将image战士到PreviewActivity中
-     *
-     * @param image
-     */
-    private void toPreviewActivity(Uri image) {
-        if (PreviewActivity.isPreviewing()) {
-            return;
-        }
-        Intent intent = new Intent(this, PreviewActivity.class);
-        intent.setData(image);
-        startActivityForResult(intent, PREVIEW);
-    }
-
-    /**
-     * 从xml中加载城市列表
-     *
-     * @deprecated
-     */
-    private void getCities() {
-        XmlResourceParser parser = getResources().getXml(R.xml.cities);
-        cityMap = new HashMap<String, ArrayList>();
-        try {
-            int eventType = parser.getEventType();
-            String province = null;
-            ArrayList<String> cities = null;
-            while (eventType != XmlResourceParser.END_DOCUMENT) {
-                String tag = parser.getName();
-                switch (eventType) {
-
-                    case XmlResourceParser.START_TAG:
-                        if (tag.equals("province")) {
-                            cities = new ArrayList<String>();
-                            province = parser.getAttributeValue(0);
-                        }
-                        if (tag.equals("city")) {
-                            cities.add(parser.getAttributeValue(0));
-                        }
-                        break;
-                    case XmlResourceParser.END_TAG:
-                        if (tag.equals("province")) {
-                            cityMap.put(province, cities);
-                        }
-                        break;
-
+            case CROP: {
+                if (PreviewActivity.isPreviewing()) {
+                    return;
                 }
-                eventType = parser.next();
+                Intent intent = new Intent(this, PreviewActivity.class);
+                intent.setData(getImageCacheUri());
+                startActivityForResult(intent, PREVIEW);
+                break;
             }
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    class EnterPriseInfo {
+        Integer company_id;
+        String image;
+        String name;
+        String company_tel;
+        Integer province_id;
+        Integer city_id;
+        String province;
+        String city;
+        String address;
+        String website;
+        String email;
+
+        EbingoRequestParmater getParams(Context context) {
+            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
+            parmater.put("company_id", company_id);
+            parmater.put("image", image);
+            parmater.put("name", name);
+            parmater.put("company_tel", company_tel);
+            parmater.put("province", province_id);//此处传的是id，而不是省名
+            parmater.put("city", city_id);//传id，而不是名称
+            parmater.put("address", address);
+            parmater.put("website", website);
+            parmater.put("email", email);
+            return parmater;
         }
 
+        void apply(Company company) {
+            company.setImage(image);
+            company.setName(name);
+            company.setCompanyTel(company_tel);
+            company.setProvince_id(province_id);
+            company.setCity_id(city_id);
+            company.setProvince_name(province);
+            company.setCity_name(city);
+            company.setAddress(address);
+            company.setWebsite(website);
+            company.setEmail(email);
+        }
+
+        boolean check(Context context) {
+            if (TextUtils.isEmpty(name)){
+                showError(getString(R.string.company_name_null));
+                return false;
+            }
+            if (!LoginManager.isMobile(company_tel)&&!LoginManager.isPhone(company_tel)) {
+                showError(getString(R.string.tel_format_error));
+                return false;
+            }
+
+            String msg = VaildUtil.validEmail(email);
+            if (!TextUtils.isEmpty(msg)) {
+                showError(msg);
+                return false;
+            }
+            return true;
+        }
+    }
+
+    void showError(String msg) {
+        tv_error.setText(msg);
+        tv_error.setVisibility(View.VISIBLE);
     }
 }

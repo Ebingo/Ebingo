@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/info_content_pad"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/info_content"
+    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray_bg"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/info_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/info_content_pad"
         android:orientation="vertical">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_vip_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="matrix"
+            android:src="@drawable/platinum_info" />
 
-    <Button
-        android:id="@+id/btn_apply_vip"
-        style="@style/blue_button"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:text="立即升级" />
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_apply_vip"
+            style="@style/blue_button"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:text="立即升级" />
+    </LinearLayout>
+</ScrollView>
+
+

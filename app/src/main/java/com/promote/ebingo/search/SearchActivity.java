@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -40,6 +42,7 @@ import com.promote.ebingo.bean.SearchSupplyBeanTools;
 import com.promote.ebingo.bean.SearchTypeBean;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.impl.SearchDao;
+import com.promote.ebingo.util.ContextUtil;
 import com.promote.ebingo.util.LogCat;
 
 import org.apache.http.Header;
@@ -49,7 +52,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener, AdapterView.OnItemClickListener {
+public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener, AdapterView.OnItemClickListener, TextWatcher {
     /**
      * 當前搜索類型，默認為顯示歷史记录。 *
      */
@@ -72,6 +75,10 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private Button searchclearbtn;
     private LinearLayout searchcontentll;
     private TextView searchnohistorytv;
+    /**
+     * 搜索内容清空按钮。 *
+     */
+    private ImageButton mSearchClearIb;
 
     private SearchHistoryListAdapter mHistoryAdapter = null;
     private SearchResultAdapter mResultAdatper = null;
@@ -112,6 +119,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchcontentresultll = (LinearLayout) findViewById(R.id.search_content_result_ll);
         searchresultlv = (ListView) findViewById(R.id.search_result_lv);
         searchcontenthistoryll = (LinearLayout) findViewById(R.id.search_content_history_ll);
+        mSearchClearIb = (ImageButton) findViewById(R.id.search_clear_ib);
 
 
         mCategoryPop = new SearchCategoryPop(this, this);
@@ -134,11 +142,13 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchcategrycb.setOnCheckedChangeListener(this);
         searchbaret.setOnClickListener(this);
         searchbaret.setOnFocusChangeListener(this);
-        searchClearLl.setOnClickListener(this);
+        searchbaret.addTextChangedListener(this);
+//        searchClearLl.setOnClickListener(this);
         searchclearbtn.setOnClickListener(this);
         searchBtnIB.setOnClickListener(this);
+        mSearchClearIb.setOnClickListener(this);
 
-
+        LogCat.i("init display history.");
         displayHistory();
 
     }
@@ -176,7 +186,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 }
                 showHistoryData();
                 LogCat.i("searchActivity handler history beansize：" + mHistoryBeans.size());
-                mHistoryAdapter.notifyDataSetChanged();
+                mHistoryAdapter.notifyDataSetChanged(mHistoryBeans);
 
             }
 
@@ -241,6 +251,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
                 SearchDao dao = new SearchDao(getApplicationContext());
                 dao.clearHistory();
+                LogCat.i("clear search history.");
                 displayHistory();
                 break;
             }
@@ -268,28 +279,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             }
 
             case R.id.search_btn_ib: {      //搜索按鈕。
-                mHistoryBeans.clear();  //清空历史数据.
-                showSearchData();
-
-                String key = searchbaret.getText().toString();
-                getCurSearchType(searchcategrycb.getText().toString());      //设置当前搜索类型.
-                searchbaret.clearFocus();
-//                mRefreshView.setVisibility(View.VISIBLE);
-                if (key != null && !key.equals("")) {
-                    saveHistory(key);
-                }
-
-                if (mCurSearchType == SearchType.SUPPLY) {
-                    getSupplyInfoList(0, key);
-                } else if (mCurSearchType == SearchType.DEMAND) {
-                    getDemandInfoList(0, key);
-                } else {
-                    getCompanyList(0, key);
-                }
-//                mRefreshView.setUpRefreshable(true);
-//                mRefreshView.setFootViewVisibility(View.VISIBLE);
-                showkey(key);       //显示关键字项。
-
+                onSearch();
                 break;
             }
 
@@ -299,8 +289,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
                 break;
             }
-            case R.id.search_clear_ll: {
-
+            case R.id.search_clear_ib: {
                 searchbaret.setText("");
                 break;
             }
@@ -312,6 +301,34 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         }
 
+    }
+
+    /**
+     * 搜索。
+     */
+    public void onSearch() {
+        mHistoryBeans.clear();  //清空历史数据.
+        showSearchData();
+        mRefreshView.setUpRefreshable(true);
+
+        String key = searchbaret.getText().toString();
+        getCurSearchType(searchcategrycb.getText().toString());      //设置当前搜索类型.
+        searchbaret.clearFocus();
+//                mRefreshView.setVisibility(View.VISIBLE);
+        if (key != null && !key.equals("")) {
+            saveHistory(key);
+        }
+
+        if (mCurSearchType == SearchType.SUPPLY) {
+            getSupplyInfoList(0, key);
+        } else if (mCurSearchType == SearchType.DEMAND) {
+            getDemandInfoList(0, key);
+        } else {
+            getCompanyList(0, key);
+        }
+//                mRefreshView.setUpRefreshable(true);
+//                mRefreshView.setFootViewVisibility(View.VISIBLE);
+        showkey(key);       //显示关键字项。
     }
 
     /**
@@ -334,6 +351,29 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     }
 
     /**
+     * 根据checkbox中的内容判断当前搜索类型.尽在存储和显示历史记录时使用.
+     *
+     * @return
+     */
+    private int getmCurSearchType() {
+
+        String searchType = searchcategrycb.getText().toString();
+
+        if (getString(R.string.interprise).equals(searchType)) {
+
+            return SearchType.INTERPRISE.getValue();
+        } else if (getString(R.string.buy).equals(searchType)) {
+
+            return SearchType.DEMAND.getValue();
+        } else if (getString(R.string.supply).equals(searchType)) {
+
+            return SearchType.SUPPLY.getValue();
+        }
+
+        return 0;
+    }
+
+    /**
      * 保存歷史記錄.
      *
      * @param history
@@ -344,7 +384,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             @Override
             public void run() {
                 SearchDao searchDao = new SearchDao(getApplicationContext());
-                searchDao.addHistory(history);
+                searchDao.addHistory(history, getmCurSearchType());
             }
         }).start();
 
@@ -364,7 +404,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 synchronized (objLock) {
                     SearchDao searchDao = new SearchDao(getApplicationContext());
                     mHistoryBeans.clear();
-                    mHistoryBeans.addAll(searchDao.getHistorys());
+                    mHistoryBeans.addAll(searchDao.getHistorys(getmCurSearchType(), searchbaret.getText().toString()));
                     mHandler.sendEmptyMessage(SEARCh_HISTORY);
                     LogCat.d("searchActivity thread history beansize：" + mHistoryBeans.size());
                 }
@@ -382,6 +422,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 buttonView.getWidth();
                 DisplayUtil.getCentWidthByView(buttonView);
                 mCategoryPop.showAsDropDown(buttonView, DisplayUtil.getCentWidthByView(buttonView) - DisplayUtil.dip2px(getApplicationContext(), 50), DisplayUtil.px2dip(getApplicationContext(), 3));
+            } else {
+                LogCat.i("check changed.");
+                displayHistory();
             }
         }
 
@@ -408,6 +451,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         if (hasFocus) {
             mSearchTypeBeans.clear();       //清空搜索结果.
+            LogCat.i("focus changed.");
             displayHistory();
 //                mRefreshView.setVisibility(View.GONE);
         } else {     //隐藏键盘.
@@ -425,7 +469,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case HISTORY: {          //當前顯示搜索記錄。
 
                 SearchHistoryBean historyBean = (SearchHistoryBean) mHistoryBeans.get(position);
+                searchbaret.clearFocus();
                 searchbaret.setText(historyBean.getHistory());
+                onSearch();
                 break;
             }
 
@@ -433,7 +479,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
                 SearchDemandBean demandBean = (SearchDemandBean) mSearchTypeBeans.get(position);
                 Intent intent = new Intent(SearchActivity.this, BuyInfoActivity.class);
-                intent.putExtra("id", demandBean.getId());
+                intent.putExtra(BuyInfoActivity.DEMAND_ID, demandBean.getId());
                 startActivity(intent);
 
                 break;
@@ -464,6 +510,32 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             }
         }
 
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+        if (s.toString() == null || s.toString().equals("")) {
+            mSearchClearIb.setVisibility(View.INVISIBLE);
+        } else {
+            mSearchClearIb.setVisibility(View.VISIBLE);
+        }
+
+        if (searchbaret.isFocused()) {
+            displayHistory();
+        }
     }
 
     /**
@@ -605,6 +677,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             if (lastId == 0) {       //首次没有加载数据.
 //                        noData(getString(R.string.no_search_data));
                 noData(getString(R.string.no_search_data));
+            } else {
+                mRefreshView.setUpRefreshable(false);
+                loadDataComplete();
             }
         } else {     //加载数据，显示.
             hasData(false);
@@ -612,6 +687,11 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             mResultAdatper.notifyDataSetChanged();
         }
 
+    }
+
+    private void loadDataComplete() {
+        mRefreshView.setUpRefreshable(false);
+        ContextUtil.toast(getResources().getString(R.string.load_data_complete));
     }
 
     /**
