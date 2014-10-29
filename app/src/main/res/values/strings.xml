@@ -124,6 +124,7 @@
     <string name="time">时间</string>
     <string name="promote">提示</string>
     <string name="vip_promote">目前只有VIP及以上用户可以一键拨号，请升级。</string>
+    <string name="vip_promote_show_demand">抱歉，您的级别不能查看求购的公司信息，请立即升级!</string>
     <string name="go_company_info_toast">查找不到当前企业信息</string>
     <string name="vip_add_tag">%1$s最多能添加%2$s个订阅标签，普通会员以上也可以单独购买。</string>
 

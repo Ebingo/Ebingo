@@ -1,30 +1,25 @@
 package com.promote.ebingo.publish.login;
 
-import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.HttpUtil;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingo.application.HttpConstant;
 import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.CompanyVipInfo;
 import com.promote.ebingo.impl.EbingoHandler;
 import com.promote.ebingo.impl.EbingoRequestParmater;
 import com.promote.ebingo.publish.VipType;
-import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ContextUtil;
+import com.promote.ebingo.util.FileUtil;
 import com.promote.ebingo.util.ImageUtil;
 import com.promote.ebingo.util.JsonUtil;
 
-import org.apache.http.Header;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -1,5 +1,6 @@
 package com.promote.ebingo.InformationActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.jch.lib.view.PagerSlidingTabStrip;
 import com.promote.ebingo.R;
+import com.promote.ebingo.publish.login.LoginDialog;
 
 /**
  * 企业详情.
@@ -31,6 +33,7 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
     private TextView commontitletv;
     private MyPagerAdapter myPagerAdapter;
     private InterpriseBaseFragment[] mFragements = null;
+    private SupplyDemandInfoFragment mSDInfoFragment = null;
     /**
      * 企业id. *
      */
@@ -119,6 +122,7 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
             } else {
                 fragment = SupplyDemandInfoFragment.newInstance(tabStr[index]);
                 fragment.setInterprsetId(intId);
+                mSDInfoFragment = (SupplyDemandInfoFragment) fragment;
             }
             mFragements[index] = fragment;
 
@@ -138,5 +142,11 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LoginDialog.REQUEST_CODE) {
+            mSDInfoFragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

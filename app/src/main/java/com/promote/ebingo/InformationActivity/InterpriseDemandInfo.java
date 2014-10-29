@@ -14,8 +14,12 @@ import android.widget.TextView;
 
 import com.jch.lib.view.PullToRefreshView;
 import com.promote.ebingo.R;
+import com.promote.ebingo.bean.Company;
 import com.promote.ebingo.bean.SearchDemandBean;
 import com.promote.ebingo.impl.EbingoRequest;
+import com.promote.ebingo.publish.EbingoDialog;
+import com.promote.ebingo.publish.VipType;
+import com.promote.ebingo.publish.login.LoginDialog;
 import com.promote.ebingo.util.LogCat;
 
 import java.lang.reflect.Field;
@@ -28,7 +32,7 @@ import java.util.ArrayList;
  * Use the {@link InterpriseDemandInfo#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InterpriseDemandInfo extends CommonListFragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
+public class InterpriseDemandInfo extends CommonListFragment implements AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener, LoginDialog.LoginResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -72,7 +76,41 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
         }
         adapter = new MyAdapter();
 
-        getData(0);
+
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            if (ifGetData())        //判断vip是否有
+                getData(0);
+        }
+    }
+
+    /**
+     * 判断是否已经登录或viptype可以查看求购信息。
+     *
+     * @return
+     */
+    private boolean ifGetData() {
+        Company company = Company.getInstance();
+        if (company == null || company.getCompanyId() == null) {//用户没有登录。
+            LoginDialog loginDialog = new LoginDialog(getParentFragment().getActivity());
+            loginDialog.setOwnerActivity(getParentFragment().getActivity());
+            loginDialog.setCanceledOnTouchOutside(true);
+            loginDialog.setLoginResultCallback(this);
+            loginDialog.setCancelable(true);
+            loginDialog.show();
+            return false;
+        } else if (!Company.getInstance().getVipInfo().callDemand()) {//不是vip会员.
+            EbingoDialog dialog = EbingoDialog.newInstance(getParentFragment().getActivity(), EbingoDialog.DialogStyle.STYLE_TO_PRIVILEGE);
+            dialog.setMessage(getString(R.string.vip_promote_show_demand, VipType.Standard_VIP.name));
+            dialog.show();
+            return false;
+        }
+
+        return true;
     }
 
     private void getData(final int lastId) {
@@ -148,6 +186,12 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
         getData(mSearchDemands.size());
     }
 
+    @Override
+    public void loginResult(boolean loginResult) {
+        if (loginResult)    //登录成功。
+            ifGetData();
+    }
+
 
     private class MyAdapter extends BaseAdapter {
 
@@ -217,5 +261,12 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == LoginDialog.REQUEST_CODE) {
+            ifGetData();
+        }
+    }
 }

@@ -12,7 +12,6 @@ import android.widget.EditText;
 import com.jch.lib.util.DialogUtil;
 import com.promote.ebingo.R;
 import com.promote.ebingo.application.EbingoApp;
-import com.promote.ebingo.center.CenterFragment;
 
 /**
  * 登录窗口
@@ -23,9 +22,27 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
     private EditText edit_phone;
     private EditText edit_password;
     private int[] lineSelector;
+    private LoginResult mLoginResult = null;
 
     public LoginDialog(Context context) {
         super(context);
+    }
+
+    /**
+     * 登录结果。*
+     */
+    public interface LoginResult {
+
+        public void loginResult(boolean loginResult);
+    }
+
+    /**
+     * 设置LoginResult
+     *
+     * @param loginResult
+     */
+    public void setLoginResultCallback(LoginResult loginResult) {
+        this.mLoginResult = loginResult;
     }
 
     @Override
@@ -78,12 +95,18 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
                         dialog.dismiss();
                         dismiss();
                         getContext().sendBroadcast(new Intent(LoginManager.ACTION_INVALIDATE));
+                        if (mLoginResult != null) {
+                            mLoginResult.loginResult(true);
+                        }
                     }
 
                     @Override
                     public void onFail(String msg) {
                         super.onFail(msg);
                         dialog.dismiss();
+                        if (mLoginResult != null) {
+                            mLoginResult.loginResult(false);
+                        }
                     }
                 });
                 break;
