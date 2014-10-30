@@ -28,7 +28,10 @@ import java.net.URL;
 public class ImageUtil {
 
     private static String getImageFile() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        File pic_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        if (!pic_file.exists())
+            pic_file.mkdirs();
+        return pic_file.getAbsolutePath();
     }
 
     /**
