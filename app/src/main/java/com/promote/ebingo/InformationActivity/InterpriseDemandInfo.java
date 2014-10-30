@@ -46,6 +46,8 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
     private MyAdapter adapter = null;
     private PullToRefreshView itprdemandpulltorefresh;
 
+    private boolean mFirstFlag = true;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -83,8 +85,9 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            if (ifGetData())        //判断vip是否有
-                getData(0);
+            if (ifGetData() && mFirstFlag) {      //判断vip是否有
+                firstGetData();
+            }
         }
     }
 
@@ -188,8 +191,9 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
 
     @Override
     public void loginResult(boolean loginResult) {
-        if (loginResult)    //登录成功。
-            ifGetData();
+        if (loginResult) {    //登录成功。
+            firstGetData();
+        }
     }
 
 
@@ -266,7 +270,15 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LoginDialog.REQUEST_CODE) {
-            ifGetData();
+            firstGetData();
         }
+    }
+
+    /**
+     * 第一次获得数据。
+     */
+    private void firstGetData() {
+        getData(0);
+        mFirstFlag = false;
     }
 }
