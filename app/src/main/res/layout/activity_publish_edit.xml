@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:id="@+id/content"
         android:layout_height="match_parent"
-        tools:context="com.promote.ebingo.publish.PublishEditActivity">
+        tools:context="com.promote.ebingoo.publish.PublishEditActivity">
 
     </FrameLayout>
 </LinearLayout>

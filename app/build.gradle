@@ -5,11 +5,11 @@ android {
     buildToolsVersion '20.0.0'
 
     defaultConfig {
-        applicationId "com.promote.ebingo"
+        applicationId "com.promote.ebingoo"
         minSdkVersion 8
         targetSdkVersion 15
-        versionCode 8
-        versionName "2.1.6"
+        versionCode 9
+        versionName "2.2.0"
     }
     buildTypes {
         release {

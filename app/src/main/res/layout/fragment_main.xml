@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:clickable="true"
-    tools:context="com.promote.ebingo.home.HomeFragment">
+    tools:context="com.promote.ebingoo.home.HomeFragment">
 
     <include layout="@layout/common_head_search_layout" />
 

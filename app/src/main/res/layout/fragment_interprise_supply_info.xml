@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.promote.ebingo.InformationActivity.InterpriseSupplyInfo">
+    tools:context="com.promote.ebingoo.InformationActivity.InterpriseSupplyInfo">
 
     <com.jch.lib.view.PullToRefreshView
         android:id="@+id/itpr_supply_pulltorefresh"

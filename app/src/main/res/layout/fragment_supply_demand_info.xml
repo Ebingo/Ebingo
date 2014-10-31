@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.promote.ebingo.InformationActivity.SupplyDemandInfoFragment">
+    tools:context="com.promote.ebingoo.InformationActivity.SupplyDemandInfoFragment">
 
     <FrameLayout
         android:id="@+id/frag_s_d_fram"

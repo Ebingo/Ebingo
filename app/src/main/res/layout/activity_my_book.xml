@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.promote.ebingo.center.MyBookActivity">
+        tools:context="com.promote.ebingoo.center.MyBookActivity">
 
         <include layout="@layout/common_head_layout_2" />
 
@@ -50,7 +50,7 @@
                         android:textSize="16sp" />
                 </FrameLayout>
                 <!-- 设置一个padding=5dp，防止抖动动画时，子view超出边界 -->
-                <com.promote.ebingo.publish.AutoLineLayout
+                <com.promote.ebingoo.publish.AutoLineLayout
                     android:id="@+id/tag_content"
                     android:padding="5dp"
                     android:layout_width="match_parent"

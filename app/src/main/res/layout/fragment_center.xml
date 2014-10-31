@@ -5,7 +5,7 @@
     android:background="@color/gray_bg"
     android:clickable="true"
     android:orientation="vertical"
-    tools:context="com.promote.ebingo.center.CenterFragment">
+    tools:context="com.promote.ebingoo.center.CenterFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

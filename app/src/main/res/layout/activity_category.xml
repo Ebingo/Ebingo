@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.promote.ebingo.category.CategoryActivity">
+    tools:context="com.promote.ebingoo.category.CategoryActivity">
 
     <include layout="@layout/common_head_layout" />
 

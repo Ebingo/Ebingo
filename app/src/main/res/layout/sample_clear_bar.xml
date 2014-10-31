@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.promote.ebingo.search.ClearBar
+    <com.promote.ebingoo.search.ClearBar
         android:background="#ccc"
         android:layout_width="300dp"
         android:layout_height="300dp"

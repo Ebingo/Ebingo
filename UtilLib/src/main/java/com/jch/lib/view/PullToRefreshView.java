@@ -457,6 +457,10 @@ public class PullToRefreshView extends LinearLayout {
         }
     }
 
+    public void setAutoLoadMore(boolean autoLoadMore){
+
+    }
+
     /**
      * 修改Header view top margin的值
      *

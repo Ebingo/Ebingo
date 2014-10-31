@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:text="热门标签" />
 
-            <com.promote.ebingo.publish.AutoLineLayout
+            <com.promote.ebingoo.publish.AutoLineLayout
                 android:id="@+id/tags_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.promote.ebingo">
+    package="com.promote.ebingoo">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,20 +16,23 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="20" />
 
     <application
-        android:name=".application.EbingoApp"
+        android:name="com.promote.ebingoo.application.EbingoApp"
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:replace="android:icon, theme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.promote.ebingoo.MainActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -37,35 +40,35 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".search.SearchActivity"
+            android:name="com.promote.ebingoo.search.SearchActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".category.CategoryActivity"
+            android:name="com.promote.ebingoo.category.CategoryActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".InformationActivity.ProductInfoActivity"
+            android:name="com.promote.ebingoo.InformationActivity.ProductInfoActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".InformationActivity.BuyInfoActivity"
+            android:name="com.promote.ebingoo.InformationActivity.BuyInfoActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".InformationActivity.InterpriseInfoActivity"
+            android:name="com.promote.ebingoo.InformationActivity.InterpriseInfoActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -73,57 +76,57 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".publish.PickCategoryActivity"
+            android:name="com.promote.ebingoo.publish.PickCategoryActivity"
             android:label="@string/choose_trade"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".publish.login.RegisterActivity"
+            android:name="com.promote.ebingoo.publish.login.RegisterActivity"
             android:label="@string/reg_for_free"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".publish.login.RegisterInputYzm"
+            android:name="com.promote.ebingoo.publish.login.RegisterInputYzm"
             android:label="@string/reg_for_free"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".publish.EditDescription"
+            android:name="com.promote.ebingoo.publish.EditDescription"
             android:label="@string/title_edit_description"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".publish.AddTagsActivity"
+            android:name="com.promote.ebingoo.publish.AddTagsActivity"
             android:label="@string/title_add_tag"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".publish.PickRegionActivity"
+            android:name="com.promote.ebingoo.publish.PickRegionActivity"
             android:label="@string/title_pick_region"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".publish.PhotoAlbumActivity"
+            android:name="com.promote.ebingoo.publish.PhotoAlbumActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".center.settings.EnterpriseSettingActivity"
+            android:name="com.promote.ebingoo.center.settings.EnterpriseSettingActivity"
             android:label="@string/title_enterprise_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".publish.PreviewActivity"
+            android:name="com.promote.ebingoo.publish.PreviewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".InformationActivity.InterpriseNewActivity"
+            android:name="com.promote.ebingoo.InformationActivity.InterpriseNewActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
-            android:parentActivityName=".BaseActivity"
+            android:parentActivityName="com.promote.ebingoo.BaseActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             android:parentActivityName=".BaseActivity">
@@ -132,7 +135,7 @@
                 android:value="com.promote.ebingo.BaseActivity" />
         </activity>
         <activity
-            android:name=".publish.login.LoginActivity"
+            android:name="com.promote.ebingoo.publish.login.LoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -140,87 +143,87 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.MySupplyActivity"
+            android:name="com.promote.ebingoo.center.MySupplyActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/my_supply"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.MyDemandActivity"
+            android:name="com.promote.ebingoo.center.MyDemandActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/my_demand"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.MyCollectionActivity"
+            android:name="com.promote.ebingoo.center.MyCollectionActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/my_collect"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.MyBookActivity"
+            android:name="com.promote.ebingoo.center.MyBookActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_my_book"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".center.MyPrivilegeActivity"
+            android:name="com.promote.ebingoo.center.MyPrivilegeActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_my_privilege"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.CallRecordActivity"
+            android:name="com.promote.ebingoo.center.CallRecordActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_call_record"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.MyEnterPriseInfoActivity"
+            android:name="com.promote.ebingoo.center.MyEnterPriseInfoActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_company_data"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.settings.SettingActivity"
+            android:name="com.promote.ebingoo.center.settings.SettingActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.settings.AboutUsActivity"
+            android:name="com.promote.ebingoo.center.settings.AboutUsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_about"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".center.settings.SuggestionActivity"
+            android:name="com.promote.ebingoo.center.settings.SuggestionActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_suggestion"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".center.TagInfoListActivity"
+            android:name="com.promote.ebingoo.center.TagInfoListActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_suggestion"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateUnspecified|adjustPan" />
         <activity
-            android:name=".publish.login.FindPasswordActivity"
+            android:name="com.promote.ebingoo.publish.login.FindPasswordActivity"
             android:label="@string/title_activity_find_password" />
         <activity
-            android:name=".GuideActivity"
+            android:name="com.promote.ebingoo.GuideActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -229,7 +232,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".publish.PublishEditActivity"
+            android:name="com.promote.ebingoo.publish.PublishEditActivity"
             android:label="@string/title_activity_publish_edit_demand" />
         <activity
             android:name="com.jch.d2code.CaptureActivity"
@@ -239,16 +242,26 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:label="@string/app_name"
-            android:name=".InformationActivity.CodeScanOnlineActivity"
+            android:name="com.promote.ebingoo.InformationActivity.CodeScanOnlineActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity
             android:label="@string/title_buy_tag"
-            android:name=".center.BuyTagActivity"
+            android:name="com.promote.ebingoo.center.BuyTagActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity
+            android:name="com.promote.ebingoo.application.TestActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

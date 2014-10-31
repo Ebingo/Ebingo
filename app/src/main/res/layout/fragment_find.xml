@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context="com.promote.ebingo.find.FindFragment">
+    tools:context="com.promote.ebingoo.find.FindFragment">
 
     <include layout="@layout/common_head_search_layout" />
 
