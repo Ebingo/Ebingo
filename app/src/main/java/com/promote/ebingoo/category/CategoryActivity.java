@@ -11,14 +11,13 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
-import com.jch.lib.view.PullToRefreshView;
+import com.jch.lib.view.RefreshMoreListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingoo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingoo.InformationActivity.ProductInfoActivity;
@@ -30,7 +29,6 @@ import com.promote.ebingoo.bean.SearchSupplyBean;
 import com.promote.ebingoo.bean.SearchSupplyBeanTools;
 import com.promote.ebingoo.bean.SearchTypeBean;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
-import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.LogCat;
 
 import org.apache.http.Header;
@@ -44,13 +42,11 @@ import java.util.ArrayList;
 /**
  * 行业分类列表。
  */
-public class CategoryActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener, PullToRefreshView.OnFooterRefreshListener {
-
+public class CategoryActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener, RefreshMoreListView.LoadMoreListener {
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
     private CheckBox categoryleftcb;
     private CheckBox categoryrightcb;
-    private ListView categorylv;
     private ImageView commonbackbtn;
     private TextView commontitletv;
     private int category_id = -1;
@@ -58,7 +54,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     /**
      * 分页最大加载数。 *
      */
-    private int pageSize = 10;
+    private static final int PAGESIZE = 10;
     /**
      * 类别选择弹出window. *
      */
@@ -72,14 +68,14 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
      */
     private CategoryType mCurType = CategoryType.SUPPLY;
     /**
-     * 当前排序类型. 默認為瀏覽量*
+     * 当前排序类型. 默認為瀏覽量
      */
     private CategoryRankType mCurRankType = CategoryRankType.LOOKNUM;
     /**
      * 供應。 *
      */
     private ArrayList<SearchTypeBean> mCategoryBean = new ArrayList<SearchTypeBean>();
-    private PullToRefreshView categoryrefreshview;
+    private RefreshMoreListView refreshMoreListView;
     private TextView nodatatv;
     private Handler handler = new Handler();
 
@@ -95,10 +91,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
         categoryleftcb = (CheckBox) findViewById(R.id.category_left_cb);
         categoryrightcb = (CheckBox) findViewById(R.id.category_right_cb);
-        categorylv = (ListView) findViewById(R.id.category_lv);
+        refreshMoreListView = (RefreshMoreListView) findViewById(R.id.category_lv);
+        refreshMoreListView.setLoadMoreListener(this);
         commonbackbtn = (ImageView) findViewById(R.id.common_back_btn);
         commontitletv = (TextView) findViewById(R.id.common_title_tv);
-        categoryrefreshview = (PullToRefreshView) findViewById(R.id.category_refresh_view);
         nodatatv = (TextView) findViewById(R.id.nodata_tv);
 
         mTypePop = new CategoryTypePop(getApplicationContext(), this);
@@ -114,13 +110,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         categoryleftcb.setOnCheckedChangeListener(new CategoryTypeCheckedCL());
         categoryrightcb.setOnCheckedChangeListener(new CategoryRankCheckedCL());
 
-        categoryrefreshview.setUpRefreshable(true);
-        categoryrefreshview.setDownRefreshable(false);
-        categoryrefreshview.setOnFooterRefreshListener(this);
-
         mListAdapter = new CategoryListAdapter(getApplicationContext(), mCategoryBean);
-        categorylv.setAdapter(mListAdapter);
-        categorylv.setOnItemClickListener(this);
+        refreshMoreListView.setAdapter(mListAdapter);
+        refreshMoreListView.setOnItemClickListener(this);
+        refreshMoreListView.setmPageSize(PAGESIZE);
         //TODO 访问默认数据
         if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
             netNotAvalible();
@@ -133,6 +126,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         }
 
     }
+
 
     /**
      * 初始化供应列表
@@ -166,7 +160,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         int id = v.getId();
         switch (id) {
             case R.id.common_back_btn: {
-
 //                onBackPressed();
                 this.finish();
                 break;
@@ -182,7 +175,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 }
 
                 mTypePop.dismiss();
-                categoryrefreshview.setUpRefreshable(true);
+//                categoryrefreshview.setUpRefreshable(true);
+                refreshMoreListView.setmCanLoadMoreAble(true);
                 if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
                     netNotAvalible();
                     return;
@@ -200,7 +194,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 }
 
                 mTypePop.dismiss();
-                categoryrefreshview.setUpRefreshable(true);
+//                categoryrefreshview.setUpRefreshable(true);
+                refreshMoreListView.setmCanLoadMoreAble(true);
                 if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
                     netNotAvalible();
                     return;
@@ -213,7 +208,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 categoryrightcb.setText(((TextView) v).getText());
                 mCurRankType = CategoryRankType.LOOKNUM;
                 mRankPop.dismiss();
-                categoryrefreshview.setUpRefreshable(true);
+//                categoryrefreshview.setUpRefreshable(true);
+                refreshMoreListView.setmCanLoadMoreAble(true);
                 if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
                     netNotAvalible();
                     return;
@@ -231,8 +227,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 String sortStr = ((TextView) v).getText().toString();
                 categoryrightcb.setText(sortStr);
-                categoryrefreshview.setUpRefreshable(true);
-
+//                categoryrefreshview.setUpRefreshable(true);
+                refreshMoreListView.setmCanLoadMoreAble(true);
                 if (getResources().getString(R.string.time).equals(sortStr)) {     //按时间排序。
                     mCurRankType = CategoryRankType.TIME;
                 } else {
@@ -262,7 +258,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
      *
      */
     private void hasData() {
-        categoryrefreshview.setVisibility(View.VISIBLE);
+
+        refreshMoreListView.setVisibility(View.VISIBLE);
         nodatatv.setVisibility(View.GONE);
     }
 
@@ -270,7 +267,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
      * 网络没有数据。
      */
     private void noData() {
-        categoryrefreshview.setVisibility(View.GONE);
+        refreshMoreListView.setVisibility(View.GONE);
         nodatatv.setText(getString(R.string.no_data));
         nodatatv.setVisibility(View.VISIBLE);
     }
@@ -279,7 +276,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
      * 网络连接失败。
      */
     private void netNotAvalible() {
-        categoryrefreshview.setVisibility(View.GONE);
+        refreshMoreListView.setVisibility(View.VISIBLE);
         nodatatv.setVisibility(View.VISIBLE);
         nodatatv.setText(getString(R.string.no_network));
     }
@@ -299,40 +296,36 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             if (lastId == 0) {       //首次没有加载数据.
                 noData();
             } else {
-                loadComplete(true);
-            }
 
+            }
+            refreshMoreListView.loadMoreOver(0);
         } else {     //加载数据，显示.
             hasData();
             int loadCount = searchTypeBeans.size();
 
-            if (loadCount < pageSize) {
-                if (lastId == 0)
-                    loadComplete(false);
-                else
-                    loadComplete(true);
-            }
+            refreshMoreListView.loadMoreOver(PAGESIZE);
             mCategoryBean.addAll(searchTypeBeans);
             mListAdapter.notifyDataSetChanged();
         }
-        categoryrefreshview.onFooterRefreshComplete();
+//        categoryrefreshview.onFooterRefreshComplete();
         mListAdapter.notifyDataSetChanged();
 
     }
 
-    /**
-     * 上拉加载数据完成.
-     */
-    private void loadComplete(boolean msg) {
-        categoryrefreshview.setUpRefreshable(false);
-        if (msg)
-            ContextUtil.toast(getResources().getString(R.string.load_data_complete));
-
-    }
+//    /**
+//     * 上拉加载数据完成.
+//     */
+//    private void loadComplete(boolean msg) {
+//        refreshMoreListView.
+//        if (msg)
+//            ContextUtil.toast(getResources().getString(R.string.load_data_complete));
+//
+//    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        if (position >= mCategoryBean.size())
+            return;
         SearchTypeBean searchTypeBean = mCategoryBean.get(position);
         if (searchTypeBean instanceof SearchDemandBean) {
 
@@ -350,16 +343,27 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
     }
 
-    @Override
-    public void onFooterRefresh(PullToRefreshView view) {
+//    @Override
+//    public void onFooterRefresh(PullToRefreshView view) {
+//
+//        int lastId = mCategoryBean.size();
+//        if (mCurType == CategoryType.DEMAND) {
+//            getDemandInfoList(lastId);
+//        } else {
+//            getSupplyInfoList(lastId);
+//        }
+//
+//    }
 
+
+    @Override
+    public void onLoadmore() {
         int lastId = mCategoryBean.size();
         if (mCurType == CategoryType.DEMAND) {
             getDemandInfoList(lastId);
         } else {
             getSupplyInfoList(lastId);
         }
-
     }
 
     /**
@@ -462,15 +466,16 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         String url = HttpConstant.getDemandInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
-        parmater.put("pagesize", pageSize);       //每页显示20条。
-
+        parmater.put("pagesize", PAGESIZE);       //每页显示20条。
 
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        final ProgressDialog dialog = DialogUtil.waitingDialog(CategoryActivity.this);
+        final ProgressDialog dialog = DialogUtil.waitingDialog(CategoryActivity.this, false);
+        if (lastId == 0)
+            dialog.show();
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
 
@@ -480,8 +485,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 ArrayList<SearchDemandBean> searchDemandBeans = SearchDemandBeanTools.getSearchDemands(response.toString());
                 displayData(searchDemandBeans, lastId);
-
-                dialog.dismiss();
+                if (lastId == 0)
+                    dialog.dismiss();
 
             }
 
@@ -489,20 +494,16 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 noData();
-                dialog.dismiss();
+                if (lastId == 0)
+                    dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 noData();
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onFinish() {
-                categoryrefreshview.onFooterRefreshComplete();
-                super.onFinish();
+                if (lastId == 0)
+                    dialog.dismiss();
             }
         });
 
@@ -520,13 +521,17 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         String url = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
-        parmater.put("pagesize", pageSize);       //每页显示20条。
+        parmater.put("pagesize", PAGESIZE);       //每页显示10条。
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        final ProgressDialog dialog = DialogUtil.waitingDialog(CategoryActivity.this);
+
+        final ProgressDialog dialog = DialogUtil.waitingDialog(CategoryActivity.this, false);
+
+        if (lastId == 0)
+            dialog.show();
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
 
@@ -536,9 +541,9 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
 
-
                 displayData(searchSupplyBeans, lastId);
-                dialog.dismiss();
+                if (lastId == 0)
+                    dialog.dismiss();
 
             }
 
@@ -547,7 +552,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 //                getDataFailed();
                 noData();
-                dialog.dismiss();
+                if (lastId == 0)
+                    dialog.dismiss();
             }
 
             @Override
@@ -555,14 +561,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 super.onFailure(statusCode, headers, responseString, throwable);
 //                getDataFailed();
                 noData();
-                dialog.dismiss();
+                if (lastId == 0)
+                    dialog.dismiss();
             }
 
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                categoryrefreshview.onFooterRefreshComplete();
-            }
         });
 
     }
