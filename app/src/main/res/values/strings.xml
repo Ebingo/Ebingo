@@ -231,4 +231,12 @@
     <string name="share_text">"Ebingoo--指尖商机 用手指做生意.打造全新电商平台。网址：www.ebingoo.com"</string>
     <string name="not_set_company_name">未设置公司名</string>
     <string name="is_download_url">这是一个下载链接！</string>
+    <string name="ptr_pull_to_refresh">下拉刷新</string>
+    <string name="ptr_release_to_refresh">松开立即刷新</string>
+    <string name="ptr_refreshing">正在刷新...</string>
+    <string name="ptr_last_updated">上次更新:%s</string>
+
+    <string name="footer_loading">正在加载...</string>
+    <string name="footer_wait_loading">查看更多</string>
+    <string name="footer_no_more">加载完毕</string>
 </resources>

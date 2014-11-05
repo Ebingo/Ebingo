@@ -81,6 +81,8 @@ public class PickRegionActivity extends BaseListActivity {
     }
 
     private void init() {
+        setDownRefreshable(false);
+        setUpRefreshable(false);
         setListAdapter(new RegionAdapter(this));
         enableCache(FileUtil.FILE_PROVINCE_LIST,regionList);
         if (regionList.size()==0)getProvinceList();

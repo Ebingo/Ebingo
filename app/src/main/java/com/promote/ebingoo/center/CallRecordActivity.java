@@ -58,6 +58,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
         records = new ArrayList<CallRecord>();
         enableDelete(true);
         enableCache(FileUtil.FILE_CALL_RECORD, records);
+        setUpRefreshable(false);
         if (records.size() == 0) {
             getCallRecord();
         }
@@ -100,6 +101,7 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                 } catch (JSONException e) {
                     LogCat.e("NO Call Record!");
                 }
+                onLoadFinish();
             }
 
             @Override
@@ -293,5 +295,8 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
 
     }
 
-
+    @Override
+    protected void onRefresh() {
+        getCallRecord();
+    }
 }

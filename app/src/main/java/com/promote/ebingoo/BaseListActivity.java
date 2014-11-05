@@ -72,12 +72,10 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         delteDialog = new ItemDelteDialog(this, this);
         mPullToRefreshView = (RefreshListView) findViewById(android.R.id.list);
 //        mPullToRefreshView.setFootViewVisibility(View.GONE);//先把FooterView隐藏，上来就显示很不美观
-        setUpRefreshable(false);
-        setDownRefreshable(false);
 
         lastRefreshTime = getLastRefreshTime(getLocalClassName());
-        mPullToRefreshView.setLastUpdated(getString(R.string.last_update) + getDateString(lastRefreshTime));
-        mPullToRefreshView.setRefreshListener(l);
+        mPullToRefreshView.setShowLastUpdatedText(true);
+        mPullToRefreshView.setOnRefreshListener(l);
 
     }
 
@@ -156,14 +154,15 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
      * @param refreshable true可以下拉刷新，false反之
      */
     public void setUpRefreshable(boolean refreshable) {
-        mPullToRefreshView.setCanRefresh(refreshable);
+        mPullToRefreshView.setHasMore(refreshable);
+        if (!refreshable)mPullToRefreshView.hideFooter();
     }
 
     /**
      * @param refreshable true可以上拉加载更多，false反之
      */
     public void setDownRefreshable(boolean refreshable) {
-        mPullToRefreshView.setCanLoadMore(refreshable);
+        if (!refreshable)mPullToRefreshView.hideHeader();
     }
 
     /**
@@ -253,13 +252,12 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
             lastId = 0;//如果用户删除数据，则无论用户接下来是上拉还是下拉
         } else {
             int itemCount = getAdapter().getCount();
-            if (itemCount % pageSize == 0) {
-                mPullToRefreshView.loadMoreFinished(true);
-            } else {
-                mPullToRefreshView.loadMoreFinished(false);
-                lastId = getListView().getChildCount();//
-                ContextUtil.toast("数据已经加载完毕！");
+            LogCat.i("item:"," itemCount="+itemCount+" oldSize="+lastId);
+            if (itemCount -lastId < pageSize) {
+                mPullToRefreshView.setHasMore(false);
+                if (itemCount!=0)ContextUtil.toast("数据已经加载完毕！");
             }
+            lastId = itemCount;
         }
         if (isDataFullScreen()) {
 //            mPullToRefreshView.setFoo;
@@ -281,16 +279,16 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
     public void onRefreshFinish() {
         if (!isHeadRefreshing) return;
         lastRefreshTime = new Date();
-        mPullToRefreshView.setLastUpdated(getString(R.string.last_update) + getDateString(lastRefreshTime));
-        mPullToRefreshView.refreshFinished();
+        mPullToRefreshView.onRefreshComplete();
         isHeadRefreshing = false;
     }
 
-    private RefreshListView.RefreshListener l = new RefreshListView.RefreshListener() {
+    private RefreshListView.OnRefreshListener l = new RefreshListView.OnRefreshListener() {
         @Override
         public void onRefresh() {
             lastId = 0;
-            mPullToRefreshView.setCanLoadMore(true);
+
+            mPullToRefreshView.setHasMore(true);
             isHeadRefreshing = true;
             if (HttpUtil.isNetworkConnected(getApplicationContext())) {
                 startRefresh();

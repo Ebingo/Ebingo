@@ -8,14 +8,15 @@ import android.widget.ArrayAdapter;
 
 import com.promote.ebingoo.R;
 import com.promote.ebingoo.view.RefreshListView;
+import com.promote.ebingoo.view.SListView;
 
 import java.util.LinkedList;
 
 /**
  * Created by acer on 2014/10/31.
  */
-public class TestActivity extends ListActivity implements RefreshListView.RefreshListener {
-    RefreshListView list;
+public class TestActivity extends ListActivity implements SListView.OnRefreshListener {
+    SListView list;
     LinkedList<String> data = new LinkedList<String>();
     ArrayAdapter<String> adapter;
 
@@ -23,9 +24,9 @@ public class TestActivity extends ListActivity implements RefreshListView.Refres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
-        list = (RefreshListView) findViewById(android.R.id.list);
+        list = (SListView) findViewById(android.R.id.list);
 
-        list.setRefreshListener(this);
+        list.setOnRefreshListener(this);
         adapter = new ArrayAdapter<String>(this, R.layout.textview, data);
         setListAdapter(adapter);
         addData();
@@ -46,27 +47,27 @@ public class TestActivity extends ListActivity implements RefreshListView.Refres
             public void run() {
                 data.clear();
                 addData();
-                list.refreshFinished();
-                list.setCanLoadMore(true);
+                list.onRefreshComplete();
             }
         }, 1000);
 
     }
 
-    @Override
     public void onLoadMore() {
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 addData();
-                if (data.size() > 30) list.loadMoreFinished(false);
-                else list.loadMoreFinished(true);
+                if (data.size()>100){
+                    list.setHasMore(false);
+                }
             }
         }, 1000);
 
     }
 
     public void onClick(View v) {
-        list.setCanRefresh(!list.canRefresh());
+
     }
 }

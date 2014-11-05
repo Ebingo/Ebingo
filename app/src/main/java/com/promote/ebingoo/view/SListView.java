@@ -2,7 +2,6 @@ package com.promote.ebingoo.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +48,7 @@ import java.util.Date;
  * @author Erik Wallentinsen <dev+ptr@erikw.eu>
  * @version 1.3.0
  */
-public class RefreshListView extends ListView implements AbsListView.OnScrollListener {
+public class SListView extends ListView implements AbsListView.OnScrollListener {
 
     private static final float PULL_RESISTANCE = 1.7f;
     private static final int BOUNCE_ANIMATION_DURATION = 700;
@@ -115,25 +114,24 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     private boolean isBottom = false;
     private boolean hasMore = true;
 
-    public RefreshListView(Context context) {
+    public SListView(Context context) {
         super(context);
         init();
     }
 
-    public RefreshListView(Context context, AttributeSet attrs) {
+    public SListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public RefreshListView(Context context, AttributeSet attrs, int defStyle) {
+    public SListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        Log.i("item:", "View:hasmMore=" + hasMore);
-        if (scrollState == SCROLL_STATE_IDLE && isBottom && onRefreshListener != null && hasMore) {
+        if (scrollState == SCROLL_STATE_IDLE && isBottom && onRefreshListener != null&&hasMore) {
             onRefreshListener.onLoadMore();
             setFooterRefresh(true);
         }
@@ -182,12 +180,11 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         }
     }
 
-    public void setHasMore(boolean hasMore) {
-        this.hasMore = hasMore;
+    public void setHasMore(boolean hasMore){
         if (!hasMore) {
             footerBar.setVisibility(GONE);
             footerText.setText(R.string.footer_no_more);
-        } else {
+        }else{
             footerBar.setVisibility(INVISIBLE);
             footerText.setText(R.string.footer_wait_loading);
         }
@@ -290,7 +287,7 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         header = (RelativeLayout) headerContainer.findViewById(R.id.ptr_id_header);
         text = (TextView) header.findViewById(R.id.ptr_id_text);
 
-        footerContainer = inflater.inflate(R.layout.foot_view, null);
+        footerContainer =  inflater.inflate(R.layout.foot_view, null);
         footerBar = (ProgressBar) footerContainer.findViewById(R.id.pull_to_load_progress);
         footerText = (TextView) footerContainer.findViewById(R.id.pull_to_load_text);
         lastUpdatedTextView = (TextView) header.findViewById(R.id.ptr_id_last_updated);
@@ -570,10 +567,7 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             hasResetHeader = false;
 
-            if (onItemClickListener != null
-                    && state == State.PULL_TO_REFRESH
-                    && position > getHeaderViewsCount() - 1
-                    && position < getAdapter().getCount() - getFooterViewsCount()) {
+            if (onItemClickListener != null && state == State.PULL_TO_REFRESH) {
                 // Passing up onItemClick. Correct position with the number of header views
                 onItemClickListener.onItemClick(adapterView, view, position - getHeaderViewsCount(), id);
             }
@@ -593,13 +587,5 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
 
             return false;
         }
-    }
-
-    public void hideFooter() {
-        removeFooterView(footerContainer);
-    }
-
-    public void hideHeader() {
-        removeHeaderView(headerContainer);
     }
 }
