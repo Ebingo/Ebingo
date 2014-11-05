@@ -19,7 +19,6 @@ import com.promote.ebingoo.application.HttpConstant;
 import com.promote.ebingoo.bean.CategoryBeen;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.util.ContextUtil;
-import com.promote.ebingoo.util.Dimension;
 import com.promote.ebingoo.util.FileUtil;
 import com.promote.ebingoo.util.LogCat;
 
@@ -28,16 +27,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by acer on 2014/9/2.
  */
 public class PickCategoryActivity extends BaseActivity implements AdapterView.OnItemClickListener {
-    List<CategoryBeen> categories_1 = new ArrayList<CategoryBeen>();
-    List<CategoryBeen> categories_2 = new ArrayList<CategoryBeen>();
+    List<CategoryBeen> categories_1 = new LinkedList<CategoryBeen>();
+    List<CategoryBeen> categories_2 = new LinkedList<CategoryBeen>();
     CategoryAdapter1 adapter1;
     CategoryAdapter2 adapter2;
     ListView lv_category_1, lv_category_2;
@@ -46,9 +44,9 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pick_category);
-        lv_category_1 = (ListView) findViewById(R.id.lv_category_1);
-        lv_category_2 = (ListView) findViewById(R.id.lv_category_2);
+        setContentView(R.layout.double_list_layout);
+        lv_category_1 = (ListView) findViewById(R.id.list1);
+        lv_category_2 = (ListView) findViewById(R.id.list2);
         initData();
         adapter1 = new CategoryAdapter1(this);
         adapter2 = new CategoryAdapter2(this);
@@ -117,8 +115,10 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
     private void getSubCategory(int id) {
         categories_2.clear();
         String name = categories_1.get(id).getName();
-        categories_2= (List<CategoryBeen>) FileUtil.readCache(this,"subCategory"+id);
-        if (categories_2==null){
+        List<CategoryBeen> temp= (List<CategoryBeen>) FileUtil.readCache(this,"subCategory"+id);
+        if (temp==null){
+            categories_2.addAll(temp);
+
             for (int i = 0; i < 20; i++) {
                 CategoryBeen been = new CategoryBeen();
                 been.setName(name + i);
@@ -132,8 +132,8 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
 
     class CategoryAdapter1 extends BaseAdapter {
         private Activity context;
-        private final int checkedColor = 0xff3344bb;
-        private final int unCheckedColor = 0xff666666;
+        private final int checkedColor = 0xffe5e5e5;
+        private final int unCheckedColor = 0xffffffff;
 
         CategoryAdapter1(Activity context) {
             this.context = context;
@@ -161,6 +161,8 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
             if (convertView == null) {
                 holder = new ViewHolder();
                 holder.tv = (TextView) LayoutInflater.from(context).inflate(R.layout.activate_textview, null);
+                holder.tv.setTextColor(0xff3a3a3a);
+                holder.tv.setTextSize(16);
                 convertView = holder.tv;
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -172,15 +174,10 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
             return convertView;
         }
 
-        private int dp(float value) {
-            return (int) Dimension.dp(value);
-        }
     }
 
     class CategoryAdapter2 extends BaseAdapter {
         private Activity context;
-        private final int checkedColor = 0xff3344ee;
-        private final int unCheckedColor = 0xff999999;
 
         CategoryAdapter2(Activity context) {
             this.context = context;
@@ -208,20 +205,18 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
             if (convertView == null) {
                 holder = new ViewHolder();
                 holder.tv = (TextView) LayoutInflater.from(context).inflate(R.layout.activate_textview, null);
+                holder.tv.setBackgroundColor(0xfff2f2f2);
+                holder.tv.setTextColor(0xff808080);
+                holder.tv.setTextSize(14);
                 convertView = holder.tv;
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.tv.setText(categories_2.get(position).getName());
-            if (selected == position) holder.tv.setBackgroundColor(checkedColor);
-            else holder.tv.setBackgroundColor(unCheckedColor);
             convertView.setTag(holder);
             return convertView;
         }
 
-        private int dp(float value) {
-            return (int) Dimension.dp(value);
-        }
     }
 
 
