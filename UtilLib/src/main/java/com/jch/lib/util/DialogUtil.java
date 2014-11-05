@@ -42,8 +42,21 @@ public class DialogUtil {
         return waitingDialog(context, "数据访问中");
     }
 
+    public static ProgressDialog waitingDialog(Context context, boolean visible) {
+        return waitingDialog(context, visible, "数据访问中");
+    }
+
+    public static ProgressDialog waitingDialog(Context context, boolean visible, String msg) {
+        LoadingDialog dialog = new LoadingDialog(context);
+        dialog.setMessage(msg);
+        dialog.setCancelable(true);
+        if (visible)
+            dialog.show();
+        return dialog;
+    }
+
     public static ProgressDialog waitingDialog(Context context, String msg) {
-        LoadingDialog dialog=new LoadingDialog(context);
+        LoadingDialog dialog = new LoadingDialog(context);
         dialog.setMessage(msg);
         dialog.setCancelable(true);
         dialog.show();
@@ -68,12 +81,14 @@ public class DialogUtil {
         new AlertDialog.Builder(context).setItems(items, l).show();
     }
 
-    public static void showDeleteDialog(Context context,OnClickListener l){
-        showListDialog(context,l,context.getString(R.string.delete),context.getString(R.string.cancel));
+    public static void showDeleteDialog(Context context, OnClickListener l) {
+        showListDialog(context, l, context.getString(R.string.delete), context.getString(R.string.cancel));
     }
-    public static class LoadingDialog extends ProgressDialog{
+
+    public static class LoadingDialog extends ProgressDialog {
         private TextView tv_message;
         private CharSequence message;
+
         public LoadingDialog(Context context) {
             super(context);
         }
@@ -86,7 +101,7 @@ public class DialogUtil {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.loading_dialog);
-            tv_message=(TextView)findViewById(R.id.message);
+            tv_message = (TextView) findViewById(R.id.message);
         }
 
         @Override
@@ -97,8 +112,8 @@ public class DialogUtil {
 
         @Override
         public void setMessage(CharSequence message) {
-            this.message=message;
-           if (tv_message!=null)tv_message.setText(message);
+            this.message = message;
+            if (tv_message != null) tv_message.setText(message);
         }
     }
 }

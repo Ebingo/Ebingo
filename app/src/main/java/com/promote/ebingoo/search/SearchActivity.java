@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.jch.lib.util.DialogUtil;
 import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
-import com.jch.lib.view.PullToRefreshView;
+import com.jch.lib.view.RefreshMoreListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingoo.InformationActivity.BuyInfoActivity;
 import com.promote.ebingoo.InformationActivity.InterpriseInfoActivity;
@@ -42,7 +42,6 @@ import com.promote.ebingoo.bean.SearchSupplyBeanTools;
 import com.promote.ebingoo.bean.SearchTypeBean;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.impl.SearchDao;
-import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.LogCat;
 
 import org.apache.http.Header;
@@ -52,12 +51,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, PullToRefreshView.OnFooterRefreshListener, View.OnFocusChangeListener, AdapterView.OnItemClickListener, TextWatcher {
+public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener, RefreshMoreListView.LoadMoreListener, RefreshMoreListView.XOnItemClickListener, AdapterView.OnItemClickListener, TextWatcher {
     /**
      * 當前搜索類型，默認為顯示歷史记录。 *
      */
     private SearchType mCurSearchType = SearchType.HISTORY;
     private SearchCategoryPop mCategoryPop = null;
+
+    private static final int PAGESIZE = 10;
     /**
      * 搜索list的显示内容类型，默认是历史记录。*
      */
@@ -70,7 +71,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private RelativeLayout searchheadcenterll;
     private TextView searchkeytv;
     private LinearLayout searchresultkeyll;
-    private PullToRefreshView mRefreshView;
+    //    private PullToRefreshView mRefreshView;
     private ListView searchlv;
     private Button searchclearbtn;
     private LinearLayout searchcontentll;
@@ -85,7 +86,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private ArrayList<SearchTypeBean> mSearchTypeBeans = new ArrayList<SearchTypeBean>();
     private ArrayList<SearchHistoryBean> mHistoryBeans = new ArrayList<SearchHistoryBean>();
     private LinearLayout searchcontentresultll;
-    private ListView searchresultlv;
+    private RefreshMoreListView searchresultlv;
     private LinearLayout searchcontenthistoryll;
     /**
      * 线程锁.*
@@ -112,12 +113,12 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchbaret = (EditText) findViewById(R.id.search_bar_et);
         searchkeytv = (TextView) findViewById(R.id.search_key_tv);
         searchresultkeyll = (LinearLayout) findViewById(R.id.search_result_key_ll);
-        mRefreshView = (PullToRefreshView) findViewById(R.id.search_freshview);
+//        mRefreshView = (PullToRefreshView) findViewById(R.id.search_freshview);
         searchlv = (ListView) findViewById(R.id.search_lv);
         searchclearbtn = (Button) findViewById(R.id.search_clear_btn);
 
         searchcontentresultll = (LinearLayout) findViewById(R.id.search_content_result_ll);
-        searchresultlv = (ListView) findViewById(R.id.search_result_lv);
+        searchresultlv = (RefreshMoreListView) findViewById(R.id.search_result_lv);
         searchcontenthistoryll = (LinearLayout) findViewById(R.id.search_content_history_ll);
         mSearchClearIb = (ImageButton) findViewById(R.id.search_clear_ib);
 
@@ -133,10 +134,12 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         mSearchTypeBeans = new ArrayList<SearchTypeBean>();
         mResultAdatper = new SearchResultAdapter(getApplicationContext(), getCurSearchType(searchcategrycb.getText().toString()), mSearchTypeBeans);
         searchresultlv.setAdapter(mResultAdatper);
-        searchresultlv.setOnItemClickListener(this);
+        searchresultlv.setXOnItemClickListener(this);
+        searchresultlv.setLoadMoreListener(this);
+//        mRefreshView.setDownRefreshable(false);
+//        mRefreshView.setOnFooterRefreshListener(this);
+        searchresultlv.setmCanLoadMoreAble(true);
 
-        mRefreshView.setDownRefreshable(false);
-        mRefreshView.setOnFooterRefreshListener(this);
 
         searchbackbtn.setOnClickListener(this);
         searchcategrycb.setOnCheckedChangeListener(this);
@@ -165,7 +168,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     /**
      * 显示搜索数据,隐藏历史记录数据.
      */
-
     public void showSearchData() {
         searchcontenthistoryll.setVisibility(View.GONE);
         searchcontentresultll.setVisibility(View.VISIBLE);
@@ -264,10 +266,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
             case R.id.search_bar_et: {       //搜索框被点击，显示搜索记录。
 
-//                if (mCurSearchType != SearchType.HISTORY){      //如果當前沒有顯示歷史記錄，顯示歷史記錄。
-//                    displayHistory();
-//                }
-
                 break;
 
             }
@@ -309,7 +307,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     public void onSearch() {
         mHistoryBeans.clear();  //清空历史数据.
         showSearchData();
-        mRefreshView.setUpRefreshable(true);
+//        mRefreshView.setUpRefreshable(true);
 
         String key = searchbaret.getText().toString();
         getCurSearchType(searchcategrycb.getText().toString());      //设置当前搜索类型.
@@ -326,8 +324,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         } else {
             getCompanyList(0, key);
         }
-//                mRefreshView.setUpRefreshable(true);
-//                mRefreshView.setFootViewVisibility(View.VISIBLE);
         showkey(key);       //显示关键字项。
     }
 
@@ -431,22 +427,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     }
 
     @Override
-    public void onFooterRefresh(PullToRefreshView view) {
-        String key = searchbaret.getText().toString();
-
-        int search_id = mSearchTypeBeans.size() - 1;
-
-        if (mCurSearchType == SearchType.SUPPLY) {
-            getSupplyInfoList(search_id, key);
-        } else if (mCurSearchType == SearchType.DEMAND) {
-            getDemandInfoList(search_id, key);
-        } else {
-            getCompanyList(search_id, key);
-        }
-
-    }
-
-    @Override
     public void onFocusChange(View v, boolean hasFocus) {
 
         if (hasFocus) {
@@ -538,6 +518,61 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         }
     }
 
+    @Override
+    public void onLoadmore() {
+        String key = searchbaret.getText().toString();
+
+        int search_id = mSearchTypeBeans.size() - 1;
+
+        if (mCurSearchType == SearchType.SUPPLY) {
+            getSupplyInfoList(search_id, key);
+        } else if (mCurSearchType == SearchType.DEMAND) {
+            getDemandInfoList(search_id, key);
+        } else {
+            getCompanyList(search_id, key);
+        }
+    }
+
+    @Override
+    public void xonItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (mCurSearchType) {
+
+            case DEMAND: {       //当前显示求购信息.
+
+                SearchDemandBean demandBean = (SearchDemandBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent(SearchActivity.this, BuyInfoActivity.class);
+                intent.putExtra(BuyInfoActivity.DEMAND_ID, demandBean.getId());
+                startActivity(intent);
+
+                break;
+            }
+
+            case SUPPLY: {
+
+                SearchSupplyBean supplyBean = (SearchSupplyBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent(SearchActivity.this, ProductInfoActivity.class);
+                intent.putExtra(ProductInfoActivity.ARG_ID, supplyBean.getId());
+                startActivity(intent);
+
+                break;
+            }
+
+            case INTERPRISE: {
+
+                SearchInterpriseBean interpriseBean = (SearchInterpriseBean) mSearchTypeBeans.get(position);
+                Intent intent = new Intent(SearchActivity.this, InterpriseInfoActivity.class);
+                intent.putExtra("id", interpriseBean.getId());
+                startActivity(intent);
+
+                break;
+            }
+
+            default: {
+
+            }
+        }
+    }
+
     /**
      * 当类别选择框消失时，类别箭头状态改变。
      */
@@ -559,13 +594,15 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         String url = HttpConstant.getDemandInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
-        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("pagesize", PAGESIZE);       //每页显示20条。
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this, false);
+        if (lastId == 0)
+            dialog.show();
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
 
@@ -586,6 +623,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 getDataFailed();
+                searchresultlv.loadMoreOver(PAGESIZE);
                 dialog.dismiss();
             }
 
@@ -593,14 +631,10 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 getDataFailed();
+                searchresultlv.loadMoreOver(PAGESIZE);
                 dialog.dismiss();
             }
 
-            @Override
-            public void onFinish() {
-                mRefreshView.onFooterRefreshComplete();
-                super.onFinish();
-            }
         });
 
     }
@@ -618,13 +652,15 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         String url = HttpConstant.getSupplyInfoList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
-        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("pagesize", PAGESIZE);       //每页显示20条。
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this, false);
+        if (lastId == 0)
+            dialog.show();
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
 
@@ -644,6 +680,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 getDataFailed();
+                searchresultlv.loadMoreOver(PAGESIZE);
                 dialog.dismiss();
             }
 
@@ -651,14 +688,10 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 getDataFailed();
+                searchresultlv.loadMoreOver(PAGESIZE);
                 dialog.dismiss();
             }
 
-            @Override
-            public void onFinish() {
-                mRefreshView.onFooterRefreshComplete();
-                super.onFinish();
-            }
         });
 
     }
@@ -677,22 +710,23 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             if (lastId == 0) {       //首次没有加载数据.
 //                        noData(getString(R.string.no_search_data));
                 noData(getString(R.string.no_search_data));
+
+//                loadDataComplete();
+
             } else {
-                mRefreshView.setUpRefreshable(false);
-                loadDataComplete();
+//                mRefreshView.setUpRefreshable(false);
+//                loadDataComplete();
             }
+            searchresultlv.loadMoreOver(0);
         } else {     //加载数据，显示.
             hasData(false);
             mSearchTypeBeans.addAll(searchTypeBeans);
             mResultAdatper.notifyDataSetChanged();
+            searchresultlv.loadMoreOver(searchTypeBeans.size());
         }
 
     }
 
-    private void loadDataComplete() {
-        mRefreshView.setUpRefreshable(false);
-        ContextUtil.toast(getResources().getString(R.string.load_data_complete));
-    }
 
     /**
      * 從網絡获取企业列表。
@@ -705,13 +739,15 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         String url = HttpConstant.getCompanyList;
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
-        parmater.put("pagesize", 20);       //每页显示20条。
+        parmater.put("pagesize", PAGESIZE);       //每页显示20条。
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(keyword), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this);
+        final ProgressDialog dialog = DialogUtil.waitingDialog(SearchActivity.this, false);
+        if (lastId == 0)
+            dialog.show();
 
         HttpUtil.post(url, parmater, new JsonHttpResponseHandler("UTF-8") {
 
@@ -729,8 +765,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                mSearchTypeBeans.clear();
                 getDataFailed();
+                searchresultlv.loadMoreOver(PAGESIZE);
                 dialog.dismiss();
             }
 
@@ -738,14 +774,10 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 getDataFailed();
+                searchresultlv.loadMoreOver(PAGESIZE);
                 dialog.dismiss();
             }
 
-            @Override
-            public void onFinish() {
-                mRefreshView.onFooterRefreshComplete();
-                super.onFinish();
-            }
         });
 
     }
