@@ -42,7 +42,7 @@ import java.util.ArrayList;
 /**
  * 行业分类列表。
  */
-public class CategoryActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener, RefreshMoreListView.LoadMoreListener {
+public class CategoryActivity extends Activity implements View.OnClickListener, RefreshMoreListView.XOnItemClickListener, RefreshMoreListView.LoadMoreListener {
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
     private CheckBox categoryleftcb;
@@ -112,7 +112,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
         mListAdapter = new CategoryListAdapter(getApplicationContext(), mCategoryBean);
         refreshMoreListView.setAdapter(mListAdapter);
-        refreshMoreListView.setOnItemClickListener(this);
+        refreshMoreListView.setXOnItemClickListener(this);
         refreshMoreListView.setmPageSize(PAGESIZE);
         //TODO 访问默认数据
         if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
@@ -175,7 +175,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 }
 
                 mTypePop.dismiss();
-//                categoryrefreshview.setUpRefreshable(true);
                 refreshMoreListView.setmCanLoadMoreAble(true);
                 if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
                     netNotAvalible();
@@ -194,7 +193,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 }
 
                 mTypePop.dismiss();
-//                categoryrefreshview.setUpRefreshable(true);
                 refreshMoreListView.setmCanLoadMoreAble(true);
                 if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
                     netNotAvalible();
@@ -208,7 +206,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
                 categoryrightcb.setText(((TextView) v).getText());
                 mCurRankType = CategoryRankType.LOOKNUM;
                 mRankPop.dismiss();
-//                categoryrefreshview.setUpRefreshable(true);
                 refreshMoreListView.setmCanLoadMoreAble(true);
                 if (!HttpUtil.isNetworkConnected(getApplicationContext())) {
                     netNotAvalible();
@@ -227,7 +224,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
                 String sortStr = ((TextView) v).getText().toString();
                 categoryrightcb.setText(sortStr);
-//                categoryrefreshview.setUpRefreshable(true);
                 refreshMoreListView.setmCanLoadMoreAble(true);
                 if (getResources().getString(R.string.time).equals(sortStr)) {     //按时间排序。
                     mCurRankType = CategoryRankType.TIME;
@@ -307,39 +303,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             mCategoryBean.addAll(searchTypeBeans);
             mListAdapter.notifyDataSetChanged();
         }
-//        categoryrefreshview.onFooterRefreshComplete();
         mListAdapter.notifyDataSetChanged();
-
-    }
-
-//    /**
-//     * 上拉加载数据完成.
-//     */
-//    private void loadComplete(boolean msg) {
-//        refreshMoreListView.
-//        if (msg)
-//            ContextUtil.toast(getResources().getString(R.string.load_data_complete));
-//
-//    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position >= mCategoryBean.size())
-            return;
-        SearchTypeBean searchTypeBean = mCategoryBean.get(position);
-        if (searchTypeBean instanceof SearchDemandBean) {
-
-            Intent intent = new Intent(CategoryActivity.this, BuyInfoActivity.class);
-            intent.putExtra(BuyInfoActivity.DEMAND_ID, (searchTypeBean).getId());
-            startActivity(intent);
-
-        } else if (searchTypeBean instanceof SearchSupplyBean) {
-
-            Intent intent = new Intent(CategoryActivity.this, ProductInfoActivity.class);
-            intent.putExtra(ProductInfoActivity.ARG_ID, searchTypeBean.getId());
-            startActivity(intent);
-
-        }
 
     }
 
@@ -363,6 +327,26 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
             getDemandInfoList(lastId);
         } else {
             getSupplyInfoList(lastId);
+        }
+    }
+
+    @Override
+    public void xonItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (position >= mCategoryBean.size())
+            return;
+        SearchTypeBean searchTypeBean = mCategoryBean.get(position);
+        if (searchTypeBean instanceof SearchDemandBean) {
+
+            Intent intent = new Intent(CategoryActivity.this, BuyInfoActivity.class);
+            intent.putExtra(BuyInfoActivity.DEMAND_ID, (searchTypeBean).getId());
+            startActivity(intent);
+
+        } else if (searchTypeBean instanceof SearchSupplyBean) {
+
+            Intent intent = new Intent(CategoryActivity.this, ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID, searchTypeBean.getId());
+            startActivity(intent);
+
         }
     }
 
