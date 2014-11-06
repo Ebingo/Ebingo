@@ -136,9 +136,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchresultlv.setAdapter(mResultAdatper);
         searchresultlv.setXOnItemClickListener(this);
         searchresultlv.setLoadMoreListener(this);
-//        mRefreshView.setDownRefreshable(false);
-//        mRefreshView.setOnFooterRefreshListener(this);
         searchresultlv.setmCanLoadMoreAble(true);
+        searchresultlv.setmPageSize(PAGESIZE);
 
 
         searchbackbtn.setOnClickListener(this);
