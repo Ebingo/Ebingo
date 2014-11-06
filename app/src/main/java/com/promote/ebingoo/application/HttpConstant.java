@@ -7,7 +7,7 @@ public class HttpConstant {
 
     private static final String TEST_RHOST = "http://ebingoo.bingoso.com"; //remote
 
-    private static final boolean LOCALHOST = false;
+    private static final boolean LOCALHOST = true;
 
     private static final String TEST_HOST = "http://192.168.1.155";
 

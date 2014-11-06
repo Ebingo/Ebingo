@@ -53,6 +53,7 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         lv_category_1.setAdapter(adapter1);
         lv_category_1.setOnItemClickListener(this);
         lv_category_2.setAdapter(adapter2);
+        lv_category_2.setOnItemClickListener(onSubItemClicked);
     }
 
     private void initData() {
@@ -94,15 +95,19 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         });
     }
 
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent data = new Intent();
-        CategoryBeen selectCategory = categories_1.get(position);
-        data.putExtra("categoryId", selectCategory.getId());
-        data.putExtra("result", selectCategory.getName());
-        LogCat.i("");
-        setResult(RESULT_OK, data);
-        finish();
-    }
+
+    private AdapterView.OnItemClickListener onSubItemClicked=new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent data = new Intent();
+            CategoryBeen selectCategory = categories_1.get(position);
+            data.putExtra("categoryId", selectCategory.getId());
+            data.putExtra("result", selectCategory.getName());
+            LogCat.i("");
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    };
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

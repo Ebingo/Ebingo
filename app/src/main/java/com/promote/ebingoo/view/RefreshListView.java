@@ -133,7 +133,11 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         Log.i("item:", "View:hasmMore=" + hasMore);
-        if (scrollState == SCROLL_STATE_IDLE && isBottom && onRefreshListener != null && hasMore) {
+        if (scrollState == SCROLL_STATE_IDLE
+                && isBottom
+                && onRefreshListener != null
+                && hasMore
+                &&state==State.PULL_TO_REFRESH) {
             onRefreshListener.onLoadMore();
             setFooterRefresh(true);
         }
