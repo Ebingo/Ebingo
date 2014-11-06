@@ -6,6 +6,6 @@
     android:text="test"
     style="@style/font_white_18"
     android:gravity="center"
-    android:padding="5dp"
+    android:padding="8dp"
     android:layout_height="wrap_content" />
 

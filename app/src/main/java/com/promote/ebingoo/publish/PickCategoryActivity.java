@@ -107,7 +107,6 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         selected = position;
-        ContextUtil.toast("select:" + selected);
         adapter1.notifyDataSetChanged();
         getSubCategory(position);
     }
@@ -117,14 +116,14 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         String name = categories_1.get(id).getName();
         List<CategoryBeen> temp= (List<CategoryBeen>) FileUtil.readCache(this,"subCategory"+id);
         if (temp==null){
-            categories_2.addAll(temp);
-
             for (int i = 0; i < 20; i++) {
                 CategoryBeen been = new CategoryBeen();
                 been.setName(name + i);
                 categories_2.add(been);
             }
             FileUtil.saveCache(this,"subCategory"+id,categories_2);
+        }else{
+            categories_2.addAll(temp);
         }
         adapter2.notifyDataSetChanged();
     }
@@ -201,7 +200,6 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            LogCat.i(position + "");
             if (convertView == null) {
                 holder = new ViewHolder();
                 holder.tv = (TextView) LayoutInflater.from(context).inflate(R.layout.activate_textview, null);
