@@ -38,6 +38,8 @@ public class TagInfoListActivity extends BaseListActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         adapter = new TagInfoAdapter(data, this);
         initView();
+        setUpRefreshable(false);
+        setDownRefreshable(false);
     }
 
     /**

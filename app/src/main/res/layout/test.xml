@@ -7,11 +7,13 @@
     android:layout_height="match_parent">
 
 
-    <com.promote.ebingoo.view.RefreshListView
+    <com.promote.ebingoo.view.SListView
         android:id="@android:id/list"
+        android:layout_marginTop="@dimen/title_height"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <include layout="@layout/common_head_layout" />
+
 
 </FrameLayout>
