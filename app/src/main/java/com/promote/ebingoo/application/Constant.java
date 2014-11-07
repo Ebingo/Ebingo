@@ -18,9 +18,9 @@ public class Constant {
     public static final String PUBLISH_SUPPLY = "2";
     public static final String PUBLISH_DEMAND = "1";
     /**
-     * 设置是否为debug模式。 *
+     * 设置是否为release模式。 *
      */
-    public static boolean mReleaseAble = true;
+    public static boolean mReleaseAble = false;
 
     public static boolean isReleaseAble() {
         return mReleaseAble;

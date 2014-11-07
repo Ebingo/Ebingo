@@ -5,6 +5,7 @@
         <shape>
             <solid android:color="@color/right_blue" />
         </shape>
+
     </item>
     <item android:state_enabled="true" android:drawable="@color/gray">
         <shape>
