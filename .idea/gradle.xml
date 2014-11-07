@@ -9,7 +9,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/D2code" />
-            <option value="$PROJECT_DIR$/TestScollListView" />
             <option value="$PROJECT_DIR$/UtilLib" />
             <option value="$PROJECT_DIR$/app" />
           </set>
