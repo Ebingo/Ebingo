@@ -425,9 +425,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      * 从相册中选择一张图片
      */
     private void openAlbum() {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
+        Intent i = new Intent(getActivity(),PhotoAlbumActivity.class);
         getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_IMAGE);
     }
 

@@ -156,7 +156,7 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent data = new Intent();
-            CategoryBeen selectCategory = parentList.get(position);
+            CategoryBeen selectCategory = curSubList.get(position);
             data.putExtra("categoryId", selectCategory.getId());
             data.putExtra("result", selectCategory.getName());
             setResult(RESULT_OK, data);

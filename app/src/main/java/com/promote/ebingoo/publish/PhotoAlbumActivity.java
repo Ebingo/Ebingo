@@ -1,160 +1,140 @@
 package com.promote.ebingoo.publish;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
-
+import com.jch.lib.util.ImageManager;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.promote.ebingoo.BaseActivity;
 import com.promote.ebingoo.R;
+import com.promote.ebingoo.util.ContextUtil;
+import com.promote.ebingoo.util.Dimension;
+import com.promote.ebingoo.util.LogCat;
 
-/**
- * Android实现获取本机中所有图片
- * @Description: Android实现获取本机中所有图片
+import java.io.File;
+import java.util.LinkedList;
 
- * @FileName: MyDevicePhotoActivity.java
+public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
- * @Package com.device.photo
 
- * @Author Hanyonglu
+    GridView grid;
+    private LinkedList<String> urls = new LinkedList<String>();
 
- * @Date 2012-5-10 下午04:43:55 
-
- * @Version V1.0
- */
-public class PhotoAlbumActivity extends FragmentActivity implements LoaderCallbacks<Cursor>{
-    private Bitmap bitmap = null;
-    private byte[] mContent = null;
-
-    private ListView listView = null;
-    private SimpleCursorAdapter simpleCursorAdapter = null;
-
-    private static final String[] STORE_IMAGES = {
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.LATITUDE,
-            MediaStore.Images.Media.LONGITUDE,
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString(),
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString(),
-    };
-
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_activity);
-
-        listView = (ListView)findViewById(android.R.id.list);
-        simpleCursorAdapter = new SimpleCursorAdapter(
-                this,
-                android.R.layout.simple_list_item_2,
-                null,
-                STORE_IMAGES,
-                new int[] {android.R.id.text1, android.R.id.text2});
-
-        simpleCursorAdapter.setViewBinder(new ImageLocationBinder());
-        listView.setAdapter(simpleCursorAdapter);
-        // 注意此处是getSupportLoaderManager()，而不是getLoaderManager()方法。
-        getSupportLoaderManager().initLoader(0, null, this);
-
-        // 单击显示图片
-        listView.setOnItemClickListener(new ShowItemImageOnClickListener());
+        grid = (GridView) findViewById(R.id.grid);
+        LogCat.i("onCreate");
+        loadPictures();
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-        // TODO Auto-generated method stub
-        // 为了查看信息，需要用到CursorLoader。
-        CursorLoader cursorLoader = new CursorLoader(
-                this,
+    private void loadPictures() {
+        String[] projection = {
+                MediaStore.Images.ImageColumns.DATA,
+                MediaStore.Images.Media._ID
+        };
+
+        Cursor cursor = managedQuery(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                STORE_IMAGES,
-                null,
-                null,
-                null);
-        return cursorLoader;
+                projection, null, null,
+                MediaStore.Images.Media._ID);
+
+        while (cursor.moveToNext()) {
+            urls.add(cursor.getString(0));
+        }
+        cursor.close();
+        final AlbumAdapter adapter = new AlbumAdapter(this);
+        grid.setAdapter(adapter);
+        grid.setOnItemClickListener(this);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> arg0) {
-        // TODO Auto-generated method stub
-        simpleCursorAdapter.swapCursor(null);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 0) {
+            Intent intent=new Intent(this,CameraActivity.class);
+            startActivity(intent);
+        }else{
+            Intent data = new Intent();
+            data.setData(Uri.fromFile(new File(parent.getItemAtPosition(position) + "")));
+            setResult(RESULT_OK, data);
+            finish();
+        }
+
+
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-        // TODO Auto-generated method stub
-        // 使用swapCursor()方法，以使旧的游标不被关闭．
-        simpleCursorAdapter.swapCursor(cursor);
-    }
+    class AlbumAdapter extends BaseAdapter {
+        private Context mContext;
 
-    // 将图片的位置绑定到视图
-    private class ImageLocationBinder implements ViewBinder{
+        DisplayImageOptions options;
+        View header;
+        int width;
+
+        AlbumAdapter(Context context) {
+            this.mContext = context;
+            options = ContextUtil.getSquareImgOptions();
+            header = LayoutInflater.from(mContext).inflate(R.layout.camera_header, null);
+            width = (int) (getWindowManager().getDefaultDisplay().getWidth() / 3 - Dimension.dp(1));
+            header.setLayoutParams(new AbsListView.LayoutParams(width, width));
+        }
+
         @Override
-        public boolean setViewValue(View view, Cursor cursor, int arg2) {
-            // TODO Auto-generated method stub
-            if (arg2 == 1) {
-                // 图片经度和纬度
-                double latitude = cursor.getDouble(arg2);
-                double longitude = cursor.getDouble(arg2 + 1);
+        public int getCount() {
+            return urls.size() + 1;
+        }
 
-                if (latitude == 0.0 && longitude == 0.0) {
-                    ((TextView)view).setText("位置：未知");
-                } else {
-                    ((TextView)view).setText("位置：" + latitude + ", " + longitude);
-                }
-
-                // 需要注意：在使用ViewBinder绑定数据时，必须返回真；否则，SimpleCursorAdapter将会用自己的方式绑定数据。
-                return true;
+        @Override
+        public Object getItem(int position) {
+            if (position == 0) {
+                return "";
             } else {
-                return false;
+                return urls.get(position - 1);
             }
         }
-    }
 
-    // 单击项显示图片事件监听器
-    private class ShowItemImageOnClickListener implements OnItemClickListener{
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
+        public long getItemId(int position) {
+            return position;
+        }
 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (position == 0) {
+                convertView = header;
+                header.setTag(null);
+            } else {
+                ViewHolder holder;
+                if (convertView == null || convertView.getTag() == null) {
+                    holder = new ViewHolder();
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_photo, null);
+                    holder.imageView = (ImageView) convertView.findViewById(R.id.image);
+                    holder.imageView.setLayoutParams(new AbsListView.LayoutParams(width, width));
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
+                }
 
-//            Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon().
-//                    appendPath(Long.toString(id)).build();
-//            FileUtil file = new FileUtil();
-//            ContentResolver resolver = getContentResolver();
-//
-//            // 从Uri中读取图片资源
-//            try {
-//                mContent = file.readInputStream(resolver.openInputStream(Uri.parse(uri.toString())));
-//                bitmap = file.getBitmapFromBytes(mContent, null);
-//                ivImageShow.setImageBitmap(bitmap);
-//            } catch (Exception e) {
-//                // TODO: handle exception
-//                e.printStackTrace();
-//            }
+                ImageManager.load("file://" + urls.get(position - 1), holder.imageView, options);
+                convertView.setTag(holder);
+            }
 
+            return convertView;
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-
-        if(bitmap != null){
-            bitmap.recycle();
-        }
+    static class ViewHolder {
+        ImageView imageView;
     }
 }
