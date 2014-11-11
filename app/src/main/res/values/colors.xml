@@ -30,5 +30,7 @@
     <color name="center_divider">#d5d5d5</color>
     <color name="tag_color">#31add9</color>
     <color name="tag_default_color">#888888</color>
+    <color name="find_subitem_bg_color">#e1e2e3</color>
+    <color name="find_subItem_font_color">#808080</color>
 
 </resources>

@@ -44,4 +44,6 @@
 
     <dimen name="vip_list_img_width">20dp</dimen>
     <dimen name="vip_list_img_height">20dp</dimen>
+
+    <dimen name="find_pad">8dp</dimen>
 </resources>
