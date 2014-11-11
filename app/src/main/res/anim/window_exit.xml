@@ -4,9 +4,9 @@
     <translate
         android:duration="300"
         android:fromYDelta="0"
-        android:toYDelta="70%" />
+        android:toYDelta="90%" />
     <alpha
         android:fromAlpha="1"
-        android:toAlpha="0.5"
+        android:toAlpha="0"
         android:duration="500" />
 </set>

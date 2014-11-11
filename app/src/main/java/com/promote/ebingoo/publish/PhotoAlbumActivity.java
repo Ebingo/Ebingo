@@ -96,12 +96,12 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
     private void loadPictures() {
         String[] projection = {
                 MediaStore.Images.ImageColumns.DATA,
-                MediaStore.Images.Media._ID
+                MediaStore.Images.ImageColumns.DATE_MODIFIED
         };
         Cursor cursor = managedQuery(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null,
-                MediaStore.Images.Media._ID);
+                MediaStore.Images.ImageColumns.DATE_MODIFIED+" DESC");
 
         TreeSet<String> dirSet = new TreeSet<String>();
         LinkedList<String> totalList = new LinkedList<String>();
@@ -149,10 +149,10 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         final View contentView = View.inflate(this, R.layout.listview, null);
         final ListView list = (ListView) contentView.findViewById(R.id.listView);
 
-        dirWindow = new PopupWindow(contentView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT, true) {
+        dirWindow = new PopupWindow(contentView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true) {
         };
         dirWindow.setAnimationStyle(R.style.popup_window_animation);
-        dirWindow.showAtLocation(bottom_ll, Gravity.BOTTOM, 0, -bottom_ll.getHeight());
+        dirWindow.showAtLocation(bottom_ll, Gravity.BOTTOM, 0, bottom_ll.getHeight());
         list.setAdapter(new PupWindowAdapter(PhotoAlbumActivity.this));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
