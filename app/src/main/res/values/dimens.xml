@@ -44,6 +44,11 @@
 
     <dimen name="vip_list_img_width">20dp</dimen>
     <dimen name="vip_list_img_height">20dp</dimen>
+    <dimen name="category_item_height">80dp</dimen>
+    <dimen name="category_item_ic_margin">15dp</dimen>
+    <dimen name="category_item_content_margin">16dp</dimen>
+    <dimen name="category_item_text_margin_top">9dp</dimen>
+    <dimen name="photo_album_item_size">120dp</dimen>
 
     <dimen name="find_pad">8dp</dimen>
 </resources>

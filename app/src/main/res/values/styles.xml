@@ -418,4 +418,9 @@
         <item name="android:layout_width">@dimen/vip_list_img_width</item>
         <item name="android:layout_height">@dimen/vip_list_img_height</item>
     </style>
+
+    <style name="popup_window_animation">
+        <item name="android:windowEnterAnimation">@anim/window_enter</item>
+        <item name="android:windowExitAnimation">@anim/window_exit</item>
+    </style>
 </resources>

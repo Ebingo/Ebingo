@@ -18,5 +18,7 @@
     <string name="title_activity_publish_edit_supply">编辑供应信息</string>
     <string name="title_activity_publish_edit_demand">编辑求购信息</string>
     <string name="title_buy_tag">购买标签</string>
+    <string name="title_album">相册</string>
+    <string name="title_camera">拍照</string>
 
 </resources>

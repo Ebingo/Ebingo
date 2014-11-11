@@ -27,7 +27,20 @@ import java.net.URL;
  */
 public class ImageUtil {
 
-    private static String getImageFile() {
+    public static final String IMAGE_TEMP_PUBLISH_SUPPLY="publish_supply.png";
+    public static final String IMAGE_TEMP_COMPANY_IMAGE="company_image.png";
+
+
+    /**
+     * 获取图片暂存文件
+     * @param name
+     * @return
+     */
+    public static File getImageTempFile(String name){
+        return new File(getImageDir(),name);
+    }
+
+    private static String getImageDir() {
         File pic_file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         if (!pic_file.exists())
             pic_file.mkdirs();
@@ -39,7 +52,7 @@ public class ImageUtil {
      */
     public static Uri saveBitmap(Bitmap bm, String picName) {
         if (TextUtils.isEmpty(picName) || bm == null) return null;
-        File f = new File(getImageFile(), picName);
+        File f = new File(getImageDir(), picName);
 
         try {
             if (!f.exists()) {
@@ -62,7 +75,7 @@ public class ImageUtil {
     public static Bitmap readBitmap(String picName) {
         Bitmap bitmap = null;
         try {
-            File f = new File(getImageFile(), picName);
+            File f = new File(getImageDir(), picName);
             FileInputStream inputStream = new FileInputStream(f);
             bitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
             inputStream.close();
