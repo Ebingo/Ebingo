@@ -1,12 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@android:id/list"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/head_layout"
+        android:layout_height="@dimen/title_height"
+        android:background="#21292c">
+
+
+        <ImageView
+            android:id="@+id/common_back_btn"
+            style="@style/back_arro_style"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:src="@drawable/nav_return" />
+
+        <TextView
+            android:id="@+id/common_title_tv"
+            style="@style/font_white_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+    <GridView
+        android:layout_width="wrap_content"
+        android:numColumns="3"
+        android:listSelector="#0000"
+        android:gravity="center"
+        android:verticalSpacing="1dp"
+        android:horizontalSpacing="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/grid" />
+
+    <LinearLayout
+        android:id="@+id/bottom_ll"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="@dimen/title_height"
+        android:background="@drawable/btn_album"
+        android:gravity="center">
+
+        <ImageView
+            android:src="@drawable/album_ic"
+            android:layout_width="wrap_content"
+            android:duplicateParentState="true"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/spinner"
+            android:textSize="18sp"
+            android:text="选择相册"
+            android:duplicateParentState="true"
+            android:layout_marginLeft="9dp"
+            android:textColor="@drawable/btn_album_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

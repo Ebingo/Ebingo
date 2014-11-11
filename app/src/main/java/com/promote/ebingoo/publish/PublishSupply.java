@@ -60,10 +60,11 @@ import static com.promote.ebingoo.publish.PublishFragment.PICK_CAMERA;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_CATEGORY;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_DESCRIPTION;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_FOR_SUPPLY;
-import static com.promote.ebingoo.publish.PublishFragment.PICK_IMAGE;
+import static com.promote.ebingoo.publish.PublishFragment.PICK_ALBUM;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_REGION;
 import static com.promote.ebingoo.publish.PublishFragment.PREVIEW;
 import static com.promote.ebingoo.publish.PublishFragment.PublishController;
+
 /**
  * Created by acer on 2014/9/2.
  */
@@ -86,7 +87,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
     private DetailInfoBean mDetailInfo;
     private TextView tv_3d_notice;
     private String info_id;
-    private final String CAMERA_PICTURE_NAME = "supply_image.png";
     PublishController controller = new PublishController();
 
     @Override
@@ -120,7 +120,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             mDetailInfo = (DetailInfoBean) FileUtil.readCache(getActivity(), FileUtil.PUBLISH_SUPPLY_MODULE);
         }
         edit(mDetailInfo);
-        LogCat.i("--->", "onCreateView edit");
+
         return v;
     }
 
@@ -194,7 +194,11 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             }
             case R.id.picked_image:
             case R.id.tv_pick_image: {
-                showPupWindow();
+//                showPupWindow();
+                //从相册中选择一张图片
+                Intent i = new Intent(getActivity(), PhotoAlbumActivity.class);
+                i.putExtra(PhotoAlbumActivity.ARG_CAMERA_OUTPUT,tempFile().getAbsolutePath());
+                getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_ALBUM);
                 break;
             }
             case R.id.btn_publish: {
@@ -247,7 +251,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         controller.contacts_phone = edit_phone.getText().toString().trim();
         controller.min_sell_num = edit_min_sell_num.getText().toString().trim();
         controller.unit = edit_unit.getText().toString().trim();
-        controller.apply_3d=upload_3d_cb.isChecked();
+        controller.apply_3d = upload_3d_cb.isChecked();
         int code = controller.checkSupply();
         if (code > 0) {
             controller.showError(code);
@@ -283,7 +287,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
             case PICK_REGION:
                 tv_pick_region.setText(result);
                 break;
-            case PICK_IMAGE: {
+            case PICK_ALBUM: {
                 if (data == null || data.getData() == null) return;
                 Uri uri = data.getData();
                 LogCat.i("--->", uri.toString());
@@ -291,12 +295,12 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 break;
             }
             case PICK_CAMERA:
-                cropImage(Uri.fromFile(getImageTempFile()));
+                cropImage(Uri.fromFile(tempFile()));
                 break;
 
             case CROP: {
                 if (data == null || resultCode != Activity.RESULT_OK) return;
-                toPreviewActivity(Uri.fromFile(getImageTempFile()));
+                toPreviewActivity(Uri.fromFile(tempFile()));
                 break;
             }
 
@@ -310,8 +314,8 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         }
     }
 
-    private File getImageTempFile() {
-        return new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), CAMERA_PICTURE_NAME);
+    private File tempFile() {
+        return ImageUtil.getImageTempFile(ImageUtil.IMAGE_TEMP_PUBLISH_SUPPLY);
     }
 
     /**
@@ -375,12 +379,20 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         public void onClick(View v) {
             window.dismiss();
             switch (v.getId()) {
-                case R.id.btn_album:
-                    openAlbum();
+                case R.id.btn_album: {
+                    //从相册中选择一张图片
+                    Intent i = new Intent(getActivity(), PhotoAlbumActivity.class);
+                    i.putExtra(PhotoAlbumActivity.ARG_CAMERA_OUTPUT,tempFile().getAbsolutePath());
+                    getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_ALBUM);
                     break;
-                case R.id.btn_camera:
-                    openCamera();
+                }
+                case R.id.btn_camera: {
+                    //打开相机拍照
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile()));
+                    getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PICK_CAMERA);
                     break;
+                }
             }
         }
     };
@@ -412,25 +424,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         });
     }
 
-    /**
-     * 打开相机拍照
-     */
-    private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getImageTempFile()));
-        getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PICK_CAMERA);
-    }
-
-    /**
-     * 从相册中选择一张图片
-     */
-    private void openAlbum() {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_IMAGE);
-    }
-
     private void cropImage(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -440,7 +433,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         intent.putExtra("aspectY", 400);
         intent.putExtra("outputX", 640);
         intent.putExtra("outputY", 400);
-        intent.putExtra("output", Uri.fromFile(getImageTempFile()));// 保存到原文件
+        intent.putExtra("output", Uri.fromFile(tempFile()));// 保存到原文件
         intent.putExtra("outputFormat", "JPEG");// 返回格式
         intent.putExtra("return-data", false);
         getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | CROP);

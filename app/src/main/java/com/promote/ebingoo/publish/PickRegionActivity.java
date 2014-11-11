@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -21,6 +24,7 @@ import com.promote.ebingoo.bean.RegionBeen;
 import com.promote.ebingoo.impl.EbingoHandler;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.util.ContextUtil;
+import com.promote.ebingoo.util.Dimension;
 import com.promote.ebingoo.util.FileUtil;
 import com.promote.ebingoo.util.JsonUtil;
 import com.promote.ebingoo.util.LogCat;
@@ -41,7 +45,8 @@ public class PickRegionActivity extends BaseActivity {
     private List<RegionBeen> cityList = new ArrayList<RegionBeen>();
     private ProvinceAdapter provinceAdapter;
     private CityAdapter cityAdapter;//
-    private int selected=-1;
+    private int selected = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,7 @@ public class PickRegionActivity extends BaseActivity {
     private AdapterView.OnItemClickListener onProvinceClicked = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selected=position;
+            selected = position;
             getCity(provinceList.get(position).getId());
             provinceAdapter.notifyDataSetChanged();
 
@@ -93,7 +98,7 @@ public class PickRegionActivity extends BaseActivity {
                     dialog.dismiss();
                 }
             });
-        }else{
+        } else {
             cityAdapter.notifyDataSetChanged();
         }
     }
@@ -101,12 +106,12 @@ public class PickRegionActivity extends BaseActivity {
     private AdapterView.OnItemClickListener onCityClicked = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            RegionBeen province=provinceList.get(selected);
-            RegionBeen city=cityList.get(position);
+            RegionBeen province = provinceList.get(selected);
+            RegionBeen city = cityList.get(position);
             Intent data = new Intent();
-            data.putExtra("result", province.getName()+city.getName());
-            data.putExtra("province_id",province.getId());
-            data.putExtra("city_id",city.getId());
+            data.putExtra("result", province.getName() + city.getName());
+            data.putExtra("province_id", province.getId());
+            data.putExtra("city_id", city.getId());
             setResult(RESULT_OK, data);
             finish();
         }
@@ -145,7 +150,7 @@ public class PickRegionActivity extends BaseActivity {
                 try {
                     array = response.getJSONArray("data");
                     JsonUtil.getArray(array, RegionBeen.class, provinceList);
-                    FileUtil.saveCache(getApplicationContext(), FileUtil.FILE_PROVINCE_LIST,provinceList);
+                    FileUtil.saveCache(getApplicationContext(), FileUtil.FILE_PROVINCE_LIST, provinceList);
                     provinceAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -193,7 +198,6 @@ public class PickRegionActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            LogCat.i(position + "");
             if (convertView == null) {
                 holder = new ViewHolder();
                 holder.tv = (TextView) LayoutInflater.from(context).inflate(R.layout.activate_textview, null);
@@ -204,9 +208,9 @@ public class PickRegionActivity extends BaseActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.tv.setText(provinceList.get(position).getName());
-            if (selected==position){
+            if (selected == position) {
                 holder.tv.setBackgroundColor(checkedColor);
-            }else{
+            } else {
                 holder.tv.setBackgroundColor(unCheckedColor);
             }
             convertView.setTag(holder);
@@ -243,10 +247,14 @@ public class PickRegionActivity extends BaseActivity {
             LogCat.i(position + "");
             if (convertView == null) {
                 holder = new ViewHolder();
-                holder.tv = (TextView) LayoutInflater.from(context).inflate(R.layout.activate_textview, null);
+
+                holder.tv = new TextView(context);
                 holder.tv.setBackgroundColor(0xfff2f2f2);
                 holder.tv.setTextColor(0xff808080);
-                holder.tv.setTextSize(14);
+                holder.tv.setTextSize(15);
+                holder.tv.setGravity(Gravity.CENTER_VERTICAL);
+                holder.tv.setPadding(dp(20),dp(7),0,dp(7));
+
                 convertView = holder.tv;
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -255,7 +263,9 @@ public class PickRegionActivity extends BaseActivity {
             convertView.setTag(holder);
             return convertView;
         }
-
+        public int dp(float value){
+            return (int) Dimension.dp(value);
+        }
     }
 
 
