@@ -49,5 +49,5 @@
         android:id="@+id/selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/upload_3d_checked" />
+        android:src="@drawable/album_select" />
 </LinearLayout>

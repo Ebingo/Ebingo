@@ -70,7 +70,6 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
     AlbumAdapter pictureAdapter;
     private int selectedItem = 0;
     private PopupWindow dirWindow;
-    Button button;
     private final String ALL = "全部";
     private final String OTHER = "其他";
 
@@ -80,11 +79,10 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         setContentView(R.layout.photo_activity);
         grid = (GridView) findViewById(R.id.grid);
         bottom_ll = (LinearLayout) findViewById(R.id.bottom_ll);
-        button = (Button) findViewById(R.id.spinner);
         loadPictures();
         camera_output = getIntent().getStringExtra(ARG_CAMERA_OUTPUT);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        bottom_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showWindow();
@@ -135,7 +133,6 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
             //在14以上版本，cursor会自动关闭，如果手动关闭在resume的时候会抛出异常。
             cursor.close();
         }
-        button.setText(dirsNameArarry[0]);
         curAlbumList = urlsMap.get(dirsNameArarry[0]);
         pictureAdapter = new AlbumAdapter(this);
         grid.setAdapter(pictureAdapter);
@@ -155,13 +152,12 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         dirWindow = new PopupWindow(contentView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT, true) {
         };
         dirWindow.setAnimationStyle(R.style.popup_window_animation);
-        dirWindow.showAtLocation(bottom_ll, Gravity.BOTTOM, 0, 0);
+        dirWindow.showAtLocation(bottom_ll, Gravity.BOTTOM, 0, -bottom_ll.getHeight());
         list.setAdapter(new PupWindowAdapter(PhotoAlbumActivity.this));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String dirName = dirsNameArarry[position];
-                button.setText(dirName);
                 curAlbumList = urlsMap.get(dirName);
                 setTitle(dirName);
                 pictureAdapter.notifyDataSetChanged();
