@@ -13,15 +13,6 @@ public class CategoryBeen implements Serializable {
     Integer id;
     String name;
     String image;
-    Integer parent_id;
-
-    public Integer getParent_id() {
-        return parent_id;
-    }
-
-    public void setParent_id(Integer parent_id) {
-        this.parent_id = parent_id;
-    }
 
     private int parent_id;
 
