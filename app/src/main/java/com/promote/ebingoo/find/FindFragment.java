@@ -47,7 +47,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    /**
+    /**ji
      * 二维码扫描按钮。 *
      */
     private ImageButton mScanIb = null;
