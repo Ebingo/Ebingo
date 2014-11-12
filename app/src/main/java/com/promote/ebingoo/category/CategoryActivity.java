@@ -301,7 +301,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
             refreshMoreListView.loadMoreOver(PAGESIZE);
             mCategoryBean.addAll(searchTypeBeans);
-            mListAdapter.notifyDataSetChanged();
         }
         mListAdapter.notifyDataSetChanged();
 

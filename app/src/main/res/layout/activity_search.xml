@@ -136,6 +136,7 @@
         android:layout_height="0.5dp"
         android:background="@color/center_divider" />
 
+
     <LinearLayout
         android:id="@+id/search_content_ll"
         android:orientation="vertical"
@@ -143,54 +144,76 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/search_content_history_ll"
+        <com.jch.lib.view.PagerScrollView
+            android:id="@+id/search_content_ps"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/search_history_click_ll"
-                android:padding="20dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:id="@+id/search_content_history_ll"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
-                <ImageView
+
+                <ProgressBar
+                    android:id="@+id/search_key_pb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/search_history_clock" />
+                    style="?android:progressBarStyleSmallInverse"
+                    android:layout_gravity="center_horizontal" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/search_history"
-                    style="@style/font_black_15" />
+                <com.jch.lib.view.ScrollGridView
+                    android:id="@+id/search_key_grad"
+                    android:numColumns="4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </com.jch.lib.view.ScrollGridView>
+
+                <LinearLayout
+                    android:id="@+id/search_history_click_ll"
+                    android:padding="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/search_history_clock" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/search_history"
+                        style="@style/font_black_15" />
+                </LinearLayout>
+
+                <View style="@style/divider_horizontal" />
+
+                <com.jch.lib.view.ScrollListView
+                    android:id="@+id/search_lv"
+                    android:dividerHeight="0dp"
+                    android:divider="@null"
+                    style="@style/list_pad_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <Button
+                    android:id="@+id/search_clear_btn"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/clear_history_btn_selector"
+                    android:layout_gravity="center"
+                    android:text="@string/clear_history"
+                    style="@style/long_btn_styl"
+                    android:textSize="@dimen/font_18"
+                    android:textColor="@drawable/gray_white_selector" />
             </LinearLayout>
-
-            <View style="@style/divider_horizontal" />
-
-            <ListView
-                android:id="@+id/search_lv"
-                android:dividerHeight="0dp"
-                android:divider="@null"
-                style="@style/list_pad_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/search_clear_btn"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/clear_history_btn_selector"
-                android:layout_gravity="center"
-                android:text="@string/clear_history"
-                style="@style/long_btn_styl"
-                android:textSize="@dimen/font_18"
-                android:textColor="@drawable/gray_white_selector" />
-
-        </LinearLayout>
+        </com.jch.lib.view.PagerScrollView>
 
         <LinearLayout
             android:orientation="vertical"
@@ -218,6 +241,7 @@
 
 
     </LinearLayout>
+
 
     <TextView
         android:id="@+id/search_no_history_tv"

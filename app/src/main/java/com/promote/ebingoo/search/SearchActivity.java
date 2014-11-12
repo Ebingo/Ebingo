@@ -3,6 +3,7 @@ package com.promote.ebingoo.search;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,11 +15,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +35,7 @@ import com.promote.ebingoo.InformationActivity.InterpriseInfoActivity;
 import com.promote.ebingoo.InformationActivity.ProductInfoActivity;
 import com.promote.ebingoo.R;
 import com.promote.ebingoo.application.HttpConstant;
+import com.promote.ebingoo.bean.HotKey;
 import com.promote.ebingoo.bean.SearchDemandBean;
 import com.promote.ebingoo.bean.SearchDemandBeanTools;
 import com.promote.ebingoo.bean.SearchHistoryBean;
@@ -42,6 +46,7 @@ import com.promote.ebingoo.bean.SearchSupplyBeanTools;
 import com.promote.ebingoo.bean.SearchTypeBean;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.impl.SearchDao;
+import com.promote.ebingoo.impl.SearchKeyRequest;
 import com.promote.ebingoo.util.LogCat;
 
 import org.apache.http.Header;
@@ -76,6 +81,11 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private Button searchclearbtn;
     private LinearLayout searchcontentll;
     private TextView searchnohistorytv;
+
+    private ProgressBar mSearchKeyPb;
+    private GridView mSearchKeyGv;
+    private HotKey mHotKey;
+    private SearchKeyAdapter mHotAdapter;
     /**
      * 搜索内容清空按钮。 *
      */
@@ -121,6 +131,11 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchresultlv = (RefreshMoreListView) findViewById(R.id.search_result_lv);
         searchcontenthistoryll = (LinearLayout) findViewById(R.id.search_content_history_ll);
         mSearchClearIb = (ImageButton) findViewById(R.id.search_clear_ib);
+        mSearchKeyPb = (ProgressBar) findViewById(R.id.search_key_pb);
+        mSearchKeyGv = (GridView) findViewById(R.id.search_key_grad);
+        mHotAdapter = new SearchKeyAdapter(getApplicationContext());
+        mSearchKeyGv.setAdapter(mHotAdapter);
+        mSearchKeyGv.setSelector(new BitmapDrawable());
 
 
         mCategoryPop = new SearchCategoryPop(this, this);
@@ -145,13 +160,13 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchbaret.setOnClickListener(this);
         searchbaret.setOnFocusChangeListener(this);
         searchbaret.addTextChangedListener(this);
-//        searchClearLl.setOnClickListener(this);
         searchclearbtn.setOnClickListener(this);
         searchBtnIB.setOnClickListener(this);
         mSearchClearIb.setOnClickListener(this);
 
         LogCat.i("init display history.");
         displayHistory();
+        getHotKey();
 
     }
 
@@ -193,6 +208,43 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
         }
     };
+
+    /**
+     * 获取关键字.
+     */
+    private void getHotKey() {
+
+        SearchKeyRequest.getHotSearchKeyWords(getApplicationContext(), new SearchKeyRequest.SearchKeyCallBack() {
+            @Override
+            public void onSuccess(HotKey hotKey) {
+                mHotKey = hotKey;
+                mSearchKeyPb.setVisibility(View.GONE);
+                updateHotkeyBuyType();
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                mSearchKeyPb.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    /**
+     * 显示当前类型下的热门关键词。
+     */
+    private void updateHotkeyBuyType() {
+
+        int curSearchType = getmCurSearchType();
+
+        if (curSearchType == SearchType.DEMAND.getValue()) {
+            mHotAdapter.nodifyOnDataChanged(mHotKey.getDemand());
+        } else if (curSearchType == SearchType.SUPPLY.getValue()) {
+            mHotAdapter.nodifyOnDataChanged(mHotKey.getSupply());
+        } else if (curSearchType == SearchType.INTERPRISE.getValue()) {
+            mHotAdapter.nodifyOnDataChanged(mHotKey.getCpmpany());
+        }
+
+    }
 
     /**
      * 没有数据。

@@ -74,10 +74,8 @@ public class RefreshMoreListView extends ListView implements AbsListView.OnScrol
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mCanLoadMoreAble)
-            this.itemClickListener.xonItemClick(parent, view, position - 1, id);
-        else
-            this.onItemClick(parent, view, position, id);
+        if (mCanLoadMoreAble && position < getAdapter().getCount())
+            this.itemClickListener.xonItemClick(parent, view, position, id);
 
     }
 

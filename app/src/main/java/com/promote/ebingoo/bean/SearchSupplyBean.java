@@ -5,24 +5,38 @@ import java.io.Serializable;
 /**
  * Created by ACER on 2014/9/2.
  */
-public class SearchSupplyBean extends SearchTypeBean implements Serializable{
-    /**公司名称**/
+public class SearchSupplyBean extends SearchTypeBean implements Serializable {
+    /**
+     * 公司名称*
+     */
     private String company;
-    /**地区**/
+    /**
+     * 地区*
+     */
     private String region;
-    /**图片**/
+    /**
+     * 图片*
+     */
     private String image;
-    /** 主营业务**/
+    /**
+     * 主营业务*
+     */
     private String date;
 
     private String price;
 
     private String unit;
-    /**起购标准**/
-    private String min_supply_num="0";
-    /**查看次数**/
+    /**
+     * 起购标准*
+     */
+    private String min_supply_num = "0";
+    /**
+     * 查看次数*
+     */
     private int read_num;
-    /**企业等级**/
+    /**
+     * 企业等级*
+     */
     private String company_rank;
     private String verify_result;
 

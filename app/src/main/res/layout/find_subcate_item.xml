@@ -9,7 +9,8 @@
     <TextView
         android:id="@+id/find_subcate_item_tv"
         android:layout_width="wrap_content"
-        style="@style/find_15_tv"
+        android:textSize="@dimen/font_15"
+        android:textColor="@drawable/find_sub_click"
         android:layout_gravity="center"
         android:layout_height="wrap_content" />
 
