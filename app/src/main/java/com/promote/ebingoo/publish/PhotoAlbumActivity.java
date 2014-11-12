@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,8 +19,6 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -33,19 +33,17 @@ import com.promote.ebingoo.BaseActivity;
 import com.promote.ebingoo.R;
 import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.Dimension;
+import com.promote.ebingoo.util.ImageUtil;
 import com.promote.ebingoo.util.LogCat;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
-
+    private final String TAG = getClass().getSimpleName();
     GridView grid;
     LinearLayout bottom_ll;
     /**
@@ -57,15 +55,27 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
      */
     private HashMap<String, LinkedList<String>> urlsMap = new HashMap<String, LinkedList<String>>();
     private final int OPEN_CAMERA = 100;
+    private final int CROP_IMAGE = 101;
     /**
-     * 拍照选择图片的保存路径，String类型
+     * Intent参数，拍照选择图片的保存路径，String类型。如果不传，将使用默认路径。
      */
-    public static String ARG_CAMERA_OUTPUT = "camera_out";
-    private String camera_output;
+    public static String EXTRA_CAMERA_OUTPUT_PATH = "camera_out_path";
+    /**
+     * 输出图片的高度，单位dp
+     */
+    public static String EXTRA_CAMERA_OUTPUT_HEIGHT = "camera_out_height";
+    /**
+     * 输出图片的宽度，单位dp
+     */
+    public static String EXTRA_CAMERA_OUTPUT_WIDTH = "camera_out_width";
+
     /**
      * 图片的输出uri
      */
     private Uri outPutUri;
+
+    private int outPut_height;
+    private int outPut_width;
     private LinkedList<String> curAlbumList;
     AlbumAdapter pictureAdapter;
     private int selectedItem = 0;
@@ -80,7 +90,7 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         grid = (GridView) findViewById(R.id.grid);
         bottom_ll = (LinearLayout) findViewById(R.id.bottom_ll);
         loadPictures();
-        camera_output = getIntent().getStringExtra(ARG_CAMERA_OUTPUT);
+        initParams();
 
         bottom_ll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +98,18 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
                 showWindow();
             }
         });
+    }
+
+    /**
+     * 初始化参数
+     */
+    void initParams() {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        String camera_output = getIntent().getStringExtra(EXTRA_CAMERA_OUTPUT_PATH);
+        outPut_height = (int) (getIntent().getIntExtra(EXTRA_CAMERA_OUTPUT_HEIGHT, 30) * dm.density);
+        outPut_width = (int) (getIntent().getIntExtra(EXTRA_CAMERA_OUTPUT_WIDTH, 30) * dm.density);
+        if (!TextUtils.isEmpty(camera_output)) outPutUri = Uri.fromFile(new File(camera_output));
+        else outPutUri=Uri.fromFile(ImageUtil.getImageTempFile("album"));
     }
 
     /**
@@ -101,7 +123,7 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         Cursor cursor = managedQuery(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null,
-                MediaStore.Images.ImageColumns.DATE_MODIFIED+" DESC");
+                MediaStore.Images.ImageColumns.DATE_MODIFIED + " DESC");
 
         TreeSet<String> dirSet = new TreeSet<String>();
         LinkedList<String> totalList = new LinkedList<String>();
@@ -192,29 +214,56 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         if (position == 0) {
             //打开相机拍照
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (camera_output != null) {
-                outPutUri = Uri.fromFile(new File(camera_output));
+            if (outPutUri != null) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutUri);
             }
             startActivityForResult(intent, OPEN_CAMERA);
-        } else {
-            Intent data = new Intent();
-            data.setData(Uri.fromFile(new File(parent.getItemAtPosition(position) + "")));
-            setResult(RESULT_OK, data);
-            finish();
+        } else {//选择照片，返回照片Uri
+            File selected = new File(curAlbumList.get(position - 1));
+            cropImage(Uri.fromFile(selected));
         }
+    }
+
+    /**
+     * 返回图片uri
+     *
+     * @param uri
+     */
+    private void returnUri(Uri uri) {
+        LogCat.i(TAG, "return outPutUri:" + uri);
+        Intent data = new Intent();
+        data.setData(uri);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == OPEN_CAMERA && resultCode == RESULT_OK) {
-            Intent intent = new Intent();
-            intent.setData(outPutUri);
-            setResult(RESULT_OK, intent);
-            finish();
+        if (resultCode != RESULT_OK) {
+            ContextUtil.toast(R.string.cancel);
+        } else if (requestCode == OPEN_CAMERA) {
+            LogCat.i(TAG, "CROP_IMAGE output:" + outPutUri);
+            cropImage(outPutUri);
+        } else if (requestCode == CROP_IMAGE) {
+            returnUri(outPutUri);
         }
     }
 
+    private void cropImage(Uri uri) {
+        LogCat.i("outPut_width:" + outPut_width + " outPut_height:" + outPut_height);
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", outPut_width);
+        intent.putExtra("aspectY", outPut_height);
+        intent.putExtra("outputX", outPut_width);
+        intent.putExtra("outputY", outPut_height);
+        intent.putExtra("output", outPutUri);// 保存到原文件
+        intent.putExtra("outputFormat", "JPEG");// 返回格式
+        intent.putExtra("return-data", false);
+        startActivityForResult(intent, CROP_IMAGE);
+    }
 
     class AlbumAdapter extends BaseAdapter {
         private Context mContext;

@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,15 +18,12 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jch.lib.util.DialogUtil;
@@ -56,7 +52,6 @@ import java.io.IOException;
 
 import static com.promote.ebingoo.publish.PublishFragment.APPLY_3D;
 import static com.promote.ebingoo.publish.PublishFragment.CROP;
-import static com.promote.ebingoo.publish.PublishFragment.PICK_CAMERA;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_CATEGORY;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_DESCRIPTION;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_FOR_SUPPLY;
@@ -197,7 +192,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 //                showPupWindow();
                 //从相册中选择一张图片
                 Intent i = new Intent(getActivity(), PhotoAlbumActivity.class);
-                i.putExtra(PhotoAlbumActivity.ARG_CAMERA_OUTPUT,tempFile().getAbsolutePath());
+                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_PATH,tempFile().getAbsolutePath());
+                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_WIDTH,192);
+                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_HEIGHT,120);
                 getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_ALBUM);
                 break;
             }
@@ -209,7 +206,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 break;
             }
             case R.id.upload_3d_cb: {
-//                callService();
                 if (has3dPermission()) show3dNotice(upload_3d_cb.isChecked());
                 break;
             }
@@ -291,23 +287,11 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 if (data == null || data.getData() == null) return;
                 Uri uri = data.getData();
                 LogCat.i("--->", uri.toString());
-                cropImage(uri);
-                break;
-            }
-            case PICK_CAMERA:
-                cropImage(Uri.fromFile(tempFile()));
-                break;
-
-            case CROP: {
-                if (data == null || resultCode != Activity.RESULT_OK) return;
-                toPreviewActivity(Uri.fromFile(tempFile()));
+                uploadImage(uri);
                 break;
             }
 
-            case PREVIEW:
-                if (data == null) return;
-                uploadImage(data.getData());
-                break;
+
             case APPLY_3D:
                 ContextUtil.toast(result);
                 break;
@@ -373,71 +357,6 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PREVIEW);
     }
 
-    private PopupWindow window;
-    View.OnClickListener popupWindowListener = new View.OnClickListener() {//popupWindow点击事件处理
-        @Override
-        public void onClick(View v) {
-            window.dismiss();
-            switch (v.getId()) {
-                case R.id.btn_album: {
-                    //从相册中选择一张图片
-                    Intent i = new Intent(getActivity(), PhotoAlbumActivity.class);
-                    i.putExtra(PhotoAlbumActivity.ARG_CAMERA_OUTPUT,tempFile().getAbsolutePath());
-                    getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_ALBUM);
-                    break;
-                }
-                case R.id.btn_camera: {
-                    //打开相机拍照
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile()));
-                    getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | PICK_CAMERA);
-                    break;
-                }
-            }
-        }
-    };
-
-
-    /**
-     * 弹出图片选择窗口
-     */
-    public void showPupWindow() {
-        final View contentView = View.inflate(getActivity(), R.layout.pick_picture_method, null);
-        final View content_layout = contentView.findViewById(R.id.content_layout);
-        contentView.findViewById(R.id.btn_album).setOnClickListener(popupWindowListener);
-        contentView.findViewById(R.id.btn_camera).setOnClickListener(popupWindowListener);
-        contentView.findViewById(R.id.btn_cancel).setOnClickListener(popupWindowListener);
-        window = new PopupWindow(contentView, 0, 0, true);
-        window.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        window.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        window.setAnimationStyle(android.R.style.Animation_InputMethod);
-        window.showAtLocation(getView(), Gravity.BOTTOM, 0, 0);
-
-        contentView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
-                    if (event.getY() < contentView.getHeight() - content_layout.getHeight())
-                        window.dismiss();
-                return true;
-            }
-        });
-    }
-
-    private void cropImage(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 640);
-        intent.putExtra("aspectY", 400);
-        intent.putExtra("outputX", 640);
-        intent.putExtra("outputY", 400);
-        intent.putExtra("output", Uri.fromFile(tempFile()));// 保存到原文件
-        intent.putExtra("outputFormat", "JPEG");// 返回格式
-        intent.putExtra("return-data", false);
-        getActivity().startActivityForResult(intent, PICK_FOR_SUPPLY | CROP);
-    }
 
     /**
      * 清空文字

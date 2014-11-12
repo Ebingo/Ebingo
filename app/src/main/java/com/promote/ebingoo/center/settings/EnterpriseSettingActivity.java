@@ -1,6 +1,5 @@
 package com.promote.ebingoo.center.settings;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,7 +26,7 @@ import com.promote.ebingoo.bean.RegionBeen;
 import com.promote.ebingoo.impl.EbingoHandler;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.impl.ImageDownloadTask;
-import com.promote.ebingoo.publish.PreviewActivity;
+import com.promote.ebingoo.publish.PhotoAlbumActivity;
 import com.promote.ebingoo.publish.login.LoginManager;
 import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.Dimension;
@@ -42,7 +40,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -52,9 +49,6 @@ import java.util.ArrayList;
 public class EnterpriseSettingActivity extends BaseActivity {
 
     private static final int PICK_IMAGE = 1;
-    private static final int PICK_CAMERA = 2;
-    private static final int PREVIEW = 3;
-    private static final int CROP = 4;
     private ImageView image_enterprise;
     private EditText edit_enterprise_name;
     private EditText edit_enterprise_address;
@@ -145,7 +139,11 @@ public class EnterpriseSettingActivity extends BaseActivity {
                 }
                 break;
             case R.id.image_enterprise:
-                showPickDialog();
+                Intent intent = new Intent(this, PhotoAlbumActivity.class);
+                intent.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_PATH, ImageUtil.getImageTempFile(ImageUtil.IMAGE_TEMP_COMPANY_IMAGE).getAbsolutePath());
+                intent.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_WIDTH, 110);
+                intent.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_HEIGHT, 110);
+                startActivityForResult(intent, PICK_IMAGE);
                 break;
             case R.id.pick_province: {
                 getProvinceList();
@@ -331,25 +329,6 @@ public class EnterpriseSettingActivity extends BaseActivity {
         return info;
     }
 
-    /**
-     * 裁剪图片
-     *
-     * @param uri
-     */
-    private void cropImage(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", 200);
-        intent.putExtra("outputY", 200);
-        intent.putExtra("output", getImageCacheUri());// 保存到原文件
-        intent.putExtra("outputFormat", "png");// 返回格式
-        intent.putExtra("return-data", false);
-        startActivityForResult(intent, CROP);
-    }
 
     /**
      * 根据uri上传上传图片
@@ -362,7 +341,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
         Bitmap bitmap = null;
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap,(int) Dimension.dp(48)));
+            image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
             Company.getInstance().setImageUri(uri);
         } catch (IOException e) {
             e.printStackTrace();
@@ -374,7 +353,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                LogCat.i("--->",response+"");
+                LogCat.i("--->", response + "");
                 try {
                     JSONObject result = response.getJSONObject("response");
                     if (HttpConstant.CODE_OK.equals(result.getString("code")))
@@ -391,79 +370,17 @@ public class EnterpriseSettingActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 选择获取图片的方式
-     */
-    private void showPickDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.enterprise_image).setItems(getResources().getStringArray(R.array.pick_picture), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                switch (which) {
-                    case 0:
-                        goToAlbum();
-                        break;
-                    case 1:
-                        openCamera();
-                        break;
-                }
-            }
-        }).show();
-    }
-
-    /**
-     * 从相册中选择一张图片
-     */
-    private void goToAlbum() {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(i, PICK_IMAGE);
-    }
-
-    /**
-     * 打开相机拍照
-     */
-    private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, getImageCacheUri());
-        startActivityForResult(intent, PICK_CAMERA);
-    }
-
-    private Uri getImageCacheUri() {
-        return Uri.fromFile(new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "company_image.png"));
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogCat.i("--->", "onActivityResult " + " " + requestCode + " " + resultCode + " " + data);
         if (resultCode != RESULT_OK) return;
 
         switch (requestCode) {
-            case PICK_CAMERA:
-                cropImage(getImageCacheUri());
-                break;
+
             case PICK_IMAGE:
-                Uri uri = data.getData();
-                LogCat.i("--->", uri.toString());
-                if (uri != null) {
-                    cropImage(uri);
-                }
-                break;
-            case PREVIEW:
-                if (data == null) return;
                 uploadImage(data.getData());
                 break;
-            case CROP: {
-                if (PreviewActivity.isPreviewing()) {
-                    return;
-                }
-                Intent intent = new Intent(this, PreviewActivity.class);
-                intent.setData(getImageCacheUri());
-                startActivityForResult(intent, PREVIEW);
-                break;
-            }
+
         }
     }
 
@@ -508,11 +425,11 @@ public class EnterpriseSettingActivity extends BaseActivity {
         }
 
         boolean check(Context context) {
-            if (TextUtils.isEmpty(name)){
+            if (TextUtils.isEmpty(name)) {
                 showError(getString(R.string.company_name_null));
                 return false;
             }
-            if (!LoginManager.isMobile(company_tel)&&!LoginManager.isPhone(company_tel)) {
+            if (!LoginManager.isMobile(company_tel) && !LoginManager.isPhone(company_tel)) {
                 showError(getString(R.string.tel_format_error));
                 return false;
             }
