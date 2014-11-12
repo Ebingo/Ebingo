@@ -2,7 +2,6 @@ package com.promote.ebingoo.find;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,13 +11,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jch.lib.util.ImageManager;
+import com.jch.lib.view.SlideGridView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingoo.BaseFragment;
 import com.promote.ebingoo.R;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
  * Use the {@link com.promote.ebingoo.find.FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class FindFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener, SlideGridView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,14 +51,16 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
      */
     private ImageButton mScanIb = null;
 
-    private GridView fragfindgv;
+    //    private GridView fragfindgv;
+    private SlideGridView gv;
     private LinearLayout searchll;
     private ImageView searchlogoimg;
     private TextView searchbartv;
     private TextView mNoDataView;
     private ArrayList<CategoryBeen> mCategoryBeens = new ArrayList<CategoryBeen>();
 
-    private MyGrideAdapter adapter = null;
+    //    private MyGrideAdapter adapter = null;
+    private FindCategoryAdapter adapter = null;
     /**
      * 廣告大圖的緩存機制. *
      */
@@ -125,17 +126,23 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     private void initialize(ViewGroup view) {
         searchlogoimg = (ImageView) view.findViewById(R.id.search_logo_img);
         searchbartv = (TextView) view.findViewById(R.id.search_bar_tv);
-        fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
-        fragfindgv.setSelector(new BitmapDrawable());
+//        fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
+//        fragfindgv.setSelector(new BitmapDrawable());
+        gv = (SlideGridView) view.findViewById(R.id.frag_find_gv);
         mNoDataView = (TextView) view.findViewById(R.id.nodate_tv);
         mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
 
         mNoDataView.setText(getResources().getString(R.string.refresh));
         String[] categorys = getResources().getStringArray(R.array.category_data);
-        adapter = new MyGrideAdapter(getActivity().getApplicationContext());
-        fragfindgv.setAdapter(adapter);
+//        adapter = new MyGrideAdapter(getActivity().getApplicationContext());
+
+//        fragfindgv.setAdapter(adapter);
+        adapter = new FindCategoryAdapter(getActivity().getApplicationContext());
+        gv.setmAdapter(adapter);
+        gv.setItemClickListener(this);
+
         searchbartv.setOnClickListener(this);
-        fragfindgv.setOnItemClickListener(this);
+//        fragfindgv.setOnItemClickListener(this);
         mNoDataView.setOnClickListener(this);
         mScanIb.setOnClickListener(this);
         getCategoryList();
@@ -194,6 +201,17 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         });
         view.findViewById(R.id.find_item_ll).startAnimation(animation);
 
+
+    }
+
+    @Override
+    public void onItemClick(int position, View view) {
+
+
+    }
+
+    @Override
+    public void onSubItemClick(int position, int subPosition, View view) {
 
     }
 
@@ -282,12 +300,12 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
     private void noData() {
         mNoDataView.setVisibility(View.VISIBLE);
-        fragfindgv.setVisibility(View.GONE);
+        gv.setVisibility(View.GONE);
     }
 
     private void haseData() {
         mNoDataView.setVisibility(View.GONE);
-        fragfindgv.setVisibility(View.VISIBLE);
+        gv.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -307,7 +325,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
                 } else {
                     mCategoryBeens.clear();
                     mCategoryBeens.addAll(categoryBeens);
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged(mCategoryBeens);
 
                 }
             }
@@ -316,7 +334,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
             public void onSuccess(ArrayList<CategoryBeen> resultObj) {
                 mCategoryBeens.clear();
                 mCategoryBeens.addAll(resultObj);
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged(resultObj);
             }
         });
 

@@ -4,17 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by acer on 2014/9/2.
- * 分类实例。
+ * Created by jch on 2014/11/10.
+ * <p/>
+ * 子分类。
  */
+public class SubCategoryBean implements Serializable {
+    /**
+     * 父分类的id *
+     */
+    private int parent_id;
 
-
-public class CategoryBeen implements Serializable {
     Integer id;
     String name;
     String image;
-
-    private int parent_id;
 
     public ArrayList<SubCategoryBean> getSubCategorys() {
         return subCategorys;
@@ -68,6 +70,4 @@ public class CategoryBeen implements Serializable {
         this.parent_id = parent_id;
     }
 
-
 }
-

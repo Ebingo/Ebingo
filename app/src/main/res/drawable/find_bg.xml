@@ -4,11 +4,11 @@
     android:shape="rectangle">
 
     <gradient
-        android:startColor="@color/home_divide_gray"
-        android:centerColor="@color/home_divide_gray"
-        android:endColor="@color/home_divide_gray" />
+        android:startColor="@color/find_subitem_bg_color"
+        android:centerColor="@color/find_subitem_bg_color"
+        android:endColor="@color/find_subitem_bg_color" />
 
     <stroke
-        android:color="@color/white"
-        android:width="10dp" />
+        android:color="@color/gray_bg"
+        android:width="@dimen/find_pad" />
 </shape>

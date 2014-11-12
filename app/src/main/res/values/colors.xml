@@ -34,4 +34,7 @@
     <drawable name="album_btn_pressed">#808383</drawable>
     <color name="album_btn_pressed_color">#333333</color>
     <color name="album_btn_normal_color">#cfcfcf</color>
+    <color name="find_subitem_bg_color">#e1e2e3</color>
+    <color name="find_subItem_font_color">#808080</color>
+
 </resources>

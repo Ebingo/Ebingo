@@ -175,7 +175,7 @@ public class HttpConstant {
      */
     public static final String getNewestVersion = getRootUrl() + "getNewestVersion";
     /**
-     *获取会员信息
+     * 获取会员信息
      */
     public static final String getCompanyVipInfo = getRootUrl() + "getCompanyVipInfo";
     /**

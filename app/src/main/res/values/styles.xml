@@ -59,6 +59,11 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="find_15_tv">
+        <item name="android:textColor">@color/find_subItem_font_color</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="blue_15_tv" parent="tv_singl_base_style">
         <item name="android:textColor">@color/title_blue</item>
         <item name="android:textSize">@dimen/font_15</item>
