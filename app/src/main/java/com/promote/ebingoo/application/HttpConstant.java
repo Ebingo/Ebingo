@@ -182,5 +182,9 @@ public class HttpConstant {
      * 获取供应信息数量
      */
     public static final String canPublishSupplyInfo = getRootUrl() + "canPublishSupplyInfo";
+    /**
+     * 获取热门搜索关键词
+     */
+    public static final String getHotSearchKeywords = getRootUrl() + "getHotSearchKeywords";
 
 }

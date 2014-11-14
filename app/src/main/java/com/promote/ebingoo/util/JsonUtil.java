@@ -32,7 +32,9 @@ public class JsonUtil {
         Gson gson = new Gson();
         for (int i = 0; i < array.length(); i++) {
             T t = gson.fromJson(array.get(i).toString(), cls);
+
             list.add(t);
         }
     }
+
 }

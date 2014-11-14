@@ -1,22 +1,18 @@
 package com.promote.ebingoo.find;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jch.lib.util.ImageManager;
 import com.jch.lib.view.SlideGridView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingoo.BaseFragment;
@@ -126,23 +122,17 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     private void initialize(ViewGroup view) {
         searchlogoimg = (ImageView) view.findViewById(R.id.search_logo_img);
         searchbartv = (TextView) view.findViewById(R.id.search_bar_tv);
-//        fragfindgv = (GridView) view.findViewById(R.id.frag_find_gv);
-//        fragfindgv.setSelector(new BitmapDrawable());
         gv = (SlideGridView) view.findViewById(R.id.frag_find_gv);
         mNoDataView = (TextView) view.findViewById(R.id.nodate_tv);
         mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
 
         mNoDataView.setText(getResources().getString(R.string.refresh));
         String[] categorys = getResources().getStringArray(R.array.category_data);
-//        adapter = new MyGrideAdapter(getActivity().getApplicationContext());
-
-//        fragfindgv.setAdapter(adapter);
         adapter = new FindCategoryAdapter(getActivity().getApplicationContext());
         gv.setmAdapter(adapter);
         gv.setItemClickListener(this);
 
         searchbartv.setOnClickListener(this);
-//        fragfindgv.setOnItemClickListener(this);
         mNoDataView.setOnClickListener(this);
         mScanIb.setOnClickListener(this);
         getCategoryList();
@@ -188,10 +178,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                Intent intent = new Intent(getActivity(), CategoryActivity.class);
-                intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getId());
-                intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getName());
-                startActivity(intent);
+
             }
 
             @Override
@@ -212,91 +199,12 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onSubItemClick(int position, int subPosition, View view) {
-
+        Intent intent = new Intent(getActivity(), CategoryActivity.class);
+        intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getSubCategorys().get(subPosition).getId());
+        intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getSubCategorys().get(subPosition).getName());
+        startActivity(intent);
     }
 
-
-    /**
-     * category gridview adapter.
-     */
-    private class MyGrideAdapter extends BaseAdapter {
-
-        Context context = null;
-
-        public MyGrideAdapter(Context context) {
-
-            this.context = context;
-        }
-
-
-        @Override
-        public int getCount() {
-            return mCategoryBeens.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mCategoryBeens.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-            if (convertView == null) {
-
-                holder = new ViewHolder();
-                convertView = (View) LayoutInflater.from(this.context).inflate(R.layout.find_gridview_item, null);
-                holder.imgView = (ImageView) convertView.findViewById(R.id.find_grid_item_img);
-                holder.text = (TextView) convertView.findViewById(R.id.find_grid_item_tv);
-                convertView.setTag(holder);
-                convertView.setOnTouchListener(new GradItemCLS());
-
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            CategoryBeen categoryBeen = mCategoryBeens.get(position);
-            ImageManager.load(categoryBeen.getImage(), holder.imgView, mOptions);
-            holder.text.setText(categoryBeen.getName());
-
-            return convertView;
-        }
-
-    }
-
-    private class GradItemCLS implements View.OnTouchListener {
-
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-
-            int action = event.getAction();
-            switch (action) {
-
-                case MotionEvent.ACTION_DOWN: {
-
-                    break;
-                }
-                case MotionEvent.ACTION_UP: {
-
-                    break;
-                }
-
-                default: {
-
-                }
-            }
-
-            return false;
-        }
-    }
 
     private void noData() {
         mNoDataView.setVisibility(View.VISIBLE);

@@ -10,6 +10,7 @@
     <item android:state_enabled="true" android:drawable="@color/gray">
         <shape>
             <solid android:color="@color/gray" />
-        </shape>s
+        </shape>
+        s
     </item>
 </selector>

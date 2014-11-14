@@ -92,23 +92,26 @@ public class SlideGridViewController extends DataSetObserver implements View.OnC
         int columNum = slideGridView.getColulmeNum();
         int lineNum = (int) Math.ceil((double) itemNum / (double) columNum);
 
+        int index = 0;
         for (int i = 0; i < lineNum; i++) {
             LinearLayout row = getRowLayout();
             LinearLayout rowTagView = getRowTagLayout();
             for (int t = 0; t < columNum; t++) {
+                if (index < itemNum) {
+                    View view = mAdatper.getView(index, null, null);
+                    View divideView = getHorizontalDivide(context, t, columNum - 1);
+                    LinearLayout.LayoutParams itemParam = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                    view.setLayoutParams(itemParam);
+                    view.setTag(rowTagView);
 
-                View view = mAdatper.getView(i * columNum + t, null, null);
-                View divideView = getHorizontalDivide(context, t, columNum - 1);
-                LinearLayout.LayoutParams itemParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-                view.setLayoutParams(itemParam);
-                view.setTag(rowTagView);
+                    itemViews.add(view);
+                    view.setOnClickListener(this);
 
-                itemViews.add(view);
-                view.setOnClickListener(this);
-
-                row.addView(view);
-                if (divideView != null)     //添加横向间距。
-                    row.addView(divideView);
+                    row.addView(view);
+                    if (divideView != null)     //添加横向间距。
+                        row.addView(divideView);
+                }
+                index++;
             }
             if (i != 0) {           //添加分割线。
                 slideGridView.addView(getVerticalDivide());
@@ -258,21 +261,25 @@ public class SlideGridViewController extends DataSetObserver implements View.OnC
         TableLayout tbLayout = new TableLayout(context);
         tbLayout.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         int subLineCount = (int) (Math.ceil((double) subCount / (double) slideGridView.getSubColumNum()));
+        int subIndex = 0;
         for (int i = 0; i < subLineCount; i++) {
             TableRow tr = new TableRow(context);
             tr.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            tr.setWeightSum(slideGridView.getSubColumNum());
             for (int j = 0; j < slideGridView.getSubColumNum(); j++) {
-
-                FrameLayout subItemFl = new FrameLayout(context);
-                TableRow.LayoutParams subItemParam = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-                subItemParam.gravity = Gravity.CENTER;
-                subItemFl.setLayoutParams(subItemParam);
-                int subPosition = i * subLineCount + j;
-                View itemView = mAdatper.getSubItemView(position, subPosition);
-                subItemFl.addView(itemView);
-                //TODO 子view添加监听。
-                subItemFl.setOnClickListener(new SubClickListener(position, subPosition));
-                tr.addView(subItemFl);
+                if (subIndex < subCount) {
+                    FrameLayout subItemFl = new FrameLayout(context);
+                    TableRow.LayoutParams subItemParam = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                    subItemParam.gravity = Gravity.CENTER;
+                    subItemFl.setLayoutParams(subItemParam);
+                    int subPosition = i * subLineCount + j;
+                    View itemView = mAdatper.getSubItemView(position, subPosition);
+                    subItemFl.addView(itemView);
+                    //TODO 子view添加监听。
+                    subItemFl.setOnClickListener(new SubClickListener(position, subPosition));
+                    tr.addView(subItemFl);
+                }
+                subIndex++;
             }
             tbLayout.addView(tr);
         }
