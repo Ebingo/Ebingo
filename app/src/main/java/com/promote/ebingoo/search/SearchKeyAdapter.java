@@ -29,8 +29,8 @@ public class SearchKeyAdapter extends BaseAdapter {
      * @param keys
      */
     public void nodifyOnDataChanged(ArrayList<String> keys) {
+        mKeys.clear();
         if (keys != null && keys.size() != 0) {
-            mKeys.clear();
             mKeys.addAll(keys);
         }
         notifyDataSetChanged();
@@ -42,7 +42,7 @@ public class SearchKeyAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public String getItem(int position) {
         return mKeys.get(position);
     }
 

@@ -3,7 +3,6 @@ package com.promote.ebingoo.search;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,13 +14,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,6 +45,7 @@ import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.impl.SearchDao;
 import com.promote.ebingoo.impl.SearchKeyRequest;
 import com.promote.ebingoo.util.LogCat;
+import com.promote.ebingoo.view.SearchHotKeyLayout;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -56,7 +54,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener, RefreshMoreListView.LoadMoreListener, RefreshMoreListView.XOnItemClickListener, AdapterView.OnItemClickListener, TextWatcher {
+public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener, RefreshMoreListView.LoadMoreListener, RefreshMoreListView.XOnItemClickListener, AdapterView.OnItemClickListener, TextWatcher, SearchHotKeyLayout.SearchHotkeyOnItemClickListener {
     /**
      * 當前搜索類型，默認為顯示歷史记录。 *
      */
@@ -81,11 +79,14 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private Button searchclearbtn;
     private LinearLayout searchcontentll;
     private TextView searchnohistorytv;
+    private TextView searchNoDataTv;
+    private LinearLayout searchHistoryContentLl;
 
-    private ProgressBar mSearchKeyPb;
-    private GridView mSearchKeyGv;
+    //    private ProgressBar mSearchKeyPb;
+//    private GridView mSearchKeyGv;
     private HotKey mHotKey;
-    private SearchKeyAdapter mHotAdapter;
+    //    private SearchKeyAdapter mHotAdapter;
+    private SearchHotKeyLayout mHotKeyLayout;
     /**
      * 搜索内容清空按钮。 *
      */
@@ -95,6 +96,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private SearchResultAdapter mResultAdatper = null;
     private ArrayList<SearchTypeBean> mSearchTypeBeans = new ArrayList<SearchTypeBean>();
     private ArrayList<SearchHistoryBean> mHistoryBeans = new ArrayList<SearchHistoryBean>();
+
+
     private LinearLayout searchcontentresultll;
     private RefreshMoreListView searchresultlv;
     private LinearLayout searchcontenthistoryll;
@@ -118,25 +121,22 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchheadcenterll = (RelativeLayout) findViewById(R.id.search_head_center_ll);
         searchcontentll = (LinearLayout) findViewById(R.id.search_content_ll);
         searchnohistorytv = (TextView) findViewById(R.id.search_no_history_tv);
+        searchNoDataTv = (TextView) findViewById(R.id.search_no_data_tv);
+        searchHistoryContentLl = (LinearLayout) findViewById(R.id.search_history_content_ll);
         searchbackbtn = (ImageView) findViewById(R.id.search_back_btn);
         searchcategrycb = (CheckBox) findViewById(R.id.search_categry_cb);
         searchbaret = (EditText) findViewById(R.id.search_bar_et);
         searchkeytv = (TextView) findViewById(R.id.search_key_tv);
         searchresultkeyll = (LinearLayout) findViewById(R.id.search_result_key_ll);
-//        mRefreshView = (PullToRefreshView) findViewById(R.id.search_freshview);
-        searchlv = (ListView) findViewById(R.id.search_lv);
+        searchlv = (ListView) findViewById(R.id.search_history_lv);
         searchclearbtn = (Button) findViewById(R.id.search_clear_btn);
 
         searchcontentresultll = (LinearLayout) findViewById(R.id.search_content_result_ll);
         searchresultlv = (RefreshMoreListView) findViewById(R.id.search_result_lv);
         searchcontenthistoryll = (LinearLayout) findViewById(R.id.search_content_history_ll);
         mSearchClearIb = (ImageButton) findViewById(R.id.search_clear_ib);
-        mSearchKeyPb = (ProgressBar) findViewById(R.id.search_key_pb);
-        mSearchKeyGv = (GridView) findViewById(R.id.search_key_grad);
-        mHotAdapter = new SearchKeyAdapter(getApplicationContext());
-        mSearchKeyGv.setAdapter(mHotAdapter);
-        mSearchKeyGv.setSelector(new BitmapDrawable());
-
+        mHotKeyLayout = (SearchHotKeyLayout) findViewById(R.id.search_hotkey_layout);
+        mHotKeyLayout.setHotKeyItemClickListener(this);
 
         mCategoryPop = new SearchCategoryPop(this, this);
         mCategoryPop.setOnDismissListener(new PopDismissLSNER());
@@ -167,6 +167,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         LogCat.i("init display history.");
         displayHistory();
         getHotKey();
+        mHotKeyLayout.loadingData();
 
     }
 
@@ -175,7 +176,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      */
     public void showHistoryData() {
 
-        searchcontenthistoryll.setVisibility(View.VISIBLE);
+        searchcontentll.setVisibility(View.VISIBLE);
         searchcontentresultll.setVisibility(View.GONE);
     }
 
@@ -183,7 +184,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      * 显示搜索数据,隐藏历史记录数据.
      */
     public void showSearchData() {
-        searchcontenthistoryll.setVisibility(View.GONE);
+
+        searchcontentll.setVisibility(View.GONE);
         searchcontentresultll.setVisibility(View.VISIBLE);
     }
 
@@ -195,9 +197,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             if (msg.what == SEARCh_HISTORY) {
                 if (mHistoryBeans.size() == 0) {
                     hidKey();
-                    noData(getString(R.string.no_history));
+                    noHistory(getString(R.string.no_history));
                 } else {
-                    hasData(true);
+                    hasHistory();
                     hidKey();
                 }
                 showHistoryData();
@@ -218,13 +220,12 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             @Override
             public void onSuccess(HotKey hotKey) {
                 mHotKey = hotKey;
-                mSearchKeyPb.setVisibility(View.GONE);
                 updateHotkeyBuyType();
             }
 
             @Override
             public void onFailure(String msg) {
-                mSearchKeyPb.setVisibility(View.GONE);
+                mHotKeyLayout.noData();
             }
         });
     }
@@ -237,36 +238,56 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         int curSearchType = getmCurSearchType();
 
         if (curSearchType == SearchType.DEMAND.getValue()) {
-            mHotAdapter.nodifyOnDataChanged(mHotKey.getDemand());
+            mHotKeyLayout.addData(mHotKey.getDemand());
         } else if (curSearchType == SearchType.SUPPLY.getValue()) {
-            mHotAdapter.nodifyOnDataChanged(mHotKey.getSupply());
+            mHotKeyLayout.addData(mHotKey.getSupply());
         } else if (curSearchType == SearchType.INTERPRISE.getValue()) {
-            mHotAdapter.nodifyOnDataChanged(mHotKey.getCpmpany());
+            mHotKeyLayout.addData(mHotKey.getCpmpany());
         }
 
     }
 
     /**
-     * 没有数据。
+     * 没有搜索历史记录。
+     *
+     * @param msg
+     */
+    public void noHistory(String msg) {
+        searchHistoryContentLl.setVisibility(View.GONE);
+        searchnohistorytv.setVisibility(View.VISIBLE);
+        searchnohistorytv.setText(msg);
+    }
+
+    /**
+     * 有搜索历史记录.
+     */
+    public void hasHistory() {
+        searchHistoryContentLl.setVisibility(View.VISIBLE);
+        searchnohistorytv.setVisibility(View.GONE);
+    }
+
+
+    /**
+     * 没有搜索数据。
      */
     private void noData(String msg) {
-        searchcontentll.setVisibility(View.GONE);
-        searchnohistorytv.setVisibility(View.VISIBLE);
+        searchresultlv.setVisibility(View.GONE);
+        searchNoDataTv.setVisibility(View.VISIBLE);
         searchnohistorytv.setText(msg);
 
     }
 
     /**
-     * @param btnVisible 清空按钮是否显示。
+     * 有搜索数据。
      */
-    private void hasData(boolean btnVisible) {
-        searchcontentll.setVisibility(View.VISIBLE);
-        searchnohistorytv.setVisibility(View.GONE);
-        if (btnVisible) {
-            searchclearbtn.setVisibility(View.VISIBLE);
-        } else {
-            searchclearbtn.setVisibility(View.GONE);
-        }
+    private void hasData() {
+        searchresultlv.setVisibility(View.VISIBLE);
+        searchNoDataTv.setVisibility(View.GONE);
+//        if (btnVisible) {
+//            searchclearbtn.setVisibility(View.VISIBLE);
+//        } else {
+//            searchclearbtn.setVisibility(View.GONE);
+//        }
     }
 
     /**
@@ -467,11 +488,12 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         if (id == R.id.search_categry_cb) {
             if (isChecked) {
                 buttonView.getWidth();
-                DisplayUtil.getCentWidthByView(buttonView);
                 mCategoryPop.showAsDropDown(buttonView, DisplayUtil.getCentWidthByView(buttonView) - DisplayUtil.dip2px(getApplicationContext(), 50), DisplayUtil.px2dip(getApplicationContext(), 3));
             } else {
                 LogCat.i("check changed.");
                 displayHistory();
+                updateHotkeyBuyType();
+                DisplayUtil.getCentWidthByView(buttonView);
             }
         }
 
@@ -484,6 +506,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             mSearchTypeBeans.clear();       //清空搜索结果.
             LogCat.i("focus changed.");
             displayHistory();
+            updateHotkeyBuyType();
 //                mRefreshView.setVisibility(View.GONE);
         } else {     //隐藏键盘.
             DisplayUtil.hideSystemKeyBoard(SearchActivity.this, v);
@@ -623,6 +646,14 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             }
         }
     }
+
+    @Override
+    public void onHotKeyItemClickListener(String hotKey, int position, long id) {
+
+        searchbaret.setText(hotKey);
+        onSearch();
+    }
+
 
     /**
      * 当类别选择框消失时，类别箭头状态改变。
@@ -770,7 +801,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             }
             searchresultlv.loadMoreOver(0);
         } else {     //加载数据，显示.
-            hasData(false);
+            hasData();
             mSearchTypeBeans.addAll(searchTypeBeans);
             mResultAdatper.notifyDataSetChanged();
             searchresultlv.loadMoreOver(searchTypeBeans.size());

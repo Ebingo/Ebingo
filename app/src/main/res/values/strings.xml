@@ -239,4 +239,7 @@
     <string name="footer_loading">正在加载...</string>
     <string name="footer_wait_loading">查看更多</string>
     <string name="footer_no_more">加载完毕</string>
+    <string name="search_hot_key">热门搜索</string>
+    <string name="no_hot_key">暂无热门词汇</string>
+
 </resources>

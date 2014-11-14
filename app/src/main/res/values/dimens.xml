@@ -51,6 +51,6 @@
     <dimen name="photo_album_item_size">120dp</dimen>
 
     <dimen name="find_pad">8dp</dimen>
-    <dimen name="search_key_item_pad">10dp</dimen>
-    <dimen name="search_key_item_margin">10dp</dimen>
+    <dimen name="search_key_item_pad">5dp</dimen>
+    <dimen name="search_key_item_margin">5dp</dimen>
 </resources>

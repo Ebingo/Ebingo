@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        style="@style/info_content_pad">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_hotkey" />
+
+        <TextView
+            style="@style/font_black_15"
+            android:layout_width="wrap_content"
+            android:text="@string/search_hot_key"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View style="@style/divider_horizontal" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.jch.lib.view.ScrollGridView
+            android:id="@+id/search_hot_gv"
+            android:numColumns="4"
+            android:overScrollMode="never"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></com.jch.lib.view.ScrollGridView>
+
+        <TextView
+            android:id="@+id/no_hotkey_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/gray_15_tv"
+            android:text="@string/no_hot_key"
+            android:padding="20dp"
+            android:gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/loading_hotkey_ll"
+            android:orientation="horizontal"
+            android:gravity="center"
+            style="@style/info_content_pad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                style="@android:style/Widget.ProgressBar.Small"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/footer_loading"
+                android:layout_marginLeft="5dp"
+                style="@style/font_gray_14" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>
