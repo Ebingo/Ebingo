@@ -45,6 +45,11 @@ public class GetIndexBeanTools {
 
         private String news = null;
 
+        private HotActivitys active;
+
+        public HotActivitys getActive() {
+            return active;
+        }
 
         public ArrayList<Adv> getAds() {
             return ads;

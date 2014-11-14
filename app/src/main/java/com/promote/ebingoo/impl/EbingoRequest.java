@@ -247,7 +247,7 @@ public class EbingoRequest {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                LogCat.d("--->"+response);
+                LogCat.d("--->" + response);
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
 
                 callBack.onSuccess(searchSupplyBeans);

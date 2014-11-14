@@ -86,6 +86,8 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     private TextView mainpricenumtv;
     private GridView mHotMarketGv;
     private HotMarketAdapter hotMarketAdapter;
+
+    private SpecialEventsLayout specialEventsLayout;
     /**
      * 二维码扫描按钮。 *
      */
@@ -205,6 +207,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         homesv = (PagerScrollView) view.findViewById(R.id.home_sv);
         mHotMarketGv = (GridView) view.findViewById(R.id.main_hotmarket_gv);
         mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
+        specialEventsLayout = (SpecialEventsLayout) view.findViewById(R.id.special_activity_layout);
+        specialEventsLayout.calculateView(getActivity());
+
 
         mHotBuyLv = (ScrollListView) view.findViewById(R.id.home_hot_buy_lv);
         mHotBuyLv.setParentScrollView(homesv);
@@ -242,7 +247,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
         loopPager();
         getIndex();
-
     }
 
     /**
@@ -441,9 +445,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
                             if (isNetworkConnected()) {
                                 Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
-//                                intent.setAction("android.intent.action.VIEW");
-//                                Uri content_uri = Uri.parse(content);
-//                                intent.setData(content_uri);
                                 intent.putExtra(CodeScanOnlineActivity.URLSTR, content);
                                 startActivity(intent);
 
@@ -591,6 +592,8 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
             mHotSupplyAdapter.notifyDataSetChanged();
         }
 
+        specialEventsLayout.setHotAcitivityData(indexBean.getActive());
+
         mIndexBean = indexBean;
         initTodayData();
         setAdvPager();
@@ -702,7 +705,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -185,6 +185,13 @@
                 </com.jch.lib.view.ScrollGridView>
             </LinearLayout>
 
+            <com.promote.ebingoo.home.SpecialEventsLayout
+                android:id="@+id/special_activity_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </com.promote.ebingoo.home.SpecialEventsLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1px"
