@@ -53,7 +53,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
+public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener, SpecialEventsLayout.SpecialEventOnlickListener {
 
     public interface HomeFragmentListener {
         public void moreHotMarket();
@@ -209,6 +209,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
         specialEventsLayout = (SpecialEventsLayout) view.findViewById(R.id.special_activity_layout);
         specialEventsLayout.calculateView(getActivity());
+        specialEventsLayout.setSpecialEventClickListener(this);
 
 
         mHotBuyLv = (ScrollListView) view.findViewById(R.id.home_hot_buy_lv);
@@ -353,6 +354,82 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
     }
 
+    @Override
+    public void onEventClickListener(ImageView view, int activityType, String content) {
+        setImageViewListner(view, activityType, content);
+
+    }
+
+    /**
+     * 给每一个imageView添加点击事件。
+     *
+     * @param imgView
+     * @param AdvType 点击事件类别。
+     */
+    private void setImageViewListner(ImageView imgView, final int AdvType, final String content) {
+
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                switch (AdvType) {
+                    case 1: {            //go 產品詳情頁
+                        if (isNetworkConnected()) {
+                            Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
+                            imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
+                            startActivity(imgIntent);
+                        }
+                        break;
+                    }
+
+                    case 2: {        //go 求购詳情頁
+
+                        if (isNetworkConnected()) {
+                            Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
+                            intent.putExtra(BuyInfoActivity.DEMAND_ID, Integer.valueOf(content));
+                            startActivity(intent);
+                        }
+
+
+                        break;
+                    }
+
+                    case 3: {        //go 企業詳情
+
+
+                        if (isNetworkConnected()) {
+                            Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
+                            intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
+                            startActivity(intent);
+                            break;
+                        }
+
+                    }
+
+                    case 4: {        //外聯web頁面.
+
+                        if (isNetworkConnected()) {
+                            Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
+                            intent.putExtra(CodeScanOnlineActivity.URLSTR, content);
+                            startActivity(intent);
+
+
+                        }
+                        break;
+                    }
+
+                    default: {
+
+                    }
+                }
+
+
+            }
+        });
+
+
+    }
+
     /**
      * 頂部循環滾動banner條viewPager適配器。
      */
@@ -393,76 +470,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 imgs.add(imgView);
                 super.notifyDataSetChanged();
             }
-        }
-
-        /**
-         * 给每一个imageView添加点击事件。
-         *
-         * @param imgView
-         * @param AdvType 点击事件类别。
-         */
-        private void setImageViewListner(ImageView imgView, final int AdvType, final String content) {
-
-            imgView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    switch (AdvType) {
-                        case 1: {            //go 產品詳情頁
-                            if (isNetworkConnected()) {
-                                Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
-                                imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
-                                startActivity(imgIntent);
-                            }
-                            break;
-                        }
-
-                        case 2: {        //go 求购詳情頁
-
-                            if (isNetworkConnected()) {
-                                Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
-                                intent.putExtra(BuyInfoActivity.DEMAND_ID, Integer.valueOf(content));
-                                startActivity(intent);
-                            }
-
-
-                            break;
-                        }
-
-                        case 3: {        //go 企業詳情
-
-
-                            if (isNetworkConnected()) {
-                                Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
-                                intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
-                                startActivity(intent);
-                                break;
-                            }
-
-                        }
-
-                        case 4: {        //外聯web頁面.
-
-                            if (isNetworkConnected()) {
-                                Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
-                                intent.putExtra(CodeScanOnlineActivity.URLSTR, content);
-                                startActivity(intent);
-
-
-                            }
-                            break;
-                        }
-
-                        default: {
-
-                        }
-                    }
-
-
-                }
-            });
-
-
         }
 
 

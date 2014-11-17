@@ -27,17 +27,11 @@ public class DisplayUtil {
      * @param baseX 基准width.
      */
     private void calcuateDisplayScale(WindowManager wm, float baseY, float baseX) {
-        // final WindowManager wm = (WindowManager)
-        // getSystemService(Context.WINDOW_SERVICE);
         final Display disp = wm.getDefaultDisplay();
         Point mPoint = new Point();
         getSize(disp, mPoint);
         float displayWidth = mPoint.x;
         float displayHeight = mPoint.y;
-        // LogCat.i("disPlay height---:" + mPoint.y + ";---display width---:"
-        // + mPoint.x);
-        // mWithScale = displayWidth / baseX;
-        // mHeightScale = displayHeight / baseY;
     }
 
     @SuppressLint("NewApi")
@@ -106,7 +100,7 @@ public class DisplayUtil {
     }
 
     /**
-     * 获得去除的给定的宽度.
+     * 获得去除的两边留白后的宽度.
      *
      * @param windowManager
      * @param baseY
@@ -124,6 +118,23 @@ public class DisplayUtil {
         }
 
         return mPoint.x - exceptDis;
+    }
+
+    /**
+     * 根据基本组件的宽度计算组件的放缩比例。
+     *
+     * @param windowManager
+     * @param basex         组件的原始宽。
+     * @param exceptDis     组件外留空间。
+     * @return
+     */
+    public static float getScaledByWidth(WindowManager windowManager, float basex, int exceptDis) {
+
+        final Display display = windowManager.getDefaultDisplay();
+        Point mPoint = new Point();
+        getSize(display, mPoint);
+        return (float) (mPoint.x - exceptDis) / basex;
+
     }
 
     /**
@@ -163,6 +174,7 @@ public class DisplayUtil {
                 .getWindowManager(), baseHeight, baseWidth, exceptWidth);
         view.setLayoutParams(params);
     }
+
 
     /**
      * 根据屏幕宽度设置view的大小.

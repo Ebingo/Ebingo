@@ -15,6 +15,7 @@ import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.ImageManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingoo.R;
+import com.promote.ebingoo.bean.HotActivity;
 import com.promote.ebingoo.bean.HotActivitys;
 import com.promote.ebingoo.util.ContextUtil;
 
@@ -64,9 +65,16 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
      */
     private ImageView homeevent3iv;
 
+    private SpecialEventOnlickListener specialEventClickListener;
+
     int rightMargin;
     int leftMargin;
 
+    public interface SpecialEventOnlickListener {
+
+        public void onEventClickListener(ImageView view, int activityType, String content);
+
+    }
 
     public SpecialEventsLayout(Context context) {
         super(context);
@@ -103,32 +111,32 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) contentView.getLayoutParams();
         rightMargin = params.rightMargin;
         leftMargin = params.leftMargin;
-//
-//        ViewTreeObserver viewTreeObserver = mContentView.getViewTreeObserver();
-//        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                mContentView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                mContentWidth = mContentView.getWidth();
-//                mScale = mContentWidth / baseImgSize.x;
-//
-//                calculateEventSize(point1, homeevent1iv);
-//                calculateEventSize(poin2, homeevent2iv);
-//                calculateEventSize(point3, homeevent3iv);
-//            }
-//        });
-
-//        calculateEventSize(point1, homeevent1iv);
-//        calculateEventSize(poin2, homeevent2iv);
-//        calculateEventSize(point3, homeevent3iv);
-
-
     }
 
     public void calculateView(Activity activity) {
-        DisplayUtil.resizeViewByScreenWidth(homeevent1iv, point1.x, point1.y, rightMargin + leftMargin, (Activity) activity);
-        DisplayUtil.resizeViewByScreenWidth(homeevent2iv, poin2.x, poin2.y, rightMargin + leftMargin, (Activity) activity);
-        DisplayUtil.resizeViewByScreenWidth(homeevent3iv, point3.x, point3.y, rightMargin + leftMargin, (Activity) activity);
+        float scale = DisplayUtil.getScaledByWidth(activity.getWindowManager(), baseImgSize.x, rightMargin + leftMargin);
+        makeScaledView(scale, homeevent1iv, point1);
+        makeScaledView(scale, homeevent2iv, poin2);
+        makeScaledView(scale, homeevent3iv, point3);
+    }
+
+    private void makeScaledView(float scaled, View view, Point baseSize) {
+
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        params.height = (int) (baseSize.y * scaled);
+        params.width = (int) (baseSize.x * scaled);
+        view.setLayoutParams(params);
+
+    }
+
+    public void setSpecialEventClickListener(SpecialEventOnlickListener specialEventClickListener) {
+        this.specialEventClickListener = specialEventClickListener;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
     }
 
     /**
@@ -155,9 +163,14 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
     public void setHotAcitivityData(HotActivitys activityData) {
 
         initHotActivity(activityData.getRight().getImage(), homeevent1iv, ContextUtil.getRectangleImgOptions());
+        homeevent1iv.setTag(activityData.getRight());
         initHotActivity(activityData.getLeft().getImage(), homeevent2iv, ContextUtil.getRectangleImgOptions());
+        homeevent2iv.setTag(activityData.getLeft());
         initHotActivity(activityData.getBottom().getImage(), homeevent3iv, ContextUtil.getRectangleImgOptions());
+        homeevent3iv.setTag(activityData.getBottom());
+
     }
+
 
     private void initHotActivity(String imageUrl, ImageView img, DisplayImageOptions options) {
         ImageManager.load(imageUrl, img, options);
@@ -167,8 +180,32 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
 
+        HotActivity hotActivity = (HotActivity) v.getTag();
+        if (hotActivity != null) {
+            specialEventClickListener.onEventClickListener((ImageView) v, hotActivity.getType(), hotActivity.getContent());
         }
+//        switch (v.getId()) {
+//
+//
+//            case R.id.home_event1_iv: {
+//
+//
+//                break;
+//            }
+//            case R.id.home_event2_iv: {
+//
+//
+//                break;
+//            }
+//
+//            case R.id.home_event3_iv: {
+//
+//
+//                break;
+//            }
+//
+//
+//        }
     }
 }
