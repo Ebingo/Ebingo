@@ -9,7 +9,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -58,6 +57,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     protected void onResume() {
         super.onResume();
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         if (hasSurface) {
             initCamera(surfaceHolder);
@@ -201,7 +201,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         }
     };
 
-    public void onClick(View v){
+    public void onClick(View v) {
         onBackPressed();
     }
 

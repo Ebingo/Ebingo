@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingoo.BaseFragment;
 import com.promote.ebingoo.R;
 import com.promote.ebingoo.bean.CategoryBeen;
+import com.promote.ebingoo.bean.SubCategoryBean;
 import com.promote.ebingoo.category.CategoryActivity;
 import com.promote.ebingoo.impl.EbingoRequest;
 import com.promote.ebingoo.search.SearchActivity;
@@ -42,7 +43,8 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    /**ji
+    /**
+     * ji
      * 二维码扫描按钮。 *
      */
     private ImageButton mScanIb = null;
@@ -200,6 +202,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onSubItemClick(int position, int subPosition, View view) {
         Intent intent = new Intent(getActivity(), CategoryActivity.class);
+        intent.putExtra(CategoryActivity.PARENT_ID, mCategoryBeens.get(position).getId());
         intent.putExtra(CategoryActivity.ARG_ID, mCategoryBeens.get(position).getSubCategorys().get(subPosition).getId());
         intent.putExtra(CategoryActivity.ARG_NAME, mCategoryBeens.get(position).getSubCategorys().get(subPosition).getName());
         startActivity(intent);
@@ -233,6 +236,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
                 } else {
                     mCategoryBeens.clear();
                     mCategoryBeens.addAll(categoryBeens);
+                    addAllSub();
                     adapter.notifyDataSetChanged(mCategoryBeens);
 
                 }
@@ -242,12 +246,23 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
             public void onSuccess(ArrayList<CategoryBeen> resultObj) {
                 mCategoryBeens.clear();
                 mCategoryBeens.addAll(resultObj);
+                addAllSub();
                 adapter.notifyDataSetChanged(resultObj);
             }
         });
 
     }
 
+    private void addAllSub() {
+        for (CategoryBeen categoryBeen : mCategoryBeens) {
+            SubCategoryBean allSub = new SubCategoryBean();
+            allSub.setId(categoryBeen.getId());
+            allSub.setParent_id(categoryBeen.getId());
+            allSub.setName("全部");
+            categoryBeen.getSubCategorys().add(0, allSub);
+
+        }
+    }
 
     static class ViewHolder {
         ImageView imgView;

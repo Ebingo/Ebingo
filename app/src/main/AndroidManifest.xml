@@ -257,13 +257,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name=".publish.CameraActivity"
-            android:label="@string/title_add_tag"/>
+        <activity
+            android:name=".publish.CameraActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/title_add_tag" />
     </application>
 
 </manifest>

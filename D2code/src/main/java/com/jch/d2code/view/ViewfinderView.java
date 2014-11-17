@@ -16,13 +16,11 @@
 
 package com.jch.d2code.view;
 
-import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
-import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -31,9 +29,6 @@ import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 
@@ -75,6 +70,7 @@ public final class ViewfinderView extends View {
     private Xfermode xfermode;
     private Interpolator interpolator;
     private String text;
+
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -88,7 +84,7 @@ public final class ViewfinderView extends View {
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setTextAlign(Paint.Align.CENTER);
 
-        laserPaint=new Paint(Paint.DITHER_FLAG);
+        laserPaint = new Paint(Paint.DITHER_FLAG);
         laserPaint.setMaskFilter(new BlurMaskFilter(20, BlurMaskFilter.Blur.NORMAL));
         Resources resources = getResources();
         maskColor = resources.getColor(R.color.viewfinder_mask);
@@ -101,10 +97,10 @@ public final class ViewfinderView extends View {
         possibleResultPoints = new HashSet<ResultPoint>(5);
         xfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         interpolator = new OvershootInterpolator();
-        text=resources.getString(R.string.code_2_notice);
+        text = resources.getString(R.string.code_2_notice);
 
-        paint.setTextSize(15*resources.getDisplayMetrics().scaledDensity+0.5f);
-        TEXT_MARGIN_TOP=resources.getDisplayMetrics().density*40+0.5f;
+        paint.setTextSize(15 * resources.getDisplayMetrics().scaledDensity + 0.5f);
+        TEXT_MARGIN_TOP = resources.getDisplayMetrics().density * 40 + 0.5f;
 
     }
 
@@ -146,7 +142,7 @@ public final class ViewfinderView extends View {
             paint.setStyle(Paint.Style.STROKE);
             canvas.drawRect(frame.left, frame.top, frame.right, frame.bottom, paint);
             paint.setColor(0xffffffff);
-            canvas.drawText(text,frame.left+frame.width()/2,frame.bottom+TEXT_MARGIN_TOP,paint);
+            canvas.drawText(text, frame.left + frame.width() / 2, frame.bottom + TEXT_MARGIN_TOP, paint);
             // Draw a red "laser scanner" line through the middle to show
             // decoding is active
             paint.setColor(laserColor);
@@ -154,10 +150,10 @@ public final class ViewfinderView extends View {
             scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
 
             saved_line = (saved_line + 13) % frame.height();
-            int laserPosition = (int) (frame.top + saved_line*interpolator.getInterpolation(saved_line/(float)frame.height()));
+            int laserPosition = (int) (frame.top + saved_line * interpolator.getInterpolation(saved_line / (float) frame.height()));
             paint.setStyle(Paint.Style.FILL);
-            RectF rect=new RectF(frame.left+3,laserPosition,frame.right-3,laserPosition+4);
-            canvas.drawOval(rect,paint);
+            RectF rect = new RectF(frame.left + 3, laserPosition, frame.right - 3, laserPosition + 4);
+            canvas.drawOval(rect, paint);
 
             paint.setAlpha(0xff);
             paint.setColor(cornerColor);
@@ -195,11 +191,10 @@ public final class ViewfinderView extends View {
     }
 
 
-
     private void drawCorner(Canvas canvas, Rect frame) {
         int corner = frame.width() / 6;
         drawAngle(canvas, frame.left - 1, frame.top - 1, frame.left - 1 + corner, frame.top - 1);
-        drawAngle(canvas, frame.right + 1, frame.top - 1, frame .right + 1, frame.top + corner - 1);
+        drawAngle(canvas, frame.right + 1, frame.top - 1, frame.right + 1, frame.top + corner - 1);
         drawAngle(canvas, frame.right + 1, frame.bottom + 1, frame.right - corner + 1, frame.bottom + 1);
         drawAngle(canvas, frame.left - 1, frame.bottom + 1, frame.left - 1, frame.bottom + 1 - corner);
     }
@@ -232,11 +227,11 @@ public final class ViewfinderView extends View {
         possibleResultPoints.add(point);
     }
 
-    private class LaserInterpolator implements Interpolator{
+    private class LaserInterpolator implements Interpolator {
 
         @Override
         public float getInterpolation(float input) {
-            return input*input-input+1;
+            return input * input - input + 1;
         }
     }
 

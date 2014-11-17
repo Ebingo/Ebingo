@@ -43,12 +43,14 @@ import java.util.ArrayList;
  * 行业分类列表。
  */
 public class CategoryActivity extends Activity implements View.OnClickListener, RefreshMoreListView.XOnItemClickListener, RefreshMoreListView.LoadMoreListener {
+    public static final String PARENT_ID = "parent_id";
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
     private CheckBox categoryleftcb;
     private CheckBox categoryrightcb;
     private ImageView commonbackbtn;
     private TextView commontitletv;
+    private int parent_id = -1;
     private int category_id = -1;
     private CategoryListAdapter mListAdapter = null;
     /**
@@ -105,6 +107,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         Intent intent = getIntent();
         String category_name = intent.getStringExtra(ARG_NAME);
         category_id = intent.getIntExtra(ARG_ID, -1);
+        parent_id = intent.getIntExtra(PARENT_ID, -1);
         commonbackbtn.setOnClickListener(this);
         commontitletv.setText(category_name + "分类");
         categoryleftcb.setOnCheckedChangeListener(new CategoryTypeCheckedCL());
@@ -306,19 +309,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
     }
 
-//    @Override
-//    public void onFooterRefresh(PullToRefreshView view) {
-//
-//        int lastId = mCategoryBean.size();
-//        if (mCurType == CategoryType.DEMAND) {
-//            getDemandInfoList(lastId);
-//        } else {
-//            getSupplyInfoList(lastId);
-//        }
-//
-//    }
-
-
     @Override
     public void onLoadmore() {
         int lastId = mCategoryBean.size();
@@ -450,6 +440,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
         parmater.put("pagesize", PAGESIZE);       //每页显示20条。
+        parmater.put("father_category_id", parent_id);
 
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
@@ -505,6 +496,7 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
         parmater.put("pagesize", PAGESIZE);       //每页显示10条。
+        parmater.put("father_category_id", parent_id);
         try {
             parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
