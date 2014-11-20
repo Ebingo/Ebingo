@@ -64,8 +64,10 @@ public class EbingoRequest {
                 LogCat.d("home data -- : " + response.toString());
                 GetIndexBeanTools.GetIndexBean indexBean = GetIndexBeanTools.getIndexBeanJson(response.toString());
                 if (indexBean != null) {
+                    LogCat.i("save data -- :" + indexBean.getHot_category().toString());
                     ContextUtil.saveCache(FileUtil.HOEM_DATA_CACh, indexBean);
                 } else {
+                    LogCat.i("get home data failed　－－　：" + indexBean);
                     indexBean = (GetIndexBeanTools.GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
                 }
                 callBack.onSuccess(indexBean);

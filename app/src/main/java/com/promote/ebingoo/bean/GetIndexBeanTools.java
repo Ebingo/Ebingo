@@ -1,6 +1,7 @@
 package com.promote.ebingoo.bean;
 
 import com.google.gson.Gson;
+import com.promote.ebingoo.util.LogCat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,9 +15,9 @@ public class GetIndexBeanTools {
 
 
     public static GetIndexBean getIndexBeanJson(String json) {
-
-//        Type type = new TypeToken<GetIndexBeanTools>(){}.getType();
-        return ((GetIndexBeanTools) (new Gson()).fromJson(json, GetIndexBeanTools.class)).getIndexBean();
+        GetIndexBeanTools getIndexBeanTools = ((GetIndexBeanTools) (new Gson()).fromJson(json, GetIndexBeanTools.class));
+        LogCat.i("getIndexBeanTools--:" + getIndexBeanTools.getIndexBean());
+        return getIndexBeanTools.getIndexBean();
 
     }
 
