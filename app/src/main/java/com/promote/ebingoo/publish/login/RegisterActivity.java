@@ -3,6 +3,7 @@ package com.promote.ebingoo.publish.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private final String logTag = getClass().getSimpleName();
     EditText edit_phone;
     public static final int REQUEST_CODE = 1001;
+    private Button checkprobtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_register_get_yzm);
         edit_phone = (EditText) findViewById(R.id.edit_phone);
         ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.login_);
+        initialize();
     }
 
     public void onClick(View v) {
@@ -49,6 +52,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
                 break;
             }
+
+            case R.id.check_pro_btn: {
+
+                ProtocolDialog protocolDialog = ProtocolDialog.build(this);
+                protocolDialog.setProtocolStr("fdsofnffsifofdaff");
+                protocolDialog.show();
+            }
+
             case R.id.commit_title_done:
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
@@ -66,4 +77,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             finish();
         }
     }
+
+    private void initialize() {
+
+        checkprobtn = (Button) findViewById(R.id.check_pro_btn);
+    }
+
+
 }

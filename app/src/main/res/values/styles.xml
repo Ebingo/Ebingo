@@ -98,6 +98,10 @@
         <item name="android:background">@drawable/btn_blue</item>
     </style>
 
+    <style name="blue_mid_btn" parent="blue_button">
+        <item name="android:padding">5dp</item>
+    </style>
+
     <style name="yellow_button" parent="single_button">
         <item name="android:background">@drawable/btn_yellow</item>
     </style>
