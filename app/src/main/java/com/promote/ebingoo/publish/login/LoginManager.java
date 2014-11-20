@@ -19,6 +19,7 @@ import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.FileUtil;
 import com.promote.ebingoo.util.ImageUtil;
 import com.promote.ebingoo.util.JsonUtil;
+import com.promote.ebingoo.util.LogCat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,7 +89,6 @@ public class LoginManager {
     public void doLogin(final String phone, final String password, final Callback callback) {
 
         final EbingoRequestParmater parmater = new EbingoRequestParmater(ContextUtil.getContext());
-//        final String md5Pwd = new MD5().getStrToMD5(password);
         parmater.put("phonenum", phone);
         parmater.put("password", password);
         HttpUtil.post(HttpConstant.login, parmater, new EbingoHandler() {
@@ -99,6 +99,7 @@ public class LoginManager {
                     data = response.getJSONObject("data");
                     Company company = JsonUtil.get(data.toString(), Company.class);
                     Company.loadInstance(company);
+                    LogCat.d("get login sucess ：" + company.toString());
 
                     ContextUtil.saveCurCompanyName(phone);
                     ContextUtil.saveCurCompanyPwd(password);

@@ -1,9 +1,11 @@
 package com.promote.ebingoo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by ACER on 2014/11/14.
  */
-public class HotActivity {
+public class HotActivity implements Serializable {
     /**
      * 图片链接地址。*
      */

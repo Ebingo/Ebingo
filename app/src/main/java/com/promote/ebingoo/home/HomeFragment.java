@@ -46,6 +46,7 @@ import com.promote.ebingoo.impl.SimpleHomeBean;
 import com.promote.ebingoo.search.SearchActivity;
 import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.FileUtil;
+import com.promote.ebingoo.util.LogCat;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -547,6 +548,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         EbingoRequest.getHomedata(getActivity(), new EbingoRequest.RequestCallBack<GetIndexBean>() {
             @Override
             public void onFaild(int resultCode, String msg) {
+                LogCat.d("getHomedata faild :" + msg);
                 GetIndexBean indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
                 if (indexBean == null) {
                     Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
@@ -558,6 +560,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
             @Override
             public void onSuccess(GetIndexBean resultObj) {
+                LogCat.d("getHomedata onSuccess :" + resultObj);
                 GetIndexBean indexBean = resultObj;
                 if (indexBean == null) {
                     indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);

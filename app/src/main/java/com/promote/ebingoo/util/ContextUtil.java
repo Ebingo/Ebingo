@@ -106,6 +106,7 @@ public class ContextUtil {
      * @return
      */
     public static Object read(String name) {
+        LogCat.d("read---- :" + name);
         return FileUtil.readCache(mContext, name);
     }
 
@@ -137,7 +138,7 @@ public class ContextUtil {
      */
     public static boolean isHtml(String str) {
         if (str == null) return false;
-        String htmlStr=new String(str);
+        String htmlStr = new String(str);
 
         String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
         String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // 定义style的正则表达式
