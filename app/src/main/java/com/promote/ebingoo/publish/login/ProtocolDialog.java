@@ -2,29 +2,27 @@ package com.promote.ebingoo.publish.login;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
+import android.webkit.WebView;
 import android.widget.CompoundButton;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
+import com.jch.lib.view.MyCustomDialog;
 import com.promote.ebingoo.R;
-import com.promote.ebingoo.util.BaseDialog;
 
 /**
  * Created by ACER on 2014/11/20.
  */
-public class ProtocolDialog extends BaseDialog implements CompoundButton.OnCheckedChangeListener {
+public class ProtocolDialog extends MyCustomDialog implements CompoundButton.OnCheckedChangeListener {
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         dismiss();
-        callback.isChecked(isChecked);
+        if (callback != null)
+            callback.isChecked(isChecked);
     }
 
-    public interface CheckCallback {
+    public interface ReadedCallback {
 
         public void isChecked(boolean checked);
 
@@ -34,44 +32,44 @@ public class ProtocolDialog extends BaseDialog implements CompoundButton.OnCheck
      * 填充内容.
      */
     private View contentView;
-    private TextView protocoldialogtv;
-    private ScrollView protocoldialogsv;
-    private CheckBox protocoldialogcb;
+    private WebView protocoldialogtv;
 
-    private CheckCallback callback;
+    private ReadedCallback callback;
 
     public ProtocolDialog(Context context) {
         super(context);
-        contentView = LayoutInflater.from(context).inflate(R.layout.center_protocol_dialog_layout, null);
-        setView(contentView);
+
+    }
+
+
+    @Override
+    protected View onCreateView() {
+
+        contentView = LayoutInflater.from(getContext()).inflate(R.layout.center_protocol_dialog_layout, null);
         initialize();
+        return contentView;
     }
 
     public static ProtocolDialog build(Activity activity) {
-
         return new ProtocolDialog(activity);
     }
 
     public void setProtocolStr(String str) {
-        protocoldialogtv.setText(str);
+        protocoldialogtv.loadData(str, "text/html", "UTF-8");
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void setProTocolHtm(String url) {
+        protocoldialogtv.loadUrl(url);
     }
 
-    public void setCallback(CheckCallback callback) {
+    public void setCallback(ReadedCallback callback) {
         this.callback = callback;
     }
 
     private void initialize() {
 
-        protocoldialogtv = (TextView) findViewById(R.id.protocol_dialog_tv);
-        protocoldialogsv = (ScrollView) findViewById(R.id.protocol_dialog_sv);
-        protocoldialogcb = (CheckBox) findViewById(R.id.protocol_dialog_cb);
+        protocoldialogtv = (WebView) contentView.findViewById(R.id.protocol_dialog_tv);
 
-        protocoldialogcb.setOnCheckedChangeListener(this);
+        setCanceledOnTouchOutside(true);
     }
 }

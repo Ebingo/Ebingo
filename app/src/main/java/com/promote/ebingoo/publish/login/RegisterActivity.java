@@ -3,7 +3,8 @@ package com.promote.ebingoo.publish.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -14,11 +15,13 @@ import com.promote.ebingoo.util.ContextUtil;
 /**
  * Created by acer on 2014/9/2.
  */
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
-    private final String logTag = getClass().getSimpleName();
+public class RegisterActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     EditText edit_phone;
     public static final int REQUEST_CODE = 1001;
-    private Button checkprobtn;
+    private String protocolStr = null;
+    //是否阅读协议
+    private boolean isRead = false;
+    private CheckBox protocolcb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         edit_phone = (EditText) findViewById(R.id.edit_phone);
         ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.login_);
         initialize();
+        initialize();
     }
 
     public void onClick(View v) {
@@ -34,7 +38,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_next: {
                 final String phonenum = edit_phone.getText().toString().trim();//用户输入的手机号
                 LoginManager manager = new LoginManager();
-                if (manager.isMobile(phonenum)) {
+                if (manager.isMobile(phonenum) && isRead) {
                     manager.getYzm(RegisterActivity.this, phonenum, new LoginManager.Callback() {
                         @Override
                         public void onSuccess() {
@@ -46,6 +50,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         }
 
                     });
+                } else if (!isRead) {
+                    ContextUtil.toast(getResources().getString(R.string.read_pro_warn));
+
                 } else {
                     ContextUtil.toast("请输入正确的手机号！");
                 }
@@ -53,11 +60,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
 
-            case R.id.check_pro_btn: {
+            case R.id.checkbox: {
 
                 ProtocolDialog protocolDialog = ProtocolDialog.build(this);
-                protocolDialog.setProtocolStr("fdsofnffsifofdaff");
+                protocolDialog.setProTocolHtm("file:///android_asset/protocol.htm");
                 protocolDialog.show();
+                break;
             }
 
             case R.id.commit_title_done:
@@ -80,8 +88,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void initialize() {
 
-        checkprobtn = (Button) findViewById(R.id.check_pro_btn);
+        protocolcb = (CheckBox) findViewById(R.id.protocol_cb);
+        protocolcb.setOnCheckedChangeListener(this);
+
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+
+    }
 }

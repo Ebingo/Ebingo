@@ -93,6 +93,7 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
      */
     private void reqestCategory() {
         EbingoRequestParmater params = new EbingoRequestParmater(this);
+        params.put("find", "publish");
         HttpUtil.post(HttpConstant.getCategories, params, new JsonHttpResponseHandler("utf-8") {
 
             @Override

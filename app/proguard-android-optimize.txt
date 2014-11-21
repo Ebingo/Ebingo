@@ -98,6 +98,10 @@
 ##---------------End: proguard configuration for Gson  ----------
 -keep class com.promote.ebingoo.impl.EbingoRequest
 
+-libraryjars libs/tm-extractors-0.4.jar
+
+-dontwarn  //dontwarn去掉警告
+
 # keep setters in Views so that animations can still work.
 # see http://proguard.sourceforge.net/manual/examples.html#beans
 -keepclassmembers public class * extends android.view.View {
