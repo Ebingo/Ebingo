@@ -39,4 +39,13 @@
         android:onClick="onClick"
         android:padding="5dp"
         android:text="下 一 步" />
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/check_pro_btn"
+        style="@style/blue_mid_btn"
+        android:text="@string/check_protocol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
