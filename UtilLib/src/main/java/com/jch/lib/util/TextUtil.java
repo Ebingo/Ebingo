@@ -145,6 +145,23 @@ public class TextUtil {
         return line;
     }
 
+    public static String InputStreamToString(InputStream is, String code) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, code));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                line = null;
+            }
+        } finally {
+//            FileLocalCache.closeBufferedReader(reader);
+        }
+        line = sb.toString();
+        sb = null;
+        return line;
+    }
+
     /**
      * @param price 需要转换的价格
      * @autor bo.wang

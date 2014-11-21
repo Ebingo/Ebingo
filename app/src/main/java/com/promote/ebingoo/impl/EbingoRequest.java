@@ -102,7 +102,7 @@ public class EbingoRequest {
         String urlStr = HttpConstant.getCategories;
         final ProgressDialog dialog = DialogUtil.waitingDialog(activity);
         EbingoRequestParmater parmater = new EbingoRequestParmater(activity.getApplicationContext());
-
+        parmater.put("scene", "find");
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

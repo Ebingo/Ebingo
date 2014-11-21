@@ -243,6 +243,7 @@
     <string name="search_hot_key">热门搜索</string>
     <string name="no_hot_key">暂无热门词汇</string>
     <string name="check_protocol">查看安全协议</string>
-    <string name="agreet">同意</string>
+    <string name="agreet">我已阅读，同意</string>
+    <string name="read_pro_warn">请阅读协议</string>
 
 </resources>
