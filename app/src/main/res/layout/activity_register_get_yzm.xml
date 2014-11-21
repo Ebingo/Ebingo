@@ -53,6 +53,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:gravity="center"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content">
 
@@ -60,6 +61,7 @@
             android:id="@+id/protocol_cb"
             android:layout_gravity="center"
             android:gravity="center"
+            android:checked="false"
             android:button="@drawable/read_check_sel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
