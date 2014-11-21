@@ -11,7 +11,7 @@ import com.promote.ebingoo.util.DeviceInfo;
 public class EbingoRequestParmater extends RequestParams {
 
 
-    public EbingoRequestParmater(Context context){
+    public EbingoRequestParmater(Context context) {
         super();
         put("os", "android");
         put("time", DeviceInfo.getmCurTimeToken());
