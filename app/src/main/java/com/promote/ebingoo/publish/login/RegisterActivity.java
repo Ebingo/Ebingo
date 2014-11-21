@@ -2,6 +2,11 @@ package com.promote.ebingoo.publish.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -22,6 +27,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     //是否阅读协议
     private boolean isRead = false;
     private CheckBox protocolcb;
+    private TextView protocoltv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_register_get_yzm);
         edit_phone = (EditText) findViewById(R.id.edit_phone);
         ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.login_);
+        initialize();
         initialize();
         initialize();
     }
@@ -60,14 +67,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
 
-            case R.id.checkbox: {
-
-                ProtocolDialog protocolDialog = ProtocolDialog.build(this);
-                protocolDialog.setProTocolHtm("file:///android_asset/protocol.htm");
-                protocolDialog.show();
-                break;
-            }
-
             case R.id.commit_title_done:
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
@@ -90,11 +89,38 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         protocolcb = (CheckBox) findViewById(R.id.protocol_cb);
         protocolcb.setOnCheckedChangeListener(this);
+        protocoltv = (TextView) findViewById(R.id.protocol_tv);
 
+
+        appendTvSpannable();
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        isRead = isChecked;
+    }
+
+    private void appendTvSpannable() {
+        SpannableString ss = new SpannableString(getString(R.string.agreet));
+        ss.setSpan(new ReadProtocolMethod(), 2, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        protocoltv.setText(ss);
+        protocoltv.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private class ReadProtocolMethod extends ClickableSpan {
+        @Override
+        public void onClick(View widget) {
+
+            ProtocolDialog protocolDialog = ProtocolDialog.build(RegisterActivity.this);
+            protocolDialog.setProTocolHtm("file:///android_asset/protocol.htm");
+            protocolDialog.show();
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setColor(getResources().getColor(R.color.right_blue));
+        }
 
 
     }
