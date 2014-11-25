@@ -8,8 +8,8 @@ android {
         applicationId "com.promote.ebingoo"
         minSdkVersion 8
         targetSdkVersion 15
-        versionCode 9
-        versionName "2.2.0"
+        versionCode 10
+        versionName "3.0.0"
     }
     buildTypes {
         release {

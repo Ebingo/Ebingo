@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingoo.BaseActivity;
 import com.promote.ebingoo.R;
 import com.promote.ebingoo.application.HttpConstant;
@@ -193,6 +194,8 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         private final int unCheckedDrawable = R.drawable.click_gray_bg;
         private int selected = -1;
 
+        DisplayImageOptions options = ContextUtil.getSquareImgOptions();
+
         /**
          * @param selected
          */
@@ -235,7 +238,7 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
                 holder = (ViewHolderCategory) convertView.getTag();
             }
             CategoryBeen been = parentList.get(position);
-            ImageManager.load(been.getImage(), holder.ic);
+            ImageManager.load(been.getImage(), holder.ic, options);
             holder.tv_category.setText(been.getName());
 
             StringBuilder hotCategory = new StringBuilder();

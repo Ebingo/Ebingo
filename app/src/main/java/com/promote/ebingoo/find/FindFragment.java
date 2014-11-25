@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jch.lib.view.SlideGridView;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link com.promote.ebingoo.find.FindFragment#newInstance} factory method to
+ * Use the {@link FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class FindFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener, SlideGridView.OnItemClickListener {
@@ -63,6 +64,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
      * 廣告大圖的緩存機制. *
      */
     private DisplayImageOptions mOptions;
+    private ScrollView findsv;
 
 
     /**
@@ -127,6 +129,8 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         gv = (SlideGridView) view.findViewById(R.id.frag_find_gv);
         mNoDataView = (TextView) view.findViewById(R.id.nodate_tv);
         mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
+
+        findsv = (ScrollView) view.findViewById(R.id.find_sv);
 
         mNoDataView.setText(getResources().getString(R.string.refresh));
         String[] categorys = getResources().getStringArray(R.array.category_data);
@@ -211,12 +215,12 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
     private void noData() {
         mNoDataView.setVisibility(View.VISIBLE);
-        gv.setVisibility(View.GONE);
+        findsv.setVisibility(View.GONE);
     }
 
     private void haseData() {
         mNoDataView.setVisibility(View.GONE);
-        gv.setVisibility(View.VISIBLE);
+        findsv.setVisibility(View.VISIBLE);
     }
 
     /**

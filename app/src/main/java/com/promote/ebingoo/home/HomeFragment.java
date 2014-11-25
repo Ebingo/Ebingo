@@ -27,6 +27,7 @@ import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.ImageManager;
 import com.jch.lib.view.PagerIndicator;
 import com.jch.lib.view.PagerScrollView;
+import com.jch.lib.view.PullToRefreshView;
 import com.jch.lib.view.ScrollListView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.promote.ebingoo.BaseFragment;
@@ -49,12 +50,16 @@ import com.promote.ebingoo.util.FileUtil;
 import com.promote.ebingoo.util.LogCat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener, SpecialEventsLayout.SpecialEventOnlickListener {
+public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener, SpecialEventsLayout.SpecialEventOnlickListener, PullToRefreshView.OnHeaderRefreshListener {
+
+    private PullToRefreshView homefreshview;
+
 
     public interface HomeFragmentListener {
         public void moreHotMarket();
@@ -209,6 +214,12 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mHotMarketGv = (GridView) view.findViewById(R.id.main_hotmarket_gv);
         mScanIb = (ImageButton) view.findViewById(R.id.scan_ib);
         specialEventsLayout = (SpecialEventsLayout) view.findViewById(R.id.special_activity_layout);
+        homefreshview = (PullToRefreshView) view.findViewById(R.id.home_fresh_view);
+
+        homefreshview.setUpRefreshable(false);
+        homefreshview.setDownRefreshable(true);
+        homefreshview.setOnHeaderRefreshListener(this);
+
         specialEventsLayout.calculateView(getActivity());
         specialEventsLayout.setSpecialEventClickListener(this);
 
@@ -248,7 +259,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mScanIb.setOnClickListener(this);
 
         loopPager();
-        getIndex();
+        getIndex(true);
     }
 
     /**
@@ -270,7 +281,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
         // 指定两秒钟切花一张图片
         scheduledExecutorService.scheduleAtFixedRate(
-                new LooperPagerTask(), 10, 7, TimeUnit.SECONDS);
+                new LooperPagerTask(), 10, 5, TimeUnit.SECONDS);
 
     }
 
@@ -309,12 +320,14 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         @Override
         public void run() {
 
+
             int curentItem = mainfragvp.getCurrentItem();
             curentItem++;
             Message msg = new Message();
             msg.what = LOOPERAGR;
             msg.arg1 = curentItem;
-            looperHandler.sendMessage(msg);
+            if (!homefreshview.isHeadRefreshing())
+                looperHandler.sendMessage(msg);
         }
     }
 
@@ -338,6 +351,13 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
         }
     };
+
+
+    @Override
+    public void onHeaderRefresh(PullToRefreshView view) {
+        getIndex(false);
+
+    }
 
 
     @Override
@@ -542,10 +562,10 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     /**
      * 從服務器獲取首頁信息。
      */
-    private void getIndex() {
+    private void getIndex(boolean showDialog) {
 
 
-        EbingoRequest.getHomedata(getActivity(), new EbingoRequest.RequestCallBack<GetIndexBean>() {
+        EbingoRequest.getHomedata(getActivity(), showDialog, new EbingoRequest.RequestCallBack<GetIndexBean>() {
             @Override
             public void onFaild(int resultCode, String msg) {
                 LogCat.d("getHomedata faild :" + msg);
@@ -555,12 +575,13 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 } else {
                     initGetData(indexBean);
                 }
-
+                homefreshview.onHeaderRefreshComplete(new Date());
             }
 
             @Override
             public void onSuccess(GetIndexBean resultObj) {
                 LogCat.d("getHomedata onSuccess :" + resultObj);
+
                 GetIndexBean indexBean = resultObj;
                 if (indexBean == null) {
                     indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
@@ -568,6 +589,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 if (indexBean != null) {
                     initGetData(indexBean);
                 }
+                homefreshview.onHeaderRefreshComplete(new Date());
 
             }
         });
@@ -614,11 +636,10 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      * 设置滚动广告图片.
      */
     private void setAdvPager() {
-        mainfragvp.removeAllViews();
+//        mainfragvp.removeAllViews();
         mBannerPagerAdapter.notifyDataSetChanged();
         mainfragpi.setTotalPage(mAds.size());
         mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
-        mainfragvp.setOnPageChangeListener(this);
         mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
     }
 
@@ -626,6 +647,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      * 初始化今日数据。
      */
     private void initTodayData() {
+
         TodayNum todayNum = mIndexBean.getToday_num();
         maingetnum.setText(String.valueOf(todayNum.getDemand_num()));
         mainsptnumtv.setText(String.valueOf(todayNum.getSupply_num()));

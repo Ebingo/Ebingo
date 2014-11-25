@@ -9,7 +9,7 @@ public class HttpConstant {
 
     private static final boolean LOCALHOST = true;
 
-    private static final String TEST_HOST = "http://192.168.1.155";
+    private static final String TEST_HOST = "http://192.168.1.112";
 
     private static final String HOST = "";
 

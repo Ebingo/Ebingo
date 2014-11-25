@@ -44,9 +44,9 @@ public class EbingoRequest {
      * @param activity
      * @param callBack
      */
-    public static void getHomedata(Activity activity, final RequestCallBack<GetIndexBeanTools.GetIndexBean> callBack) {
+    public static void getHomedata(Activity activity, boolean showDialog, final RequestCallBack<GetIndexBeanTools.GetIndexBean> callBack) {
 
-        final ProgressDialog dialog = DialogUtil.waitingDialog(activity);
+        final ProgressDialog dialog = DialogUtil.waitingDialog(activity, showDialog);
         EbingoRequestParmater parma = new EbingoRequestParmater(activity.getApplicationContext());
         Company company = Company.getInstance();
         if (company.getCompanyId() != null) {
@@ -71,22 +71,25 @@ public class EbingoRequest {
                     indexBean = (GetIndexBeanTools.GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
                 }
                 callBack.onSuccess(indexBean);
-
-                dialog.dismiss();
+                if (dialog.isShowing())
+                    dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 callBack.onFaild(statusCode, "数据解析错误。");
-                dialog.dismiss();
+                if (dialog.isShowing())
+                    dialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 callBack.onFaild(statusCode, "网络错误");
-                dialog.dismiss();
+
+                if (dialog.isShowing())
+                    dialog.dismiss();
             }
         });
     }

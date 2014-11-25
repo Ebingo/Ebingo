@@ -156,21 +156,6 @@
                 android:layout_height="match_parent">
 
 
-                <!--<ProgressBar-->
-                <!--android:id="@+id/search_key_pb"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--style="?android:progressBarStyleSmallInverse"-->
-                <!--android:layout_gravity="center_horizontal" />-->
-
-
-                <!--<com.jch.lib.view.ScrollGridView-->
-                <!--android:id="@+id/search_key_grad"-->
-                <!--android:numColumns="4"-->
-                <!--android:overScrollMode="never"-->
-                <!--android:padding="5dp"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"></com.jch.lib.view.ScrollGridView>-->
                 <com.promote.ebingoo.view.SearchHotKeyLayout
                     android:id="@+id/search_hotkey_layout"
                     android:layout_width="match_parent"

@@ -236,7 +236,9 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private void updateHotkeyBuyType() {
 
         int curSearchType = getmCurSearchType();
-
+        if (mHotKey == null) {
+            return;
+        }
         if (curSearchType == SearchType.DEMAND.getValue()) {
             mHotKeyLayout.addData(mHotKey.getDemand());
         } else if (curSearchType == SearchType.SUPPLY.getValue()) {
@@ -283,11 +285,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private void hasData() {
         searchresultlv.setVisibility(View.VISIBLE);
         searchNoDataTv.setVisibility(View.GONE);
-//        if (btnVisible) {
-//            searchclearbtn.setVisibility(View.VISIBLE);
-//        } else {
-//            searchclearbtn.setVisibility(View.GONE);
-//        }
     }
 
     /**
@@ -349,7 +346,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             }
 
             case R.id.search_btn_ib: {      //搜索按鈕。
-                onSearch();
+                onSearch(searchbaret.getText().toString());
                 break;
             }
 
@@ -376,27 +373,25 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     /**
      * 搜索。
      */
-    public void onSearch() {
+    public void onSearch(String searchKey) {
         mHistoryBeans.clear();  //清空历史数据.
-        showSearchData();
-//        mRefreshView.setUpRefreshable(true);
-
-        String key = searchbaret.getText().toString();
-        getCurSearchType(searchcategrycb.getText().toString());      //设置当前搜索类型.
+//        showSearchData();
         searchbaret.clearFocus();
-//                mRefreshView.setVisibility(View.VISIBLE);
-        if (key != null && !key.equals("")) {
-            saveHistory(key);
+        searchbaret.setText(searchKey);
+        getCurSearchType(searchcategrycb.getText().toString());      //设置当前搜索类型.
+
+        if (searchKey != null && !searchKey.equals("")) {
+            saveHistory(searchKey);
         }
 
         if (mCurSearchType == SearchType.SUPPLY) {
-            getSupplyInfoList(0, key);
+            getSupplyInfoList(0, searchKey);
         } else if (mCurSearchType == SearchType.DEMAND) {
-            getDemandInfoList(0, key);
+            getDemandInfoList(0, searchKey);
         } else {
-            getCompanyList(0, key);
+            getCompanyList(0, searchKey);
         }
-        showkey(key);       //显示关键字项。
+        showkey(searchKey);       //显示关键字项。
     }
 
     /**
@@ -523,9 +518,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             case HISTORY: {          //當前顯示搜索記錄。
 
                 SearchHistoryBean historyBean = (SearchHistoryBean) mHistoryBeans.get(position);
-                searchbaret.clearFocus();
-                searchbaret.setText(historyBean.getHistory());
-                onSearch();
+                onSearch(historyBean.getHistory());
                 break;
             }
 
@@ -649,9 +642,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
     @Override
     public void onHotKeyItemClickListener(String hotKey, int position, long id) {
-
-        searchbaret.setText(hotKey);
-        onSearch();
+        onSearch(hotKey);
     }
 
 
@@ -753,8 +744,8 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
                 mCurSearchType = SearchType.SUPPLY;
                 displayData(searchSupplyBeans, lastId);
-//                mResultAdatper.notifyDataSetChanged(mSearchTypeBeans);
                 dialog.dismiss();
+
 
             }
 
@@ -785,6 +776,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      * @param lastId
      */
     private void displayData(ArrayList<? extends SearchTypeBean> searchTypeBeans, int lastId) {
+
         if (lastId == 0) {   //第一次加载清空数据
             mSearchTypeBeans.clear();
         }
@@ -803,10 +795,10 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         } else {     //加载数据，显示.
             hasData();
             mSearchTypeBeans.addAll(searchTypeBeans);
-            mResultAdatper.notifyDataSetChanged();
+            mResultAdatper.notifyDataSetChanged(mSearchTypeBeans);
             searchresultlv.loadMoreOver(searchTypeBeans.size());
         }
-
+        showSearchData();
     }
 
 
@@ -868,6 +860,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      * 獲取數據失敗，顯示無數據。
      */
     private void getDataFailed() {
+        showSearchData();
         mSearchTypeBeans.clear();
         mResultAdatper.notifyDataSetChanged(mSearchTypeBeans);
         noData(getString(R.string.no_search_data));

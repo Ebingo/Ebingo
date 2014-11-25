@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import com.jch.lib.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * 支持上下拉刷新。
  *
@@ -138,6 +141,9 @@ public class PullToRefreshView extends LinearLayout {
      */
     private OnHeaderRefreshListener mOnHeaderRefreshListener;
 
+
+    private boolean mIsHeadRefreshing = false;
+
     /**
      * last update time
      */
@@ -150,6 +156,14 @@ public class PullToRefreshView extends LinearLayout {
     public PullToRefreshView(Context context) {
         super(context);
         init();
+    }
+
+    public boolean isHeadRefreshing() {
+        return mIsHeadRefreshing;
+    }
+
+    public void setIsHeadRefreshing(boolean mIsHeadRefreshing) {
+        this.mIsHeadRefreshing = mIsHeadRefreshing;
     }
 
     /**
@@ -353,7 +367,7 @@ public class PullToRefreshView extends LinearLayout {
      * @return
      */
     private boolean isRefreshViewScroll(int deltaY) {
-        if (mHeaderState == REFRESHING || mFooterState == REFRESHING||Math.abs(deltaY)<=1) {
+        if (mHeaderState == REFRESHING || mFooterState == REFRESHING || Math.abs(deltaY) <= 1) {
             //ACTION_DOWN是不应该拦截的，但ACTION_DOWN时可能产生微小的移动，从而产生deltaY，触发ACTION_MOVE，进入此判断。
             //此处，必须当deltaY的绝对值大于1时才视为有效移动
             return false;
@@ -457,7 +471,7 @@ public class PullToRefreshView extends LinearLayout {
         }
     }
 
-    public void setAutoLoadMore(boolean autoLoadMore){
+    public void setAutoLoadMore(boolean autoLoadMore) {
 
     }
 
@@ -502,6 +516,7 @@ public class PullToRefreshView extends LinearLayout {
      */
     private void headerRefreshing() {
         mHeaderState = REFRESHING;
+        mIsHeadRefreshing = true;
         setHeaderTopMargin(0);
         mHeaderImageView.setVisibility(View.GONE);
         mHeaderImageView.clearAnimation();
@@ -549,7 +564,7 @@ public class PullToRefreshView extends LinearLayout {
     /**
      * header view 完成更新后恢复初始状态
      *
-     * @description hylin 2012-7-31上午11:54:23
+     * @description
      */
     public void onHeaderRefreshComplete() {
         setHeaderTopMargin(-mHeaderViewHeight);
@@ -557,8 +572,47 @@ public class PullToRefreshView extends LinearLayout {
         mHeaderImageView.setImageResource(R.drawable.ic_pulltorefresh_arrow);
         mHeaderTextView.setText(R.string.pull_to_refresh_pull_label);
         mHeaderProgressBar.setVisibility(View.GONE);
-        // mHeaderUpdateTextView.setText("");
+        mIsHeadRefreshing = false;
+//        mHeaderUpdateTextView.setText("");
         mHeaderState = PULL_TO_REFRESH;
+    }
+
+    /**
+     * 更新刷新时间。
+     *
+     * @param date
+     */
+    public void updateRefreshTime(Date date) {
+
+        if (date != null) {
+            String dateStr = formateDate(date);
+            mHeaderUpdateTextView.setVisibility(View.VISIBLE);
+            mHeaderUpdateTextView.setText(dateStr);
+        } else {
+            mHeaderUpdateTextView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * header view 完成更新后恢复初始状态,更新刷新时间。
+     *
+     * @param date
+     */
+    public void onHeaderRefreshComplete(Date date) {
+
+        onHeaderRefreshComplete();
+        updateRefreshTime(date);
+    }
+
+    /**
+     * 格式化时间。
+     *
+     * @param date
+     * @return
+     */
+    private String formateDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+        return sdf.format(date);
     }
 
     /**
