@@ -13,7 +13,7 @@ public class HotKey {
     /**
      * 公司。
      */
-    private ArrayList<String> cpmpany;
+    private ArrayList<String> company;
     /**
      * 供应。
      */
@@ -28,11 +28,11 @@ public class HotKey {
     }
 
     public ArrayList<String> getCpmpany() {
-        return cpmpany;
+        return company;
     }
 
     public void setCpmpany(ArrayList<String> cpmpany) {
-        this.cpmpany = cpmpany;
+        this.company = cpmpany;
     }
 
     public ArrayList<String> getSupply() {

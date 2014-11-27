@@ -169,7 +169,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         displayHistory();
         getHotKey();
         mHotKeyLayout.loadingData();
-
     }
 
     /**
@@ -406,7 +405,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
             @Override
             public void onFaild(int resultCode, String msg) {
-                DialogUtil.msgSinglBtnAlertDialog(SearchActivity.this, getResources().getString(R.string.net_error)).show();
+                DialogUtil.buildMyMsgAlertDialog(SearchActivity.this, msg).show();
                 displayHistory();
             }
 

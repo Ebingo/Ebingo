@@ -1,5 +1,6 @@
 package com.jch.lib.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.jch.lib.R;
+import com.jch.lib.view.MyMsgAlertDialog;
 
 /**
  * 自定义公共的dialog.
@@ -55,6 +57,7 @@ public class DialogUtil {
         return dialog;
     }
 
+
     public static ProgressDialog waitingDialog(Context context, String msg) {
         LoadingDialog dialog = new LoadingDialog(context);
         dialog.setMessage(msg);
@@ -63,7 +66,10 @@ public class DialogUtil {
         return dialog;
     }
 
+//    public static AlertDialog myMsgDialog(Context )
+
     public static AlertDialog msgSinglBtnAlertDialog(Context context, String msg) {
+
 
         AlertDialog dialog = new AlertDialog.Builder(context).setMessage(msg)
                 .setPositiveButton(R.string.ok, new OnClickListener() {
@@ -75,6 +81,21 @@ public class DialogUtil {
                 }).create();
         return dialog;
 
+    }
+
+    /**
+     * 显示带信息的dialog.
+     *
+     * @param activity
+     * @param msg
+     * @return
+     */
+    public static Dialog buildMyMsgAlertDialog(Activity activity, String msg) {
+
+        MyMsgAlertDialog dialog = new MyMsgAlertDialog(activity);
+        dialog.setMsg(msg);
+
+        return dialog;
     }
 
     public static void showListDialog(Context context, OnClickListener l, String... items) {
@@ -116,4 +137,5 @@ public class DialogUtil {
             if (tv_message != null) tv_message.setText(message);
         }
     }
+
 }
