@@ -41,6 +41,7 @@ import com.promote.ebingoo.bean.SearchInterpriseBeanTools;
 import com.promote.ebingoo.bean.SearchSupplyBean;
 import com.promote.ebingoo.bean.SearchSupplyBeanTools;
 import com.promote.ebingoo.bean.SearchTypeBean;
+import com.promote.ebingoo.impl.EbingoRequest;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.impl.SearchDao;
 import com.promote.ebingoo.impl.SearchKeyRequest;
@@ -384,6 +385,11 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             saveHistory(searchKey);
         }
 
+        if (searchKey.startsWith("@")) {
+            doAtcompany(searchKey);
+            return;
+        }
+
         if (mCurSearchType == SearchType.SUPPLY) {
             getSupplyInfoList(0, searchKey);
         } else if (mCurSearchType == SearchType.DEMAND) {
@@ -392,6 +398,26 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
             getCompanyList(0, searchKey);
         }
         showkey(searchKey);       //显示关键字项。
+    }
+
+    private void doAtcompany(final String key) {
+        String keyStr = key.substring(1, key.length());
+        EbingoRequest.getAtCompany(SearchActivity.this, keyStr, new EbingoRequest.RequestCallBack<String>() {
+
+            @Override
+            public void onFaild(int resultCode, String msg) {
+                DialogUtil.msgSinglBtnAlertDialog(SearchActivity.this, getResources().getString(R.string.net_error)).show();
+                displayHistory();
+            }
+
+            @Override
+            public void onSuccess(String resultObj) {
+                Intent intent = new Intent(SearchActivity.this, AtCompanyActivity.class);
+                intent.putExtra(AtCompanyActivity.KEY, resultObj);
+                startActivity(intent);
+                displayHistory();
+            }
+        });
     }
 
     /**
@@ -534,6 +560,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
 
             case SUPPLY: {
 
+
                 SearchSupplyBean supplyBean = (SearchSupplyBean) mSearchTypeBeans.get(position);
                 Intent intent = new Intent(SearchActivity.this, ProductInfoActivity.class);
                 intent.putExtra(ProductInfoActivity.ARG_ID, supplyBean.getId());
@@ -562,13 +589,10 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
     }
 
     @Override
@@ -579,8 +603,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         } else {
             mSearchClearIb.setVisibility(View.VISIBLE);
         }
-
-        if (searchbaret.isFocused()) {
+        if (mCurSearchType == SearchType.HISTORY || searchbaret.isFocused()) {
             displayHistory();
         }
     }
@@ -662,6 +685,7 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      *
      * @param lastId
      */
+
     public void getDemandInfoList(final int lastId, String keyword) {
 
         String url = HttpConstant.getDemandInfoList;
@@ -745,7 +769,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
                 mCurSearchType = SearchType.SUPPLY;
                 displayData(searchSupplyBeans, lastId);
                 dialog.dismiss();
-
 
             }
 

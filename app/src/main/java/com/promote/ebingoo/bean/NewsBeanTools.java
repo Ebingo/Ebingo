@@ -7,10 +7,6 @@ import com.google.gson.Gson;
  */
 public class NewsBeanTools {
 
-    public NewsBean getResponse() {
-        return response;
-    }
-
     private NewsBean response;
 
     public static NewsBean getNews(String json) {
@@ -18,7 +14,13 @@ public class NewsBeanTools {
 
     }
 
+    public NewsBean getResponse() {
+        return response;
+    }
+
     public class NewsBean {
+
+        private String url = null;
 
         public String getUrl() {
             return url;
@@ -27,7 +29,5 @@ public class NewsBeanTools {
         public void setUrl(String url) {
             this.url = url;
         }
-
-        private String url = null;
     }
 }

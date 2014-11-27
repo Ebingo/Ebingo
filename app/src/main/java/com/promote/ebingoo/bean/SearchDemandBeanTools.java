@@ -13,11 +13,7 @@ public class SearchDemandBeanTools {
 
     private ArrayList<SearchDemandBean> response;
 
-    public ArrayList<SearchDemandBean> getSearchDemands(){
-        return response;
-    }
-
-    public static ArrayList<SearchDemandBean> getSearchDemands(String json){
+    public static ArrayList<SearchDemandBean> getSearchDemands(String json) {
 
 
         Type type = new TypeToken<SearchDemandBeanTools>() {
@@ -25,7 +21,11 @@ public class SearchDemandBeanTools {
 
         Gson gson = new Gson();
 
-        return ((SearchDemandBeanTools)(gson.fromJson(json, type))).getSearchDemands();
+        return ((SearchDemandBeanTools) (gson.fromJson(json, type))).getSearchDemands();
+    }
+
+    public ArrayList<SearchDemandBean> getSearchDemands() {
+        return response;
     }
 
 }

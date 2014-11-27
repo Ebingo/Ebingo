@@ -12,17 +12,17 @@ public class InterpriseInfoBeanTools {
 
     private InterpriseInfoBean response = null;
 
-    public InterpriseInfoBean getResponse() {
-
-        return response;
-    }
-
     public static InterpriseInfoBean getInterpriseInfo(String json) {
 
         Type type = new TypeToken<InterpriseInfoBeanTools>() {
         }.getType();
 
         return ((InterpriseInfoBeanTools) new Gson().fromJson(json, type)).getResponse();
+    }
+
+    public InterpriseInfoBean getResponse() {
+
+        return response;
     }
 
 }

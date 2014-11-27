@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by ACER on 2014/9/12.
  */
-public class CollectBean implements Serializable{
+public class CollectBean implements Serializable {
 
     /**
      * 搜藏id. *

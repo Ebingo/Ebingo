@@ -9,7 +9,8 @@ import java.io.Serializable;
 /**
  * Created by acer on 2014/9/3.
  */
-public class Company implements Serializable{
+public class Company implements Serializable {
+    private static Company mCompany = null;
     private Integer company_id;//公司Id
     private String image;//公司图片url
     private String company_name;//公司名
@@ -22,13 +23,12 @@ public class Company implements Serializable{
     private String province_name;//省份名
     private String city_name;//城市名
     private Integer city_id;//城市id
-    private String viptype= VipType.VISITOR.code;//会员类型，默认是游客
+    private String viptype = VipType.VISITOR.code;//会员类型，默认是游客
     private String is_lock;
     private String email;
     private transient Uri imageUri;//公司图片在手机中的位置
     private CompanyVipInfo companyVipInfo;
     private String e_url;//e平台url
-    private static Company mCompany = null;
 
     private Company() {
 
@@ -36,6 +36,7 @@ public class Company implements Serializable{
 
     /**
      * 获取当前公司
+     *
      * @return
      */
 
@@ -45,6 +46,17 @@ public class Company implements Serializable{
 //            mCompany.setCompanyId(6);
         }
         return mCompany;
+    }
+
+    public static void loadInstance(Company company) {
+        mCompany = company;
+    }
+
+    /**
+     * 清空公司。
+     */
+    public static void clearInstance() {
+        mCompany = null;
     }
 
     public String getE_url() {
@@ -72,7 +84,7 @@ public class Company implements Serializable{
     }
 
     public String getProvince_name() {
-        return province_name==null?"":province_name;
+        return province_name == null ? "" : province_name;
     }
 
     public void setProvince_name(String province_name) {
@@ -80,19 +92,20 @@ public class Company implements Serializable{
     }
 
     public String getCity_name() {
-        return city_name==null?"":city_name;
-    }
-
-    /**
-     * 获得完整地址 将 Province city address拼接起来
-     * @return
-     */
-    public String getRegion(){
-        return getProvince_name()+getCity_name()+getAddress();
+        return city_name == null ? "" : city_name;
     }
 
     public void setCity_name(String city_name) {
         this.city_name = city_name;
+    }
+
+    /**
+     * 获得完整地址 将 Province city address拼接起来
+     *
+     * @return
+     */
+    public String getRegion() {
+        return getProvince_name() + getCity_name() + getAddress();
     }
 
     public Integer getProvince_id() {
@@ -111,12 +124,12 @@ public class Company implements Serializable{
         this.city_id = city_id;
     }
 
-    public static void loadInstance(Company company){
-        mCompany=company;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Uri getImageUri() {
@@ -125,10 +138,6 @@ public class Company implements Serializable{
 
     public void setImageUri(Uri imageUri) {
         this.imageUri = imageUri;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getVipType() {
@@ -196,7 +205,7 @@ public class Company implements Serializable{
     }
 
     public String getAddress() {
-        return address==null?"":address;
+        return address == null ? "" : address;
     }
 
     public void setAddress(String address) {
@@ -209,13 +218,6 @@ public class Company implements Serializable{
 
     public void setWebsite(String website) {
         this.website = website;
-    }
-
-    /**
-     * 清空公司。
-     */
-    public static void clearInstance() {
-        mCompany=null;
     }
 
     @Override

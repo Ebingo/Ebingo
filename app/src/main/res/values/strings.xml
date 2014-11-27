@@ -95,6 +95,7 @@
     <string name="load_data_complete">加载数据完成.</string>
     <string name="enterprise_settings">企业设置</string>
     <string name="about_us">关于我们</string>
+
     <string-array name="interprise_info_tab">
         <item>公司首页</item>
         <item>企业动态</item>
@@ -163,7 +164,6 @@
     <string name="enterprise_site">企业网址</string>
     <string name="enterprise_email">企业邮箱</string>
     <string name="title_activity_my_supply">MySupplyActivity</string>
-
     <string name="about_name">南京普而摩网络技术有限公司</string>
     <string name="about_contact">董小姐</string>
     <string name="about_email">kefu@chinapromo.cn</string>
@@ -208,7 +208,6 @@
     <string name="vip_platinum">铂金会员</string>
     <string name="title_activity_code_scan">Ebingoo</string>
     <string name="more">更多</string>
-
     <string name="data_error">数据错误！</string>
     <string name="info_has_deleted">信息已经被删除！</string>
     <string name="can_scan_demand_company_info">抱歉，%s不能查看求购的公司信息,请立即升级！</string>
@@ -236,7 +235,6 @@
     <string name="ptr_release_to_refresh">松开立即刷新</string>
     <string name="ptr_refreshing">正在刷新...</string>
     <string name="ptr_last_updated">上次更新:%s</string>
-
     <string name="footer_loading">正在加载...</string>
     <string name="footer_wait_loading">查看更多</string>
     <string name="footer_no_more">加载完毕</string>

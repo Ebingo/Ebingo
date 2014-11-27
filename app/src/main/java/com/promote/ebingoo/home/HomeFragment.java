@@ -259,7 +259,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mScanIb.setOnClickListener(this);
 
         loopPager();
-        getIndex(true);
+        getIndex(true, false);
     }
 
     /**
@@ -299,7 +299,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
             }
 
             case R.id.scan_ib: {        //二维码扫描。
-
                 scan2Code();
             }
 
@@ -319,7 +318,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
         @Override
         public void run() {
-
 
             int curentItem = mainfragvp.getCurrentItem();
             curentItem++;
@@ -345,6 +343,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
                 int curItem = msg.arg1;
                 mainfragvp.setCurrentItem(curItem);
+                LogCat.i("Thread item :--" + curItem);
 
             }
 
@@ -355,10 +354,9 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
     @Override
     public void onHeaderRefresh(PullToRefreshView view) {
-        getIndex(false);
+        getIndex(false, true);
 
     }
-
 
     @Override
     public void onPageScrolled(int i, float v, int i2) {
@@ -378,7 +376,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     @Override
     public void onEventClickListener(ImageView view, int activityType, String content) {
         setImageViewListner(view, activityType, content);
-
     }
 
     /**
@@ -411,12 +408,10 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                             startActivity(intent);
                         }
 
-
                         break;
                     }
 
                     case 3: {        //go 企業詳情
-
 
                         if (isNetworkConnected()) {
                             Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
@@ -433,7 +428,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                             Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
                             intent.putExtra(CodeScanOnlineActivity.URLSTR, content);
                             startActivity(intent);
-
 
                         }
                         break;
@@ -489,8 +483,8 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 ImageManager.load(adv.getSrc(), imgView, mOptions);
                 setImageViewListner(imgView, adv.getType(), mAds.get(i).getContent());
                 imgs.add(imgView);
-                super.notifyDataSetChanged();
             }
+            super.notifyDataSetChanged();
         }
 
 
@@ -512,7 +506,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-
             int loopPosition = getCurPosition(position);
             ImageView imgView = imgs.get(loopPosition);
             ViewGroup parent = (ViewGroup) imgView.getParent();
@@ -520,7 +513,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 parent.removeView(imgView);
             }
 
-            container.addView(imgView, 0);
+            container.addView(imgView);
 
 
             return imgView;
@@ -562,7 +555,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     /**
      * 從服務器獲取首頁信息。
      */
-    private void getIndex(boolean showDialog) {
+    private void getIndex(boolean showDialog, final boolean refreshed) {
 
 
         EbingoRequest.getHomedata(getActivity(), showDialog, new EbingoRequest.RequestCallBack<GetIndexBean>() {
@@ -573,7 +566,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                 if (indexBean == null) {
                     Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 } else {
-                    initGetData(indexBean);
+                    initGetData(indexBean, refreshed);
                 }
                 homefreshview.onHeaderRefreshComplete(new Date());
             }
@@ -587,7 +580,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
                     indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
                 }
                 if (indexBean != null) {
-                    initGetData(indexBean);
+                    initGetData(indexBean, refreshed);
                 }
                 homefreshview.onHeaderRefreshComplete(new Date());
 
@@ -596,7 +589,7 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
     }
 
-    private void initGetData(GetIndexBean indexBean) {
+    private void initGetData(GetIndexBean indexBean, boolean refreshed) {
         ArrayList<Adv> advs = indexBean.getAds();
         if (advs != null) {
             mAds.clear();
@@ -628,19 +621,22 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
         mIndexBean = indexBean;
         initTodayData();
-        setAdvPager();
+        setAdvPager(refreshed);
         initHotMarket();
     }
 
     /**
      * 设置滚动广告图片.
      */
-    private void setAdvPager() {
+    private void setAdvPager(boolean refreshed) {
 //        mainfragvp.removeAllViews();
         mBannerPagerAdapter.notifyDataSetChanged();
         mainfragpi.setTotalPage(mAds.size());
-        mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
-        mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
+        if (!refreshed) {
+            mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
+            mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
+        }
+
     }
 
     /**

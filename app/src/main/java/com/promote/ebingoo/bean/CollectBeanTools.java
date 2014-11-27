@@ -13,15 +13,15 @@ public class CollectBeanTools {
 
     private ArrayList<CollectBean> response;
 
-    public ArrayList<CollectBean> getResponse() {
-        return response;
-    }
-
     public static ArrayList<CollectBean> getCollections(String json) {
 
         Type type = new TypeToken<CollectBeanTools>() {
         }.getType();
 
         return ((CollectBeanTools) new Gson().fromJson(json, type)).getResponse();
+    }
+
+    public ArrayList<CollectBean> getResponse() {
+        return response;
     }
 }

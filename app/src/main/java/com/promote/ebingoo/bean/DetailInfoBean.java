@@ -327,21 +327,21 @@ public class DetailInfoBean implements Serializable {
     }
 
     /**
-     * 设置当前vipType.
-     *
-     * @param vip_type
-     */
-    public void setVip_type(int vip_type) {
-        this.vip_type = vip_type;
-    }
-
-    /**
      * 获得vipType。
      *
      * @return
      */
     public int getVip_type() {
         return this.vip_type;
+    }
+
+    /**
+     * 设置当前vipType.
+     *
+     * @param vip_type
+     */
+    public void setVip_type(int vip_type) {
+        this.vip_type = vip_type;
     }
 
     @Override

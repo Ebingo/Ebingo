@@ -19,6 +19,8 @@ public class InterpriseInfoBean {
 //     * 联系人. *
 //     */
 //    private String contacts = null;
+    private String mainRun = null;
+    private ArrayList<CurrentSupplyBean> infoarray = null;
 
     public String getE_url() {
         return e_url;
@@ -27,9 +29,6 @@ public class InterpriseInfoBean {
     public void setE_url(String e_url) {
         this.e_url = e_url;
     }
-
-    private String mainRun = null;
-    private ArrayList<CurrentSupplyBean> infoarray = null;
 
     public String getName() {
         return name;

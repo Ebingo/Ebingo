@@ -15,6 +15,7 @@ public class CategoryBeen implements Serializable {
     String image;
 
     private int parent_id;
+    private ArrayList<SubCategoryBean> subCategorys = new ArrayList<SubCategoryBean>();
 
     public ArrayList<SubCategoryBean> getSubCategorys() {
         return subCategorys;
@@ -23,9 +24,6 @@ public class CategoryBeen implements Serializable {
     public void setSubCategorys(ArrayList<SubCategoryBean> subCategorys) {
         this.subCategorys = subCategorys;
     }
-
-    private ArrayList<SubCategoryBean> subCategorys = new ArrayList<SubCategoryBean>();
-
 
     public String getImage() {
         return image;
@@ -39,6 +37,10 @@ public class CategoryBeen implements Serializable {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "CategoryBeen{" +
@@ -46,10 +48,6 @@ public class CategoryBeen implements Serializable {
                 ", name='" + name + '\'' +
                 ", image='" + image + '\'' +
                 '}';
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

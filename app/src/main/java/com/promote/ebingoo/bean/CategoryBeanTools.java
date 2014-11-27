@@ -12,15 +12,6 @@ import java.util.ArrayList;
 public class CategoryBeanTools {
     private ArrayList<CategoryBeen> response;
 
-    public ArrayList<CategoryBeen> getResponse() {
-        return response;
-    }
-
-    public void setResponse(ArrayList<CategoryBeen> response) {
-        this.response = response;
-    }
-
-
     public static ArrayList<CategoryBeen> getCategories(String json) {
         Gson gson = new Gson();
         Type type = new TypeToken<CategoryBeanTools>() {
@@ -72,6 +63,14 @@ public class CategoryBeanTools {
         }
 
         return null;
+    }
+
+    public ArrayList<CategoryBeen> getResponse() {
+        return response;
+    }
+
+    public void setResponse(ArrayList<CategoryBeen> response) {
+        this.response = response;
     }
 
 

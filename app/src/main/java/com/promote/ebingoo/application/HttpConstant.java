@@ -187,4 +187,6 @@ public class HttpConstant {
      */
     public static final String getHotSearchKeywords = getRootUrl() + "getHotSearchKeywords";
 
+    public static final String atCompany = getRootUrl() + "atCompany";
+
 }

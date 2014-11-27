@@ -2,9 +2,8 @@ package com.promote.ebingoo.bean;
 
 /**
  * Created by ACER on 2014/9/9.
- *
+ * <p/>
  * 供應和求購，信息詳情。
- *
  */
 public class InfoDetailBean {
 

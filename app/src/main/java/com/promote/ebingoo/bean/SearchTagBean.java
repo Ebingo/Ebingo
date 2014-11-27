@@ -3,7 +3,7 @@ package com.promote.ebingoo.bean;
 /**
  * Created by acer on 2014/9/18.
  */
-public class SearchTagBean extends SearchTypeBean{
+public class SearchTagBean extends SearchTypeBean {
     private String create_time;
     private int is_read;
     private String title;

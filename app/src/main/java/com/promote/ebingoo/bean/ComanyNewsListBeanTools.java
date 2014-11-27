@@ -11,14 +11,6 @@ import java.util.ArrayList;
  */
 public class ComanyNewsListBeanTools {
 
-    public ArrayList<CompanyNewListBean> getResponse() {
-        return response;
-    }
-
-    public void setResponse(ArrayList<CompanyNewListBean> response) {
-        this.response = response;
-    }
-
     public ArrayList<CompanyNewListBean> response = null;
 
     public static ArrayList<CompanyNewListBean> getCompanyNewsListBeans(String json) {
@@ -29,6 +21,13 @@ public class ComanyNewsListBeanTools {
         return ((ComanyNewsListBeanTools) new Gson().fromJson(json, type)).getResponse();
     }
 
+    public ArrayList<CompanyNewListBean> getResponse() {
+        return response;
+    }
+
+    public void setResponse(ArrayList<CompanyNewListBean> response) {
+        this.response = response;
+    }
 
     public class CompanyNewListBean {
 

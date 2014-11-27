@@ -24,7 +24,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.promote.ebingoo.R;
 
 import java.text.SimpleDateFormat;
@@ -137,7 +136,7 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
                 && isBottom
                 && onRefreshListener != null
                 && hasMore
-                &&state==State.PULL_TO_REFRESH) {
+                && state == State.PULL_TO_REFRESH) {
             onRefreshListener.onLoadMore();
             setFooterRefresh(true);
         }

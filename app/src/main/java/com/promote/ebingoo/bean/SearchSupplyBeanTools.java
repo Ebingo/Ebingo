@@ -13,21 +13,20 @@ public class SearchSupplyBeanTools {
 
     private ArrayList<SearchSupplyBean> response;
 
-    public ArrayList<SearchSupplyBean> getSearchSupplyBeans(){
-        return response;
-    }
-
     /**
-     *
      * @param json
      * @return
      */
-    public static ArrayList<SearchSupplyBean> getSearchSupplyBeans(String json){
+    public static ArrayList<SearchSupplyBean> getSearchSupplyBeans(String json) {
 
         Type type = new TypeToken<SearchSupplyBeanTools>() {
         }.getType();
         Gson gson = new Gson();
 
         return ((SearchSupplyBeanTools) (gson.fromJson(json, type))).getSearchSupplyBeans();
+    }
+
+    public ArrayList<SearchSupplyBean> getSearchSupplyBeans() {
+        return response;
     }
 }

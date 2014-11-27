@@ -9,14 +9,14 @@ import java.util.ArrayList;
  * 子分类。
  */
 public class SubCategoryBean implements Serializable {
+    Integer id;
+    String name;
+    String image;
     /**
      * 父分类的id *
      */
     private int parent_id;
-
-    Integer id;
-    String name;
-    String image;
+    private ArrayList<SubCategoryBean> subCategorys = new ArrayList<SubCategoryBean>();
 
     public ArrayList<SubCategoryBean> getSubCategorys() {
         return subCategorys;
@@ -25,9 +25,6 @@ public class SubCategoryBean implements Serializable {
     public void setSubCategorys(ArrayList<SubCategoryBean> subCategorys) {
         this.subCategorys = subCategorys;
     }
-
-    private ArrayList<SubCategoryBean> subCategorys = new ArrayList<SubCategoryBean>();
-
 
     public String getImage() {
         return image;
@@ -41,6 +38,10 @@ public class SubCategoryBean implements Serializable {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "CategoryBeen{" +
@@ -48,10 +49,6 @@ public class SubCategoryBean implements Serializable {
                 ", name='" + name + '\'' +
                 ", image='" + image + '\'' +
                 '}';
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

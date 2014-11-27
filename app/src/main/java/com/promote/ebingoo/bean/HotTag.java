@@ -4,9 +4,9 @@ package com.promote.ebingoo.bean;
  * Created by acer on 2014/9/5.
  */
 public class HotTag {
+    transient boolean isSelect = false;
     private String name;
     private Integer id;
-    transient boolean isSelect=false;
 
     public boolean isSelect() {
         return isSelect;

@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Created by ACER on 2014/9/2.
- *
+ * <p/>
  * 搜索內容基類。
  */
-public class SearchTypeBean implements Serializable{
+public class SearchTypeBean implements Serializable {
 
     protected int id;
 

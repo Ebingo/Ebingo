@@ -12,6 +12,8 @@ import com.promote.ebingoo.bean.CategoryBeanTools;
 import com.promote.ebingoo.bean.CategoryBeen;
 import com.promote.ebingoo.bean.Company;
 import com.promote.ebingoo.bean.GetIndexBeanTools;
+import com.promote.ebingoo.bean.ResponseBaseBean;
+import com.promote.ebingoo.bean.ResponseBean;
 import com.promote.ebingoo.bean.SearchDemandBean;
 import com.promote.ebingoo.bean.SearchDemandBeanTools;
 import com.promote.ebingoo.bean.SearchSupplyBean;
@@ -139,6 +141,39 @@ public class EbingoRequest {
                 dialog.dismiss();
             }
         });
+
+    }
+
+    public static void getAtCompany(final Activity activity, String keyword, final RequestCallBack<String> callBack) {
+
+        final EbingoRequestParmater parmater = new EbingoRequestParmater(activity.getApplicationContext());
+        parmater.put("keywords", keyword);
+        final ProgressDialog dialog = DialogUtil.waitingDialog(activity);
+
+        HttpUtil.post(HttpConstant.atCompany, parmater, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                ResponseBaseBean<String> responseBaseBean = ResponseBean.getResponse(response.toString());
+
+                if (responseBaseBean.getCode() == 100) {
+                    callBack.onSuccess(responseBaseBean.getData());
+                } else {
+                    callBack.onFaild(responseBaseBean.getCode(), "数据解析错误");
+                }
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                callBack.onFaild(statusCode, "数据访问失败");
+                dialog.dismiss();
+            }
+        });
+
 
     }
 

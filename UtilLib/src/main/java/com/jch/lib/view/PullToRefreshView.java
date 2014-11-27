@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 import com.jch.lib.R;
@@ -141,8 +142,14 @@ public class PullToRefreshView extends LinearLayout {
      */
     private OnHeaderRefreshListener mOnHeaderRefreshListener;
 
+    private Scroller mScroller = null;
 
     private boolean mIsHeadRefreshing = false;
+    /**
+     * weight effectes the speed of View scrolling depandend on touch move.*
+     */
+    private static final float SCROLLWEIGHT = 0.3f;
+
 
     /**
      * last update time
@@ -187,6 +194,8 @@ public class PullToRefreshView extends LinearLayout {
 
         mInflater = LayoutInflater.from(getContext());
         // header view 在此添加,保证是第一个添加到linearlayout的最上端
+
+        mScroller = new Scroller(getContext());
         addHeaderView();
     }
 
@@ -204,10 +213,18 @@ public class PullToRefreshView extends LinearLayout {
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, mHeaderViewHeight);
         // 设置topMargin的值为负的header View高度,即将其隐藏在最上方
         params.topMargin = -(mHeaderViewHeight);
-        // mHeaderView.setLayoutParams(params1);
         addView(mHeaderView, params);
 
     }
+
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+        if (mScroller.computeScrollOffset()) {
+            scrollTo(0, mScroller.getCurrY());
+        }
+    }
+
 
     private void addFooterView() {
         // footer view
@@ -227,6 +244,7 @@ public class PullToRefreshView extends LinearLayout {
         addView(mFooterView, params);
     }
 
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -237,8 +255,6 @@ public class PullToRefreshView extends LinearLayout {
 
     /**
      * init AdapterView like ListView,GridView and so on;or init ScrollView
-     *
-     * @description hylin 2012-7-30下午8:48:12
      */
     private void initContentAdapterView() {
         int count = getChildCount();
@@ -471,10 +487,6 @@ public class PullToRefreshView extends LinearLayout {
         }
     }
 
-    public void setAutoLoadMore(boolean autoLoadMore) {
-
-    }
-
     /**
      * 修改Header view top margin的值
      *
@@ -484,7 +496,7 @@ public class PullToRefreshView extends LinearLayout {
      */
     private int changingHeaderViewTopMargin(int deltaY) {
         LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
-        float newTopMargin = params.topMargin + deltaY * 0.3f;
+        float newTopMargin = params.topMargin + deltaY * SCROLLWEIGHT;
         // 这里对上拉做一下限制,因为当前上拉后然后不释放手指直接下拉,会把下拉刷新给触发了,感谢网友yufengzungzhe的指出
         // 表示如果是在上拉后一段距离,然后直接下拉
         if (deltaY > 0 && mPullState == PULL_UP_STATE && Math.abs(params.topMargin) <= mHeaderViewHeight) {
@@ -526,7 +538,9 @@ public class PullToRefreshView extends LinearLayout {
         if (mOnHeaderRefreshListener != null) {
             mOnHeaderRefreshListener.onHeaderRefresh(this);
         }
+
     }
+
 
     /**
      * footer refreshing
@@ -585,7 +599,7 @@ public class PullToRefreshView extends LinearLayout {
     public void updateRefreshTime(Date date) {
 
         if (date != null) {
-            String dateStr = formateDate(date);
+            String dateStr = "更新于：" + formateDate(date);
             mHeaderUpdateTextView.setVisibility(View.VISIBLE);
             mHeaderUpdateTextView.setText(dateStr);
         } else {
@@ -611,7 +625,7 @@ public class PullToRefreshView extends LinearLayout {
      * @return
      */
     private String formateDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
         return sdf.format(date);
     }
 
@@ -651,6 +665,7 @@ public class PullToRefreshView extends LinearLayout {
             mHeaderUpdateTextView.setVisibility(View.GONE);
         }
     }
+
 
     /**
      * 获取当前header view 的topMargin

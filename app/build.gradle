@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.promote.ebingoo"
-        minSdkVersion 8
+        minSdkVersion 10
         targetSdkVersion 15
         versionCode 10
         versionName "3.0.0"
@@ -25,6 +25,5 @@ dependencies {
     compile project(':UtilLib')
     compile files('D:/workspace/Ebingo/UtilLib/libs/android-support-v7-appcompat.jar')
     compile project(':D2code')
-    compile 'com.android.support:appcompat-v7:20.0.0'
-    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
 }

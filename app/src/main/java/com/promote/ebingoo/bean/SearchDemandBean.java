@@ -4,18 +4,25 @@ import java.io.Serializable;
 
 /**
  * Created by ACER on 2014/9/2.
- *
+ * <p/>
  * 求购实体类。
- *
  */
-public class SearchDemandBean extends SearchTypeBean implements Serializable{
-    /**发布日期. **/
+public class SearchDemandBean extends SearchTypeBean implements Serializable {
+    /**
+     * 发布日期. *
+     */
     private String date = null;
-    /**求购简介. **/
+    /**
+     * 求购简介. *
+     */
     private String introduction = null;
-    /** 瀏覽量. **/
+    /**
+     * 瀏覽量. *
+     */
     private String read_num = null;
-    /** 求購數量. **/
+    /**
+     * 求購數量. *
+     */
     private String buy_num = null;
     private String verify_result;
 
