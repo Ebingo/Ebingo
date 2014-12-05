@@ -5,9 +5,10 @@ package com.promote.ebingoo.application;
  */
 public class HttpConstant {
 
-    private static final String TEST_RHOST = "http://ebingoo.com"; //remote
+    //    private static final String TEST_RHOST = "http://ebingoo.com"; //remote
+    private static final String TEST_RHOST = "http://ebingoo.bingoso.com";
 
-    private static final boolean LOCALHOST = true;
+    private static final boolean LOCALHOST = false;
 
     private static final String TEST_HOST = "http://192.168.1.112";
 

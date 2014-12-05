@@ -25,5 +25,4 @@ dependencies {
     compile project(':UtilLib')
     compile files('D:/workspace/Ebingo/UtilLib/libs/android-support-v7-appcompat.jar')
     compile project(':D2code')
-    compile 'com.android.support:support-v4:21.0.0'
 }

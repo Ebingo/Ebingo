@@ -133,11 +133,6 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
         this.specialEventClickListener = specialEventClickListener;
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-    }
 
     /**
      * 计算imageView放缩后的大小.

@@ -68,9 +68,7 @@ public class OjbFileCache {
      * @return
      */
     private static <T> T readObj(Class<T> clz, String path) {
-
         T obj = null;
-
         try {
             FileInputStream fis = new FileInputStream(path);
             ObjectInputStream ois = new ObjectInputStream(fis);

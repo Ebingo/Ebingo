@@ -375,70 +375,77 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
     @Override
     public void onEventClickListener(ImageView view, int activityType, String content) {
-        setImageViewListner(view, activityType, content);
+        doImgContentByType(activityType, content);
+    }
+
+    /**
+     * 根据不同的
+     *
+     * @param advType
+     * @param content
+     */
+    private void doImgContentByType(int advType, String content) {
+        switch (advType) {
+            case 1: {            //go 產品詳情頁
+                if (isNetworkConnected()) {
+                    Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
+                    imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
+                    startActivity(imgIntent);
+                }
+                break;
+            }
+
+            case 2: {        //go 求购詳情頁
+
+                if (isNetworkConnected()) {
+                    Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
+                    intent.putExtra(BuyInfoActivity.DEMAND_ID, Integer.valueOf(content));
+                    startActivity(intent);
+                }
+
+                break;
+            }
+
+            case 3: {        //go 企業詳情
+
+                if (isNetworkConnected()) {
+                    Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
+                    intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
+                    startActivity(intent);
+                    break;
+                }
+
+            }
+
+            case 4: {        //外聯web頁面.
+
+                if (isNetworkConnected()) {
+                    Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
+                    intent.putExtra(CodeScanOnlineActivity.URLSTR, content);
+                    startActivity(intent);
+
+                }
+                break;
+            }
+
+            default: {
+
+            }
+        }
     }
 
     /**
      * 给每一个imageView添加点击事件。
      *
      * @param imgView
-     * @param AdvType 点击事件类别。
+     * @param advType 点击事件类别。
      */
-    private void setImageViewListner(ImageView imgView, final int AdvType, final String content) {
+    private void setImageViewListner(ImageView imgView, final int advType, final String content) {
 
         imgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                switch (AdvType) {
-                    case 1: {            //go 產品詳情頁
-                        if (isNetworkConnected()) {
-                            Intent imgIntent = new Intent(getActivity(), ProductInfoActivity.class);
-                            imgIntent.putExtra(ProductInfoActivity.ARG_ID, Integer.valueOf(content));
-                            startActivity(imgIntent);
-                        }
-                        break;
-                    }
-
-                    case 2: {        //go 求购詳情頁
-
-                        if (isNetworkConnected()) {
-                            Intent intent = new Intent(getActivity(), BuyInfoActivity.class);
-                            intent.putExtra(BuyInfoActivity.DEMAND_ID, Integer.valueOf(content));
-                            startActivity(intent);
-                        }
-
-                        break;
-                    }
-
-                    case 3: {        //go 企業詳情
-
-                        if (isNetworkConnected()) {
-                            Intent intent = new Intent(getActivity(), InterpriseInfoActivity.class);
-                            intent.putExtra(InterpriseInfoActivity.ARG_ID, Integer.valueOf(content));
-                            startActivity(intent);
-                            break;
-                        }
-
-                    }
-
-                    case 4: {        //外聯web頁面.
-
-                        if (isNetworkConnected()) {
-                            Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
-                            intent.putExtra(CodeScanOnlineActivity.URLSTR, content);
-                            startActivity(intent);
-
-                        }
-                        break;
-                    }
-
-                    default: {
-
-                    }
-                }
-
-
+                doImgContentByType(advType, content);
             }
         });
 

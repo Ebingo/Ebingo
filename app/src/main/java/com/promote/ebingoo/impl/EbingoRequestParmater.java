@@ -17,6 +17,7 @@ public class EbingoRequestParmater extends RequestParams {
         put("time", DeviceInfo.getmCurTimeToken());
         put("uuid", DeviceInfo.getImei(context));
         put("secret", DeviceInfo.getAuth(context));
+        put("version", DeviceInfo.getVersionCode(context));
     }
 
 }

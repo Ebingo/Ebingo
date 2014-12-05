@@ -17,9 +17,7 @@ public class CategoryBeanTools {
         Type type = new TypeToken<CategoryBeanTools>() {
         }.getType();
 
-
         ArrayList<CategoryBeen> categoryBeens = ((CategoryBeanTools) gson.fromJson(json, type)).getResponse();
-
 
         return divideSubCategory(categoryBeens);
     }
