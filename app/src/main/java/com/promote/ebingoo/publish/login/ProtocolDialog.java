@@ -15,6 +15,21 @@ import com.promote.ebingoo.R;
  */
 public class ProtocolDialog extends MyCustomDialog implements CompoundButton.OnCheckedChangeListener {
 
+    /**
+     * 填充内容.
+     */
+    private View contentView;
+    private WebView protocoldialogtv;
+    private ReadedCallback callback;
+    public ProtocolDialog(Context context) {
+        super(context);
+
+    }
+
+    public static ProtocolDialog build(Activity activity) {
+        return new ProtocolDialog(activity);
+    }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         dismiss();
@@ -22,36 +37,12 @@ public class ProtocolDialog extends MyCustomDialog implements CompoundButton.OnC
             callback.isChecked(isChecked);
     }
 
-    public interface ReadedCallback {
-
-        public void isChecked(boolean checked);
-
-    }
-
-    /**
-     * 填充内容.
-     */
-    private View contentView;
-    private WebView protocoldialogtv;
-
-    private ReadedCallback callback;
-
-    public ProtocolDialog(Context context) {
-        super(context);
-
-    }
-
-
     @Override
     protected View onCreateView() {
 
         contentView = LayoutInflater.from(getContext()).inflate(R.layout.center_protocol_dialog_layout, null);
         initialize();
         return contentView;
-    }
-
-    public static ProtocolDialog build(Activity activity) {
-        return new ProtocolDialog(activity);
     }
 
     public void setProtocolStr(String str) {
@@ -71,5 +62,11 @@ public class ProtocolDialog extends MyCustomDialog implements CompoundButton.OnC
         protocoldialogtv = (WebView) contentView.findViewById(R.id.protocol_dialog_tv);
 
         setCanceledOnTouchOutside(true);
+    }
+
+    public interface ReadedCallback {
+
+        public void isChecked(boolean checked);
+
     }
 }

@@ -1,33 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     android:clickable="true"
+    android:orientation="vertical"
     tools:context="com.promote.ebingoo.home.HomeFragment">
 
     <include layout="@layout/common_head_search_layout" />
 
     <com.jch.lib.view.PullToRefreshView
         android:id="@+id/home_fresh_view"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <com.jch.lib.view.PagerScrollView
             android:id="@+id/home_sv"
             android:layout_width="match_parent"
-            android:scrollbars="none"
-            android:fadingEdge="none"
+            android:layout_height="match_parent"
             android:background="@color/gray_bg"
-            android:layout_height="match_parent">
+            android:fadingEdge="none"
+            android:scrollbars="none">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -41,66 +41,66 @@
                     <com.jch.lib.view.PagerIndicator
                         android:id="@+id/main_frag_pi"
                         android:layout_width="wrap_content"
-                        app:nomal_icon="@drawable/indicator_nomal"
-                        app:cur_icon="@drawable/indicator_cur"
                         android:layout_height="20dp"
-                        android:layout_gravity="bottom|center_horizontal" />
+                        android:layout_gravity="bottom|center_horizontal"
+                        app:cur_icon="@drawable/indicator_cur"
+                        app:nomal_icon="@drawable/indicator_nomal" />
                 </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:orientation="horizontal"
-                    android:paddingRight="@dimen/main_subtitle_marg_left"
-                    android:paddingLeft="@dimen/main_subtitle_marg_left"
-                    android:weightSum="6"
                     android:gravity="bottom"
-                    android:paddingBottom="5dp">
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="@dimen/main_subtitle_marg_left"
+                    android:paddingRight="@dimen/main_subtitle_marg_left"
+                    android:paddingTop="5dp"
+                    android:weightSum="6">
 
 
                     <ImageView
-                        android:background="@drawable/home_newadd"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/home_newadd" />
 
                     <TextView
                         android:id="@+id/home_add"
                         style="@style/gray_15_tv"
-                        android:layout_marginLeft="2dp"
-                        android:text="@string/home_newsadd"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="@string/home_newsadd" />
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:gravity="center_vertical"
                         android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <TextView
                             style="@style/gray_11_tv"
-                            android:text="@string/main_td_get"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_td_get" />
 
                         <TextView
                             android:id="@+id/main_get_num"
+                            style="@style/blue_15_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/blue_15_tv"
                             android:text="0" />
 
                         <TextView
                             style="@style/gray_11_tv"
-                            android:text="@string/main_msg_unit"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_msg_unit" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -110,27 +110,27 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <TextView
                             style="@style/gray_11_tv"
-                            android:text="@string/main_td_spt"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_td_spt" />
 
                         <TextView
                             android:id="@+id/main_spt_num_tv"
+                            style="@style/blue_15_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/blue_15_tv"
                             android:text="0" />
 
                         <TextView
                             style="@style/gray_11_tv"
-                            android:text="@string/main_client_unit"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_client_unit" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -140,27 +140,27 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <TextView
                             style="@style/gray_11_tv"
-                            android:text="@string/main_td_price"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_td_price" />
 
                         <TextView
                             android:id="@+id/main_price_num_tv"
+                            style="@style/blue_15_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/blue_15_tv"
                             android:text="0" />
 
                         <TextView
                             style="@style/gray_11_tv"
-                            android:text="@string/main_price_unit"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@string/main_price_unit" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -176,17 +176,17 @@
                     android:background="@color/center_divider" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
                     style="@style/home_subtitle_style"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
 
                     <com.jch.lib.view.ScrollGridView
                         android:id="@+id/main_hotmarket_gv"
-                        android:numColumns="4"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:numColumns="4">
 
                     </com.jch.lib.view.ScrollGridView>
                 </LinearLayout>
@@ -199,65 +199,65 @@
                 </com.promote.ebingoo.home.SpecialEventsLayout>
 
                 <LinearLayout
+                    style="@style/home_subtitle_style"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    style="@style/home_subtitle_style"
                     android:background="@color/center_divider" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
                     style="@style/home_subtitle_style"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="5dp"
                         android:gravity="bottom"
+                        android:paddingBottom="5dp"
                         android:paddingTop="5dp">
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:src="@drawable/cur_supply"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/cur_supply" />
 
                         <TextView
+                            style="@style/font_gray_15"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            style="@style/font_gray_15"
                             android:text="@string/main_hote_support" />
                     </LinearLayout>
 
 
                     <com.jch.lib.view.ScrollListView
                         android:id="@+id/home_hotsupply_lv"
-                        android:divider="@color/center_divider"
-                        android:dividerHeight="0.5dp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:divider="@color/center_divider"
+                        android:dividerHeight="0.5dp" />
 
 
                 </LinearLayout>
 
                 <LinearLayout
+                    style="@style/home_subtitle_style"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    style="@style/home_subtitle_style"
                     android:background="@color/center_divider" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
                     style="@style/home_subtitle_style"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="5dp"
                         android:gravity="bottom"
+                        android:paddingBottom="5dp"
                         android:paddingTop="5dp">
 
                         <ImageView
@@ -266,9 +266,9 @@
                             android:src="@drawable/cur_demaind" />
 
                         <TextView
+                            style="@style/font_gray_15"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/font_gray_15"
                             android:layout_marginLeft="5dp"
                             android:text="@string/main_hote_buy" />
                     </LinearLayout>
@@ -276,9 +276,9 @@
                     <com.jch.lib.view.ScrollListView
                         android:id="@+id/home_hot_buy_lv"
                         android:layout_width="match_parent"
-                        android:dividerHeight="0.5dp"
+                        android:layout_height="match_parent"
                         android:divider="@color/center_divider"
-                        android:layout_height="match_parent">
+                        android:dividerHeight="0.5dp">
 
                     </com.jch.lib.view.ScrollListView>
 

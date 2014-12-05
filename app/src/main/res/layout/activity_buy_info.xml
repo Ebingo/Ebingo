@@ -41,11 +41,11 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/buy_info_into_company_tv"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/buy_info_into_company_tv"
+                android:gravity="left"
                 android:orientation="horizontal">
 
                 <FrameLayout
@@ -60,11 +60,10 @@
                         android:layout_marginRight="@dimen/vip_list_img_width" />
 
                     <ImageView
-                        android:scaleType="fitStart"
-                        android:layout_gravity="top|right"
                         android:id="@+id/buy_info_btm_img"
                         style="@style/list_vip_img_style"
-                         />
+                        android:layout_gravity="top|right"
+                        android:scaleType="fitStart" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -72,9 +71,9 @@
         </RelativeLayout>
 
         <View
-            android:layout_above="@id/buy_info_btm_ll"
             style="@style/divider_horizontal"
-            android:layout_height="1dp" />
+            android:layout_height="1dp"
+            android:layout_above="@id/buy_info_btm_ll" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -148,9 +147,9 @@
 
                             <LinearLayout
                                 android:layout_width="0dp"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="right"
-                                android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
                                 <TextView
@@ -206,12 +205,12 @@
                             android:layout_marginTop="5dp" />
 
                         <TextView
-                            style="@style/font_black_15"
                             android:id="@+id/buy_info_detail_tv"
+                            style="@style/font_black_15"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content" />
+                            android:visibility="gone" />
                     </LinearLayout>
 
 
@@ -220,10 +219,10 @@
             </ScrollView>
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
                 style="@style/info_content_pad"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -234,18 +233,18 @@
                 <Button
                     android:id="@+id/buy_info_contact_phone_tv"
                     style="@style/font_white_15"
-                    android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:layout_weight="5"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_weight="5"
                     android:background="@drawable/blue_btn_selector"
+                    android:gravity="center"
                     android:text="@string/contact_buy" />
 
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
-                    android:layout_height="1dp"></LinearLayout>
+                    android:layout_height="1dp"
+                    android:layout_weight="1"></LinearLayout>
             </LinearLayout>
 
 

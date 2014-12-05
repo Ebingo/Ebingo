@@ -21,19 +21,6 @@ import android.widget.LinearLayout;
 public class DisplayUtil {
 
 
-    /**
-     * @param wm
-     * @param baseY 基准height.
-     * @param baseX 基准width.
-     */
-    private void calcuateDisplayScale(WindowManager wm, float baseY, float baseX) {
-        final Display disp = wm.getDefaultDisplay();
-        Point mPoint = new Point();
-        getSize(disp, mPoint);
-        float displayWidth = mPoint.x;
-        float displayHeight = mPoint.y;
-    }
-
     @SuppressLint("NewApi")
     public static void getSize(Display display, Point outSize) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -175,7 +162,6 @@ public class DisplayUtil {
         view.setLayoutParams(params);
     }
 
-
     /**
      * 根据屏幕宽度设置view的大小.
      *
@@ -223,6 +209,19 @@ public class DisplayUtil {
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+    /**
+     * @param wm
+     * @param baseY 基准height.
+     * @param baseX 基准width.
+     */
+    private void calcuateDisplayScale(WindowManager wm, float baseY, float baseX) {
+        final Display disp = wm.getDefaultDisplay();
+        Point mPoint = new Point();
+        getSize(disp, mPoint);
+        float displayWidth = mPoint.x;
+        float displayHeight = mPoint.y;
     }
 
 }

@@ -240,6 +240,49 @@ public class HttpUtil {
         return client;
     }
 
+    public static String SimpleHttp(String urlStr) throws Exception {
+
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        int resCode = conn.getResponseCode();
+        InputStream input = null;
+        String result = null;
+        if (resCode == 200) {
+            input = conn.getInputStream();
+            result = toString(input);
+            input.close();
+            conn.disconnect();
+        } else {
+            throw new Exception("connect failed");
+        }
+
+        return result;
+    }
+
+    private static String toString(InputStream input) {
+
+        String content = null;
+        try {
+            InputStreamReader ir = new InputStreamReader(input);
+            BufferedReader br = new BufferedReader(ir);
+
+            StringBuilder sbuff = new StringBuilder();
+            while (null != br) {
+                String temp = br.readLine();
+                if (null == temp)
+                    break;
+                sbuff.append(temp).append(System.getProperty("line.separator"));
+            }
+
+            content = sbuff.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return content;
+    }
+
     /**
      * 下载数据.
      *
@@ -283,49 +326,6 @@ public class HttpUtil {
                 callbackHandler.sendEmptyMessage(FAILE);
             }
         });
-    }
-
-    public static String SimpleHttp(String urlStr) throws Exception {
-
-        URL url = new URL(urlStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        int resCode = conn.getResponseCode();
-        InputStream input = null;
-        String result = null;
-        if (resCode == 200) {
-            input = conn.getInputStream();
-            result = toString(input);
-            input.close();
-            conn.disconnect();
-        } else {
-            throw new Exception("connect failed");
-        }
-
-        return result;
-    }
-
-    private static String toString(InputStream input) {
-
-        String content = null;
-        try {
-            InputStreamReader ir = new InputStreamReader(input);
-            BufferedReader br = new BufferedReader(ir);
-
-            StringBuilder sbuff = new StringBuilder();
-            while (null != br) {
-                String temp = br.readLine();
-                if (null == temp)
-                    break;
-                sbuff.append(temp).append(System.getProperty("line.separator"));
-            }
-
-            content = sbuff.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return content;
     }
 
     /**

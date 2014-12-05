@@ -16,16 +16,9 @@ import org.json.JSONObject;
  */
 public class GetInfoDetail {
 
-    public interface CallBack {
-
-        public void onFailed(String msg);
-
-        public void onSuccess(DetailInfoBean detailInfoBean);
-    }
-
     public static void getInfoDetail(EbingoRequestParmater parmater, final CallBack callBack) {
         String urlStr = HttpConstant.getInfoDetail;
-        LogCat.i("--->",parmater+"");
+        LogCat.i("--->", parmater + "");
 
         HttpUtil.post(urlStr, parmater, new JsonHttpResponseHandler() {
 
@@ -34,9 +27,9 @@ public class GetInfoDetail {
 
                 DetailInfoBean detailInfo = null;
                 try {
-                    response=response.getJSONObject("response");
-                    LogCat.i("--->",response+"");
-                    if (HttpConstant.CODE_OK.equals(response.getString("code"))){
+                    response = response.getJSONObject("response");
+                    LogCat.i("--->", response + "");
+                    if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
                         LogCat.i("--->", response.getJSONObject("data").toString());
                         detailInfo = JsonUtil.get(response.getJSONObject("data").toString(), DetailInfoBean.class);     //
                         if (detailInfo != null) {
@@ -59,18 +52,25 @@ public class GetInfoDetail {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 String msg = "获取数据失败";
                 callBack.onFailed(msg);
-                LogCat.i("--->",errorResponse+"");
+                LogCat.i("--->", errorResponse + "");
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                LogCat.i("--->",responseString+"");
+                LogCat.i("--->", responseString + "");
                 String msg = "获取数据失败";
                 callBack.onFailed(msg);
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
+    }
+
+    public interface CallBack {
+
+        public void onFailed(String msg);
+
+        public void onSuccess(DetailInfoBean detailInfoBean);
     }
 
 }

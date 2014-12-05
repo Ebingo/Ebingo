@@ -48,9 +48,13 @@ import java.util.List;
  * 通话记录
  */
 public class CallRecordActivity extends BaseListActivity implements View.OnClickListener {
+    private static boolean REFRESH = false;
     private ArrayList<CallRecord> records;
     private RecordAdapter adapter;
-    private static boolean REFRESH = false;
+
+    public static void setRefresh() {
+        REFRESH = true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +66,6 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
         if (records.size() == 0) {
             getCallRecord();
         }
-    }
-
-    public static void setRefresh() {
-        REFRESH = true;
     }
 
     @Override
@@ -154,6 +154,59 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                 dialog.dismiss();
             }
         });
+    }
+
+    @Override
+    protected void onRefresh() {
+        getCallRecord();
+    }
+
+    public static class CallRecordManager {
+        private Context context;
+
+        public CallRecordManager(Context context) {
+            this.context = context;
+        }
+
+        public static void addCallRecord(Context context, CallRecord record, JsonHttpResponseHandler handler) {
+            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
+            parmater.put("call_id", record.getCall_id());
+            parmater.put("to_id", record.getTo_id());
+            parmater.put("info_id", record.getInfoId());
+            HttpUtil.post(HttpConstant.addCallRecord, parmater, handler);
+        }
+
+        /**
+         * 拨打电话，并添加通话记录
+         *
+         * @param context
+         * @param record  record中必须包含 phone_number,call_id,to_id,info_id
+         */
+        public static void dialNumber(final Activity context, final CallRecord record) {
+            final String number = record.getPhone_num();
+            if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return;
+
+            EbingoDialog dialog = EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_CALL_PHONE);
+            dialog.setTitle(record.getContacts());
+            dialog.setMessage(context.getString(R.string.dial_number_notice, record.getPhone_num()));
+            dialog.setPositiveButton(R.string.make_call, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    LogCat.i("--->", "dial:" + number);
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+                    context.startActivity(intent);
+                    CallRecordManager.addCallRecord(context, record, new JsonHttpResponseHandler());
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+
+        public void deleteCallRecord(int id, JsonHttpResponseHandler handler) {
+            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
+            HttpUtil.post(HttpConstant.deleteInfo, parmater, handler);
+        }
+
     }
 
     class RecordAdapter extends BaseAdapter {
@@ -245,58 +298,5 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
             TextView date;
             View dial;
         }
-    }
-
-    public static class CallRecordManager {
-        private Context context;
-
-        public CallRecordManager(Context context) {
-            this.context = context;
-        }
-
-        public static void addCallRecord(Context context,CallRecord record, JsonHttpResponseHandler handler) {
-            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
-            parmater.put("call_id", record.getCall_id());
-            parmater.put("to_id", record.getTo_id());
-            parmater.put("info_id", record.getInfoId());
-            HttpUtil.post(HttpConstant.addCallRecord, parmater, handler);
-        }
-
-        public void deleteCallRecord(int id, JsonHttpResponseHandler handler) {
-            EbingoRequestParmater parmater = new EbingoRequestParmater(context);
-            HttpUtil.post(HttpConstant.deleteInfo, parmater, handler);
-        }
-
-        /**
-         * 拨打电话，并添加通话记录
-         *
-         * @param context
-         * @param record  record中必须包含 phone_number,call_id,to_id,info_id
-         */
-        public static void dialNumber(final Activity context, final CallRecord record) {
-            final String number = record.getPhone_num();
-            if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return;
-
-            EbingoDialog dialog=EbingoDialog.newInstance(context, EbingoDialog.DialogStyle.STYLE_CALL_PHONE);
-            dialog.setTitle(record.getContacts());
-            dialog.setMessage(context.getString(R.string.dial_number_notice, record.getPhone_num()));
-            dialog.setPositiveButton(R.string.make_call,new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    LogCat.i("--->", "dial:" + number);
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
-                    context.startActivity(intent);
-                    CallRecordManager.addCallRecord(context, record, new JsonHttpResponseHandler());
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-        }
-
-    }
-
-    @Override
-    protected void onRefresh() {
-        getCallRecord();
     }
 }

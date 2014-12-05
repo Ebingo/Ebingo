@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     style="@style/list_item_style"
-    android:background="@drawable/click_gray_bg"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/click_gray_bg">
 
     <ImageView
+        android:id="@+id/search_list_item_img"
         android:layout_width="60dp"
-        android:layout_centerVertical="true"
         android:layout_height="60dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/search_list_item_img" />
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop" />
 
     <LinearLayout
-        android:layout_toRightOf="@id/search_list_item_img"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_toRightOf="@id/search_list_item_img"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -26,12 +26,12 @@
 
             <TextView
                 android:id="@+id/search_result_black_name_tv"
+                style="@style/font_black_15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="2014年韩版新款"
                 android:ellipsize="end"
-                style="@style/font_black_15" />
+                android:singleLine="true"
+                android:text="2014年韩版新款" />
             <!--<TextView-->
             <!--android:id="@+id/search_result_red_name_tv"-->
             <!--android:layout_width="wrap_content"-->
@@ -47,16 +47,16 @@
 
             <TextView
                 style="@style/font_red_15"
-                android:text="@string/rmb_signe"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/rmb_signe" />
 
             <TextView
                 android:id="@+id/search_result_price_tv"
                 style="@style/font_red_15"
-                android:text="200"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="200" />
 
         </LinearLayout>
 
@@ -68,50 +68,50 @@
             <LinearLayout
                 android:id="@+id/search_r_ll"
                 android:layout_width="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/font_gray_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_gray_12"
                     android:text="@string/search_look" />
 
                 <TextView
                     android:id="@+id/search_result_item_look_num_tvs"
+                    style="@style/font_gray_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_gray_12"
                     android:text="2000" />
 
                 <TextView
+                    style="@style/font_gray_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/font_gray_12"
                     android:text="@string/search_time" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/search_l_ll"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="0dp"
-                android:layout_toLeftOf="@id/search_r_ll"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="0dp"
+                android:layout_toLeftOf="@id/search_r_ll">
 
                 <TextView
                     android:id="@+id/search_min_num"
-                    android:layout_width="wrap_content"
                     style="@style/font_gray_12"
-                    android:text="200"
-                    android:singleLine="true"
-                    android:layout_height="wrap_content" />
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="200" />
+
+                <TextView
                     style="@style/font_gray_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="@string/search_start" />
             </LinearLayout>
@@ -122,11 +122,11 @@
         <TextView
             android:id="@+id/search_result_company_name_tv"
             style="@style/gray_11_tv"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:text="那經普爾摩網絡技術有限公司"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="那經普爾摩網絡技術有限公司" />
     </LinearLayout>
 
 

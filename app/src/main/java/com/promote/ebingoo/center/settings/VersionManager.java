@@ -132,15 +132,15 @@ public class VersionManager {
                     EbingoDialog dialog = new EbingoDialog(context);
                     dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                     dialog.setTitle(R.string.warn);
-                    int rate= (int) (localeSize/(float)remoteSize*100);
-                    dialog.setMessage(context.getString(R.string.continue_download,rate));
+                    int rate = (int) (localeSize / (float) remoteSize * 100);
+                    dialog.setMessage(context.getString(R.string.continue_download, rate));
                     dialog.setPositiveButton(R.string.continue_, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             new APKDownloadTask(context, localeSize).execute(url, versionName);
                         }
                     });
-                    dialog.setNegativeButton(R.string.cancel,dialog.DEFAULT_LISTENER);
+                    dialog.setNegativeButton(R.string.cancel, dialog.DEFAULT_LISTENER);
                     dialog.show();
                 }
                 return false;
@@ -175,6 +175,79 @@ public class VersionManager {
             e.printStackTrace();
         }
         return localeVersion;
+    }
+
+    /**
+     * 根据版本名创建文件
+     *
+     * @param context
+     * @return
+     */
+    public static File getDownloadFile(Context context, String version) {
+        File dir;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            dir = new File(Environment.getExternalStorageDirectory(), "ebingoo");
+        } else {
+            dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "ebingoo");
+        }
+
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String fileName = "Ebingoo" + version + ".apk";
+        return new File(dir, fileName);
+    }
+
+    /**
+     * 获取远程文件大小
+     *
+     * @param url
+     * @return
+     */
+    private static long getRemoteFileSize(String url) {
+        long size = 0;
+        try {
+            HttpURLConnection httpUrl = (HttpURLConnection) (new URL(url)).openConnection();
+            size = httpUrl.getContentLength();
+            httpUrl.disconnect();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return size;
+    }
+
+    private static Intent getInstallIntent(File file) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file),
+                "application/vnd.android.package-archive");
+        return intent;
+    }
+
+    /**
+     * 安装
+     *
+     * @param context
+     * @param file
+     */
+    private static void showInstallDialog(Context context, File file) {
+        final File f = file;
+        final Context mContext = context.getApplicationContext();
+        EbingoDialog installDialog = new EbingoDialog(context);
+        installDialog.setTitle(R.string.warn);
+        installDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        installDialog.setMessage(context.getString(R.string.click_install, file.getName()));
+        installDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = getInstallIntent(f);
+                mContext.startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        installDialog.show();
     }
 
     /**
@@ -241,47 +314,25 @@ public class VersionManager {
     }
 
     /**
-     * 根据版本名创建文件
-     *
-     * @param context
-     * @return
-     */
-    public static File getDownloadFile(Context context, String version) {
-        File dir;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            dir = new File(Environment.getExternalStorageDirectory(), "ebingoo");
-        } else {
-            dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "ebingoo");
-        }
-
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        String fileName = "Ebingoo" + version + ".apk";
-        return new File(dir, fileName);
-    }
-
-    /**
      * 下载apk，需要传入url和版本名
      */
     public static class APKDownloadTask extends AsyncTask<String, Long, File> implements Dialog.OnDismissListener {
+        NotificationManager manager;
         private Context mContext;
         private ApkProgressDialog dialog;
         private NotificationCompat.Builder builder;
         private Boolean pause = false;
         /*下载开始位置*/
         private Long start;
-        NotificationManager manager;
 
         /**
-         *
          * @param context
-         * @param start 文件流的开始位置
+         * @param start   文件流的开始位置
          */
         public APKDownloadTask(Context context, Long start) {
             this.mContext = context.getApplicationContext();
             this.start = start;
-            manager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
         @Override
@@ -289,7 +340,7 @@ public class VersionManager {
             dialog = new ApkProgressDialog(mContext) {
                 @Override
                 public void onPausePressed() {
-                    synchronized (pause){
+                    synchronized (pause) {
                         pause = true;
                     }
                 }
@@ -338,8 +389,8 @@ public class VersionManager {
             return apkFile;
         }
 
-        private boolean isPause(){
-            synchronized (pause){
+        private boolean isPause() {
+            synchronized (pause) {
                 return pause;
             }
         }
@@ -415,59 +466,6 @@ public class VersionManager {
         @Override
         public void onDismiss(DialogInterface dialog) {
         }
-    }
-
-    /**
-     * 获取远程文件大小
-     *
-     * @param url
-     * @return
-     */
-    private static long getRemoteFileSize(String url) {
-        long size = 0;
-        try {
-            HttpURLConnection httpUrl = (HttpURLConnection) (new URL(url)).openConnection();
-            size = httpUrl.getContentLength();
-            httpUrl.disconnect();
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        return size;
-    }
-
-    private static Intent getInstallIntent(File file) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file),
-                "application/vnd.android.package-archive");
-        return intent;
-    }
-
-
-    /**
-     * 安装
-     *
-     * @param context
-     * @param file
-     */
-    private static void showInstallDialog(Context context, File file) {
-        final File f = file;
-        final Context mContext = context.getApplicationContext();
-        EbingoDialog installDialog = new EbingoDialog(context);
-        installDialog.setTitle(R.string.warn);
-        installDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        installDialog.setMessage(context.getString(R.string.click_install, file.getName()));
-        installDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = getInstallIntent(f);
-                mContext.startActivity(intent);
-                dialog.dismiss();
-            }
-        });
-        installDialog.show();
     }
 
 }

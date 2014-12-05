@@ -196,6 +196,45 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LoginDialog.REQUEST_CODE) {
+            firstGetData();
+        }
+    }
+
+    /**
+     * 第一次获得数据。
+     */
+    private void firstGetData() {
+        getData(0);
+        mFirstFlag = false;
+    }
+
+    private static class ViewHolder {
+        TextView nameTv;
+        TextView timeTv;
+        TextView describTv;
+
+    }
 
     private class MyAdapter extends BaseAdapter {
 
@@ -239,46 +278,5 @@ public class InterpriseDemandInfo extends CommonListFragment implements AdapterV
             return convertView;
         }
 
-    }
-
-
-    private static class ViewHolder {
-        TextView nameTv;
-        TextView timeTv;
-        TextView describTv;
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        try {
-            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
-
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LoginDialog.REQUEST_CODE) {
-            firstGetData();
-        }
-    }
-
-    /**
-     * 第一次获得数据。
-     */
-    private void firstGetData() {
-        getData(0);
-        mFirstFlag = false;
     }
 }

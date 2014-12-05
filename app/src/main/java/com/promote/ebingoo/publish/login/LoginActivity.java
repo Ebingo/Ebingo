@@ -86,7 +86,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             }
             case R.id.tv_forget_password:
-                startActivity(new Intent(this,FindPasswordActivity.class));
+                startActivity(new Intent(this, FindPasswordActivity.class));
                 break;
             default: {
 
@@ -122,7 +122,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode==RESULT_OK&&requestCode==RegisterActivity.REQUEST_CODE){
+        if (resultCode == RESULT_OK && requestCode == RegisterActivity.REQUEST_CODE) {
             finish();
         }
     }

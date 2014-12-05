@@ -25,48 +25,27 @@ import com.jch.lib.view.Dialog.niftyefffectslib.effects.BaseEffects;
  */
 public class NiftyDialogBuilder extends Dialog implements DialogInterface {
 
-    private final String defTextColor = "#FFFFFFFF";
-
-    private final String defDividerColor = "#11000000";
-
-    private final String defMsgColor = "#FFFFFFFF";
-
-    private final String defDialogColor = "#FFE74C3C";
-
-
-    private Effectstype type = null;
-
-    private LinearLayout mLinearLayoutView;
-
-    private RelativeLayout mRelativeLayoutView;
-
-    private LinearLayout mLinearLayoutMsgView;
-
-    private LinearLayout mLinearLayoutTopView;
-
-    private FrameLayout mFrameLayoutCustomView;
-
-    private View mDialogView;
-
-    private View mDivider;
-
-    private TextView mTitle;
-
-    private TextView mMessage;
-
-    private ImageView mIcon;
-
-    private Button mButton1;
-
-    private Button mButton2;
-
-    private int mDuration = -1;
-
     private static int mOrientation = 1;
-
-    private boolean isCancelable = true;
-
     private static NiftyDialogBuilder instance;
+    private final String defTextColor = "#FFFFFFFF";
+    private final String defDividerColor = "#11000000";
+    private final String defMsgColor = "#FFFFFFFF";
+    private final String defDialogColor = "#FFE74C3C";
+    private Effectstype type = null;
+    private LinearLayout mLinearLayoutView;
+    private RelativeLayout mRelativeLayoutView;
+    private LinearLayout mLinearLayoutMsgView;
+    private LinearLayout mLinearLayoutTopView;
+    private FrameLayout mFrameLayoutCustomView;
+    private View mDialogView;
+    private View mDivider;
+    private TextView mTitle;
+    private TextView mMessage;
+    private ImageView mIcon;
+    private Button mButton1;
+    private Button mButton2;
+    private int mDuration = -1;
+    private boolean isCancelable = true;
 
     public NiftyDialogBuilder(Context context) {
         super(context);
@@ -79,6 +58,12 @@ public class NiftyDialogBuilder extends Dialog implements DialogInterface {
         init(context);
     }
 
+    public static NiftyDialogBuilder getInstance(Context context) {
+        instance = new NiftyDialogBuilder(context, R.style.dialog_untran);
+        return instance;
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,12 +71,6 @@ public class NiftyDialogBuilder extends Dialog implements DialogInterface {
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         getWindow().setAttributes((WindowManager.LayoutParams) params);
-
-    }
-
-    public static NiftyDialogBuilder getInstance(Context context) {
-        instance = new NiftyDialogBuilder(context, R.style.dialog_untran);
-        return instance;
 
     }
 

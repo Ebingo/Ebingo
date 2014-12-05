@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
     style="@style/info_content_pad"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/click_gray_bg"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal">
 
 
     <ImageView
@@ -14,31 +14,31 @@
         android:scaleType="centerCrop" />
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/search_result_province_tv"
                 style="@style/font_gray_12"
-                android:text="江蘇"
-                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="江蘇" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/search_result_province_tv"
-                android:layout_height="wrap_content">
+                android:orientation="horizontal">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -46,29 +46,29 @@
 
                     <TextView
                         android:id="@+id/search_result_black_name_tv"
-                        android:layout_width="wrap_content"
                         style="@style/black_15_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/vip_list_img_width"
-                        android:text="南京普爾摩網絡有限公司"
-                        android:layout_height="wrap_content" />
+                        android:text="南京普爾摩網絡有限公司" />
 
                     <ImageView
-                        android:scaleType="fitStart"
-                        android:layout_gravity="top|right"
                         android:id="@+id/search_list_vip_img"
                         style="@style/list_vip_img_style"
+                        android:layout_gravity="top|right"
+                        android:scaleType="fitStart"
                         android:src="@drawable/vip_1_member" />
                 </FrameLayout>
             </LinearLayout>
         </RelativeLayout>
 
         <TextView
-            android:layout_marginTop="5dp"
             android:id="@+id/search_result_describe_tv"
+            style="@style/font_gray_12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="2"
-            style="@style/font_gray_12" />
+            android:layout_marginTop="5dp"
+            android:lines="2" />
 
     </LinearLayout>
 

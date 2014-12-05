@@ -17,6 +17,14 @@ public class JsonObjectWrapper {
         this.jsonObject = jsonObject;
     }
 
+    public static String quote(String data) {
+        return JSONObject.quote(data);
+    }
+
+    public static String numberToString(Number number) throws JSONException {
+        return JSONObject.numberToString(number);
+    }
+
     public int length() {
         return jsonObject.length();
     }
@@ -39,10 +47,6 @@ public class JsonObjectWrapper {
 
     public JSONObject accumulate(String name, Object value) throws JSONException {
         return jsonObject.accumulate(name, value);
-    }
-
-    public static String quote(String data) {
-        return JSONObject.quote(data);
     }
 
     public String getString(String name) throws JSONException {
@@ -148,10 +152,6 @@ public class JsonObjectWrapper {
 
     public JSONObject put(String name, Object value) throws JSONException {
         return jsonObject.put(name, value);
-    }
-
-    public static String numberToString(Number number) throws JSONException {
-        return JSONObject.numberToString(number);
     }
 
     public String optString(String name, String fallback) {

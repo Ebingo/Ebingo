@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/center_del_name_tv"
         style="@style/item_pad_black_15_tv"
-        android:background="@color/white"
-        android:text="求购衣物求购衣物求购衣物求购"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:text="求购衣物求购衣物求购衣物求购" />
 
     <View
         android:layout_width="match_parent"
@@ -21,10 +21,10 @@
     <TextView
         android:id="@+id/center_del_delte_tv"
         style="@style/item_pad_gray_15_tv"
-        android:background="@drawable/click_gray_bg"
-        android:text="@string/delete"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/click_gray_bg"
+        android:text="@string/delete" />
 
     <View
         android:layout_width="match_parent"
@@ -34,9 +34,9 @@
     <TextView
         android:id="@+id/center_del_cancel_tv"
         style="@style/item_pad_gray_15_tv"
-        android:background="@drawable/click_gray_bg"
-        android:text="@string/cancel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/click_gray_bg"
+        android:text="@string/cancel" />
 
 </LinearLayout>

@@ -67,6 +67,10 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     private ScrollView findsv;
 
 
+    public FindFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -82,10 +86,6 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public FindFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -271,13 +271,13 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    static class ViewHolder {
-        ImageView imgView;
-        TextView text;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    static class ViewHolder {
+        ImageView imgView;
+        TextView text;
     }
 }

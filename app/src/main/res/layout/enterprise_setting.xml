@@ -127,9 +127,9 @@
                     <View style="@style/vertical_divider_20" />
 
                     <EditText
-                        android:inputType="phone"
                         android:id="@+id/edit_enterprise_phone"
-                        style="@style/publish_edit" />
+                        style="@style/publish_edit"
+                        android:inputType="phone" />
 
                 </TableRow>
 
@@ -167,10 +167,10 @@
 
             <TextView
                 android:id="@+id/tv_error"
-                android:layout_marginTop="12dp"
+                style="@style/font_red_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/font_red_12"
+                android:layout_marginTop="12dp"
                 android:drawableLeft="@drawable/ic_warn"
                 android:text="电话格式错误" />
 

@@ -384,6 +384,11 @@ public class EnterpriseSettingActivity extends BaseActivity {
         }
     }
 
+    void showError(String msg) {
+        tv_error.setText(msg);
+        tv_error.setVisibility(View.VISIBLE);
+    }
+
     class EnterPriseInfo {
         Integer company_id;
         String image;
@@ -441,10 +446,5 @@ public class EnterpriseSettingActivity extends BaseActivity {
             }
             return true;
         }
-    }
-
-    void showError(String msg) {
-        tv_error.setText(msg);
-        tv_error.setVisibility(View.VISIBLE);
     }
 }

@@ -53,15 +53,17 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         enableDelete(true);
         setDownRefreshable(true);
         enableCache(FileUtil.FILE_DEMAND_LIST, mDemandBeans);
-        if (mDemandBeans.size() == 0||getIntent().getBooleanExtra(ARG_REFRESH,false)) onRefresh();
+        if (mDemandBeans.size() == 0 || getIntent().getBooleanExtra(ARG_REFRESH, false))
+            onRefresh();
     }
+
     /**
      * 添加一个emptyView,如果不添加则使用默认的
      */
     private void addEmptyView() {
         View empty_view = View.inflate(this, R.layout.empty_layout, null);
-        TextView notice= (TextView) empty_view.findViewById(R.id.tv_empty_notice);
-        notice.setText(getString(R.string.empty_notice,"求购"));
+        TextView notice = (TextView) empty_view.findViewById(R.id.tv_empty_notice);
+        notice.setText(getString(R.string.empty_notice, "求购"));
         empty_view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -75,6 +77,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
 
         setEmptyView(empty_view);
     }
+
     private void getMyDemandList(int lastId) {
 
         String urlStr = HttpConstant.getDemandInfoList;
@@ -111,6 +114,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
 
     /**
      * 创建筛选条件
+     *
      * @return
      */
     private String getCondition() {
@@ -120,7 +124,7 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
                 .append(",")
                 .append(makeCondition("sort", "time"))
                 .append(",")
-                .append(makeCondition("verify",3))
+                .append(makeCondition("verify", 3))
                 .append("}");
 
         try {
@@ -182,6 +186,25 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
         });
     }
 
+    @Override
+    protected void onLoadMore(int lastId) {
+        getMyDemandList(lastId);
+    }
+
+    @Override
+    protected void onRefresh() {
+        mDemandBeans.clear();
+        getMyDemandList(0);
+    }
+
+    private static class ViewHolder {
+
+        TextView nameTv;
+        TextView lookTv;
+        TextView timeTv;
+        TextView verifyTv;
+    }
+
     private class MyAdapter extends BaseAdapter {
 
 
@@ -220,39 +243,20 @@ public class MyDemandActivity extends BaseListActivity implements View.OnClickLi
             viewHolder.nameTv.setText(demandBean.getName());
             viewHolder.lookTv.setText(getString(R.string.look_unite, demandBean.getRead_num()));
             viewHolder.timeTv.setText(demandBean.getDate());
-            String verify_result=demandBean.getVerify_result();
-            if (Constant.VERIFY_WAITING.equals(verify_result)){
+            String verify_result = demandBean.getVerify_result();
+            if (Constant.VERIFY_WAITING.equals(verify_result)) {
                 viewHolder.verifyTv.setVisibility(View.VISIBLE);
                 viewHolder.verifyTv.setText("待审核");
                 viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.orange_my));
-            }else if(Constant.VERIFY_NOT_PASS.equals(verify_result)){
+            } else if (Constant.VERIFY_NOT_PASS.equals(verify_result)) {
                 viewHolder.verifyTv.setVisibility(View.VISIBLE);
                 viewHolder.verifyTv.setText("未通过");
                 viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.gray));
-            }else{
+            } else {
                 viewHolder.verifyTv.setVisibility(View.INVISIBLE);
             }
             return convertView;
         }
 
-    }
-
-    private static class ViewHolder {
-
-        TextView nameTv;
-        TextView lookTv;
-        TextView timeTv;
-        TextView verifyTv;
-    }
-
-    @Override
-    protected void onLoadMore(int lastId) {
-        getMyDemandList(lastId);
-    }
-
-    @Override
-    protected void onRefresh() {
-        mDemandBeans.clear();
-        getMyDemandList(0);
     }
 }

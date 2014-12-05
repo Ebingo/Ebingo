@@ -1,17 +1,16 @@
 package com.jch.lib.view.Dialog.niftyefffectslib.effects;
 
-import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.View;
 
-import static android.animation.ObjectAnimator.*;
+import static android.animation.ObjectAnimator.ofFloat;
 
 
 /**
  * Created by lee on 2014/7/31.
  */
-public class Shake  extends BaseEffects{
+public class Shake extends BaseEffects {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override

@@ -12,21 +12,15 @@ import android.util.Log;
 public class InstanceFragmentAdapter {
 
 
-    public interface FragmentFactory {
-        /**
-         * 生成需要的fragment.
-         *
-         * @return
-         */
-        public Fragment createFragment();
-    }
-
+    public static InstanceFragmentAdapter instanceFragmentAdapter = null;
     private FragmentManager mFragmentManager = null;
 
     private FragmentTransaction mFt = null;
     private FragmentFactory mFragmentFactory = null;
 
-    public static InstanceFragmentAdapter instanceFragmentAdapter = null;
+    public InstanceFragmentAdapter(FragmentManager fm) {
+        this.mFragmentManager = fm;
+    }
 
     /**
      * 以单例模式获得本类实例。
@@ -40,10 +34,6 @@ public class InstanceFragmentAdapter {
         }
 
         return instanceFragmentAdapter;
-    }
-
-    public InstanceFragmentAdapter(FragmentManager fm) {
-        this.mFragmentManager = fm;
     }
 
     /**
@@ -77,6 +67,15 @@ public class InstanceFragmentAdapter {
         ft = null;
         mFragmentManager.executePendingTransactions();
 
+    }
+
+    public interface FragmentFactory {
+        /**
+         * 生成需要的fragment.
+         *
+         * @return
+         */
+        public Fragment createFragment();
     }
 
 }

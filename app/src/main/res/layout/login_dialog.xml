@@ -19,8 +19,8 @@
         android:drawableLeft="@drawable/ic_edit_account"
         android:drawablePadding="@dimen/ic_padding"
         android:hint="@string/hint_edit_phone"
-        android:paddingLeft="5dp"
         android:inputType="phone"
+        android:paddingLeft="5dp"
         android:singleLine="true"
         android:textSize="@dimen/font_15" />
 

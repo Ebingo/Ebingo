@@ -48,6 +48,7 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
      * activty内容容器 *
      */
     private FrameLayout maincontentfl;
+    private long lastTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
         ft.commitAllowingStateLoss();
         mCurFragment = mMainFramgent; //记录当前frag。
     }
-
 
     /**
      * 隐藏显示相应的frag，并将设置当前的fragment。
@@ -210,8 +210,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     public void onLoginCancel() {
         mainrb.setChecked(true);
     }
-
-    private long lastTime = 0;
 
     @Override
     public void onBackPressed() {

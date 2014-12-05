@@ -5,46 +5,10 @@ package com.promote.ebingoo.application;
  */
 public class HttpConstant {
 
-    //    private static final String TEST_RHOST = "http://ebingoo.com"; //remote
-    private static final String TEST_RHOST = "http://ebingoo.bingoso.com";
-
-    private static final boolean LOCALHOST = false;
-
-    private static final String TEST_HOST = "http://192.168.1.112";
-
-    private static final String HOST = "";
-
-    private static final String PORT = "";
-
-    private static final String ROOT_URL = "/index.php?s=/Home/Api/";
-
-    public static String LOCAL_URL = "/ebingoo/index.php?s=/Home/Api/";
-
-
-    public static String getHost() {
-
-        if (Constant.isReleaseAble()) {
-            return HOST + PORT;
-        } else {
-            return TEST_HOST + PORT;
-        }
-    }
-
-    public static String getRootUrl() {
-
-        if (LOCALHOST) {
-            return TEST_HOST + LOCAL_URL;
-        } else {
-            return TEST_RHOST + ROOT_URL;
-        }
-    }
-
     public static final String KEY = "hdy782634j23487sdfkjw3486";
-
     public static final String FAIL = "fail";//访问网络返回失败
     public static final String CODE_OK = "100";//成功返回码
     public static final String CODE_FAIL = "101";//失败返回码
-
     /**
      * 首页显示接口.*
      */
@@ -125,12 +89,10 @@ public class HttpConstant {
      * 意见反馈
      */
     public static final String addAdvice = getRootUrl() + "addAdvice";
-
     /**
      * 添加收藏
      */
     public static final String addToWishlist = getRootUrl() + "addToWishlist";
-
     /**
      * 获取用户的订阅标签
      */
@@ -187,7 +149,32 @@ public class HttpConstant {
      * 获取热门搜索关键词
      */
     public static final String getHotSearchKeywords = getRootUrl() + "getHotSearchKeywords";
-
     public static final String atCompany = getRootUrl() + "atCompany";
+    //    private static final String TEST_RHOST = "http://ebingoo.com"; //remote
+    private static final String TEST_RHOST = "http://ebingoo.bingoso.com";
+    private static final boolean LOCALHOST = false;
+    private static final String TEST_HOST = "http://192.168.1.112";
+    private static final String HOST = "";
+    private static final String PORT = "";
+    private static final String ROOT_URL = "/index.php?s=/Home/Api/";
+    public static String LOCAL_URL = "/ebingoo/index.php?s=/Home/Api/";
+
+    public static String getHost() {
+
+        if (Constant.isReleaseAble()) {
+            return HOST + PORT;
+        } else {
+            return TEST_HOST + PORT;
+        }
+    }
+
+    public static String getRootUrl() {
+
+        if (LOCALHOST) {
+            return TEST_HOST + LOCAL_URL;
+        } else {
+            return TEST_RHOST + ROOT_URL;
+        }
+    }
 
 }

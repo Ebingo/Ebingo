@@ -3,10 +3,10 @@
     <corners android:radius="1dp" />
 
     <gradient
-        android:startColor="@color/transparent"
         android:centerColor="@color/transparent"
-        android:endColor="@color/transparent" />
+        android:endColor="@color/transparent"
+        android:startColor="@color/transparent" />
     <stroke
-        android:color="@color/divide_gray"
-        android:width="1px"></stroke>
+        android:width="1px"
+        android:color="@color/divide_gray"></stroke>
 </shape>

@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     style="@style/list_item_style"
-    android:background="@drawable/click_gray_bg"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/click_gray_bg">
 
 
     <ImageView
         android:id="@+id/category_lv_item_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleType="centerCrop"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/category_right_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:orientation="horizontal">
 
         <TextView
+            style="@style/font_gray_12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/font_gray_12"
             android:text="@string/search_look" />
 
         <TextView
+            style="@style/font_gray_12"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/font_gray_12" />
+            android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/font_gray_12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/font_gray_12"
             android:text="@string/search_time" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_toRightOf="@id/category_lv_item_img"
-        android:layout_toLeftOf="@id/category_right_ll"
         android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/category_right_ll"
+        android:layout_toRightOf="@id/category_lv_item_img"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/category_lv_item_name_tv"
@@ -59,9 +59,9 @@
 
             <TextView
                 style="@style/font_orange_15"
-                android:text="@string/rmb_signe"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/rmb_signe" />
 
             <TextView
                 android:id="@+id/category_item_price"
@@ -71,16 +71,16 @@
 
             <TextView
                 android:id="@+id/category_item_start_num"
-                android:layout_marginLeft="10dp"
                 style="@style/font_gray_12"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp" />
 
             <TextView
-                android:layout_width="wrap_content"
                 style="@style/font_gray_12"
-                android:text="@string/start_supply"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_supply" />
 
         </LinearLayout>
 
@@ -92,17 +92,17 @@
 
             <TextView
                 android:id="@+id/category_item_name_title"
-                android:layout_width="wrap_content"
-                android:text="@string/supply_company"
                 style="@style/font_gray_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:layout_height="wrap_content" />
+                android:text="@string/supply_company" />
 
             <TextView
                 android:id="@+id/category_item_company_tv"
+                style="@style/gray_11_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/gray_11_tv"
                 android:layout_marginLeft="3dp" />
         </LinearLayout>
     </LinearLayout>

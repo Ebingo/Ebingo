@@ -27,17 +27,18 @@ import java.net.URL;
  */
 public class ImageUtil {
 
-    public static final String IMAGE_TEMP_PUBLISH_SUPPLY="publish_supply.png";
-    public static final String IMAGE_TEMP_COMPANY_IMAGE="company_image.png";
+    public static final String IMAGE_TEMP_PUBLISH_SUPPLY = "publish_supply.png";
+    public static final String IMAGE_TEMP_COMPANY_IMAGE = "company_image.png";
 
 
     /**
      * 获取图片暂存文件
+     *
      * @param name
      * @return
      */
-    public static File getImageTempFile(String name){
-        return new File(getImageDir(),name);
+    public static File getImageTempFile(String name) {
+        return new File(getImageDir(), name);
     }
 
     private static String getImageDir() {

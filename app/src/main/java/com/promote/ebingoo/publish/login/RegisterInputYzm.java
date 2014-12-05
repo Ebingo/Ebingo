@@ -51,11 +51,39 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
      * 重新获取验证码剩余时间
      */
     int timeLeft = MAX_TIME;
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            timeLeft--;
+            Message msg = new Message();
+            if (timeLeft <= 0) {
+                this.cancel();
+                msg.what = 2;
+            } else {
+                msg.what = 1;
+                msg.arg1 = timeLeft;
+            }
+            buttonHandler.sendMessage(msg);
+        }
+    };
+    Button btn_getYzm;
+    ImageView verify_image;
+    Handler buttonHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == 1) {
+                btn_getYzm.setText(msg.arg1 + "秒后\n重新获取");
+                btn_getYzm.setEnabled(false);
+            } else {
+                btn_getYzm.setText("重新获取");
+                btn_getYzm.setEnabled(true);
+            }
+            return false;
+        }
+    });
     private Timer timer = null;
     private EditText edit_yzm;
     private EditText edit_password;
-    Button btn_getYzm;
-    ImageView verify_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +98,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
         findViewById(R.id.btn_next).setOnClickListener(this);
         startTimer2InvalidateButton();
         invalidateVerify();
-        ((TextView)findViewById(R.id.commit_title_done)).setText(R.string.login_);
+        ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.login_);
     }
 
     private void invalidateVerify() {
@@ -103,7 +131,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
                 try {
                     Company.getInstance().setCompanyId(response.getInt("company_id"));
                     Company.getInstance().setVipType(response.getString("vip_type"));
-                    doLogin(phoneNum,password);
+                    doLogin(phoneNum, password);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -122,13 +150,13 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
         });
     }
 
-    private void doLogin(String phone,String password){
-        new LoginManager().doLogin(phone,password,new LoginManager.Callback() {
+    private void doLogin(String phone, String password) {
+        new LoginManager().doLogin(phone, password, new LoginManager.Callback() {
             @Override
             public void onSuccess() {
                 Intent intent = new Intent(RegisterInputYzm.this, EnterpriseSettingActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
-                setResult(RESULT_OK,new Intent());
+                setResult(RESULT_OK, new Intent());
                 finish();
             }
 
@@ -139,10 +167,10 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
         });
     }
 
-    private boolean checkVerify(String input){
-        String code=verify_image.getContentDescription().toString().toLowerCase();
-        String input_code=input.toLowerCase();
-        LogCat.i("--->","input="+input_code+" code:"+code);
+    private boolean checkVerify(String input) {
+        String code = verify_image.getContentDescription().toString().toLowerCase();
+        String input_code = input.toLowerCase();
+        LogCat.i("--->", "input=" + input_code + " code:" + code);
         return code.equals(input_code);
     }
 
@@ -159,37 +187,6 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
 //        timer=new Timer();
 //        timer.schedule(task,1000,1000);
     }
-
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            timeLeft--;
-            Message msg = new Message();
-            if (timeLeft <= 0) {
-                this.cancel();
-                msg.what = 2;
-            } else {
-                msg.what = 1;
-                msg.arg1 = timeLeft;
-            }
-            buttonHandler.sendMessage(msg);
-        }
-    };
-
-    Handler buttonHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (msg.what == 1) {
-                btn_getYzm.setText(msg.arg1 + "秒后\n重新获取");
-                btn_getYzm.setEnabled(false);
-            } else {
-                btn_getYzm.setText("重新获取");
-                btn_getYzm.setEnabled(true);
-            }
-            return false;
-        }
-    });
-
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -223,7 +220,7 @@ public class RegisterInputYzm extends BaseActivity implements CompoundButton.OnC
                 invalidateVerify();
                 break;
             case R.id.commit_title_done:
-                Intent intent=new Intent(this,LoginActivity.class);
+                Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 break;

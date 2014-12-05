@@ -58,22 +58,39 @@ import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends BaseFragment implements ViewPager.OnPageChangeListener, View.OnClickListener, SpecialEventsLayout.SpecialEventOnlickListener, PullToRefreshView.OnHeaderRefreshListener {
 
-    private PullToRefreshView homefreshview;
-
-
-    public interface HomeFragmentListener {
-        public void moreHotMarket();
-    }
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PARAM1 = "param1";
     public static final String ARG_PARAM2 = "param2";
+    private final static int LOOPERAGR = 1;
+    /**
+     * 循環滾動banner的handler
+     */
+    private Handler looperHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            if (msg.what == LOOPERAGR) {
+
+                int curItem = msg.arg1;
+                mainfragvp.setCurrentItem(curItem);
+                LogCat.i("Thread item :--" + curItem);
+
+            }
+
+
+        }
+    };
     /**
      * 主页回调函数. *
      */
     public HomeFragmentListener mHomeFragmentListener = null;
-
+    /**
+     * 公告条. *
+     */
+    ArrayList<Adv> mAds = new ArrayList<Adv>();
+    private PullToRefreshView homefreshview;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -92,7 +109,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     private TextView mainpricenumtv;
     private GridView mHotMarketGv;
     private HotMarketAdapter hotMarketAdapter;
-
     private SpecialEventsLayout specialEventsLayout;
     /**
      * 二维码扫描按钮。 *
@@ -102,7 +118,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      * banner條滾動schedule. *
      */
     private ScheduledExecutorService scheduledExecutorService;
-
     private GetIndexBean mIndexBean = null;
     /**
      * 热门市场. *
@@ -116,7 +131,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      * 热门需求. *
      */
     private ArrayList<HotBean> hot_demand = new ArrayList<HotBean>();
-
     /**
      * 廣告大圖的緩存機制. *
      */
@@ -126,10 +140,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      */
     private DisplayImageOptions mCircleImageOptions;
     /**
-     * 公告条. *
-     */
-    ArrayList<Adv> mAds = new ArrayList<Adv>();
-    /**
      * 热门求购 *
      */
     private HoteBeanAdapter mHotBuyAdapter = null;
@@ -137,15 +147,15 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      * 热门供应 *
      */
     private HoteBeanAdapter mHotSupplyAdapter = null;
-
     private Point imageSize = new Point(320, 118);
-
     private Point hote_d_s_imgSize = new Point(300, 118);
-
     private ScrollListView mHotBuyLv = null;
     private ScrollListView mSupplyLv = null;
     private PagerScrollView homesv;
 
+    public HomeFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -163,10 +173,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public HomeFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -190,7 +196,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         initialize(view);
         return view;
     }
-
 
     @Override
     public void onDestroy() {
@@ -273,7 +278,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         mCircleImageOptions = ContextUtil.getSquareImgOptions();
     }
 
-
     /**
      * 自动循环播放banner viewPager.
      */
@@ -309,48 +313,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         }
 
     }
-
-
-    /**
-     * 定时滚动banner的Task.
-     */
-    private class LooperPagerTask implements Runnable {
-
-        @Override
-        public void run() {
-
-            int curentItem = mainfragvp.getCurrentItem();
-            curentItem++;
-            Message msg = new Message();
-            msg.what = LOOPERAGR;
-            msg.arg1 = curentItem;
-            if (!homefreshview.isHeadRefreshing())
-                looperHandler.sendMessage(msg);
-        }
-    }
-
-    private final static int LOOPERAGR = 1;
-
-    /**
-     * 循環滾動banner的handler
-     */
-    private Handler looperHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            if (msg.what == LOOPERAGR) {
-
-                int curItem = msg.arg1;
-                mainfragvp.setCurrentItem(curItem);
-                LogCat.i("Thread item :--" + curItem);
-
-            }
-
-
-        }
-    };
-
 
     @Override
     public void onHeaderRefresh(PullToRefreshView view) {
@@ -450,6 +412,160 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
         });
 
 
+    }
+
+    /**
+     * 從服務器獲取首頁信息。
+     */
+    private void getIndex(boolean showDialog, final boolean refreshed) {
+
+
+        EbingoRequest.getHomedata(getActivity(), showDialog, new EbingoRequest.RequestCallBack<GetIndexBean>() {
+            @Override
+            public void onFaild(int resultCode, String msg) {
+                LogCat.d("getHomedata faild :" + msg);
+                GetIndexBean indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
+                if (indexBean == null) {
+                    Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                } else {
+                    initGetData(indexBean, refreshed);
+                }
+                homefreshview.onHeaderRefreshComplete(new Date());
+            }
+
+            @Override
+            public void onSuccess(GetIndexBean resultObj) {
+                LogCat.d("getHomedata onSuccess :" + resultObj);
+
+                GetIndexBean indexBean = resultObj;
+                if (indexBean == null) {
+                    indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
+                }
+                if (indexBean != null) {
+                    initGetData(indexBean, refreshed);
+                }
+                homefreshview.onHeaderRefreshComplete(new Date());
+
+            }
+        });
+
+    }
+
+    private void initGetData(GetIndexBean indexBean, boolean refreshed) {
+        ArrayList<Adv> advs = indexBean.getAds();
+        if (advs != null) {
+            mAds.clear();
+            mAds.addAll(advs);
+        }
+
+        ArrayList<HotCategory> hotCategories = indexBean.getHot_category();
+        if (hotCategories != null) {
+            hot_category.clear();
+            hot_category.addAll(hotCategories);
+        }
+
+        ArrayList<HotBean> hotDemands = indexBean.getHot_demand();
+        if (hotDemands != null) {
+            hot_demand.clear();
+            hot_demand.addAll(hotDemands);
+            mHotBuyAdapter.notifyDataSetChanged();
+
+        }
+
+        ArrayList<HotBean> hotSupplys = indexBean.getHot_supply();
+        if (hotSupplys != null) {
+            hot_supply.clear();
+            hot_supply.addAll(hotSupplys);
+            mHotSupplyAdapter.notifyDataSetChanged();
+        }
+
+        specialEventsLayout.setHotAcitivityData(indexBean.getActive());
+
+        mIndexBean = indexBean;
+        initTodayData();
+        setAdvPager(refreshed);
+        initHotMarket();
+    }
+
+    /**
+     * 设置滚动广告图片.
+     */
+    private void setAdvPager(boolean refreshed) {
+//        mainfragvp.removeAllViews();
+        mBannerPagerAdapter.notifyDataSetChanged();
+        mainfragpi.setTotalPage(mAds.size());
+        if (!refreshed) {
+            mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
+            mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
+        }
+
+    }
+
+    /**
+     * 初始化今日数据。
+     */
+    private void initTodayData() {
+
+        TodayNum todayNum = mIndexBean.getToday_num();
+        maingetnum.setText(String.valueOf(todayNum.getDemand_num()));
+        mainsptnumtv.setText(String.valueOf(todayNum.getSupply_num()));
+        mainpricenumtv.setText(String.valueOf(todayNum.getCall_num()));
+    }
+
+    /**
+     * 初始化热门市场。
+     */
+    private void initHotMarket() {
+
+        hotMarketAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mHomeFragmentListener = (HomeFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (scheduledExecutorService != null) {
+            scheduledExecutorService.shutdown();
+        }
+        mHomeFragmentListener = null;
+    }
+
+    public interface HomeFragmentListener {
+        public void moreHotMarket();
+    }
+
+    /**
+     * 定时滚动banner的Task.
+     */
+    private class LooperPagerTask implements Runnable {
+
+        @Override
+        public void run() {
+
+            int curentItem = mainfragvp.getCurrentItem();
+            curentItem++;
+            Message msg = new Message();
+            msg.what = LOOPERAGR;
+            msg.arg1 = curentItem;
+            if (!homefreshview.isHeadRefreshing())
+                looperHandler.sendMessage(msg);
+        }
     }
 
     /**
@@ -560,112 +676,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
     }
 
     /**
-     * 從服務器獲取首頁信息。
-     */
-    private void getIndex(boolean showDialog, final boolean refreshed) {
-
-
-        EbingoRequest.getHomedata(getActivity(), showDialog, new EbingoRequest.RequestCallBack<GetIndexBean>() {
-            @Override
-            public void onFaild(int resultCode, String msg) {
-                LogCat.d("getHomedata faild :" + msg);
-                GetIndexBean indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
-                if (indexBean == null) {
-                    Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                } else {
-                    initGetData(indexBean, refreshed);
-                }
-                homefreshview.onHeaderRefreshComplete(new Date());
-            }
-
-            @Override
-            public void onSuccess(GetIndexBean resultObj) {
-                LogCat.d("getHomedata onSuccess :" + resultObj);
-
-                GetIndexBean indexBean = resultObj;
-                if (indexBean == null) {
-                    indexBean = (GetIndexBean) ContextUtil.read(FileUtil.HOEM_DATA_CACh);
-                }
-                if (indexBean != null) {
-                    initGetData(indexBean, refreshed);
-                }
-                homefreshview.onHeaderRefreshComplete(new Date());
-
-            }
-        });
-
-    }
-
-    private void initGetData(GetIndexBean indexBean, boolean refreshed) {
-        ArrayList<Adv> advs = indexBean.getAds();
-        if (advs != null) {
-            mAds.clear();
-            mAds.addAll(advs);
-        }
-
-        ArrayList<HotCategory> hotCategories = indexBean.getHot_category();
-        if (hotCategories != null) {
-            hot_category.clear();
-            hot_category.addAll(hotCategories);
-        }
-
-        ArrayList<HotBean> hotDemands = indexBean.getHot_demand();
-        if (hotDemands != null) {
-            hot_demand.clear();
-            hot_demand.addAll(hotDemands);
-            mHotBuyAdapter.notifyDataSetChanged();
-
-        }
-
-        ArrayList<HotBean> hotSupplys = indexBean.getHot_supply();
-        if (hotSupplys != null) {
-            hot_supply.clear();
-            hot_supply.addAll(hotSupplys);
-            mHotSupplyAdapter.notifyDataSetChanged();
-        }
-
-        specialEventsLayout.setHotAcitivityData(indexBean.getActive());
-
-        mIndexBean = indexBean;
-        initTodayData();
-        setAdvPager(refreshed);
-        initHotMarket();
-    }
-
-    /**
-     * 设置滚动广告图片.
-     */
-    private void setAdvPager(boolean refreshed) {
-//        mainfragvp.removeAllViews();
-        mBannerPagerAdapter.notifyDataSetChanged();
-        mainfragpi.setTotalPage(mAds.size());
-        if (!refreshed) {
-            mainfragpi.setCurrentPage(mBannerPagerAdapter.getCurPosition(mBannerPagerAdapter.getStartpoiont()));
-            mainfragvp.setCurrentItem(mBannerPagerAdapter.getStartpoiont());
-        }
-
-    }
-
-    /**
-     * 初始化今日数据。
-     */
-    private void initTodayData() {
-
-        TodayNum todayNum = mIndexBean.getToday_num();
-        maingetnum.setText(String.valueOf(todayNum.getDemand_num()));
-        mainsptnumtv.setText(String.valueOf(todayNum.getSupply_num()));
-        mainpricenumtv.setText(String.valueOf(todayNum.getCall_num()));
-    }
-
-    /**
-     * 初始化热门市场。
-     */
-    private void initHotMarket() {
-
-        hotMarketAdapter.notifyDataSetChanged();
-    }
-
-    /**
      * 這門市場監聽。
      */
     public class HotMarketOCL implements AdapterView.OnItemClickListener {
@@ -739,32 +749,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
             }
 
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mHomeFragmentListener = (HomeFragmentListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdown();
-        }
-        mHomeFragmentListener = null;
     }
 
 }

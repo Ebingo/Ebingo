@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/scroll"
-    android:background="@color/gray_bg"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,10 +22,10 @@
             <TextView
                 style="@style/text_deep_gray_style"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_hot_tag"
                 android:drawablePadding="@dimen/ic_padding"
                 android:gravity="center_vertical"
-                android:layout_height="wrap_content"
                 android:text="热门标签" />
 
             <com.promote.ebingoo.publish.AutoLineLayout
@@ -36,11 +36,11 @@
 
             <TextView
                 style="@style/text_deep_gray_style"
-                android:layout_marginTop="22dp"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
                 android:drawableLeft="@drawable/ic_new_tag"
                 android:drawablePadding="@dimen/ic_padding"
-                android:layout_height="wrap_content"
                 android:text="新增标签" />
 
             <LinearLayout
@@ -53,17 +53,17 @@
                     android:id="@+id/edit_add_tags"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/widget_height"
-                    android:hint="请输入标签名称"
                     android:background="@drawable/corner_frame_light"
+                    android:hint="请输入标签名称"
                     android:paddingLeft="3dp"
                     android:paddingRight="3dp" />
 
                 <Button
                     android:id="@+id/btn_add"
-                    android:layout_marginTop="25dp"
                     style="@style/blue_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/widget_height"
+                    android:layout_marginTop="25dp"
                     android:gravity="center"
                     android:onClick="onClick"
                     android:text="添 加" />

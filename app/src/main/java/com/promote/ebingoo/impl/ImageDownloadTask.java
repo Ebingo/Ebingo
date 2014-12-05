@@ -54,7 +54,7 @@ public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
                 Company.getInstance().setImageUri(ImageUtil.saveBitmap(bitmap, PreviewActivity.PIC_NAME));
             }
         } catch (Exception e) {
-           LogCat.e("ImageDownloadTask error!");
+            LogCat.e("ImageDownloadTask error!");
         }
         return bitmap;
     }

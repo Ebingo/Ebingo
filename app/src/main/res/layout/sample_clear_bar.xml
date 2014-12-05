@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
 
     <com.promote.ebingoo.search.ClearBar
-        android:background="#ccc"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:paddingLeft="20dp"
+        android:background="#ccc"
         android:paddingBottom="40dp"
-        app:exampleDimension="24sp"
+        android:paddingLeft="20dp"
         app:exampleColor="#33b5e5"
-        app:exampleString="Hello, ClearBar"
-        app:exampleDrawable="@android:drawable/ic_menu_add" />
+        app:exampleDimension="24sp"
+        app:exampleDrawable="@android:drawable/ic_menu_add"
+        app:exampleString="Hello, ClearBar" />
 
 </FrameLayout>

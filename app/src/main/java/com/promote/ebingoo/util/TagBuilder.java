@@ -15,7 +15,7 @@ public class TagBuilder {
     private View tagView;
 
     public View create() {
-        View v= LayoutInflater.from(context).inflate(R.layout.call_record_item,null);
+        View v = LayoutInflater.from(context).inflate(R.layout.call_record_item, null);
         return tagView;
     }
 

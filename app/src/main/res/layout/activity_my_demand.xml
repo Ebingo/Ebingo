@@ -10,10 +10,10 @@
 
     <ListView
         android:id="@+id/mydemand_lv"
-        android:divider="@color/divide_gray"
-        android:dividerHeight="0.5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:divider="@color/divide_gray"
+        android:dividerHeight="0.5dp"></ListView>
 
     <include layout="@layout/common_nodate"></include>
 

@@ -47,9 +47,9 @@
         <ImageButton
             android:id="@+id/scan_ib"
             android:layout_width="wrap_content"
-            android:src="@drawable/scan_btn_sel"
+            android:layout_height="wrap_content"
             android:background="@null"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/scan_btn_sel" />
 
         <View
             android:layout_width="0dp"

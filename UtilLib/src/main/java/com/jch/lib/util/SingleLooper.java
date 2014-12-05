@@ -10,19 +10,22 @@ import android.os.Message;
  */
 public class SingleLooper {
 
-    public interface LooperCallback {
-        public void looerCall();
-    }
-
+    private static final int MSG_WHAT = 555;
     private int duration = 0;
     /**
      * 发送消息的时间间隔。
      */
     private int interval = 0;
-
-    private static final int MSG_WHAT = 555;
-
     private LooperCallback mLooperCallBack = null;
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (mLooperCallBack != null) {
+                mLooperCallBack.looerCall();
+            }
+        }
+    };
 
     public SingleLooper(int duration) {
 
@@ -48,14 +51,8 @@ public class SingleLooper {
         handler.sendEmptyMessageDelayed(MSG_WHAT, interval);
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (mLooperCallBack != null) {
-                mLooperCallBack.looerCall();
-            }
-        }
-    };
+    public interface LooperCallback {
+        public void looerCall();
+    }
 
 }

@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.promote.ebingoo.R;
 
 import java.text.SimpleDateFormat;
@@ -55,31 +54,8 @@ public class SListView extends ListView implements AbsListView.OnScrollListener 
     private static final int BOUNCE_ANIMATION_DELAY = 100;
     private static final float BOUNCE_OVERSHOOT_TENSION = 1.4f;
     private static final int ROTATE_ARROW_ANIMATION_DURATION = 250;
-
-
-    private static enum State {
-        PULL_TO_REFRESH,
-        RELEASE_TO_REFRESH,
-        REFRESHING
-    }
-
-    /**
-     * Interface to implement when you want to get notified of 'pull to refresh'
-     * events.
-     * Call setOnRefreshListener(..) to activate an OnRefreshListener.
-     */
-    public interface OnRefreshListener {
-
-        /**
-         * Method to be called when a refresh is requested
-         */
-        public void onRefresh();
-
-        public void onLoadMore();
-    }
-
     private static int measuredHeaderHeight;
-
+    private final int IDLE_DISTANCE = 5;
     private boolean scrollbarEnabled;
     private boolean bounceBackHeader;
     private boolean lockScrollWhileRefreshing;
@@ -89,7 +65,6 @@ public class SListView extends ListView implements AbsListView.OnScrollListener 
     private String refreshingText;
     private String lastUpdatedText;
     private SimpleDateFormat lastUpdatedDateFormat = new SimpleDateFormat("dd/MM HH:mm");
-
     private float previousY;
     private int headerPadding;
     private boolean hasResetHeader;
@@ -110,15 +85,12 @@ public class SListView extends ListView implements AbsListView.OnScrollListener 
     private OnItemLongClickListener onItemLongClickListener;
     private OnRefreshListener onRefreshListener;
     private float mScrollStartY;
-    private final int IDLE_DISTANCE = 5;
     private boolean isBottom = false;
     private boolean hasMore = true;
-
     public SListView(Context context) {
         super(context);
         init();
     }
-
     public SListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -131,7 +103,7 @@ public class SListView extends ListView implements AbsListView.OnScrollListener 
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if (scrollState == SCROLL_STATE_IDLE && isBottom && onRefreshListener != null&&hasMore) {
+        if (scrollState == SCROLL_STATE_IDLE && isBottom && onRefreshListener != null && hasMore) {
             onRefreshListener.onLoadMore();
             setFooterRefresh(true);
         }
@@ -180,11 +152,11 @@ public class SListView extends ListView implements AbsListView.OnScrollListener 
         }
     }
 
-    public void setHasMore(boolean hasMore){
+    public void setHasMore(boolean hasMore) {
         if (!hasMore) {
             footerBar.setVisibility(GONE);
             footerText.setText(R.string.footer_no_more);
-        }else{
+        } else {
             footerBar.setVisibility(INVISIBLE);
             footerText.setText(R.string.footer_wait_loading);
         }
@@ -287,7 +259,7 @@ public class SListView extends ListView implements AbsListView.OnScrollListener 
         header = (RelativeLayout) headerContainer.findViewById(R.id.ptr_id_header);
         text = (TextView) header.findViewById(R.id.ptr_id_text);
 
-        footerContainer =  inflater.inflate(R.layout.foot_view, null);
+        footerContainer = inflater.inflate(R.layout.foot_view, null);
         footerBar = (ProgressBar) footerContainer.findViewById(R.id.pull_to_load_progress);
         footerText = (TextView) footerContainer.findViewById(R.id.pull_to_load_text);
         lastUpdatedTextView = (TextView) header.findViewById(R.id.ptr_id_last_updated);
@@ -484,6 +456,27 @@ public class SListView extends ListView implements AbsListView.OnScrollListener 
 
             hasResetHeader = true;
         }
+    }
+
+    private static enum State {
+        PULL_TO_REFRESH,
+        RELEASE_TO_REFRESH,
+        REFRESHING
+    }
+
+    /**
+     * Interface to implement when you want to get notified of 'pull to refresh'
+     * events.
+     * Call setOnRefreshListener(..) to activate an OnRefreshListener.
+     */
+    public interface OnRefreshListener {
+
+        /**
+         * Method to be called when a refresh is requested
+         */
+        public void onRefresh();
+
+        public void onLoadMore();
     }
 
     private class HeaderAnimationListener implements AnimationListener {

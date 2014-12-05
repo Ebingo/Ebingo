@@ -38,10 +38,10 @@ public class SettingActivity extends BaseActivity {
 
         switch (v.getId()) {
             case R.id.company_setting:
-                if (Company.getInstance().getCompanyId()==null){
+                if (Company.getInstance().getCompanyId() == null) {
                     toActivity(LoginActivity.class);
                     finish();
-                }else{
+                } else {
                     toActivity(EnterpriseSettingActivity.class);
                 }
                 break;

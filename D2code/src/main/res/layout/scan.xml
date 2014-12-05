@@ -21,40 +21,40 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_gravity="top"
         android:layout_height="48dp"
+        android:layout_gravity="top"
         android:background="#29241e">
 
         <ImageView
+            android:id="@+id/common_back_btn"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:id="@+id/common_back_btn"
-            android:clickable="true"
-            android:scaleType="center"
             android:layout_gravity="center_vertical"
+            android:clickable="true"
             android:onClick="onClick"
+            android:scaleType="center"
             android:src="@drawable/back_arro" />
 
         <TextView
             android:id="@+id/common_title_tv"
-            android:textColor="#ffffff"
-            android:text="扫描二维码"
-            android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:text="扫描二维码"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
 
     </FrameLayout>
 
     <TextView
         android:id="@+id/txtResult"
-        android:textColor="#ffffff"
-
-        android:layout_gravity="center_horizontal|bottom"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="66dp"
+        android:textColor="#ffffff"
         android:textSize="14sp" />
 
 </FrameLayout>

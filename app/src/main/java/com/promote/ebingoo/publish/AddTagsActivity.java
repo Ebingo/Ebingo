@@ -18,11 +18,11 @@ import com.promote.ebingoo.BaseActivity;
 import com.promote.ebingoo.R;
 import com.promote.ebingoo.application.HttpConstant;
 import com.promote.ebingoo.bean.HotTag;
-import com.promote.ebingoo.view.TagView;
 import com.promote.ebingoo.impl.EbingoRequestParmater;
 import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.JsonUtil;
 import com.promote.ebingoo.util.LogCat;
+import com.promote.ebingoo.view.TagView;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -38,14 +38,15 @@ import java.util.List;
  */
 public class AddTagsActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, TagView.OnTagClickListener {
     public static final String CONTENT = "content";
-    private String spilt = ",";
     MultiAutoCompleteTextView edit_add_tab;
+    private String spilt = ",";
     private int tag_select_color;
     private int tag_unSelect_color;
     private List<HotTag> tagList = new LinkedList<HotTag>();
     private AutoLineLayout tagContainer;
     private List<String> savedTags;
     private ScrollHandler scrollHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +75,7 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         } else {
             savedTags = new LinkedList<String>();
         }
-        scrollHandler=new ScrollHandler((ScrollView) findViewById(R.id.scroll));
+        scrollHandler = new ScrollHandler((ScrollView) findViewById(R.id.scroll));
         scrollHandler.post(new Runnable() {//延迟10ms，等Activity加载完布局再获取热门标签
             @Override
             public void run() {
@@ -170,30 +171,6 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    public static class ScrollHandler extends Handler{
-        private ScrollView scrollView;
-        private Runnable scroll;
-        public ScrollHandler(ScrollView scrollView) {
-            this.scrollView = scrollView;
-        }
-
-        public void scrollToEnd(long delay) {
-            if (scroll==null){
-                scroll=new Runnable() {
-                    @Override
-                    public void run() {
-
-                        scrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                };
-            }
-            postDelayed(scroll,delay);
-        }
-
-    }
-
-
-
     /**
      * 将标签加载到视图上面
      *
@@ -222,7 +199,6 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
         tagContainer.addView(tagView);
         scrollHandler.scrollToEnd(0);
     }
-
 
     /**
      * 判断所选的标签是否超过最大值
@@ -277,5 +253,28 @@ public class AddTagsActivity extends BaseActivity implements View.OnClickListene
             hotTag.setSelect(true);
             v.setDefaultColor(tag_select_color);
         }
+    }
+
+    public static class ScrollHandler extends Handler {
+        private ScrollView scrollView;
+        private Runnable scroll;
+
+        public ScrollHandler(ScrollView scrollView) {
+            this.scrollView = scrollView;
+        }
+
+        public void scrollToEnd(long delay) {
+            if (scroll == null) {
+                scroll = new Runnable() {
+                    @Override
+                    public void run() {
+
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                };
+            }
+            postDelayed(scroll, delay);
+        }
+
     }
 }

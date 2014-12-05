@@ -26,15 +26,20 @@ import com.jch.lib.R;
 public class MyMsgAlertDialog extends Dialog {
 
     private static final int ENDMSG_WHAT = 0x5256;
+    Handler handler = new Handler() {
 
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            endDismissAnimal();
+        }
+    };
     private View contentLayoutView;
     private Context mContext;
     private TextView mTv;
-
     private int animalDuration = 500;
-
     private int mShowTime = 1500;
-
     private String msgStr;
 
     public MyMsgAlertDialog(Context context) {
@@ -87,7 +92,6 @@ public class MyMsgAlertDialog extends Dialog {
         this.msgStr = msg;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +100,6 @@ public class MyMsgAlertDialog extends Dialog {
 //        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
 //        getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }
-
 
     @Override
     protected void onStart() {
@@ -111,16 +114,6 @@ public class MyMsgAlertDialog extends Dialog {
 
         handler.sendEmptyMessageDelayed(ENDMSG_WHAT, mShowTime);
     }
-
-    Handler handler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            endDismissAnimal();
-        }
-    };
 
     /**
      * 开始动画。

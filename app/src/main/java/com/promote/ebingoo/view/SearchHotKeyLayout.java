@@ -28,27 +28,7 @@ public class SearchHotKeyLayout extends LinearLayout implements AdapterView.OnIt
     private TextView nohotkeytv;
     private LinearLayout loadinghotkeyll;
     private SearchKeyAdapter mAdater;
-
-    public void setHotKeyItemClickListener(SearchHotkeyOnItemClickListener hotKeyItemClickListener) {
-
-        this.mHotKeyItemClickListener = hotKeyItemClickListener;
-
-    }
-
     private SearchHotkeyOnItemClickListener mHotKeyItemClickListener;
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        String hotKey = mAdater.getItem(position);
-
-        mHotKeyItemClickListener.onHotKeyItemClickListener(hotKey, position, id);
-    }
-
-    public interface SearchHotkeyOnItemClickListener {
-
-        public void onHotKeyItemClickListener(String hotkey, int position, long id);
-    }
 
     public SearchHotKeyLayout(Context context) {
         super(context);
@@ -60,6 +40,19 @@ public class SearchHotKeyLayout extends LinearLayout implements AdapterView.OnIt
         initView(context);
     }
 
+    public void setHotKeyItemClickListener(SearchHotkeyOnItemClickListener hotKeyItemClickListener) {
+
+        this.mHotKeyItemClickListener = hotKeyItemClickListener;
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        String hotKey = mAdater.getItem(position);
+
+        mHotKeyItemClickListener.onHotKeyItemClickListener(hotKey, position, id);
+    }
 
     private void initView(Context context) {
         contentView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.search_hotkey_layout, null);
@@ -110,6 +103,11 @@ public class SearchHotKeyLayout extends LinearLayout implements AdapterView.OnIt
             hasData();
         }
         mAdater.nodifyOnDataChanged(hotekeys);
+    }
+
+    public interface SearchHotkeyOnItemClickListener {
+
+        public void onHotKeyItemClickListener(String hotkey, int position, long id);
     }
 
 

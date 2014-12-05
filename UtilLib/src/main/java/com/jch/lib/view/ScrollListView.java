@@ -14,9 +14,8 @@ import android.widget.ScrollView;
  */
 public class ScrollListView extends ListView {
 
-    private ScrollView mParentScrollView;
-
     private static final String TAG = "SCROLLLISTVIEW";
+    private ScrollView mParentScrollView;
 
     public ScrollListView(Context context) {
         super(context);

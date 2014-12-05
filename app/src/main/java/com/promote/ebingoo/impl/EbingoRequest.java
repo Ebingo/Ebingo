@@ -34,12 +34,6 @@ import java.util.ArrayList;
  */
 public class EbingoRequest {
 
-    public interface RequestCallBack<T> {
-        public void onFaild(int resultCode, String msg);
-
-        public void onSuccess(T resultObj);
-    }
-
     /**
      * 获取首页数据.
      *
@@ -177,7 +171,6 @@ public class EbingoRequest {
 
     }
 
-
     /**
      * 從網絡獲取求购信息列表.
      *
@@ -257,7 +250,6 @@ public class EbingoRequest {
         return sb.toString();
     }
 
-
     /**
      * 從網絡获取供应信息列表。
      * http://218.244.149.129/eb/index.php?s=/Home/Api/getSupplyInfoList?condition=%7B%22company_id%22%3A%22-1%22%7D&pagesize=20&lastid=0&os=android&secret=5cab4ffb3c00730b53eaad20a22bb201&uuid=000000000000000&time=1411200220872
@@ -324,5 +316,12 @@ public class EbingoRequest {
             }
         });
 
+    }
+
+
+    public interface RequestCallBack<T> {
+        public void onFaild(int resultCode, String msg);
+
+        public void onSuccess(T resultObj);
     }
 }

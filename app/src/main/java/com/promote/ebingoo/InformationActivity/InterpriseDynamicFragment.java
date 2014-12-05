@@ -46,6 +46,10 @@ public class InterpriseDynamicFragment extends CommonListFragment implements Ada
     private MyAdapter myAdapter = null;
     private int mCompanyId = 0;
 
+    public InterpriseDynamicFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -60,10 +64,6 @@ public class InterpriseDynamicFragment extends CommonListFragment implements Ada
         args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public InterpriseDynamicFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -119,62 +119,6 @@ public class InterpriseDynamicFragment extends CommonListFragment implements Ada
     @Override
     public void setInterprsetId(int interpriseId) {
         this.mCompanyId = interpriseId;
-    }
-
-    /**
-     * list adapter.
-     */
-    private class MyAdapter extends BaseAdapter {
-
-
-        @Override
-        public int getCount() {
-            return mCompanyNewListBeans.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mCompanyNewListBeans.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-
-                convertView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.iprise_info_dynamic_item, null);
-                viewHolder = new ViewHolder();
-
-                viewHolder.nameTv = (TextView) convertView.findViewById(R.id.iprise_info_dyanmic_name_tv);
-                viewHolder.discTv = (TextView) convertView.findViewById(R.id.iprise_info_dynamic_content_tv);
-                viewHolder.timeTv = (TextView) convertView.findViewById(R.id.iprise_info_dynamic_date_tv);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            ComanyNewsListBeanTools.CompanyNewListBean companyNewListBean = mCompanyNewListBeans.get(position);
-            viewHolder.nameTv.setText(companyNewListBean.getTitle());
-            viewHolder.timeTv.setText(companyNewListBean.getCreate_time());
-            viewHolder.discTv.setText(companyNewListBean.getDescription());
-
-            return convertView;
-        }
-
-    }
-
-    private static class ViewHolder {
-
-        TextView nameTv;
-        TextView timeTv;
-        TextView discTv;
-
     }
 
     /**
@@ -247,6 +191,62 @@ public class InterpriseDynamicFragment extends CommonListFragment implements Ada
             }
         });
 
+
+    }
+
+    private static class ViewHolder {
+
+        TextView nameTv;
+        TextView timeTv;
+        TextView discTv;
+
+    }
+
+    /**
+     * list adapter.
+     */
+    private class MyAdapter extends BaseAdapter {
+
+
+        @Override
+        public int getCount() {
+            return mCompanyNewListBeans.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mCompanyNewListBeans.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+
+                convertView = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.iprise_info_dynamic_item, null);
+                viewHolder = new ViewHolder();
+
+                viewHolder.nameTv = (TextView) convertView.findViewById(R.id.iprise_info_dyanmic_name_tv);
+                viewHolder.discTv = (TextView) convertView.findViewById(R.id.iprise_info_dynamic_content_tv);
+                viewHolder.timeTv = (TextView) convertView.findViewById(R.id.iprise_info_dynamic_date_tv);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            ComanyNewsListBeanTools.CompanyNewListBean companyNewListBean = mCompanyNewListBeans.get(position);
+            viewHolder.nameTv.setText(companyNewListBean.getTitle());
+            viewHolder.timeTv.setText(companyNewListBean.getCreate_time());
+            viewHolder.discTv.setText(companyNewListBean.getDescription());
+
+            return convertView;
+        }
 
     }
 

@@ -13,7 +13,7 @@ import com.promote.ebingoo.util.LogCat;
  */
 public enum VipType {
     VISITOR("9", "游客", 0),
-    Experience_Vip("0", "体验会员",R.drawable.vip_practice),
+    Experience_Vip("0", "体验会员", R.drawable.vip_practice),
     Standard_VIP("1", "普通会员", R.drawable.vip_standard),
     Silver_VIP("2", "银牌用户", R.drawable.vip_silver),
     Gold_VIP("3", "金牌会员", R.drawable.vip_gold),
@@ -29,6 +29,37 @@ public enum VipType {
         this.drawableId = drawableId;
     }
 
+    /**
+     * 根据vipCode获取vip名
+     *
+     * @param vipCode
+     * @return
+     */
+    public static String nameOf(String vipCode) {
+        return parse(vipCode).name;
+    }
+
+    /**
+     * 根据vip的code，获得相应的vipType。
+     *
+     * @param code
+     * @return 如果不存在对应的vipType，返回游客
+     */
+    public static VipType parse(String code) {
+        for (VipType type : VipType.values()) {
+            if (type.code.equals(code)) return type;
+        }
+        return VipType.VISITOR;
+    }
+
+    /**
+     * 获取当前公司VIP类型
+     *
+     * @return
+     */
+    public static VipType getCompanyInstance() {
+        return parse(Company.getInstance().getVipType());
+    }
 
     @Override
     public String toString() {
@@ -84,7 +115,7 @@ public enum VipType {
                 info.display_3d = 0;
                 info.webService = false;
                 info.email_book_info = false;
-                info.can_scan_demand_company_info=true;
+                info.can_scan_demand_company_info = true;
                 break;
             }
 
@@ -96,7 +127,7 @@ public enum VipType {
                 info.display_3d = 0;
                 info.webService = false;
                 info.email_book_info = false;
-                info.can_scan_demand_company_info=true;
+                info.can_scan_demand_company_info = true;
                 break;
             }
 
@@ -108,7 +139,7 @@ public enum VipType {
                 info.display_3d = 1;
                 info.webService = true;
                 info.email_book_info = false;
-                info.can_scan_demand_company_info=true;
+                info.can_scan_demand_company_info = true;
                 break;
             }
 
@@ -119,7 +150,7 @@ public enum VipType {
                 info.book_tag_num = Integer.MAX_VALUE;
                 info.display_3d = 5;
                 info.webService = true;
-                info.can_scan_demand_company_info=true;
+                info.can_scan_demand_company_info = true;
                 info.email_book_info = true;
                 break;
             }
@@ -137,38 +168,6 @@ public enum VipType {
         VipType[] vipTypes = VipType.values();
         if (ordinal() >= vipTypes.length) return null;
         else return vipTypes[ordinal() + 1];
-    }
-
-    /**
-     * 根据vipCode获取vip名
-     *
-     * @param vipCode
-     * @return
-     */
-    public static String nameOf(String vipCode) {
-        return parse(vipCode).name;
-    }
-
-    /**
-     * 根据vip的code，获得相应的vipType。
-     *
-     * @param code
-     * @return 如果不存在对应的vipType，返回游客
-     */
-    public static VipType parse(String code) {
-        for (VipType type : VipType.values()) {
-            if (type.code.equals(code)) return type;
-        }
-        return VipType.VISITOR;
-    }
-
-    /**
-     * 获取当前公司VIP类型
-     *
-     * @return
-     */
-    public static VipType getCompanyInstance() {
-        return parse(Company.getInstance().getVipType());
     }
 
     /**

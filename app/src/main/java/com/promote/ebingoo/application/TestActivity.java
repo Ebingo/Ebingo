@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.promote.ebingoo.R;
-import com.promote.ebingoo.view.RefreshListView;
 import com.promote.ebingoo.view.SListView;
 
 import java.util.LinkedList;
@@ -59,7 +58,7 @@ public class TestActivity extends ListActivity implements SListView.OnRefreshLis
             @Override
             public void run() {
                 addData();
-                if (data.size()>100){
+                if (data.size() > 100) {
                     list.setHasMore(false);
                 }
             }

@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.promote.ebingoo.InformationActivity.SupplyDemandInfoFragment">
 
     <FrameLayout
@@ -19,23 +19,23 @@
     <RadioGroup
         android:id="@+id/frag_iprise_s_d_cg"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
         android:background="@color/white"
-        android:layout_height="@dimen/title_height">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/frag_iprise_supply_ll"
-            android:text="@string/supply_info"
-            android:checked="true"
+            style="@style/iprise_s_d_tab_style"
             android:background="@color/gray_bg"
-            style="@style/iprise_s_d_tab_style" />
+            android:checked="true"
+            android:text="@string/supply_info" />
 
         <RadioButton
             android:id="@+id/frag_iprise_demand_ll"
-            android:text="@string/buy_info"
+            style="@style/iprise_s_d_tab_style"
             android:background="@color/gray_bg"
-            style="@style/iprise_s_d_tab_style" />
+            android:text="@string/buy_info" />
     </RadioGroup>
 
 </LinearLayout>

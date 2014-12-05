@@ -40,18 +40,16 @@ import static com.promote.ebingoo.publish.PublishFragment.PublishController;
  * Created by acer on 2014/9/2.
  */
 public class PublishDemand extends Fragment implements View.OnClickListener, PublishEditActivity.EditInfo {
-    private DetailInfoBean mDetailInfo;
     TextView tv_pick_category;
     TextView tv_pick_description;
     TextView tv_tags;
-
     EditText edit_title;
     EditText edit_contact;
     EditText edit_phone;
     EditText edit_demand_num;
-
     EditText edit_unit;
     PublishController controller = new PublishController();
+    private DetailInfoBean mDetailInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -115,7 +113,7 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
                 int code = controller.checkDemand();
                 if (code > 0) {
                     controller.showError(code);
-                }else{
+                } else {
                     startPublish(controller.getDemandParams(getActivity()));
                 }
 

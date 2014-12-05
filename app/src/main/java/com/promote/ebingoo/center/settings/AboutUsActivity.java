@@ -8,7 +8,7 @@ import com.promote.ebingoo.R;
 /**
  * Created by acer on 2014/9/16.
  */
-public class AboutUsActivity extends BaseActivity{
+public class AboutUsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

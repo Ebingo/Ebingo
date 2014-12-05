@@ -45,6 +45,7 @@ public class TagView extends View {
     private int number;
     private String numberStr;
     private boolean inDeleteState = false;
+    private OnTagClickListener onTagClickListener;
 
     public TagView(Context context) {
         super(context);
@@ -102,10 +103,9 @@ public class TagView extends View {
     }
 
     public void setTextSize(float textSize) {
-        this.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,textSize,getResources().getDisplayMetrics());
+        this.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, getResources().getDisplayMetrics());
         invalidateTextPaintAndMeasurements();
     }
-
 
     public int getCheckedColor() {
         return checkedColor;
@@ -133,7 +133,7 @@ public class TagView extends View {
         indicateTextSize = a.getDimension(
                 R.styleable.TagView_indicateTextSize,
                 textSize);
-        indicateHeight= a.getDimension(
+        indicateHeight = a.getDimension(
                 R.styleable.TagView_indicateHeight,
                 textSize);
         number = a.getInteger(R.styleable.TagView_number, 0);
@@ -163,28 +163,28 @@ public class TagView extends View {
         mTextHeight = fontMetrics.descent - fontMetrics.ascent;
 
         topRightPaint.setTextSize(indicateTextSize);
-        if (number>100){
-            numberStr="99+";
-        }else{
-            numberStr=number+"";
+        if (number > 100) {
+            numberStr = "99+";
+        } else {
+            numberStr = number + "";
         }
-        indicateWidth=topRightPaint.measureText(numberStr)*1.6f;
-        if(indicateWidth<indicateHeight)indicateWidth=indicateHeight;
+        indicateWidth = topRightPaint.measureText(numberStr) * 1.6f;
+        if (indicateWidth < indicateHeight) indicateWidth = indicateHeight;
         topRightPaint.setColor(indicateColor);
         invalidate();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width=MeasureSpec.getSize(widthMeasureSpec);
-        int height=MeasureSpec.getSize(heightMeasureSpec);
-        int widthMode=MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode=MeasureSpec.getMode(heightMeasureSpec);
-        if (widthMode!=MeasureSpec.EXACTLY){
-            width= (int) (mTextWidth+horizontal_spacing+indicateWidth/2)+1;
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        if (widthMode != MeasureSpec.EXACTLY) {
+            width = (int) (mTextWidth + horizontal_spacing + indicateWidth / 2) + 1;
         }
-        if (heightMode!=MeasureSpec.EXACTLY){
-            height= (int) (mTextHeight+vertical_spacing+indicateHeight/2);
+        if (heightMode != MeasureSpec.EXACTLY) {
+            height = (int) (mTextHeight + vertical_spacing + indicateHeight / 2);
         }
 
         setMeasuredDimension(width, height);
@@ -202,8 +202,8 @@ public class TagView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         // TODO: consider storing these as member variables to reduce
-        float indicate_width_half=indicateWidth/2;
-        float height_offset_half=indicateHeight/2;
+        float indicate_width_half = indicateWidth / 2;
+        float height_offset_half = indicateHeight / 2;
         int content_width = (int) (getWidth() - indicate_width_half);
         int content_height = (int) (getHeight() - height_offset_half);
         // Draw the text.
@@ -262,7 +262,6 @@ public class TagView extends View {
         return text;
     }
 
-
     public void setText(String exampleString) {
         text = exampleString;
         invalidateTextPaintAndMeasurements();
@@ -286,8 +285,6 @@ public class TagView extends View {
     public void setOnTagClickListener(OnTagClickListener onTagClickListener) {
         this.onTagClickListener = onTagClickListener;
     }
-
-    private OnTagClickListener onTagClickListener;
 
     public boolean performClick() {
         if (onTagClickListener != null) {

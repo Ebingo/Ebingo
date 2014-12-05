@@ -1,12 +1,12 @@
 package com.promote.ebingoo.impl;
 
-import java.util.Random;
-
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Bitmap.Config;
+
+import java.util.Random;
 
 public class VerifyCreator {
 
@@ -17,37 +17,32 @@ public class VerifyCreator {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
+    //default settings
+    private static final int DEFAULT_CODE_LENGTH = 4;
+    //number of chars, lines; font size
+    private int codeLength = DEFAULT_CODE_LENGTH, line_number = DEFAULT_LINE_NUMBER, font_size = DEFAULT_FONT_SIZE;
+    private static final int DEFAULT_FONT_SIZE = 25;
+    private static final int DEFAULT_LINE_NUMBER = 2;
+    private static final int BASE_PADDING_LEFT = 15, RANGE_PADDING_LEFT = 6, BASE_PADDING_TOP = 20, RANGE_PADDING_TOP = 10;
+    //random word space and pading_top
+    private int base_padding_left = BASE_PADDING_LEFT, range_padding_left = RANGE_PADDING_LEFT,
+            base_padding_top = BASE_PADDING_TOP, range_padding_top = RANGE_PADDING_TOP;
+    private static final int DEFAULT_WIDTH = 60, DEFAULT_HEIGHT = 40;
 
+    //settings decided by the layout xml
+    //canvas width and height
+    private int width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT;
     private static VerifyCreator bmpCode;
+    //variables
+    private String code;
+    private int padding_left, padding_top;
+    private Random random = new Random();
 
     public static VerifyCreator getInstance() {
         if (bmpCode == null)
             bmpCode = new VerifyCreator();
         return bmpCode;
     }
-
-    //default settings
-    private static final int DEFAULT_CODE_LENGTH = 4;
-    private static final int DEFAULT_FONT_SIZE = 25;
-    private static final int DEFAULT_LINE_NUMBER = 2;
-    private static final int BASE_PADDING_LEFT = 15, RANGE_PADDING_LEFT = 6, BASE_PADDING_TOP = 20, RANGE_PADDING_TOP = 10;
-    private static final int DEFAULT_WIDTH = 60, DEFAULT_HEIGHT = 40;
-
-    //settings decided by the layout xml
-    //canvas width and height
-    private int width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT;
-
-    //random word space and pading_top
-    private int base_padding_left = BASE_PADDING_LEFT, range_padding_left = RANGE_PADDING_LEFT,
-            base_padding_top = BASE_PADDING_TOP, range_padding_top = RANGE_PADDING_TOP;
-
-    //number of chars, lines; font size
-    private int codeLength = DEFAULT_CODE_LENGTH, line_number = DEFAULT_LINE_NUMBER, font_size = DEFAULT_FONT_SIZE;
-
-    //variables
-    private String code;
-    private int padding_left, padding_top;
-    private Random random = new Random();
 
     //验证码图片
     public Bitmap createBitmap() {
@@ -124,7 +119,7 @@ public class VerifyCreator {
     }
 
     private void randomPadding(int position) {
-        padding_left = base_padding_left*position + random.nextInt(range_padding_left);
+        padding_left = base_padding_left * position + random.nextInt(range_padding_left);
         padding_top = base_padding_top + random.nextInt(range_padding_top);
     }
 }

@@ -8,22 +8,22 @@
     <include layout="@layout/common_head_layout_2" />
 
     <ImageView
+        style="@style/logo_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerInside"
-        style="@style/logo_style"
         android:src="@drawable/logo_large" />
 
     <EditText
         android:id="@+id/edit_phone"
         style="@style/font_black_15"
         android:layout_width="match_parent"
-        android:drawableLeft="@drawable/ic_edit_account"
-        android:drawablePadding="@dimen/ic_padding"
         android:layout_height="@dimen/login_input_height"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:background="@drawable/corner_frame"
+        android:drawableLeft="@drawable/ic_edit_account"
+        android:drawablePadding="@dimen/ic_padding"
         android:hint="@string/hint_edit_phone"
         android:inputType="phone"
         android:padding="8dp" />
@@ -50,21 +50,21 @@
     <!--android:layout_height="wrap_content" />-->
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/protocol_cb"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:checked="false"
-            android:button="@drawable/read_check_sel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:button="@drawable/read_check_sel"
+            android:checked="false"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/protocol_tv"

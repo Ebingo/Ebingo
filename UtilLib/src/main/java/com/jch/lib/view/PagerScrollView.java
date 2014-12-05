@@ -7,9 +7,8 @@ import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 /**
- *
  * Created by jch on 2014/8/22.
- *
+ * <p/>
  * This scrollView can contained viewpager.
  */
 public class PagerScrollView extends ScrollView {
@@ -47,7 +46,7 @@ public class PagerScrollView extends ScrollView {
 
         try {
             onTouchResult = mGestureDetector.onTouchEvent(ev);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 

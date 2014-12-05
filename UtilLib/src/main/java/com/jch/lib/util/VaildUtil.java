@@ -44,7 +44,7 @@ public class VaildUtil {
             message = "";
         } else {
             /*
-			 * if("14527060199".equals(phone)){ //测试所用 return message; }
+             * if("14527060199".equals(phone)){ //测试所用 return message; }
 			 */
             // String phoneRule = "^[1]+[3,5,8]+[0-9]{9}";
             // String phoneRule =

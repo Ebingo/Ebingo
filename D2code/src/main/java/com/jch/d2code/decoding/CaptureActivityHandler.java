@@ -47,12 +47,6 @@ public final class CaptureActivityHandler extends Handler {
     private final DecodeThread decodeThread;
     private State state;
 
-    private enum State {
-        PREVIEW,
-        SUCCESS,
-        DONE
-    }
-
     public CaptureActivityHandler(CaptureActivity activity, Vector<BarcodeFormat> decodeFormats,
                                   String characterSet) {
         this.activity = activity;
@@ -129,6 +123,12 @@ public final class CaptureActivityHandler extends Handler {
             CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
             activity.drawViewfinder();
         }
+    }
+
+    private enum State {
+        PREVIEW,
+        SUCCESS,
+        DONE
     }
 
 }

@@ -3,13 +3,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:tagColor="@color/tag_color"
-    app:textSize="16sp"
-    app:indicateTextSize="12sp"
-    app:horizontal_spacing="16dp"
-    app:vertical_spacing="13dp"
     app:deleteState="false"
-    app:number="12"
+    app:horizontal_spacing="16dp"
     app:indicateHeight="16dp"
-    app:text="Hello, TagView" />
+    app:indicateTextSize="12sp"
+    app:number="12"
+    app:tagColor="@color/tag_color"
+    app:text="Hello, TagView"
+    app:textSize="16sp"
+    app:vertical_spacing="13dp" />
 

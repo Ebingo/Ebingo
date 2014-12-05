@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/common_nodata_i"
+        style="@style/font_gray_18"
+        layout="@layout/common_nodate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        style="@style/font_gray_18"
         android:text="@string/no_data"
-        android:visibility="gone"
-        android:id="@+id/common_nodata_i"
-        layout="@layout/common_nodate" />
+        android:visibility="gone" />
 
     <com.jch.lib.view.PullToRefreshView
         android:id="@+id/commmon_freshview"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/common_dynamic_lv"
-            android:layout_width="match_parent"
             style="@style/listview_style"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"></ListView>
     </com.jch.lib.view.PullToRefreshView>
 

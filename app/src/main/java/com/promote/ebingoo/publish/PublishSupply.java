@@ -51,11 +51,10 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.promote.ebingoo.publish.PublishFragment.APPLY_3D;
-import static com.promote.ebingoo.publish.PublishFragment.CROP;
+import static com.promote.ebingoo.publish.PublishFragment.PICK_ALBUM;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_CATEGORY;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_DESCRIPTION;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_FOR_SUPPLY;
-import static com.promote.ebingoo.publish.PublishFragment.PICK_ALBUM;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_REGION;
 import static com.promote.ebingoo.publish.PublishFragment.PREVIEW;
 import static com.promote.ebingoo.publish.PublishFragment.PublishController;
@@ -64,25 +63,22 @@ import static com.promote.ebingoo.publish.PublishFragment.PublishController;
  * Created by acer on 2014/9/2.
  */
 public class PublishSupply extends Fragment implements View.OnClickListener, PublishEditActivity.EditInfo {
+    PublishController controller = new PublishController();
     private EditText edit_title;
     private EditText edit_contact;
     private EditText edit_phone;
     private EditText edit_price;
     private EditText edit_min_sell_num;
     private EditText edit_unit;
-
     private TextView tv_pick_description;
     private TextView tv_pick_category;
     private TextView tv_pick_region;
     private TextView tv_pick_image;
-
     private ImageView picked_image;
     private CheckBox upload_3d_cb;
-
     private DetailInfoBean mDetailInfo;
     private TextView tv_3d_notice;
     private String info_id;
-    PublishController controller = new PublishController();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -192,9 +188,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 //                showPupWindow();
                 //从相册中选择一张图片
                 Intent i = new Intent(getActivity(), PhotoAlbumActivity.class);
-                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_PATH,tempFile().getAbsolutePath());
-                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_WIDTH,192);
-                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_HEIGHT,120);
+                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_PATH, tempFile().getAbsolutePath());
+                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_WIDTH, 192);
+                i.putExtra(PhotoAlbumActivity.EXTRA_CAMERA_OUTPUT_HEIGHT, 120);
                 getActivity().startActivityForResult(i, PICK_FOR_SUPPLY | PICK_ALBUM);
                 break;
             }

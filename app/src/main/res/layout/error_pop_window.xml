@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
-    android:paddingTop="8dp"
+    android:orientation="horizontal"
     android:paddingBottom="8dp"
     android:paddingLeft="23dp"
     android:paddingRight="23dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:paddingTop="8dp">
+
     <TextView
         android:id="@+id/tv_warn"
+        style="@style/font_orange_15"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:drawableLeft="@drawable/ic_warn"
         android:drawablePadding="@dimen/ic_padding"
-        android:text="错误提示：审核未通过，请重新上传"
         android:drawableRight="@drawable/ic_edit"
-        style="@style/font_orange_15"/>
+        android:text="错误提示：审核未通过，请重新上传" />
 
 </LinearLayout>

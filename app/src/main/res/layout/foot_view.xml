@@ -13,20 +13,20 @@
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="30dip"
         android:layout_marginRight="20dip"
         android:layout_marginTop="10dip"
         android:indeterminate="true"
-        android:layout_centerVertical="true"
         android:visibility="visible" />
 
     <TextView
         android:id="@+id/pull_to_load_text"
+        style="@style/font_gray_15"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        style="@style/font_gray_15"
         android:text="@string/footer_loading"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold" />

@@ -1,7 +1,7 @@
 <com.jch.lib.view.PagerScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/enterprise_info_psv"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
@@ -10,12 +10,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/ipr_gray_bg">
+        android:background="@color/ipr_gray_bg"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
             style="@style/info_content_pad"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:gravity="center_vertical"
@@ -24,30 +24,30 @@
             <ImageView
                 android:id="@+id/interpris_main_img"
                 android:layout_width="100dp"
-                android:scaleType="centerCrop"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:orientation="vertical"
-                android:layout_weight="3"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
-                android:layout_height="wrap_content">
+                android:layout_weight="3"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/frag_interprise_main_name_tv"
-                        android:layout_width="wrap_content"
                         style="@style/font_black_15"
-                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="7"
-                        android:gravity="center_vertical"
                         android:drawablePadding="4dp"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        android:textStyle="bold" />
 
                     <!--<ImageView
                         android:id="@+id/iv_vip_icon"
@@ -60,66 +60,66 @@
                 <LinearLayout
                     android:id="@+id/address_layout"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp">
 
                     <TextView
+                        style="@style/font_gray_12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font_gray_12"
                         android:text="@string/address" />
 
                     <TextView
                         android:id="@+id/frag_interprise_main_addr_tv"
+                        style="@style/font_gray_12"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/font_gray_12" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/website_layout"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp">
 
                     <TextView
+                        style="@style/font_gray_12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font_gray_12"
                         android:text="@string/http_addr" />
 
                     <TextView
                         android:id="@+id/frag_interprise_main_httpaddr_tv"
+                        style="@style/font_gray_12"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/font_gray_12" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/tel_layout"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp">
 
                     <TextView
+                        style="@style/font_gray_12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font_gray_12"
                         android:text="@string/tell" />
 
                     <TextView
                         android:id="@+id/frag_interprise_main_tell_tv"
+                        style="@style/font_gray_12"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/font_gray_12" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/e_plat"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/e_platform"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/e_platform" />
             </LinearLayout>
 
 
@@ -134,29 +134,29 @@
         <LinearLayout
             style="@style/info_content_pad"
 
-            android:background="@color/white"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
 
 
             <TextView
                 style="@style/black_15_tv"
-                android:text="@string/interprise_range"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/interprise_range" />
 
             <com.jch.lib.view.ScrollListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></com.jch.lib.view.ScrollListView>
 
             <TextView
-                android:layout_marginTop="5dp"
-                android:paddingLeft="5dp"
                 android:id="@+id/frag_interprise_main_range_tv"
-                android:layout_width="match_parent"
                 style="@style/font_gray_14"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="5dp" />
 
         </LinearLayout>
 
@@ -168,26 +168,26 @@
 
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:background="@color/white"
             style="@style/info_content_pad"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/black_15_tv"
                 android:layout_width="match_parent"
-                android:text="@string/interprise_abstrace"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/interprise_abstrace" />
 
             <TextView
-                android:layout_marginTop="5dp"
                 android:id="@+id/frag_interprise_main_abstract_tv"
-                android:layout_width="match_parent"
-                android:paddingLeft="5dp"
                 style="@style/font_gray_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
 
-                android:layout_height="wrap_content" />
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
         <View style="@style/divider_horizontal" />
@@ -198,35 +198,35 @@
 
         <LinearLayout
             style="@style/info_content_pad"
-            android:background="@color/white"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
 
             <TextView
-                android:text="@string/interprise_sup_dem"
                 style="@style/black_15_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/interprise_sup_dem" />
 
             <com.jch.lib.view.ScrollListView
                 android:id="@+id/interpise_main_sup_dem_lv"
-                android:divider="@color/center_divider"
                 android:layout_width="match_parent"
-                android:dividerHeight="0.5dp"
+                android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:scrollbars="none"
-                android:focusableInTouchMode="false"
+                android:divider="@color/center_divider"
+                android:dividerHeight="0.5dp"
                 android:focusable="false"
-                android:layout_height="match_parent" />
+                android:focusableInTouchMode="false"
+                android:scrollbars="none" />
 
             <TextView
                 android:id="@+id/empty"
-                android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
-                android:text="@string/no_demand_supply_info"
                 style="@style/font_gray_14"
-                android:layout_height="match_parent" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:text="@string/no_demand_supply_info" />
         </LinearLayout>
 
     </LinearLayout>

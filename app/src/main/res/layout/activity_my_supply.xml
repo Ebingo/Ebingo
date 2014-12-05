@@ -11,12 +11,12 @@
     <ListView
         android:id="@+id/mysupply_lv"
         android:layout_width="match_parent"
-        android:dividerHeight="0.5dp"
+        android:layout_height="wrap_content"
         android:divider="@color/gray_bg"
-        android:layout_height="wrap_content"></ListView>
+        android:dividerHeight="0.5dp"></ListView>
 
     <include
-        layout="@layout/common_nodate"
-        android:id="@+id/nodata"></include>
+        android:id="@+id/nodata"
+        layout="@layout/common_nodate"></include>
 
 </LinearLayout>

@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@drawable/guide5"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/guide5"
     android:gravity="bottom"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btn_reg"
+        style="@style/font_white_15"
         android:layout_width="280dp"
         android:layout_height="@dimen/widget_height"
-        android:background="@drawable/btn_red"
-        style="@style/font_white_15"
         android:layout_gravity="center_horizontal"
+        android:background="@drawable/btn_red"
         android:text="@string/reg_for_free" />
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="280dp"
-        android:layout_marginTop="30dp"
-        android:layout_height="@dimen/widget_height"
-        android:background="@drawable/guide_login_btn"
         style="@style/font_white_15"
+        android:layout_width="280dp"
+        android:layout_height="@dimen/widget_height"
         android:layout_gravity="center_horizontal"
-        android:text="@string/enter_now"
-        android:layout_marginBottom="100dp" />
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/guide_login_btn"
+        android:text="@string/enter_now" />
 
 </LinearLayout>

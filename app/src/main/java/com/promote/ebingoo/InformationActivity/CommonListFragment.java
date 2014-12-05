@@ -26,15 +26,14 @@ public class CommonListFragment extends Fragment implements PullToRefreshView.On
     private TextView commonnodatai;
     private ListView commondynamiclv;
     private PullToRefreshView commmonfreshview;
-
-    public int getAddMaxeNum() {
-        return mAddMaxeNum;
-    }
-
     /**
      * 每一次加载更多的数据条数. *
      */
     private int mAddMaxeNum = 20;
+
+    public int getAddMaxeNum() {
+        return mAddMaxeNum;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

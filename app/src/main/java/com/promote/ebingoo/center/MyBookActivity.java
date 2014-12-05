@@ -73,37 +73,6 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         }, 100);
     }
 
-    private class LengthLimitWatcher implements TextWatcher {
-
-        private int maxLength;
-        private CharSequence old = null;
-
-        private LengthLimitWatcher(int maxLength) {
-            this.maxLength = maxLength;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            try {
-                if (s.toString().getBytes("UTF-8").length > maxLength * 3) {
-                    s.delete(s.length() - 1, s.length());
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -153,7 +122,6 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
 
         }
     }
-
 
     private boolean isUniqueTag(String tagName) {
         int count = tagContent.getChildCount();
@@ -262,7 +230,7 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
                 public void run() {
                     toggleTagViewState(true);
                 }
-            },100);
+            }, 100);
         }
         scrollHandler.scrollToEnd(0);
     }
@@ -284,8 +252,8 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
             if (state) {
                 Animation anim;
                 if (tagView.getAnimation() == null) {
-                    int centerX=tagView.getWidth()/2;
-                    float degree=180*5/(3.1415f*centerX);
+                    int centerX = tagView.getWidth() / 2;
+                    float degree = 180 * 5 / (3.1415f * centerX);
                     RotateAnimation rotateAnimation = new RotateAnimation(-degree, degree, centerX, tagView.getHeight() / 2);
                     rotateAnimation.setDuration(200);
                     rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -304,7 +272,6 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         }
     }
 
-
     @Override
     public void onDelete(TagView v) {
         v.clearAnimation();
@@ -320,5 +287,36 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         intent.putExtra(TagInfoListActivity.ID, bookBean.getId());
         intent.putExtra(TagInfoListActivity.NAME, bookBean.getName());
         startActivity(intent);
+    }
+
+    private class LengthLimitWatcher implements TextWatcher {
+
+        private int maxLength;
+        private CharSequence old = null;
+
+        private LengthLimitWatcher(int maxLength) {
+            this.maxLength = maxLength;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            try {
+                if (s.toString().getBytes("UTF-8").length > maxLength * 3) {
+                    s.delete(s.length() - 1, s.length());
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }

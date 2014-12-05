@@ -78,8 +78,8 @@ public class MySupplyActivity extends BaseListActivity {
      */
     private void addEmptyView() {
         View empty_view = View.inflate(this, R.layout.empty_layout, null);
-        TextView notice= (TextView) empty_view.findViewById(R.id.tv_empty_notice);
-        notice.setText(getString(R.string.empty_notice,"供应"));
+        TextView notice = (TextView) empty_view.findViewById(R.id.tv_empty_notice);
+        notice.setText(getString(R.string.empty_notice, "供应"));
         empty_view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -146,7 +146,7 @@ public class MySupplyActivity extends BaseListActivity {
                 LogCat.i("--->", response.toString());
                 ArrayList<SearchSupplyBean> searchSupplyBeans = SearchSupplyBeanTools.getSearchSupplyBeans(response.toString());
                 if (searchSupplyBeans != null && searchSupplyBeans.size() > 0) {
-                    if (lastId==0)mSupplyBeans.clear();
+                    if (lastId == 0) mSupplyBeans.clear();
                     mSupplyBeans.addAll(searchSupplyBeans);
                     adapter.notifyDataSetChanged();
                 }
@@ -176,6 +176,26 @@ public class MySupplyActivity extends BaseListActivity {
     @Override
     protected void onDelete(int position) {
         delete(position);
+    }
+
+    @Override
+    protected void onLoadMore(int lastId) {
+        getMySupply(lastId);
+    }
+
+    @Override
+    protected void onRefresh() {
+        getMySupply(0);
+    }
+
+    private static class ViewHolder {
+
+        ImageView img;
+        TextView nameTv;
+        TextView priceTv;
+        TextView startTv;
+        TextView timeTv;
+        TextView verifyTv;
     }
 
     /**
@@ -218,46 +238,26 @@ public class MySupplyActivity extends BaseListActivity {
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
 
             viewHolder.nameTv.setText(supplyBean.getName());
-            viewHolder.priceTv.setText(FormatUtil.formatPrice(supplyBean.getPrice(),supplyBean.getUnit()));
+            viewHolder.priceTv.setText(FormatUtil.formatPrice(supplyBean.getPrice(), supplyBean.getUnit()));
             viewHolder.timeTv.setText(supplyBean.getDate());
 
-            String minNum=FormatUtil.formatSellNum(supplyBean.getMin_supply_num(),supplyBean.getUnit());
-            viewHolder.startTv.setText(getString(R.string.supply_start_num,minNum));
+            String minNum = FormatUtil.formatSellNum(supplyBean.getMin_supply_num(), supplyBean.getUnit());
+            viewHolder.startTv.setText(getString(R.string.supply_start_num, minNum));
 
-            String verify_result=supplyBean.getVerify_result();
-            if (Constant.VERIFY_WAITING.equals(verify_result)){
+            String verify_result = supplyBean.getVerify_result();
+            if (Constant.VERIFY_WAITING.equals(verify_result)) {
                 viewHolder.verifyTv.setVisibility(View.VISIBLE);
                 viewHolder.verifyTv.setText("待审核");
                 viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.orange_my));
-            }else if(Constant.VERIFY_NOT_PASS.equals(verify_result)){
+            } else if (Constant.VERIFY_NOT_PASS.equals(verify_result)) {
                 viewHolder.verifyTv.setVisibility(View.VISIBLE);
                 viewHolder.verifyTv.setText("未通过");
                 viewHolder.verifyTv.setTextColor(getResources().getColor(R.color.gray));
-            }else{
+            } else {
                 viewHolder.verifyTv.setVisibility(View.INVISIBLE);
             }
             return convertView;
         }
 
-    }
-
-    private static class ViewHolder {
-
-        ImageView img;
-        TextView nameTv;
-        TextView priceTv;
-        TextView startTv;
-        TextView timeTv;
-        TextView verifyTv;
-    }
-
-    @Override
-    protected void onLoadMore(int lastId) {
-        getMySupply(lastId);
-    }
-
-    @Override
-    protected void onRefresh() {
-        getMySupply(0);
     }
 }

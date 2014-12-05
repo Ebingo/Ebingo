@@ -9,12 +9,12 @@
 
     <ProgressBar
         android:id="@+id/company_progressbar"
-        android:max="100"
-        android:progressDrawable="@drawable/progress_bar"
-        android:background="@color/gray"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="3dp" />
+        android:layout_height="3dp"
+        android:background="@color/gray"
+        android:max="100"
+        android:progressDrawable="@drawable/progress_bar" />
 
     <WebView
         android:id="@+id/at_company_wv"

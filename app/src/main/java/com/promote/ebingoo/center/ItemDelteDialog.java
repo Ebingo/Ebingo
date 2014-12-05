@@ -17,10 +17,6 @@ import com.promote.ebingoo.R;
 public class ItemDelteDialog extends Dialog {
 
 
-    public interface DeleteItemListener {
-        public void onItemDelete(View view, int itemId);
-    }
-
     private TextView centerdelnametv;
     private TextView centerdeldeltetv;
     private TextView centerdelcanceltv;
@@ -30,14 +26,12 @@ public class ItemDelteDialog extends Dialog {
      * 所要删除条的id. *
      */
     private int mId;
-
     public ItemDelteDialog(Context context, DeleteItemListener clickListener) {
 
         super(context);
         this.mDeleteItemListener = clickListener;
 
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,5 +76,9 @@ public class ItemDelteDialog extends Dialog {
             centerdelnametv.setText(itemText);
 
         this.mId = id;
+    }
+
+    public interface DeleteItemListener {
+        public void onItemDelete(View view, int itemId);
     }
 }

@@ -55,31 +55,8 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     private static final int BOUNCE_ANIMATION_DELAY = 100;
     private static final float BOUNCE_OVERSHOOT_TENSION = 1.4f;
     private static final int ROTATE_ARROW_ANIMATION_DURATION = 250;
-
-
-    private static enum State {
-        PULL_TO_REFRESH,
-        RELEASE_TO_REFRESH,
-        REFRESHING
-    }
-
-    /**
-     * Interface to implement when you want to get notified of 'pull to refresh'
-     * events.
-     * Call setOnRefreshListener(..) to activate an OnRefreshListener.
-     */
-    public interface OnRefreshListener {
-
-        /**
-         * Method to be called when a refresh is requested
-         */
-        public void onRefresh();
-
-        public void onLoadMore();
-    }
-
     private static int measuredHeaderHeight;
-
+    private final int IDLE_DISTANCE = 5;
     private boolean scrollbarEnabled;
     private boolean bounceBackHeader;
     private boolean lockScrollWhileRefreshing;
@@ -89,7 +66,6 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     private String refreshingText;
     private String lastUpdatedText;
     private SimpleDateFormat lastUpdatedDateFormat = new SimpleDateFormat("dd/MM HH:mm");
-
     private float previousY;
     private int headerPadding;
     private boolean hasResetHeader;
@@ -110,15 +86,12 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
     private OnItemLongClickListener onItemLongClickListener;
     private OnRefreshListener onRefreshListener;
     private float mScrollStartY;
-    private final int IDLE_DISTANCE = 5;
     private boolean isBottom = false;
     private boolean hasMore = true;
-
     public RefreshListView(Context context) {
         super(context);
         init();
     }
-
     public RefreshListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -492,6 +465,35 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
         }
     }
 
+    public void hideFooter() {
+        removeFooterView(footerContainer);
+    }
+
+    public void hideHeader() {
+        removeHeaderView(headerContainer);
+    }
+
+    private static enum State {
+        PULL_TO_REFRESH,
+        RELEASE_TO_REFRESH,
+        REFRESHING
+    }
+
+    /**
+     * Interface to implement when you want to get notified of 'pull to refresh'
+     * events.
+     * Call setOnRefreshListener(..) to activate an OnRefreshListener.
+     */
+    public interface OnRefreshListener {
+
+        /**
+         * Method to be called when a refresh is requested
+         */
+        public void onRefresh();
+
+        public void onLoadMore();
+    }
+
     private class HeaderAnimationListener implements AnimationListener {
 
         private int height, translation;
@@ -596,13 +598,5 @@ public class RefreshListView extends ListView implements AbsListView.OnScrollLis
 
             return false;
         }
-    }
-
-    public void hideFooter() {
-        removeFooterView(footerContainer);
-    }
-
-    public void hideHeader() {
-        removeHeaderView(headerContainer);
     }
 }

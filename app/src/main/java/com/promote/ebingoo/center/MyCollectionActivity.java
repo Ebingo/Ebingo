@@ -42,6 +42,13 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
 
     private ArrayList<CollectBean> mCollections = new ArrayList<CollectBean>();
 
+    /**
+     * 刷新收藏列表
+     */
+    public static void setRefresh() {
+        MyCollectionActivity.refresh = true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,13 +66,6 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         }
         enableDelete(true);
         setDownRefreshable(true);
-    }
-
-    /**
-     * 刷新收藏列表
-     */
-    public static void setRefresh() {
-        MyCollectionActivity.refresh = true;
     }
 
     /**
@@ -90,7 +90,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
                 ArrayList<CollectBean> collectBeans = CollectBeanTools.getCollections(response.toString());
 
                 if (collectBeans != null && collectBeans.size() > 0) {
-                    if (lastId==0)mCollections.clear();
+                    if (lastId == 0) mCollections.clear();
                     mCollections.addAll(collectBeans);
                     myAdapter.notifyDataSetChanged();
                     refresh = false;
@@ -162,6 +162,24 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
         });
     }
 
+    @Override
+    protected void onRefresh() {
+        getWishlist(0);
+    }
+
+    @Override
+    protected void onLoadMore(int lastId) {
+        getWishlist(lastId);
+    }
+
+    private static class ViewHolder {
+        ImageView imgIv;
+        TextView priceTv;
+        TextView nameTv;
+        TextView timesTv;
+        TextView timeTv;
+    }
+
     /**
      * listView adapter.
      */
@@ -211,23 +229,5 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
             return convertView;
         }
 
-    }
-
-    private static class ViewHolder {
-        ImageView imgIv;
-        TextView priceTv;
-        TextView nameTv;
-        TextView timesTv;
-        TextView timeTv;
-    }
-
-    @Override
-    protected void onRefresh() {
-        getWishlist(0);
-    }
-
-    @Override
-    protected void onLoadMore(int lastId) {
-        getWishlist(lastId);
     }
 }

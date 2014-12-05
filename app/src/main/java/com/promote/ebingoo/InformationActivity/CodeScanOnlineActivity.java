@@ -29,16 +29,16 @@ import com.promote.ebingoo.util.LogCat;
 
 public class CodeScanOnlineActivity extends Activity implements View.OnClickListener {
 
+    public static final String URLSTR = "urlStr";
     private WebView scanwb;
     private String urlStr = null;
-    public static final String URLSTR = "urlStr";
-
     /**
      * 回退按钮. *
      */
     private ImageView mBackIv = null;
     private TextView titleTv;
     private ProgressBar bar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +70,10 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
         mBackIv.setOnClickListener(this);
         urlStr = getIntent().getStringExtra(URLSTR);
         LogCat.d("CodeScan", "url=" + urlStr);
-        WebSettings settings=scanwb.getSettings();
+        WebSettings settings = scanwb.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setUserAgentString(settings.getUserAgentString()+" ebingoo");
+        settings.setUserAgentString(settings.getUserAgentString() + " ebingoo");
         scanwb.addJavascriptInterface(new JavaInterface(this), "ebingoo");
         scanwb.setWebViewClient(new MyWebViewClient());
         scanwb.setWebChromeClient(new WebChromeClient() {
@@ -92,14 +92,6 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
         scanwb.loadUrl(urlStr);
     }
 
-    private class MyDownLoadListener implements DownloadListener {
-
-        @Override
-        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-            ContextUtil.toast(R.string.is_download_url);
-        }
-    }
-
     @Override
     public void onClick(View v) {
 
@@ -116,6 +108,13 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
     }
 
+    private class MyDownLoadListener implements DownloadListener {
+
+        @Override
+        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+            ContextUtil.toast(R.string.is_download_url);
+        }
+    }
 
     private class MyWebViewClient extends WebViewClient {
 
@@ -143,30 +142,14 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
         private JavaInterface(Activity activity) {
             this.activity = activity;
-            handler=new Handler(activity.getMainLooper());
-        }
-
-        /**
-         * 推送Intent到消息队列的接口
-         */
-        private class JavaInterfaceRunnable implements Runnable{
-            private  Intent postIntent;
-
-            private JavaInterfaceRunnable(Intent postIntent) {
-                this.postIntent = postIntent;
-            }
-
-            @Override
-            public void run() {
-                activity.startActivity(postIntent);
-            }
+            handler = new Handler(activity.getMainLooper());
         }
 
         @JavascriptInterface()
         public void jumpToSupply(int id) {
             LogCat.i("---------jumpToSupply");
-            Intent intent=new Intent(activity, ProductInfoActivity.class);
-            intent.putExtra(ProductInfoActivity.ARG_ID,id);
+            Intent intent = new Intent(activity, ProductInfoActivity.class);
+            intent.putExtra(ProductInfoActivity.ARG_ID, id);
             handler.post(new JavaInterfaceRunnable(intent));
 
         }
@@ -189,7 +172,8 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
 
         @JavascriptInterface
         public String callPhone(final String number, final String contacts) {
-            if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number))) return "fail";
+            if (TextUtils.isEmpty(number) || number.equals(VaildUtil.validPhone(number)))
+                return "fail";
 
             handler.post(new Runnable() {
                 @Override
@@ -226,6 +210,22 @@ public class CodeScanOnlineActivity extends Activity implements View.OnClickList
                 }
             });
             return "OK";
+        }
+
+        /**
+         * 推送Intent到消息队列的接口
+         */
+        private class JavaInterfaceRunnable implements Runnable {
+            private Intent postIntent;
+
+            private JavaInterfaceRunnable(Intent postIntent) {
+                this.postIntent = postIntent;
+            }
+
+            @Override
+            public void run() {
+                activity.startActivity(postIntent);
+            }
         }
     }
 }

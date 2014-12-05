@@ -31,6 +31,30 @@ public class LoginManager {
     public static final String ACTION_INVALIDATE = "com.promote.ebingo.center.ACTION_INVALIDATE";
 
     /**
+     * 校验手机号
+     *
+     * @param input
+     * @return
+     */
+    public static boolean isMobile(String input) {
+        String a = "^1[34578][0-9]\\d{8}";
+        String b = "^((13[0-9])|(14[0-9])|(15[^4,\\D])|(18[0-9])|(17[0-9]))\\d{8}$";
+        if (TextUtils.isEmpty(input)) return false;
+        else return input.matches(a);
+    }
+
+    /**
+     * 校验固话
+     *
+     * @param input
+     * @return
+     */
+    public static boolean isPhone(String input) {
+        if (TextUtils.isEmpty(input)) return false;
+        else return input.matches("\\d{3,4}-\\d{7,8}");
+    }
+
+    /**
      * 获取验证码
      *
      * @param context
@@ -60,31 +84,6 @@ public class LoginManager {
             });
         }
     }
-
-    /**
-     * 校验手机号
-     *
-     * @param input
-     * @return
-     */
-    public static boolean isMobile(String input) {
-        String a = "^1[34578][0-9]\\d{8}";
-        String b = "^((13[0-9])|(14[0-9])|(15[^4,\\D])|(18[0-9])|(17[0-9]))\\d{8}$";
-        if (TextUtils.isEmpty(input)) return false;
-        else return input.matches(a);
-    }
-
-    /**
-     * 校验固话
-     *
-     * @param input
-     * @return
-     */
-    public static boolean isPhone(String input) {
-        if (TextUtils.isEmpty(input)) return false;
-        else return input.matches("\\d{3,4}-\\d{7,8}");
-    }
-
 
     public void doLogin(final String phone, final String password, final Callback callback) {
 

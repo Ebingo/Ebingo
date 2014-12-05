@@ -27,17 +27,16 @@ public class FindCategoryAdapter extends SlideGridViewBaseAdapter {
 
     private DisplayImageOptions mImgOptions;
 
-    public void notifyDataSetChanged(ArrayList<CategoryBeen> categoryBeens) {
-        datas.clear();
-        datas.addAll(categoryBeens);
-        notifyDataSetChanged();
-    }
-
     public FindCategoryAdapter(Context context) {
         this.context = context;
         mImgOptions = ContextUtil.getCircleImgOptions();
     }
 
+    public void notifyDataSetChanged(ArrayList<CategoryBeen> categoryBeens) {
+        datas.clear();
+        datas.addAll(categoryBeens);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getSubItemCountByPosition(int itemPosition) {

@@ -44,19 +44,19 @@
                     android:text="公司名" />
 
                 <TextView
-                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_region_top"
                     style="@style/font_gray_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="公司地区" />
 
                 <TextView
-                    android:layout_marginTop="5dp"
                     android:id="@+id/tv_vipType"
                     style="@style/font_gray_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="等级 ： vvip" />
 
             </LinearLayout>

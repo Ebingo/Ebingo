@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:background="@color/white"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
 
     <TextView
         style="@style/info_content_pad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/contact_buy"
         android:textColor="@color/right_blue"
-        android:textSize="@dimen/font_18"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textSize="@dimen/font_18" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,14 +20,14 @@
 
     <TextView
         android:id="@+id/call_dialog_phone_num"
+        style="@style/info_content_pad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/info_content_pad"
-        android:textSize="@dimen/font_15"
+        android:drawableLeft="@drawable/tell"
         android:drawablePadding="5dp"
         android:text="155651351651"
         android:textColor="@color/black"
-        android:drawableLeft="@drawable/tell" />
+        android:textSize="@dimen/font_15" />
 
     <View
         android:layout_width="match_parent"
@@ -37,21 +37,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/ebingo_button_divider">
+        android:background="@color/ebingo_button_divider"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/call_dialog_call_btn"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:textSize="@dimen/font_15"
-            android:textColor="@color/black"
-            android:text="@string/make_call"
-            android:gravity="center"
-            android:layout_marginRight="0.5dp"
-            android:background="@drawable/blue_selector"
             style="@style/info_content_pad"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0.5dp"
+            android:layout_weight="1"
+            android:background="@drawable/blue_selector"
+            android:gravity="center"
+            android:text="@string/make_call"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_15" />
 
         <View
             android:id="@+id/btn_divider"
@@ -61,15 +61,15 @@
 
         <TextView
             android:id="@+id/call_dialog_cancel_btn"
+            style="@style/info_content_pad"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/black"
+            android:background="@drawable/blue_selector"
             android:gravity="center"
             android:text="@string/cancel"
-            android:textSize="@dimen/font_15"
-            android:background="@drawable/blue_selector"
-            style="@style/info_content_pad"
-            android:layout_height="wrap_content" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_15" />
     </LinearLayout>
 
 

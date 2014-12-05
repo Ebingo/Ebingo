@@ -38,6 +38,10 @@ public class PullToRefreshView extends LinearLayout {
     private static final int PULL_UP_STATE = 0;
     private static final int PULL_DOWN_STATE = 1;
     /**
+     * weight effectes the speed of View scrolling depandend on touch move.*
+     */
+    private static final float SCROLLWEIGHT = 0.3f;
+    /**
      * 是否支持上拉刷新。 *
      */
     private boolean mUpRefreshable = true;
@@ -94,13 +98,13 @@ public class PullToRefreshView extends LinearLayout {
      */
     private TextView mFooterTextView;
     /**
-     * header refresh time
-     */
-    private TextView mHeaderUpdateTextView;
-    /**
      * footer refresh time
      */
     // private TextView mFooterUpdateTextView;
+    /**
+     * header refresh time
+     */
+    private TextView mHeaderUpdateTextView;
     /**
      * header progress bar
      */
@@ -141,14 +145,8 @@ public class PullToRefreshView extends LinearLayout {
      * footer refresh listener
      */
     private OnHeaderRefreshListener mOnHeaderRefreshListener;
-
     private Scroller mScroller = null;
-
     private boolean mIsHeadRefreshing = false;
-    /**
-     * weight effectes the speed of View scrolling depandend on touch move.*
-     */
-    private static final float SCROLLWEIGHT = 0.3f;
 
 
     /**
@@ -562,20 +560,6 @@ public class PullToRefreshView extends LinearLayout {
     }
 
     /**
-     * 设置header view 的topMargin的值
-     *
-     * @param topMargin ，为0时，说明header view 刚好完全显示出来； 为-mHeaderViewHeight时，说明完全隐藏了
-     *                  hylin 2012-7-31上午11:24:06
-     * @description
-     */
-    private void setHeaderTopMargin(int topMargin) {
-        LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
-        params.topMargin = topMargin;
-        mHeaderView.setLayoutParams(params);
-        invalidate();
-    }
-
-    /**
      * header view 完成更新后恢复初始状态
      *
      * @description
@@ -666,7 +650,6 @@ public class PullToRefreshView extends LinearLayout {
         }
     }
 
-
     /**
      * 获取当前header view 的topMargin
      *
@@ -676,6 +659,20 @@ public class PullToRefreshView extends LinearLayout {
     private int getHeaderTopMargin() {
         LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
         return params.topMargin;
+    }
+
+    /**
+     * 设置header view 的topMargin的值
+     *
+     * @param topMargin ，为0时，说明header view 刚好完全显示出来； 为-mHeaderViewHeight时，说明完全隐藏了
+     *                  hylin 2012-7-31上午11:24:06
+     * @description
+     */
+    private void setHeaderTopMargin(int topMargin) {
+        LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
+        params.topMargin = topMargin;
+        mHeaderView.setLayoutParams(params);
+        invalidate();
     }
 
     /**
@@ -690,22 +687,6 @@ public class PullToRefreshView extends LinearLayout {
 
     public void setOnFooterRefreshListener(OnFooterRefreshListener footerRefreshListener) {
         mOnFooterRefreshListener = footerRefreshListener;
-    }
-
-    /**
-     * Interface definition for a callback to be invoked when list/grid footer
-     * view should be refreshed.
-     */
-    public interface OnFooterRefreshListener {
-        public void onFooterRefresh(PullToRefreshView view);
-    }
-
-    /**
-     * Interface definition for a callback to be invoked when list/grid header
-     * view should be refreshed.
-     */
-    public interface OnHeaderRefreshListener {
-        public void onHeaderRefresh(PullToRefreshView view);
     }
 
     /**
@@ -742,5 +723,21 @@ public class PullToRefreshView extends LinearLayout {
      */
     public void setDownRefreshable(boolean downRefreshable) {
         this.mDownRefreshable = downRefreshable;
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when list/grid footer
+     * view should be refreshed.
+     */
+    public interface OnFooterRefreshListener {
+        public void onFooterRefresh(PullToRefreshView view);
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when list/grid header
+     * view should be refreshed.
+     */
+    public interface OnHeaderRefreshListener {
+        public void onHeaderRefresh(PullToRefreshView view);
     }
 }

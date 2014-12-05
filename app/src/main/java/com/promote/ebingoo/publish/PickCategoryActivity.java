@@ -66,6 +66,20 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
      * 总数据源
      */
     SparseArray<ArrayList<CategoryBeen>> data = new SparseArray<ArrayList<CategoryBeen>>();
+    /**
+     * 二级分类点击事件
+     */
+    private AdapterView.OnItemClickListener onSubItemClicked = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent data = new Intent();
+            CategoryBeen selectCategory = curSubList.get(position);
+            data.putExtra("categoryId", selectCategory.getId());
+            data.putExtra("result", selectCategory.getName());
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,21 +166,6 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
     }
 
     /**
-     * 二级分类点击事件
-     */
-    private AdapterView.OnItemClickListener onSubItemClicked = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent data = new Intent();
-            CategoryBeen selectCategory = curSubList.get(position);
-            data.putExtra("categoryId", selectCategory.getId());
-            data.putExtra("result", selectCategory.getName());
-            setResult(RESULT_OK, data);
-            finish();
-        }
-    };
-
-    /**
      * 一级分类点击处理
      */
     @Override
@@ -187,14 +186,26 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         adapter2.notifyDataSetChanged();
     }
 
+    static class ViewHolderSubCategory {
+        TextView tv;
+    }
+
+    static class ViewHolderCategory {
+        TextView tv_sub_category;
+        TextView tv_category;
+        ImageView ic;
+    }
 
     class CategoryAdapter1 extends BaseAdapter {
-        private Activity context;
         private final int checkedDrawable = R.drawable.category_list_item_bg;
         private final int unCheckedDrawable = R.drawable.click_gray_bg;
+        DisplayImageOptions options = ContextUtil.getSquareImgOptions();
+        private Activity context;
         private int selected = -1;
 
-        DisplayImageOptions options = ContextUtil.getSquareImgOptions();
+        CategoryAdapter1(Activity context) {
+            this.context = context;
+        }
 
         /**
          * @param selected
@@ -204,10 +215,6 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
             this.selected = selected;
             notifyDataSetChanged();
 
-        }
-
-        CategoryAdapter1(Activity context) {
-            this.context = context;
         }
 
         @Override
@@ -307,17 +314,6 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
             return convertView;
         }
 
-    }
-
-
-    static class ViewHolderSubCategory {
-        TextView tv;
-    }
-
-    static class ViewHolderCategory {
-        TextView tv_sub_category;
-        TextView tv_category;
-        ImageView ic;
     }
 
 }

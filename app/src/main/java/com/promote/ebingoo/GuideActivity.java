@@ -27,9 +27,11 @@ import java.util.ArrayList;
 
 
 public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
+    final int LOGIN = 1;
     ViewPager pager;
     ArrayList<View> views = new ArrayList<View>();
-    final int LOGIN = 1;
+    private float mSavedOffset = 0;
+    private boolean scrollToEnd = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -100,9 +102,6 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         return imageView;
     }
 
-    private float mSavedOffset = 0;
-    private boolean scrollToEnd = false;
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         LogCat.i("page:" + position + " positionOffset:" + positionOffset + " positionOffsetPixels:" + positionOffsetPixels);
@@ -135,30 +134,6 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
                 break;
             }
 
-        }
-    }
-
-    class GuideAdapter extends PagerAdapter {
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(views.get(position));
-            return views.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return views.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object o) {
-            return view == o;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(views.get(position));
         }
     }
 
@@ -218,6 +193,30 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
                 }
                 break;
             }
+        }
+    }
+
+    class GuideAdapter extends PagerAdapter {
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.addView(views.get(position));
+            return views.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return views.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object o) {
+            return view == o;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView(views.get(position));
         }
     }
 }

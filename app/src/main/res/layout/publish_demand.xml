@@ -81,9 +81,8 @@
                 <EditText
                     android:id="@+id/edit_demand_num"
                     style="@style/publish_edit"
-                    android:inputType="number"
                     android:hint="求购物品的数量"
-                    />
+                    android:inputType="number" />
             </TableRow>
 
             <View style="@style/divider_horizontal" />

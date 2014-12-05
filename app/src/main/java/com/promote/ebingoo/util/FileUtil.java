@@ -50,17 +50,6 @@ public class FileUtil {
     }
 
     /**
-     * 读取一个非缓存文件
-     *
-     * @param context
-     * @param name
-     * @return
-     */
-    public Object readFile(Context context, String name) {
-        return read(getFile(context, name));
-    }
-
-    /**
      * 讲一个对象保存到 一个非缓存文件中
      *
      * @param context
@@ -166,5 +155,16 @@ public class FileUtil {
 
     public static void clearCache(Context context) {
         delete(getCacheDir(context));
+    }
+
+    /**
+     * 读取一个非缓存文件
+     *
+     * @param context
+     * @param name
+     * @return
+     */
+    public Object readFile(Context context, String name) {
+        return read(getFile(context, name));
     }
 }

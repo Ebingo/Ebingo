@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,23 +10,23 @@
     <include layout="@layout/common_head_search_layout" />
 
     <ScrollView
-        android:layout_width="match_parent"
         android:id="@+id/find_sv"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.jch.lib.view.SlideGridView
             android:id="@+id/frag_find_gv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:columNum="3"
-            android:padding="@dimen/find_pad"
             android:background="@drawable/find_bg"
-            app:divideColor="@color/center_divider"
-            app:divideHeight="1px"
+            android:padding="@dimen/find_pad"
             app:checked_index="@drawable/find_arr"
             app:checked_namal="@drawable/find_arr_nomal"
-            app:subViewBg="@color/find_subitem_bg_color"
-            app:subColumNum="3">
+            app:columNum="3"
+            app:divideColor="@color/center_divider"
+            app:divideHeight="1px"
+            app:subColumNum="3"
+            app:subViewBg="@color/find_subitem_bg_color">
 
         </com.jch.lib.view.SlideGridView>
     </ScrollView>

@@ -45,8 +45,8 @@ public class ListDialog extends DialogFragment implements AdapterView.OnItemClic
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_HOLO_LIGHT);
-        }else{
-            builder=new AlertDialog.Builder(getActivity());
+        } else {
+            builder = new AlertDialog.Builder(getActivity());
         }
         mListView = new ListView(getActivity());
         mListView.setDivider(getResources().getDrawable(R.drawable.list_divider));

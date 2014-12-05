@@ -19,14 +19,6 @@ public class SearchKeyRequest {
 
     private ResponseBaseBean<HotKey> response;
 
-    public interface SearchKeyCallBack {
-
-        public void onSuccess(HotKey hotKey);
-
-        public void onFailure(String msg);
-
-    }
-
     /**
      * 获得搜索关键词。
      *
@@ -63,16 +55,24 @@ public class SearchKeyRequest {
         });
     }
 
-    public ResponseBaseBean<HotKey> getResponse() {
-
-        return this.response;
-    }
-
     public static ResponseBaseBean<HotKey> getHotKeyfromJson(String jsonStr) {
 
         Gson gson = new Gson();
         ResponseBaseBean<HotKey> response = ((SearchKeyRequest) gson.fromJson(jsonStr, SearchKeyRequest.class)).getResponse();
         return response;
+    }
+
+    public ResponseBaseBean<HotKey> getResponse() {
+
+        return this.response;
+    }
+
+    public interface SearchKeyCallBack {
+
+        public void onSuccess(HotKey hotKey);
+
+        public void onFailure(String msg);
+
     }
 
 }

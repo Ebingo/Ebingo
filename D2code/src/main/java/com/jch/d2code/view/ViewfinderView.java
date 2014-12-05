@@ -55,7 +55,6 @@ public final class ViewfinderView extends View {
 
     private final Paint paint;
     private final Paint laserPaint;
-    private Bitmap resultBitmap;
     private final int maskColor;
     private final int resultColor;
     private final int frameColor;
@@ -63,6 +62,7 @@ public final class ViewfinderView extends View {
     private final int resultPointColor;
     private final int cornerColor;
     private final float TEXT_MARGIN_TOP;
+    private Bitmap resultBitmap;
     private int scannerAlpha;
     private float saved_line;
     private Collection<ResultPoint> possibleResultPoints;

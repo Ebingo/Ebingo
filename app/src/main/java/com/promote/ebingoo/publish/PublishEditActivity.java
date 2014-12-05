@@ -3,8 +3,8 @@ package com.promote.ebingoo.publish;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.promote.ebingoo.BaseActivity;
 import com.promote.ebingoo.R;
@@ -30,7 +30,7 @@ public class PublishEditActivity extends BaseActivity {
         DetailInfoBean infoBean = (DetailInfoBean) getIntent().getSerializableExtra(INFO);
         if (infoBean != null) {
             if ("pc".equals(infoBean.getFrom())) showDialog();
-            if (Constant.PUBLISH_SUPPLY .equals(infoBean.getType())) {
+            if (Constant.PUBLISH_SUPPLY.equals(infoBean.getType())) {
                 mFragment = new PublishSupply();
                 setTitle(R.string.title_activity_publish_edit_supply);
             } else {
@@ -38,8 +38,8 @@ public class PublishEditActivity extends BaseActivity {
                 setTitle(R.string.title_activity_publish_edit_demand);
             }
         } else {
-            String type= getIntent().getStringExtra(TYPE);
-            if (Constant.PUBLISH_SUPPLY .equals(type)) {
+            String type = getIntent().getStringExtra(TYPE);
+            if (Constant.PUBLISH_SUPPLY.equals(type)) {
                 mFragment = new PublishSupply();
                 setTitle(R.string.publish_supply);
             } else {
@@ -47,15 +47,11 @@ public class PublishEditActivity extends BaseActivity {
                 setTitle(R.string.publish_demand);
             }
         }
-        Bundle args=new Bundle();
-        args.putBoolean(EDIT,true);
+        Bundle args = new Bundle();
+        args.putBoolean(EDIT, true);
         mFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().add(R.id.content, mFragment).commit();
         ((EditInfo) mFragment).edit(infoBean);
-    }
-
-    public interface EditInfo {
-        public void edit(DetailInfoBean infoBean);
     }
 
     @Override
@@ -72,5 +68,9 @@ public class PublishEditActivity extends BaseActivity {
                         dialog.dismiss();
                     }
                 }).show();
+    }
+
+    public interface EditInfo {
+        public void edit(DetailInfoBean infoBean);
     }
 }

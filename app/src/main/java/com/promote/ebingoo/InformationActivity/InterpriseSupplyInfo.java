@@ -83,7 +83,7 @@ public class InterpriseSupplyInfo extends CommonListFragment implements AdapterV
 
 
     private void getData(int lastId) {
-        LogCat.d("--->","enterprise_id="+enterprise_id);
+        LogCat.d("--->", "enterprise_id=" + enterprise_id);
         EbingoRequest.getSupplyInfoList(getActivity(), lastId, enterprise_id, 20, new MyRequest(lastId));  //网络请求.
     }
 
@@ -110,6 +110,36 @@ public class InterpriseSupplyInfo extends CommonListFragment implements AdapterV
     @Override
     public void onFooterRefresh(PullToRefreshView view) {
         getData(mSearchSupplys.size());
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private static class ViewHolder {
+        ImageView img;
+        TextView nameTv;
+        TextView priceTv;
+        TextView lookTimeTv;
+        TextView startTv;
+        TextView timeTv;
     }
 
     /**
@@ -216,38 +246,6 @@ public class InterpriseSupplyInfo extends CommonListFragment implements AdapterV
 
             return convertView;
         }
-    }
-
-
-    private static class ViewHolder {
-        ImageView img;
-        TextView nameTv;
-        TextView priceTv;
-        TextView lookTimeTv;
-        TextView startTv;
-        TextView timeTv;
-    }
-
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        try {
-            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
-
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
 

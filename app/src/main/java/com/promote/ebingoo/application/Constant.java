@@ -18,16 +18,6 @@ public class Constant {
     public static final String PUBLISH_SUPPLY = "2";
     public static final String PUBLISH_DEMAND = "1";
     /**
-     * 设置是否为release模式。 *
-     */
-    public static boolean mReleaseAble = false;
-
-    public static boolean isReleaseAble() {
-        return mReleaseAble;
-    }
-
-    private static final String FIRSTSTART = "first_start";
-    /**
      * 禁用账号. *
      */
     public static final int VIP_STOP = -2;
@@ -55,8 +45,6 @@ public class Constant {
      * 铂金账号. *
      */
     public static final int VIP_4 = 4;
-
-
     /**
      * 磁盘缓存路径. *
      */
@@ -65,12 +53,20 @@ public class Constant {
      * 圖片緩存路徑. *
      */
     public static final String IMG_DIR = CACHE_DIR + "/images";
-
     public static final int DB_VERSION = 2;
     /**
      * 程序大图的尺寸。 *
      */
     public static final Point imageSize = new Point(720, 258);
+    private static final String FIRSTSTART = "first_start";
+    /**
+     * 设置是否为release模式。 *
+     */
+    public static boolean mReleaseAble = false;
+
+    public static boolean isReleaseAble() {
+        return mReleaseAble;
+    }
 
     /**
      * 将第一次运行程序表示保存到本地.

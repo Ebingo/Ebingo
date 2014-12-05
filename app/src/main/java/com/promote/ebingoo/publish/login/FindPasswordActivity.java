@@ -31,16 +31,16 @@ public class FindPasswordActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
-                final ProgressDialog dialog= DialogUtil.waitingDialog(this,"正在发送验证邮件...");
+                final ProgressDialog dialog = DialogUtil.waitingDialog(this, "正在发送验证邮件...");
                 EbingoRequestParmater parmater = new EbingoRequestParmater(this);
                 parmater.put("phone_num", edit_phone.getText().toString().trim());
                 HttpUtil.post(HttpConstant.sendChangePasswordEmail, parmater, new EbingoHandler() {
                     @Override
                     public void onSuccess(int statusCode, JSONObject response) {
-                        EbingoDialog dialog=new EbingoDialog(FindPasswordActivity.this);
+                        EbingoDialog dialog = new EbingoDialog(FindPasswordActivity.this);
                         dialog.setTitle(R.string.find_password_dialog_title);
                         dialog.setMessage(getString(R.string.find_password_dialog_message));
-                        dialog.setPositiveButton(getString(R.string.i_know),dialog.DEFAULT_LISTENER);
+                        dialog.setPositiveButton(getString(R.string.i_know), dialog.DEFAULT_LISTENER);
                         dialog.show();
                     }
 

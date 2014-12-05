@@ -24,68 +24,15 @@ public class RefreshMoreListView extends ListView implements AbsListView.OnScrol
     private RefreshListner refreshListner;
 
     private boolean loadingMore = false;
-
-    public int getmPageSize() {
-        return mPageSize;
-    }
-
-    public void setmPageSize(int mPageSize) {
-        this.mPageSize = mPageSize;
-    }
-
     /**
      * 每次加载的数量.
      */
     private int mPageSize;
-
-    public void setmCanLoadMoreAble(boolean canLoadMoreAble) {
-        this.mCanLoadMoreAble = canLoadMoreAble;
-        if (canLoadMoreAble)
-            mFootView.setVisibility(View.VISIBLE);
-        else
-            mFootView.setVisibility(View.GONE);
-    }
-
     /**
      * 是否能加载更多. *
      */
     private boolean mCanLoadMoreAble = true;
-
-
-    /**
-     * 加载更多。
-     */
-    public interface LoadMoreListener {
-
-        public void onLoadmore();
-    }
-
-    public interface XOnItemClickListener {
-
-        public void xonItemClick(AdapterView<?> parent, View view, int position, long id);
-    }
-
     private XOnItemClickListener itemClickListener;
-
-
-    public void setXOnItemClickListener(XOnItemClickListener listener) {
-        this.itemClickListener = listener;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position < getAdapter().getCount())
-            this.itemClickListener.xonItemClick(parent, view, position, id);
-
-    }
-
-    /**
-     * 数据刷新。
-     */
-    public interface RefreshListner {
-
-        public void onrefresh();
-    }
 
     public RefreshMoreListView(Context context) {
         super(context);
@@ -97,9 +44,37 @@ public class RefreshMoreListView extends ListView implements AbsListView.OnScrol
         init(context);
     }
 
+
     public RefreshMoreListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
+    }
+
+    public int getmPageSize() {
+        return mPageSize;
+    }
+
+    public void setmPageSize(int mPageSize) {
+        this.mPageSize = mPageSize;
+    }
+
+    public void setmCanLoadMoreAble(boolean canLoadMoreAble) {
+        this.mCanLoadMoreAble = canLoadMoreAble;
+        if (canLoadMoreAble)
+            mFootView.setVisibility(View.VISIBLE);
+        else
+            mFootView.setVisibility(View.GONE);
+    }
+
+    public void setXOnItemClickListener(XOnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (position < getAdapter().getCount())
+            this.itemClickListener.xonItemClick(parent, view, position, id);
+
     }
 
     private void init(Context context) {
@@ -119,7 +94,6 @@ public class RefreshMoreListView extends ListView implements AbsListView.OnScrol
         this.refreshListner = listener;
     }
 
-
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -136,7 +110,6 @@ public class RefreshMoreListView extends ListView implements AbsListView.OnScrol
             }
         }
     }
-
 
     /**
      * 数据加载完成。
@@ -159,6 +132,28 @@ public class RefreshMoreListView extends ListView implements AbsListView.OnScrol
 
     public void loadMoreCompleteMsg() {
         Toast.makeText(getContext(), getResources().getString(R.string.load_more_complete), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 加载更多。
+     */
+    public interface LoadMoreListener {
+
+        public void onLoadmore();
+    }
+
+
+    public interface XOnItemClickListener {
+
+        public void xonItemClick(AdapterView<?> parent, View view, int position, long id);
+    }
+
+    /**
+     * 数据刷新。
+     */
+    public interface RefreshListner {
+
+        public void onrefresh();
     }
 
 

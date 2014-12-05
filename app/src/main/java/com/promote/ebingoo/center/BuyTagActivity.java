@@ -3,6 +3,7 @@ package com.promote.ebingoo.center;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
 import com.promote.ebingoo.R;
 
 /**
@@ -26,7 +27,8 @@ public class BuyTagActivity extends MyBookActivity {
                 break;
             case R.id.commit_title_done:
                 break;
-            default:super.onClick(v);
+            default:
+                super.onClick(v);
         }
 
     }

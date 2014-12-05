@@ -46,12 +46,12 @@ public class AutoLineLayout extends LinearLayout {
 
             remainWidth -= childWidth;  //将每次子控件宽度进行统计叠加，如果大于设定的高度则需要换行，高度即Top坐标也需重新设置
 
-            if (remainWidth<0) {
-                remainWidth = mWidth - leftOffset - rightOffset-childWidth;
+            if (remainWidth < 0) {
+                remainWidth = mWidth - leftOffset - rightOffset - childWidth;
                 frame.left = leftOffset;
-                frame.top = frame.bottom  + 5;
+                frame.top = frame.bottom + 5;
             }
-            remainWidth-=ITEM_SPACING;
+            remainWidth -= ITEM_SPACING;
 
             frame.right = frame.left + child.getMeasuredWidth();
             frame.bottom = frame.top + child.getMeasuredHeight();
@@ -59,7 +59,7 @@ public class AutoLineLayout extends LinearLayout {
             map.put(child, new Rect(frame));
             frame.left = frame.right + ITEM_SPACING;
         }
-        setMeasuredDimension(mWidth, frame.bottom+getPaddingBottom());
+        setMeasuredDimension(mWidth, frame.bottom + getPaddingBottom());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class AutoLineLayout extends LinearLayout {
             View child = getChildAt(i);
             Rect rect = map.get(child);
             if (rect != null) {
-                child.layout(rect.left , rect.top, rect.right, rect.bottom);
+                child.layout(rect.left, rect.top, rect.right, rect.bottom);
             } else {
                 LogCat.i("MyLayout", "error");
             }

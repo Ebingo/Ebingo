@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jch.lib.util.HttpUtil;
-import com.jch.lib.view.PullToRefreshView;
 import com.promote.ebingoo.center.ItemDelteDialog;
 import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.LogCat;
@@ -24,8 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static com.jch.lib.view.PullToRefreshView.*;
-
 /**
  * 用于展示列表的Activity，有一个默认的布局文件R.layout.activity_base_list，子类不需要设定布局文件。标题是在manifest中对应Activity的label值
  * zhuchao on 2014/9/18.
@@ -33,16 +30,14 @@ import static com.jch.lib.view.PullToRefreshView.*;
 public class BaseListActivity extends ListActivity implements View.OnClickListener, AdapterView.OnItemLongClickListener, ItemDelteDialog.DeleteItemListener {
     public static final String ARG_REFRESH = "refresh";
     /**
+     * 保存上次更新时间的文件名
+     */
+    private final String CACHE_DATE = "cache_date";
+    /**
      * 分页的lastId
      */
     protected int lastId = 0;
     protected int pageSize = 10;
-    /**
-     * 弹出编辑框的位置
-     */
-    private int edit_position = -1;
-    private ItemDelteDialog delteDialog;
-    private RefreshListView mPullToRefreshView;
     /**
      * 缓存模块的名称
      */
@@ -52,16 +47,39 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
      */
     protected List mCache;
     /**
+     * 弹出编辑框的位置
+     */
+    private int edit_position = -1;
+    private ItemDelteDialog delteDialog;
+    private RefreshListView mPullToRefreshView;
+    /**
      * 上一次更新的时间
      */
     private Date lastRefreshTime = null;
-    /**
-     * 保存上次更新时间的文件名
-     */
-    private final String CACHE_DATE = "cache_date";
-
     private boolean isHeadRefreshing = false;
+    private RefreshListView.OnRefreshListener l = new RefreshListView.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            lastId = 0;
 
+            mPullToRefreshView.setHasMore(true);
+            isHeadRefreshing = true;
+            if (HttpUtil.isNetworkConnected(getApplicationContext())) {
+                startRefresh();
+            } else {
+                onLoadFinish();
+            }
+        }
+
+        @Override
+        public void onLoadMore() {
+            if (lastId != 0) {
+                startLoadMore();
+            } else {
+                startRefresh();
+            }
+        }
+    };
     private Handler mHandler;
 
     @Override
@@ -78,7 +96,6 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         mPullToRefreshView.setOnRefreshListener(l);
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -155,14 +172,14 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
      */
     public void setUpRefreshable(boolean refreshable) {
         mPullToRefreshView.setHasMore(refreshable);
-        if (!refreshable)mPullToRefreshView.hideFooter();
+        if (!refreshable) mPullToRefreshView.hideFooter();
     }
 
     /**
      * @param refreshable true可以上拉加载更多，false反之
      */
     public void setDownRefreshable(boolean refreshable) {
-        if (!refreshable)mPullToRefreshView.hideHeader();
+        if (!refreshable) mPullToRefreshView.hideHeader();
     }
 
     /**
@@ -202,7 +219,6 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
                 .append("\"" + value + "\"")
                 .toString();
     }
-
 
     /**
      * called when a delete Dialog is prepared to show,
@@ -252,10 +268,10 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
             lastId = 0;//如果用户删除数据，则无论用户接下来是上拉还是下拉
         } else {
             int itemCount = getAdapter().getCount();
-            LogCat.i("item:"," itemCount="+itemCount+" oldSize="+lastId);
-            if (itemCount -lastId < pageSize) {
+            LogCat.i("item:", " itemCount=" + itemCount + " oldSize=" + lastId);
+            if (itemCount - lastId < pageSize) {
                 mPullToRefreshView.setHasMore(false);
-                if (itemCount!=0)ContextUtil.toast("数据已经加载完毕！");
+                if (itemCount != 0) ContextUtil.toast("数据已经加载完毕！");
             }
             lastId = itemCount;
         }
@@ -282,31 +298,6 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
         mPullToRefreshView.onRefreshComplete();
         isHeadRefreshing = false;
     }
-
-    private RefreshListView.OnRefreshListener l = new RefreshListView.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            lastId = 0;
-
-            mPullToRefreshView.setHasMore(true);
-            isHeadRefreshing = true;
-            if (HttpUtil.isNetworkConnected(getApplicationContext())) {
-                startRefresh();
-            } else {
-                onLoadFinish();
-            }
-        }
-
-        @Override
-        public void onLoadMore() {
-            if (lastId != 0) {
-                startLoadMore();
-            } else {
-                startRefresh();
-            }
-        }
-    };
-
 
     final public void startRefresh() {
         if (mHandler == null) {
@@ -353,10 +344,10 @@ public class BaseListActivity extends ListActivity implements View.OnClickListen
      */
     public void setEmptyView(View v) {
         v.setId(android.R.id.empty);
-        FrameLayout content= (FrameLayout) findViewById(R.id.content);
+        FrameLayout content = (FrameLayout) findViewById(R.id.content);
         content.removeView(content.findViewById(android.R.id.empty));
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.gravity=Gravity.CENTER;
+        lp.gravity = Gravity.CENTER;
         content.addView(v, lp);
         mPullToRefreshView.setEmptyView(v);
         onContentChanged();

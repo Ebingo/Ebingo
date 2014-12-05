@@ -19,10 +19,6 @@ import com.promote.ebingoo.R;
  */
 public class CallDialog extends Dialog implements View.OnClickListener {
 
-    private TextView calldialogcallbtn;
-    private TextView calldialogcancelbtn;
-    private TextView calldialogphonenum;
-
     // the minimum scaling factor for the web dialog (50% of screen size)
     private static final double MIN_SCALE_FACTOR = 0.5;
     // width below which there are no extra margins
@@ -33,6 +29,25 @@ public class CallDialog extends Dialog implements View.OnClickListener {
     private static final int NO_PADDING_SCREEN_HEIGHT = 800;
     // height beyond which we're always using the MIN_SCALE_FACTOR
     private static final int MAX_PADDING_SCREEN_HEIGHT = 1280;
+    private TextView calldialogcallbtn;
+    private TextView calldialogcancelbtn;
+    private TextView calldialogphonenum;
+    private PhoneCallBack mPhoneCallBack = null;
+
+
+    public CallDialog(Context context, PhoneCallBack callBack) {
+        super(context);
+        this.mPhoneCallBack = callBack;
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.call_dialog_layout);
+        calculateSize();
+        getWindow().setGravity((Gravity.CENTER));
+        initialize();
+
+
+        this.setCanceledOnTouchOutside(true);
+        this.setCancelable(true);
+    }
 
     @Override
     public void onClick(View v) {
@@ -60,27 +75,6 @@ public class CallDialog extends Dialog implements View.OnClickListener {
 
     }
 
-
-    public interface PhoneCallBack {
-        public void call(CallDialog dialog, String str);
-    }
-
-    private PhoneCallBack mPhoneCallBack = null;
-
-    public CallDialog(Context context, PhoneCallBack callBack) {
-        super(context);
-        this.mPhoneCallBack = callBack;
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.call_dialog_layout);
-        calculateSize();
-        getWindow().setGravity((Gravity.CENTER));
-        initialize();
-
-
-        this.setCanceledOnTouchOutside(true);
-        this.setCancelable(true);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,16 +89,15 @@ public class CallDialog extends Dialog implements View.OnClickListener {
         calldialogcancelbtn.setOnClickListener(this);
     }
 
-    public void setCallphone(String phoneNum) {
-
-        calldialogphonenum.setText(phoneNum);
-    }
-
     public String getCallphone() {
 
         return calldialogphonenum.getText().toString();
     }
 
+    public void setCallphone(String phoneNum) {
+
+        calldialogphonenum.setText(phoneNum);
+    }
 
     private void calculateSize() {
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -152,6 +145,10 @@ public class CallDialog extends Dialog implements View.OnClickListener {
                     / ((double) (maxPaddingSize - noPaddingSize)) * (1.0 - MIN_SCALE_FACTOR);
         }
         return (int) (screenSize * scaleFactor);
+    }
+
+    public interface PhoneCallBack {
+        public void call(CallDialog dialog, String str);
     }
 
 }

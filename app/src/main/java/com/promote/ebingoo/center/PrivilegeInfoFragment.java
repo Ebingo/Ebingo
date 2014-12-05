@@ -36,13 +36,13 @@ import org.json.JSONObject;
 public class PrivilegeInfoFragment extends Fragment implements View.OnClickListener {
 
 
+    private VipType displayVipType;
+
     public static PrivilegeInfoFragment newInstance(VipType vipType) {
         PrivilegeInfoFragment fragment = new PrivilegeInfoFragment();
         fragment.setDisplayVipType(vipType);
         return fragment;
     }
-
-    private VipType displayVipType;
 
     public VipType getDisplayVipType() {
         return displayVipType;

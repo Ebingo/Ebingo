@@ -56,13 +56,13 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class SearchActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener, RefreshMoreListView.LoadMoreListener, RefreshMoreListView.XOnItemClickListener, AdapterView.OnItemClickListener, TextWatcher, SearchHotKeyLayout.SearchHotkeyOnItemClickListener {
+    private static final int PAGESIZE = 10;
+    private static final int SEARCh_HISTORY = 1;
     /**
      * 當前搜索類型，默認為顯示歷史记录。 *
      */
     private SearchType mCurSearchType = SearchType.HISTORY;
     private SearchCategoryPop mCategoryPop = null;
-
-    private static final int PAGESIZE = 10;
     /**
      * 搜索list的显示内容类型，默认是历史记录。*
      */
@@ -82,7 +82,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
     private TextView searchnohistorytv;
     private TextView searchNoDataTv;
     private LinearLayout searchHistoryContentLl;
-
     //    private ProgressBar mSearchKeyPb;
 //    private GridView mSearchKeyGv;
     private HotKey mHotKey;
@@ -92,13 +91,31 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
      * 搜索内容清空按钮。 *
      */
     private ImageButton mSearchClearIb;
-
     private SearchHistoryListAdapter mHistoryAdapter = null;
     private SearchResultAdapter mResultAdatper = null;
     private ArrayList<SearchTypeBean> mSearchTypeBeans = new ArrayList<SearchTypeBean>();
     private ArrayList<SearchHistoryBean> mHistoryBeans = new ArrayList<SearchHistoryBean>();
+    private Handler mHandler = new Handler() {
 
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == SEARCh_HISTORY) {
+                if (mHistoryBeans.size() == 0) {
+                    hidKey();
+                    noHistory(getString(R.string.no_history));
+                } else {
+                    hasHistory();
+                    hidKey();
+                }
+                showHistoryData();
+                LogCat.i("searchActivity handler history beansize：" + mHistoryBeans.size());
+                mHistoryAdapter.notifyDataSetChanged(mHistoryBeans);
 
+            }
+
+        }
+    };
     private LinearLayout searchcontentresultll;
     private RefreshMoreListView searchresultlv;
     private LinearLayout searchcontenthistoryll;
@@ -113,7 +130,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         setContentView(R.layout.activity_search);
         initialize();
     }
-
 
     private void initialize() {
 
@@ -189,28 +205,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchcontentresultll.setVisibility(View.VISIBLE);
     }
 
-    private Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == SEARCh_HISTORY) {
-                if (mHistoryBeans.size() == 0) {
-                    hidKey();
-                    noHistory(getString(R.string.no_history));
-                } else {
-                    hasHistory();
-                    hidKey();
-                }
-                showHistoryData();
-                LogCat.i("searchActivity handler history beansize：" + mHistoryBeans.size());
-                mHistoryAdapter.notifyDataSetChanged(mHistoryBeans);
-
-            }
-
-        }
-    };
-
     /**
      * 获取关键字.
      */
@@ -268,7 +262,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchnohistorytv.setVisibility(View.GONE);
     }
 
-
     /**
      * 没有搜索数据。
      */
@@ -295,14 +288,12 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         searchkeytv.setText(key);
     }
 
-
     /**
      * 隱藏關鍵字項。
      */
     private void hidKey() {
         searchresultkeyll.setVisibility(View.GONE);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -477,8 +468,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         }).start();
 
     }
-
-    private static final int SEARCh_HISTORY = 1;
 
     /**
      * 显示搜索记录.
@@ -667,18 +656,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         onSearch(hotKey);
     }
 
-
-    /**
-     * 当类别选择框消失时，类别箭头状态改变。
-     */
-    private class PopDismissLSNER implements PopupWindow.OnDismissListener {
-
-        @Override
-        public void onDismiss() {
-            searchcategrycb.setChecked(false);
-        }
-    }
-
     /**
      * 從網絡獲取求购信息列表.
      *
@@ -734,7 +711,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         });
 
     }
-
 
     /**
      * 從網絡获取供应信息列表。
@@ -823,7 +799,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         showSearchData();
     }
 
-
     /**
      * 從網絡获取企业列表。
      *
@@ -888,7 +863,6 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         noData(getString(R.string.no_search_data));
     }
 
-
     /**
      * 拼接赛选条件参数。
      *
@@ -900,6 +874,17 @@ public class SearchActivity extends Activity implements View.OnClickListener, Co
         sb.append(keyword);
         sb.append("\"}");
         return sb.toString();
+    }
+
+    /**
+     * 当类别选择框消失时，类别箭头状态改变。
+     */
+    private class PopDismissLSNER implements PopupWindow.OnDismissListener {
+
+        @Override
+        public void onDismiss() {
+            searchcategrycb.setChecked(false);
+        }
     }
 
 }

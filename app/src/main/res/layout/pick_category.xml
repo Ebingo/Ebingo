@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/gray_bg"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <include layout="@layout/common_head_layout" />
 
@@ -15,19 +15,19 @@
 
         <ListView
             android:id="@+id/lv_category_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="3.9"
             android:divider="@color/center_divider"
             android:dividerHeight="1px"
-            android:layout_width="0dp"
-            android:scrollbars="none"
-            android:layout_height="wrap_content" />
+            android:scrollbars="none" />
 
         <ListView
-            android:layout_width="0dp"
             android:id="@+id/lv_category_2"
-            android:dividerHeight="1px"
-            android:divider="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2.5"
-            android:layout_height="wrap_content" />
+            android:divider="@color/white"
+            android:dividerHeight="1px" />
     </LinearLayout>
 </LinearLayout>

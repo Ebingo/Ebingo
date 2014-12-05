@@ -51,12 +51,12 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/ebingo_dialog_btn"
+            android:clickable="true"
             android:gravity="center"
             android:text="确定"
-            android:textStyle="bold"
-            android:clickable="true"
+            android:textColor="@color/ebingo_button_textColor"
             android:textSize="@dimen/ebingo_button_textSize"
-            android:textColor="@color/ebingo_button_textColor" />
+            android:textStyle="bold" />
 
         <View
             android:id="@+id/btn_divider1"
@@ -70,12 +70,13 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/ebingo_dialog_btn"
+            android:clickable="true"
             android:gravity="center"
             android:text="忽略"
-            android:clickable="true"
-            android:textStyle="bold"
+            android:textColor="@color/ebingo_button_textColor"
             android:textSize="@dimen/ebingo_button_textSize"
-            android:textColor="@color/ebingo_button_textColor" />
+            android:textStyle="bold" />
+
         <View
             android:id="@+id/btn_divider2"
             android:layout_width="1dp"
@@ -88,11 +89,11 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/ebingo_dialog_btn"
+            android:clickable="true"
             android:gravity="center"
             android:text="取消"
-            android:clickable="true"
-            android:textStyle="bold"
+            android:textColor="@color/ebingo_button_textColor"
             android:textSize="@dimen/ebingo_button_textSize"
-            android:textColor="@color/ebingo_button_textColor" />
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

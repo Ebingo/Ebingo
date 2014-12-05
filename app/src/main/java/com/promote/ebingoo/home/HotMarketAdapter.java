@@ -22,12 +22,9 @@ import java.util.ArrayList;
  */
 public class HotMarketAdapter extends BaseAdapter {
 
-    private Context mContext;
-
     DisplayImageOptions mOptions;
-
-
     ArrayList<HotCategory> hotCategories = new ArrayList<HotCategory>();
+    private Context mContext;
 
     public HotMarketAdapter(Context context, ArrayList<HotCategory> hotCategories, DisplayImageOptions options) {
 

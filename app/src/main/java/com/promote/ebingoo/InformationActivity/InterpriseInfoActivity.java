@@ -93,6 +93,13 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
         commontitletv.setText(name);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LoginDialog.REQUEST_CODE) {
+            mSDInfoFragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     /**
      * ViewPager adapter.
@@ -139,14 +146,6 @@ public class InterpriseInfoActivity extends FragmentActivity implements View.OnC
 
 
             return tabStr.length;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LoginDialog.REQUEST_CODE) {
-            mSDInfoFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

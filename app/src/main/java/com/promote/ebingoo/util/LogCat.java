@@ -6,7 +6,6 @@ import com.promote.ebingoo.application.Constant;
 
 /**
  * @author jch.
- *
  */
 public class LogCat {
 

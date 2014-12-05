@@ -7,13 +7,13 @@
     <com.jch.lib.view.PullToRefreshView
         android:id="@+id/iprise_dynamic_freshview"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/iprise_info_dynamic_lv"
-            android:layout_width="match_parent"
             style="@style/listview_style"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"></ListView>
     </com.jch.lib.view.PullToRefreshView>
 </FrameLayout>

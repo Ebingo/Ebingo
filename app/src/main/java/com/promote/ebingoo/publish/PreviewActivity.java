@@ -22,11 +22,18 @@ import java.io.IOException;
  * Created by acer on 2014/9/9.
  */
 public class PreviewActivity extends Activity implements View.OnClickListener {
+    public static final String PIC_NAME = "ebingoo_preview.png";
+    private static boolean isPreviewing = false;
     private Uri uri;
     private Uri savedUri;
     private ImageView picked_image;
-    public static final String PIC_NAME = "ebingoo_preview.png";
-    private static boolean isPreviewing = false;
+
+    /**
+     * @return if this activity is Previewing pictures
+     */
+    public static boolean isPreviewing() {
+        return isPreviewing;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +68,6 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
     }
 
     /**
-     * @return if this activity is Previewing pictures
-     */
-    public static boolean isPreviewing() {
-        return isPreviewing;
-    }
-
-    /**
      * 根据Uri来加载一个图片，并压缩
      */
     private class LoadImageTask extends AsyncTask<Uri, Void, Bitmap> {
@@ -89,15 +89,15 @@ public class PreviewActivity extends Activity implements View.OnClickListener {
         protected Bitmap doInBackground(Uri... params) {
             Bitmap result = null;
             try {
-                BitmapFactory.Options options=new BitmapFactory.Options();
-                options.inJustDecodeBounds=true;
-                BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]),null,options);
-                int size = options.outWidth*options.outHeight;
-                LogCat.i("--->","size="+size+" size/max="+(size /max_size));
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]), null, options);
+                int size = options.outWidth * options.outHeight;
+                LogCat.i("--->", "size=" + size + " size/max=" + (size / max_size));
                 if (size > max_size) {
-                    options.inSampleSize = size /max_size;
-                    options.inJustDecodeBounds=false;
-                    result = BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]),null,options);
+                    options.inSampleSize = size / max_size;
+                    options.inJustDecodeBounds = false;
+                    result = BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]), null, options);
                 } else {
                     result = BitmapFactory.decodeStream(getContentResolver().openInputStream(params[0]));
                 }

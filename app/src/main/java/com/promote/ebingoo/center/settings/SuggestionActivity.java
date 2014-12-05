@@ -26,35 +26,36 @@ import org.json.JSONObject;
  */
 public class SuggestionActivity extends BaseActivity {
     private AddTagsActivity.ScrollHandler scrollHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggestion);
-        scrollHandler=new AddTagsActivity.ScrollHandler((android.widget.ScrollView) findViewById(R.id.scroll));
-        ((TextView)findViewById(R.id.commit_title_done)).setText("提 交");
+        scrollHandler = new AddTagsActivity.ScrollHandler((android.widget.ScrollView) findViewById(R.id.scroll));
+        ((TextView) findViewById(R.id.commit_title_done)).setText("提 交");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.commit_title_done:
-                String content=getText((EditText) findViewById(R.id.edit_content));
-                if (TextUtils.isEmpty(content)){
+                String content = getText((EditText) findViewById(R.id.edit_content));
+                if (TextUtils.isEmpty(content)) {
                     ContextUtil.toast("您还没有输入任何内容。");
                     return;
                 }
-                final Dialog dialog= DialogUtil.waitingDialog(this,"操作中...");
+                final Dialog dialog = DialogUtil.waitingDialog(this, "操作中...");
 
-                EbingoRequestParmater parmater=new EbingoRequestParmater(v.getContext());
+                EbingoRequestParmater parmater = new EbingoRequestParmater(v.getContext());
                 parmater.put("company_id", Company.getInstance().getCompanyId());
                 parmater.put("content", content);
-                HttpUtil.post(HttpConstant.addAdvice,parmater,new EbingoHandler() {
+                HttpUtil.post(HttpConstant.addAdvice, parmater, new EbingoHandler() {
                     @Override
-                    public void onSuccess(int statusCode,  JSONObject response) {
-                        EbingoDialog notice=new EbingoDialog(SuggestionActivity.this);
+                    public void onSuccess(int statusCode, JSONObject response) {
+                        EbingoDialog notice = new EbingoDialog(SuggestionActivity.this);
                         notice.setTitle("提交成功！");
                         notice.setMessage("感谢您的建议！");
-                        notice.setPositiveButton(R.string.yes,notice.DEFAULT_LISTENER);
+                        notice.setPositiveButton(R.string.yes, notice.DEFAULT_LISTENER);
                         notice.show();
                     }
 

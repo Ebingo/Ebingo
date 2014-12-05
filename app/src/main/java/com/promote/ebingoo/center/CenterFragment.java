@@ -78,6 +78,16 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     private TextView centShare;
     private Handler handler = new Handler();
     private InvalidateData invalidateData = new InvalidateData();
+    private BroadcastReceiver invalidateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            invalidateData();
+        }
+    };
+
+    public CenterFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -95,10 +105,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public CenterFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -189,7 +195,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -238,14 +243,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         handler.postDelayed(invalidateData, 100);
-    }
-
-    private class InvalidateData implements Runnable {
-
-        @Override
-        public void run() {
-            invalidateData();
-        }
     }
 
     /**
@@ -349,7 +346,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
                 intent.setType("text/plain"); // 分享发送的数据类型
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject)); // 分享的主题
-                intent.putExtra(Intent.EXTRA_TEXT,getString(R.string.share_text) ); // 分享的内容
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text)); // 分享的内容
                 startActivity(Intent.createChooser(intent, "选择分享"));
                 break;
             }
@@ -366,21 +363,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
     /**
@@ -447,10 +429,26 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
-    private BroadcastReceiver invalidateReceiver = new BroadcastReceiver() {
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(Uri uri);
+    }
+
+    private class InvalidateData implements Runnable {
+
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void run() {
             invalidateData();
         }
-    };
+    }
 }

@@ -43,19 +43,6 @@ import java.util.TreeSet;
 
 public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
-    private final String TAG = getClass().getSimpleName();
-    GridView grid;
-    LinearLayout bottom_ll;
-    /**
-     * 图片目录
-     */
-    private String[] dirsNameArarry;
-    /**
-     * 图片目录和图片url集合
-     */
-    private HashMap<String, LinkedList<String>> urlsMap = new HashMap<String, LinkedList<String>>();
-    private final int OPEN_CAMERA = 100;
-    private final int CROP_IMAGE = 101;
     /**
      * Intent参数，拍照选择图片的保存路径，String类型。如果不传，将使用默认路径。
      */
@@ -68,20 +55,31 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
      * 输出图片的宽度，单位dp
      */
     public static String EXTRA_CAMERA_OUTPUT_WIDTH = "camera_out_width";
-
+    private final String TAG = getClass().getSimpleName();
+    private final int OPEN_CAMERA = 100;
+    private final int CROP_IMAGE = 101;
+    private final String ALL = "全部";
+    private final String OTHER = "其他";
+    GridView grid;
+    LinearLayout bottom_ll;
+    AlbumAdapter pictureAdapter;
+    /**
+     * 图片目录
+     */
+    private String[] dirsNameArarry;
+    /**
+     * 图片目录和图片url集合
+     */
+    private HashMap<String, LinkedList<String>> urlsMap = new HashMap<String, LinkedList<String>>();
     /**
      * 图片的输出uri
      */
     private Uri outPutUri;
-
     private int outPut_height;
     private int outPut_width;
     private LinkedList<String> curAlbumList;
-    AlbumAdapter pictureAdapter;
     private int selectedItem = 0;
     private PopupWindow dirWindow;
-    private final String ALL = "全部";
-    private final String OTHER = "其他";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +107,7 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         outPut_height = (int) (getIntent().getIntExtra(EXTRA_CAMERA_OUTPUT_HEIGHT, 30) * dm.density);
         outPut_width = (int) (getIntent().getIntExtra(EXTRA_CAMERA_OUTPUT_WIDTH, 30) * dm.density);
         if (!TextUtils.isEmpty(camera_output)) outPutUri = Uri.fromFile(new File(camera_output));
-        else outPutUri=Uri.fromFile(ImageUtil.getImageTempFile("album"));
+        else outPutUri = Uri.fromFile(ImageUtil.getImageTempFile("album"));
     }
 
     /**
@@ -265,12 +263,22 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         startActivityForResult(intent, CROP_IMAGE);
     }
 
-    class AlbumAdapter extends BaseAdapter {
-        private Context mContext;
+    static class ViewHolder {
+        ImageView imageView;
+    }
 
+    static class ViewHolder2 {
+        ImageView imageView;
+        TextView dir_name;
+        TextView num_pics;
+        ImageView selected;
+    }
+
+    class AlbumAdapter extends BaseAdapter {
         DisplayImageOptions options;
         View header;
         int width;
+        private Context mContext;
 
         AlbumAdapter(Context context) {
             this.mContext = context;
@@ -321,10 +329,6 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
 
             return convertView;
         }
-    }
-
-    static class ViewHolder {
-        ImageView imageView;
     }
 
     class PupWindowAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
@@ -385,13 +389,6 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
             pictureAdapter.notifyDataSetChanged();
             dirWindow.dismiss();
         }
-    }
-
-    static class ViewHolder2 {
-        ImageView imageView;
-        TextView dir_name;
-        TextView num_pics;
-        ImageView selected;
     }
 
 }

@@ -39,8 +39,8 @@ final class DecodeThread extends Thread {
 
     private final CaptureActivity activity;
     private final Hashtable<DecodeHintType, Object> hints;
-    private Handler handler;
     private final CountDownLatch handlerInitLatch;
+    private Handler handler;
 
     DecodeThread(CaptureActivity activity,
                  Vector<BarcodeFormat> decodeFormats,

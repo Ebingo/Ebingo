@@ -15,94 +15,26 @@ import com.jch.lib.R;
  */
 public class SlideGridView extends LinearLayout {
 
-    public interface OnItemClickListener {
-        /**
-         * 父分类点击事件.
-         *
-         * @param position
-         * @param view
-         */
-        public void onItemClick(int position, View view);
-
-        /**
-         * 子分类点击事件.
-         *
-         * @param subPosition
-         * @param view
-         */
-        public void onSubItemClick(int position, int subPosition, View view);
-    }
-
-
+    private static final int DEFAUTGRAYCOLOR = 0xcccccc;
+    private static final int DEFULTSUBCOLOR = 0x72a2f2;
+    private static final int DEFAUTDIVIDEHEIGHT = 0;
+    private static final int DEFULTCOLUM = 3;
+    // @formatter:off
+    private static final int[] ATTRS = new int[]{android.R.attr.textSize, android.R.attr.textColor};
     private OnItemClickListener itemClickListener;
-
     //每一行的列数.
     private int colulmeNum = 3;
     //子分类中每行的列数。
     private int subColumNum = 3;
-
     //子分类的背景
     private int subBg;
-
-    private static final int DEFAUTGRAYCOLOR = 0xcccccc;
-    private static final int DEFULTSUBCOLOR = 0x72a2f2;
-    private static final int DEFAUTDIVIDEHEIGHT = 0;
-
-    private static final int DEFULTCOLUM = 3;
-
     private float divideHeight;
-
-    public int getDivideColor() {
-        return divideColor;
-    }
-
-    public void setDivideColor(int divideColor) {
-        this.divideColor = divideColor;
-    }
-
-    public float getDivideHeight() {
-        return divideHeight;
-    }
-
-    public void setDivideHeight(float divideHeight) {
-        this.divideHeight = divideHeight;
-    }
-
     private int divideColor;
-
-
-    // @formatter:off
-    private static final int[] ATTRS = new int[]{android.R.attr.textSize, android.R.attr.textColor};
-
     private SlideGridViewBaseAdapter mAdapter = null;
-
     private SlideGridViewController mController = null;
-
-
     private int arroIndexIds;
-
-    public int getArroIndexIdsNomal() {
-        return arroIndexIdsNomal;
-    }
-
-    public void setArroIndexIdsNomal(int arroIndexIdsNomal) {
-        this.arroIndexIdsNomal = arroIndexIdsNomal;
-    }
-
     private int arroIndexIdsNomal;
-
-
-    public int getArroIndexIds() {
-        return arroIndexIds;
-    }
-
-    public void setArroIndexIds(int arroIndexIds) {
-        this.arroIndexIds = arroIndexIds;
-    }
-
     private int DEFAUTE_BG = R.drawable.slidgrid_index;
-
-    // @formatter:on
 
     public SlideGridView(Context context) {
         super(context);
@@ -125,6 +57,39 @@ public class SlideGridView extends LinearLayout {
         init(context);
     }
 
+    public int getDivideColor() {
+        return divideColor;
+    }
+
+    public void setDivideColor(int divideColor) {
+        this.divideColor = divideColor;
+    }
+
+    public float getDivideHeight() {
+        return divideHeight;
+    }
+
+    public void setDivideHeight(float divideHeight) {
+        this.divideHeight = divideHeight;
+    }
+
+    public int getArroIndexIdsNomal() {
+        return arroIndexIdsNomal;
+    }
+
+    public void setArroIndexIdsNomal(int arroIndexIdsNomal) {
+        this.arroIndexIdsNomal = arroIndexIdsNomal;
+    }
+
+    public int getArroIndexIds() {
+        return arroIndexIds;
+    }
+
+    // @formatter:on
+
+    public void setArroIndexIds(int arroIndexIds) {
+        this.arroIndexIds = arroIndexIds;
+    }
 
     public void init(Context context) {
         mController = new SlideGridViewController(context, this);
@@ -160,5 +125,23 @@ public class SlideGridView extends LinearLayout {
         if (mAdapter != null) {
             mAdapter.registerDataSetObserver(mController);
         }
+    }
+
+    public interface OnItemClickListener {
+        /**
+         * 父分类点击事件.
+         *
+         * @param position
+         * @param view
+         */
+        public void onItemClick(int position, View view);
+
+        /**
+         * 子分类点击事件.
+         *
+         * @param subPosition
+         * @param view
+         */
+        public void onSubItemClick(int position, int subPosition, View view);
     }
 }

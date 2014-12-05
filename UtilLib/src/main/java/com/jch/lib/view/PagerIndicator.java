@@ -67,14 +67,6 @@ public class PagerIndicator extends View {
         return mCurrentPage;
     }
 
-    public void setDefaultResource(int defaultResid) {
-        mDefaultResid = defaultResid;
-    }
-
-    public void setCurrentResource(int currentResid) {
-        mCurrentResid = currentResid;
-    }
-
     public void setCurrentPage(int nPageIndex) {
         if (nPageIndex < 0 || nPageIndex >= mTotalPage)
             return;
@@ -83,6 +75,14 @@ public class PagerIndicator extends View {
             mCurrentPage = nPageIndex;
             this.invalidate();
         }
+    }
+
+    public void setDefaultResource(int defaultResid) {
+        mDefaultResid = defaultResid;
+    }
+
+    public void setCurrentResource(int currentResid) {
+        mCurrentResid = currentResid;
     }
 
     @Override

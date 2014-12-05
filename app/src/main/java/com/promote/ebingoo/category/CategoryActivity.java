@@ -39,6 +39,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 
+enum CategoryType {
+
+    DEMAND, SUPPLY;
+}
+
+enum CategoryRankType {
+
+    TIME, PRICE, LOOKNUM;
+}
+
 /**
  * 行业分类列表。
  */
@@ -46,6 +56,10 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     public static final String PARENT_ID = "parent_id";
     public static final String ARG_ID = "category_id";
     public static final String ARG_NAME = "name";
+    /**
+     * 分页最大加载数。 *
+     */
+    private static final int PAGESIZE = 10;
     private CheckBox categoryleftcb;
     private CheckBox categoryrightcb;
     private ImageView commonbackbtn;
@@ -53,10 +67,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     private int parent_id = -1;
     private int category_id = -1;
     private CategoryListAdapter mListAdapter = null;
-    /**
-     * 分页最大加载数。 *
-     */
-    private static final int PAGESIZE = 10;
     /**
      * 类别选择弹出window. *
      */
@@ -80,6 +90,24 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     private RefreshMoreListView refreshMoreListView;
     private TextView nodatatv;
     private Handler handler = new Handler();
+    /**
+     * 初始化供应列表
+     */
+    private Runnable initSupplyInfoList = new Runnable() {
+        @Override
+        public void run() {
+            getSupplyInfoList(0);
+        }
+    };
+    /**
+     * 初始化求购列表
+     */
+    private Runnable initDemandInfoList = new Runnable() {
+        @Override
+        public void run() {
+            getDemandInfoList(0);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +115,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         setContentView(R.layout.activity_category);
         initialize();
     }
-
 
     private void initialize() {
 
@@ -129,26 +156,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         }
 
     }
-
-
-    /**
-     * 初始化供应列表
-     */
-    private Runnable initSupplyInfoList = new Runnable() {
-        @Override
-        public void run() {
-            getSupplyInfoList(0);
-        }
-    };
-    /**
-     * 初始化求购列表
-     */
-    private Runnable initDemandInfoList = new Runnable() {
-        @Override
-        public void run() {
-            getDemandInfoList(0);
-        }
-    };
 
     @Override
     protected void onDestroy() {
@@ -340,40 +347,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
     }
 
     /**
-     * 行業種類選擇監聽.
-     */
-    private class CategoryTypeCheckedCL implements CompoundButton.OnCheckedChangeListener {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-
-                mTypePop.showAsDropDown(categoryleftcb, DisplayUtil.getCentWidthByView(buttonView) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
-            }
-
-        }
-    }
-
-    /**
-     * 行业排列顺序选择监听。
-     */
-    private class CategoryRankCheckedCL implements CompoundButton.OnCheckedChangeListener {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-
-                if (mCurType == CategoryType.DEMAND) {
-                    mRankPop.setPriceTimeSortType(getResources().getString(R.string.time));
-                } else {
-                    mRankPop.setPriceTimeSortType(getResources().getString(R.string.price));
-                }
-                mRankPop.showAsDropDown(categoryrightcb, DisplayUtil.getCentWidthByView(buttonView) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
-            }
-        }
-    }
-
-    /**
      * 獲取popwin的偏移量。
      *
      * @param percentOffset 屏幕宽度的百分比。
@@ -391,29 +364,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
     }
 
-    /**
-     * 当类别选择框消失时，类别箭头状态改变。
-     */
-    private class TypePopDismissLSNER implements PopupWindow.OnDismissListener {
-
-        @Override
-        public void onDismiss() {
-
-            categoryleftcb.setChecked(false);
-        }
-    }
-
-    /**
-     * 当排序选择框消失时，类别箭头状态改变。
-     */
-    private class RankPopDismissLSNER implements PopupWindow.OnDismissListener {
-
-        @Override
-        public void onDismiss() {
-            categoryrightcb.setChecked(false);
-        }
-    }
-
     private String getRank() {
 
         String rankType = null;
@@ -426,8 +376,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         }
         return rankType;
     }
-
-    //price 价格筛选
 
     /**
      * 從網絡獲取求购信息列表.
@@ -482,7 +430,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         });
 
     }
-
 
     /**
      * 從網絡获取供应信息列表。
@@ -544,7 +491,6 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
     }
 
-
     /**
      * @param category_id
      * @param rankType    time, hote.
@@ -559,15 +505,64 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         return sb.toString();
     }
 
+    /**
+     * 行業種類選擇監聽.
+     */
+    private class CategoryTypeCheckedCL implements CompoundButton.OnCheckedChangeListener {
 
-}
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
 
-enum CategoryType {
+                mTypePop.showAsDropDown(categoryleftcb, DisplayUtil.getCentWidthByView(buttonView) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
+            }
 
-    DEMAND, SUPPLY;
-}
+        }
+    }
 
-enum CategoryRankType {
+    //price 价格筛选
 
-    TIME, PRICE, LOOKNUM;
+    /**
+     * 行业排列顺序选择监听。
+     */
+    private class CategoryRankCheckedCL implements CompoundButton.OnCheckedChangeListener {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+
+                if (mCurType == CategoryType.DEMAND) {
+                    mRankPop.setPriceTimeSortType(getResources().getString(R.string.time));
+                } else {
+                    mRankPop.setPriceTimeSortType(getResources().getString(R.string.price));
+                }
+                mRankPop.showAsDropDown(categoryrightcb, DisplayUtil.getCentWidthByView(buttonView) - getResources().getDimensionPixelSize(R.dimen.cate_pop_widht) / 2, DisplayUtil.dip2px(getApplicationContext(), -5));
+            }
+        }
+    }
+
+    /**
+     * 当类别选择框消失时，类别箭头状态改变。
+     */
+    private class TypePopDismissLSNER implements PopupWindow.OnDismissListener {
+
+        @Override
+        public void onDismiss() {
+
+            categoryleftcb.setChecked(false);
+        }
+    }
+
+    /**
+     * 当排序选择框消失时，类别箭头状态改变。
+     */
+    private class RankPopDismissLSNER implements PopupWindow.OnDismissListener {
+
+        @Override
+        public void onDismiss() {
+            categoryrightcb.setChecked(false);
+        }
+    }
+
+
 }

@@ -21,8 +21,8 @@ import com.promote.ebingoo.util.ContextUtil;
  * Created by acer on 2014/9/2.
  */
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-    EditText edit_phone;
     public static final int REQUEST_CODE = 1001;
+    EditText edit_phone;
     private String protocolStr = null;
     //是否阅读协议
     private boolean isRead = false;

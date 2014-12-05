@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -46,14 +44,6 @@ public class PickRegionActivity extends BaseActivity {
     private ProvinceAdapter provinceAdapter;
     private CityAdapter cityAdapter;//
     private int selected = -1;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.double_list_layout);
-        init();
-    }
-
     private AdapterView.OnItemClickListener onProvinceClicked = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,6 +53,26 @@ public class PickRegionActivity extends BaseActivity {
 
         }
     };
+    private AdapterView.OnItemClickListener onCityClicked = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            RegionBeen province = provinceList.get(selected);
+            RegionBeen city = cityList.get(position);
+            Intent data = new Intent();
+            data.putExtra("result", province.getName() + city.getName());
+            data.putExtra("province_id", province.getId());
+            data.putExtra("city_id", city.getId());
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.double_list_layout);
+        init();
+    }
 
     private void getCity(final int id) {
         cityList.clear();
@@ -102,20 +112,6 @@ public class PickRegionActivity extends BaseActivity {
             cityAdapter.notifyDataSetChanged();
         }
     }
-
-    private AdapterView.OnItemClickListener onCityClicked = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            RegionBeen province = provinceList.get(selected);
-            RegionBeen city = cityList.get(position);
-            Intent data = new Intent();
-            data.putExtra("result", province.getName() + city.getName());
-            data.putExtra("province_id", province.getId());
-            data.putExtra("city_id", city.getId());
-            setResult(RESULT_OK, data);
-            finish();
-        }
-    };
 
     private void getDataFromCache(String cacheName, List data) {
         List temp = (List) FileUtil.readCache(this, cacheName);
@@ -170,11 +166,14 @@ public class PickRegionActivity extends BaseActivity {
         });
     }
 
+    static class ViewHolder {
+        TextView tv;
+    }
 
     class ProvinceAdapter extends BaseAdapter {
-        private Activity context;
         private final int checkedColor = 0xffe5e5e5;
         private final int unCheckedColor = 0xffffffff;
+        private Activity context;
 
         ProvinceAdapter(Activity context) {
             this.context = context;
@@ -253,7 +252,7 @@ public class PickRegionActivity extends BaseActivity {
                 holder.tv.setTextColor(0xff808080);
                 holder.tv.setTextSize(15);
                 holder.tv.setGravity(Gravity.CENTER_VERTICAL);
-                holder.tv.setPadding(dp(20),dp(7),0,dp(7));
+                holder.tv.setPadding(dp(20), dp(7), 0, dp(7));
 
                 convertView = holder.tv;
             } else {
@@ -263,13 +262,9 @@ public class PickRegionActivity extends BaseActivity {
             convertView.setTag(holder);
             return convertView;
         }
-        public int dp(float value){
+
+        public int dp(float value) {
             return (int) Dimension.dp(value);
         }
-    }
-
-
-    static class ViewHolder {
-        TextView tv;
     }
 }

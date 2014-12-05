@@ -16,10 +16,10 @@
 
     <LinearLayout
         style="@style/info_content_pad"
-        android:paddingTop="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="0dp">
 
 
         <TableLayout style="@style/frame_bg_login">

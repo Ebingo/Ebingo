@@ -24,23 +24,14 @@ import com.promote.ebingoo.util.ContextUtil;
  */
 public class SpecialEventsLayout extends LinearLayout implements View.OnClickListener {
 
-    private Context mContext;
-
-    private View mContentView;
-    /**
-     * 第一个活动图标位。
-     */
-    private ImageView homeevent1iv;
     /**
      * 第一个活动图标位的大小。
      */
     private static final Point point1 = new Point(350, 140);
-
     /**
      * 第二个活动图标位的大小。
      */
     private static final Point poin2 = new Point(250, 140);
-
     /**
      * 第三个活动图标的大小。
      */
@@ -49,13 +40,19 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
      * 基本活动图标的大小。
      */
     private static final Point baseImgSize = new Point(600, 140);
-
+    int rightMargin;
+    int leftMargin;
+    private Context mContext;
+    private View mContentView;
+    /**
+     * 第一个活动图标位。
+     */
+    private ImageView homeevent1iv;
     private double mContentWidth;
     /**
      * 图片放缩比。
      */
     private double mScale;
-
     /**
      * 第二个活动图标位。
      */
@@ -64,17 +61,7 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
      * 第三个活动图标位。
      */
     private ImageView homeevent3iv;
-
     private SpecialEventOnlickListener specialEventClickListener;
-
-    int rightMargin;
-    int leftMargin;
-
-    public interface SpecialEventOnlickListener {
-
-        public void onEventClickListener(ImageView view, int activityType, String content);
-
-    }
 
     public SpecialEventsLayout(Context context) {
         super(context);
@@ -88,7 +75,6 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
         init();
     }
 
-
     private void init() {
 
         mContentView = LayoutInflater.from(mContext).inflate(R.layout.home_specialevent_layout, null);
@@ -96,7 +82,6 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
         initialize();
         addView(mContentView);
     }
-
 
     /**
      * 初始化view。
@@ -133,7 +118,6 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
         this.specialEventClickListener = specialEventClickListener;
     }
 
-
     /**
      * 计算imageView放缩后的大小.
      *
@@ -166,12 +150,10 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
 
     }
 
-
     private void initHotActivity(String imageUrl, ImageView img, DisplayImageOptions options) {
         ImageManager.load(imageUrl, img, options);
         img.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -202,5 +184,12 @@ public class SpecialEventsLayout extends LinearLayout implements View.OnClickLis
 //
 //
 //        }
+    }
+
+
+    public interface SpecialEventOnlickListener {
+
+        public void onEventClickListener(ImageView view, int activityType, String content);
+
     }
 }

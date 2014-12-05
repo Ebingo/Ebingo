@@ -42,9 +42,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="游客"
-                android:gravity="bottom"
                 android:drawablePadding="3dp"
+                android:gravity="bottom"
+                android:text="游客"
                 android:textColor="@color/text_black"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -73,31 +73,31 @@
 
             <RadioButton
                 android:id="@+id/rb_standard"
-                android:text="@string/vip_standard"
-                style="@style/rb_my_privilege_info" />
+                style="@style/rb_my_privilege_info"
+                android:text="@string/vip_standard" />
 
             <RadioButton
                 android:id="@+id/rb_silver"
-                android:text="@string/vip_silver"
-                style="@style/rb_my_privilege_info" />
+                style="@style/rb_my_privilege_info"
+                android:text="@string/vip_silver" />
 
             <RadioButton
                 android:id="@+id/rb_gold"
-                android:text="@string/vip_gold"
-                style="@style/rb_my_privilege_info" />
+                style="@style/rb_my_privilege_info"
+                android:text="@string/vip_gold" />
 
             <RadioButton
                 android:id="@+id/rb_platinum"
-                android:text="@string/vip_platinum"
-                style="@style/rb_my_privilege_info" />
+                style="@style/rb_my_privilege_info"
+                android:text="@string/vip_platinum" />
 
         </RadioGroup>
 
         <LinearLayout
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:orientation="vertical">
 
 
             <FrameLayout

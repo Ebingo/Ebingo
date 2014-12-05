@@ -9,7 +9,7 @@ import android.view.View;
 /**
  * Created by lee on 2014/7/31.
  */
-public class RotateLeft extends BaseEffects{
+public class RotateLeft extends BaseEffects {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -17,7 +17,7 @@ public class RotateLeft extends BaseEffects{
         getAnimatorSet().playTogether(
                 ObjectAnimator.ofFloat(view, "rotationY", 90, 0).setDuration(mDuration),
                 ObjectAnimator.ofFloat(view, "translationX", -300, 0).setDuration(mDuration),
-                ObjectAnimator.ofFloat(view, "alpha", 0, 1).setDuration(mDuration*3/2)
+                ObjectAnimator.ofFloat(view, "alpha", 0, 1).setDuration(mDuration * 3 / 2)
 
         );
     }

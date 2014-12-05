@@ -17,23 +17,32 @@ import com.promote.ebingoo.application.EbingoApp;
  * 登录窗口
  */
 public class LoginDialog extends Dialog implements View.OnClickListener {
-    private final String LOG_TAG = getClass().getSimpleName();
     public static final int REQUEST_CODE = 1001;
+    private final String LOG_TAG = getClass().getSimpleName();
     private EditText edit_phone;
     private EditText edit_password;
     private int[] lineSelector;
+    private View.OnFocusChangeListener fcl = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            View divider_user = findViewById(R.id.divider_user_name);
+            View divider_password = findViewById(R.id.divider_password);
+            switch (v.getId()) {
+                case R.id.edit_user_name:
+                    divider_user.setBackgroundColor(lineSelector[1]);
+                    divider_password.setBackgroundColor(lineSelector[0]);
+                    break;
+                case R.id.edit_password:
+                    divider_password.setBackgroundColor(lineSelector[1]);
+                    divider_user.setBackgroundColor(lineSelector[0]);
+                    break;
+            }
+        }
+    };
     private LoginResult mLoginResult = null;
 
     public LoginDialog(Context context) {
         super(context);
-    }
-
-    /**
-     * 登录结果。*
-     */
-    public interface LoginResult {
-
-        public void loginResult(boolean loginResult);
     }
 
     /**
@@ -65,24 +74,6 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
         findViewById(R.id.tv_reg).setOnClickListener(this);
         findViewById(R.id.tv_forget_password).setOnClickListener(this);
     }
-
-    private View.OnFocusChangeListener fcl = new View.OnFocusChangeListener() {
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            View divider_user = findViewById(R.id.divider_user_name);
-            View divider_password = findViewById(R.id.divider_password);
-            switch (v.getId()) {
-                case R.id.edit_user_name:
-                    divider_user.setBackgroundColor(lineSelector[1]);
-                    divider_password.setBackgroundColor(lineSelector[0]);
-                    break;
-                case R.id.edit_password:
-                    divider_password.setBackgroundColor(lineSelector[1]);
-                    divider_user.setBackgroundColor(lineSelector[0]);
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onClick(View v) {
@@ -130,5 +121,13 @@ public class LoginDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onBackPressed() {
         dismiss();
+    }
+
+    /**
+     * 登录结果。*
+     */
+    public interface LoginResult {
+
+        public void loginResult(boolean loginResult);
     }
 }

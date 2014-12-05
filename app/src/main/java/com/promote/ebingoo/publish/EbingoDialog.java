@@ -17,6 +17,12 @@ import com.promote.ebingoo.center.MyPrivilegeActivity;
  * Created by acer on 2014/9/19.
  */
 public class EbingoDialog extends AlertDialog {
+    public OnClickListener DEFAULT_LISTENER = new OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+        }
+    };
     private P P;
     private TextView mTitleView;
     private TextView mMessage;
@@ -25,37 +31,10 @@ public class EbingoDialog extends AlertDialog {
     private TextView mNeutralButton;
     private View btn_divider1;
     private View btn_divider2;
-    public OnClickListener DEFAULT_LISTENER = new OnClickListener() {
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-        }
-    };
 
     public EbingoDialog(Context context) {
         super(context);
         P = new P();
-    }
-
-    public enum DialogStyle {
-        /**
-         * 跳转到特权页面的对话框
-         */
-        STYLE_TO_PRIVILEGE,
-
-        /**
-         * 信息已经被删除，点击“我知道了”会关闭当前Activity
-         */
-        STYLE_INFO_DELETED,
-        /**
-         * title:温馨提示
-         * 点击:我知道了
-         */
-        STYLE_I_KNOW,
-        /**
-         * 拨打电话
-         */
-        STYLE_CALL_PHONE
     }
 
     /**
@@ -116,7 +95,6 @@ public class EbingoDialog extends AlertDialog {
         }
         return dialog;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,6 +211,26 @@ public class EbingoDialog extends AlertDialog {
         }
     }
 
+    public enum DialogStyle {
+        /**
+         * 跳转到特权页面的对话框
+         */
+        STYLE_TO_PRIVILEGE,
+
+        /**
+         * 信息已经被删除，点击“我知道了”会关闭当前Activity
+         */
+        STYLE_INFO_DELETED,
+        /**
+         * title:温馨提示
+         * 点击:我知道了
+         */
+        STYLE_I_KNOW,
+        /**
+         * 拨打电话
+         */
+        STYLE_CALL_PHONE
+    }
 
     private class P {
         CharSequence textPositive;
