@@ -257,6 +257,9 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
+    /**
+     * 将所有分类添数据添加到adapter中。
+     */
     private void addAllSub() {
         for (CategoryBeen categoryBeen : mCategoryBeens) {
             SubCategoryBean allSub = new SubCategoryBean();

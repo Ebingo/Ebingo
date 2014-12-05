@@ -252,7 +252,7 @@ public class SlideGridViewController extends DataSetObserver implements View.OnC
     /**
      * 布局子分类.
      *
-     * @param position
+     * @param position 主分类的序列号.
      * @return
      */
     private ViewGroup layoutSubView(int position) {
@@ -272,11 +272,10 @@ public class SlideGridViewController extends DataSetObserver implements View.OnC
                     TableRow.LayoutParams subItemParam = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
                     subItemParam.gravity = Gravity.CENTER;
                     subItemFl.setLayoutParams(subItemParam);
-                    int subPosition = i * subLineCount + j;
-                    View itemView = mAdatper.getSubItemView(position, subPosition);
+                    View itemView = mAdatper.getSubItemView(position, subIndex);
                     subItemFl.addView(itemView);
                     //TODO 子view添加监听。
-                    subItemFl.setOnClickListener(new SubClickListener(position, subPosition));
+                    subItemFl.setOnClickListener(new SubClickListener(position, subIndex));
                     tr.addView(subItemFl);
                 }
                 subIndex++;

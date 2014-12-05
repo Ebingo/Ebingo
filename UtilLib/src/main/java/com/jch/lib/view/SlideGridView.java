@@ -10,6 +10,8 @@ import com.jch.lib.R;
 
 /**
  * Created by ACER on 2014/11/10.
+ * <p/>
+ * 滚动九宫格。
  */
 public class SlideGridView extends LinearLayout {
 
