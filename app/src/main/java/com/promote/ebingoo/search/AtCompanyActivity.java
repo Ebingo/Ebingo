@@ -34,7 +34,7 @@ public class AtCompanyActivity extends Activity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            if (atcompanywv.canGoBack()) {
+            if (atcompanywv.canGoBack()) {      //按下返回键是webView回退.
                 atcompanywv.goBack();
                 return true;
             }
