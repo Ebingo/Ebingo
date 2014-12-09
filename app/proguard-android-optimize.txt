@@ -66,8 +66,10 @@
 -keep class com.nostra13.universalimageloader.**
 -keep class com.nineoldandroids.**
 -keep class com.google.zxing.**
--keep class com.promote.ebingoo.bean**
--keep class com.promote.ebingoo.util**
+-keep class com.promote.ebingoo.bean.**{*;}
+-keep class com.promote.ebingoo.util.**{*;}
+-keep class com.promote.ebingoo.impl.EbingoRequest {*;}
+-keep class com.promote.ebingoo.impl.SearchKeyRequest {*;}
 
 # Explicitly preserve all serialization members. The Serializable interface
 # is only a marker interface, so it wouldn't save them.
@@ -96,8 +98,6 @@
 -keep class com.promote.ebingoo.bean.** { *; }
 
 ##---------------End: proguard configuration for Gson  ----------
--keep class com.promote.ebingoo.impl.EbingoRequest
-
 
 -dontwarn  #dontwarn去掉警告
 

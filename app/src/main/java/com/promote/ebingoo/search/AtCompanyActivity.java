@@ -79,7 +79,6 @@ public class AtCompanyActivity extends Activity {
 
 
     private class MyWebViewClient extends WebViewClient {
-
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
@@ -103,6 +102,7 @@ public class AtCompanyActivity extends Activity {
         public void onLoadResource(WebView view, String url) {
             super.onLoadResource(view, url);
         }
+
     }
 
 
