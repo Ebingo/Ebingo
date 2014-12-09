@@ -1,12 +1,14 @@
 package com.jch.lib.view;
 
 import android.content.Context;
+import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
@@ -14,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Scroller;
 import android.widget.TextView;
 
 import com.jch.lib.R;
@@ -142,7 +143,7 @@ public class PullToRefreshView extends LinearLayout {
      */
     private OnHeaderRefreshListener mOnHeaderRefreshListener;
 
-    private Scroller mScroller = null;
+    private ScrollerCompat mScroller = null;
 
     private boolean mIsHeadRefreshing = false;
     /**
@@ -195,7 +196,7 @@ public class PullToRefreshView extends LinearLayout {
         mInflater = LayoutInflater.from(getContext());
         // header view 在此添加,保证是第一个添加到linearlayout的最上端
 
-        mScroller = new Scroller(getContext());
+        mScroller = ScrollerCompat.create(getContext(), new AccelerateDecelerateInterpolator());
         addHeaderView();
     }
 

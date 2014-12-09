@@ -37,4 +37,10 @@ public class ResponseBaseBean<T> {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
+    @Override
+    public String toString() {
+
+        return code + data.toString();
+    }
 }

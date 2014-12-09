@@ -3,6 +3,7 @@ package com.promote.ebingoo.search;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -15,8 +16,8 @@ import com.promote.ebingoo.R;
 
 public class AtCompanyActivity extends Activity {
 
-    private WebView atcompanywv;
     public static final String KEY = "key";
+    private WebView atcompanywv;
     private ImageView backBtn = null;
     private TextView titleTv = null;
     private ProgressBar pb = null;
@@ -28,10 +29,23 @@ public class AtCompanyActivity extends Activity {
         initialize();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (atcompanywv.canGoBack()) {      //按下返回键是webView回退.
+                atcompanywv.goBack();
+                return true;
+            }
+        }
+
+
+        return super.onKeyDown(keyCode, event);
+    }
 
     private void initialize() {
         String urlStr = getIntent().getStringExtra(KEY);
-
         backBtn = (ImageView) findViewById(R.id.common_back_btn);
         atcompanywv = (WebView) findViewById(R.id.at_company_wv);
         pb = (ProgressBar) findViewById(R.id.company_progressbar);
@@ -63,8 +77,8 @@ public class AtCompanyActivity extends Activity {
         });
     }
 
-    private class MyWebViewClient extends WebViewClient {
 
+    private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
@@ -88,6 +102,7 @@ public class AtCompanyActivity extends Activity {
         public void onLoadResource(WebView view, String url) {
             super.onLoadResource(view, url);
         }
+
     }
 
 

@@ -40,6 +40,7 @@ public class SearchKeyRequest {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                 ResponseBaseBean<HotKey> responseBaseBean = getHotKeyfromJson(response.toString());
+
                 if (responseBaseBean != null && responseBaseBean.getCode() == 100) {
                     callBack.onSuccess(responseBaseBean.getData());
                 } else {
