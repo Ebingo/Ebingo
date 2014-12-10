@@ -30,7 +30,7 @@ public class Constant {
      */
     public static final int VIP_PRACTICE = 0;
     /**
-     * 普通账号. *
+     * 普通账号.
      */
     public static final int VIP_1 = 1;
     /**
@@ -62,7 +62,7 @@ public class Constant {
     /**
      * 设置是否为release模式。 *
      */
-    public static boolean mReleaseAble = false;
+    public static boolean mReleaseAble = true;
 
     public static boolean isReleaseAble() {
         return mReleaseAble;

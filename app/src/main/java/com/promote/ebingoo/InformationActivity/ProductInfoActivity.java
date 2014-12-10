@@ -121,7 +121,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         }
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
-        pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? "0" : infoBean.getPrice() + "");
+        pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? getString(R.string.price_zero) : infoBean.getPrice() + "");
         productinfolooknumtv.setText(infoBean.getRead_num() + "");
         if (infoBean.getUnit() != null) {//起售标准
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "" + infoBean.getUnit());

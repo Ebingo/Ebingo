@@ -61,7 +61,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        LogCat.i("--->", "onRestoreInstanceState");
         Company.loadInstance((Company) savedInstanceState.getSerializable("company"));
         sendBroadcast(new Intent(LoginManager.ACTION_INVALIDATE));
     }
@@ -70,7 +69,6 @@ public class MainActivity extends FragmentActivity implements RadioGroup.OnCheck
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("company", Company.getInstance());
-        LogCat.i("--->", "onSaveInstanceState");
     }
 
     private void initialize() {
