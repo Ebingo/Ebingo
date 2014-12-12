@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -18,8 +16,6 @@ public class PagerIndicator extends View {
 
     private int mCurrentPage = -1;
     private int mTotalPage = 0;
-    private int mDefaultResid;
-    private int mCurrentResid;
     private Drawable mDefaultDrawabl;
     private Drawable mCurDrawble;
 
@@ -63,6 +59,16 @@ public class PagerIndicator extends View {
             mCurrentPage = mTotalPage - 1;
     }
 
+    public void setCurrentResource(int currentResource) {
+        mCurDrawble = getContext().getResources().getDrawable(currentResource);
+
+    }
+
+    public void setDefaultResource(int defaultResource) {
+
+        mDefaultDrawabl = getContext().getResources().getDrawable(defaultResource);
+    }
+
     public int getCurrentPage() {
         return mCurrentPage;
     }
@@ -77,14 +83,6 @@ public class PagerIndicator extends View {
         }
     }
 
-    public void setDefaultResource(int defaultResid) {
-        mDefaultResid = defaultResid;
-    }
-
-    public void setCurrentResource(int currentResid) {
-        mCurrentResid = currentResid;
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -93,9 +91,9 @@ public class PagerIndicator extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLACK);
+//        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+//        paint.setStyle(Paint.Style.FILL);
+//        paint.setColor(Color.BLACK);
 
         Rect r = new Rect();
         this.getDrawingRect(r);
