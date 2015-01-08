@@ -29,6 +29,7 @@ public class AtCompanyActivity extends Activity {
         initialize();
     }
 
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

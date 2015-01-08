@@ -3,20 +3,28 @@ package com.promote.ebingoo.InformationActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jch.lib.util.DialogUtil;
+import com.jch.lib.util.DisplayUtil;
 import com.jch.lib.util.HttpUtil;
 import com.jch.lib.util.ImageManager;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.promote.ebingoo.R;
 import com.promote.ebingoo.application.Constant;
 import com.promote.ebingoo.application.HttpConstant;
@@ -34,10 +42,14 @@ import com.promote.ebingoo.publish.VipType;
 import com.promote.ebingoo.publish.login.LoginDialog;
 import com.promote.ebingoo.util.ContextUtil;
 import com.promote.ebingoo.util.LogCat;
+import com.promote.ebingoo.view.BigImagDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 产品详情。
+ */
 public class ProductInfoActivity extends Activity implements View.OnClickListener {
     public static final String ARG_ID = "id";
     private ImageView commonbackbtn;
@@ -101,6 +113,8 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         prdinfointocompanytv.setOnClickListener(this);
         productinfocollectcb.setOnClickListener(this);
         prdinfobtmll.setOnClickListener(this);
+        productinfoimg.setOnClickListener(this);
+
     }
 
     private void setData(DetailInfoBean infoBean) {
@@ -121,7 +135,7 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
         }
         prdinfocompanytv.setText(infoBean.getCompany_name());
         pi_title_tv.setText(infoBean.getTitle());
-        pi_price_tv.setText(TextUtils.isEmpty(infoBean.getPrice()) ? getString(R.string.price_zero) : infoBean.getPrice() + "");
+        pi_price_tv.setText((Integer.parseInt(infoBean.getPrice()) == 0) ? getString(R.string.price_zero) : infoBean.getPrice() + "");
         productinfolooknumtv.setText(infoBean.getRead_num() + "");
         if (infoBean.getUnit() != null) {//起售标准
             pi_min_sell_num.setText(infoBean.getMin_sell_num() + "" + infoBean.getUnit());
@@ -223,9 +237,60 @@ public class ProductInfoActivity extends Activity implements View.OnClickListene
                 break;
             }
 
+            case R.id.product_info_img: {
+                showImgDialog();
+            }
+
             default: {
             }
         }
+    }
+
+
+    private void showImgDialog() {
+        final ScrollView scrollView = new ScrollView(getApplicationContext());
+        scrollView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        final ImageView img = new ImageView(this);
+        img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        img.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        ImageLoader.getInstance().displayImage(mDetailInfoBean.getImage(), img, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                Point point = new Point();
+                DisplayUtil.resizeViewByScreenWidth(point, bitmap.getWidth(), bitmap.getHeight(), 60, ProductInfoActivity.this);
+                img.setImageBitmap(bitmap);
+                img.getLayoutParams().height = point.y;
+                img.getLayoutParams().width = point.x;
+                img.setMaxHeight(point.y);
+                img.setMaxWidth(point.x);
+                img.setMinimumHeight(point.y);
+                img.setMinimumWidth(point.x);
+                scrollView.addView(img);
+                new BigImagDialog(ProductInfoActivity.this).setView(scrollView).show();
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+        });
+
+
+//        BigImagDialog imagDialog = new BigImagDialog(this);
+//        imagDialog.setOwnerActivity(this);
+//        imagDialog.setImageView(mDetailInfoBean.getImage()
+//        imagDialog.show();
     }
 
     /**

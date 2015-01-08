@@ -25,6 +25,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="bottom"
             android:orientation="horizontal">
 
             <TextView
@@ -34,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="2dp"
+                android:layout_marginTop="3dp"
                 android:text="08-05" />
 
             <TextView

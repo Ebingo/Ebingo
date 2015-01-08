@@ -1,11 +1,13 @@
 package com.promote.ebingoo.center.settings;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.jch.lib.util.TextUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.promote.ebingoo.BaseActivity;
 import com.promote.ebingoo.R;
@@ -63,24 +65,7 @@ public class SettingActivity extends BaseActivity {
                 toActivity(SuggestionActivity.class);
                 break;
             case R.id.logout: {
-                EbingoDialog dialog = new EbingoDialog(this);
-                dialog.setTitle(R.string.warn);
-                dialog.setMessage(R.string.confirm_logout);
-                DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            Company.clearInstance();
-                            ContextUtil.cleanCurComany();
-                            FileUtil.deleteFile(SettingActivity.this, FileUtil.FILE_COMPANY);
-                            toActivity(LoginActivity.class);
-                            finish();
-                        }
-                    }
-                };
-                dialog.setPositiveButton(R.string.yes, l);
-                dialog.setNegativeButton(R.string.cancel, l);
-                dialog.show();
+                onLogout();
                 break;
             }
             default:
@@ -88,5 +73,56 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 退出。
+     */
+    private void onLogout() {
 
+        Company company = Company.getInstance();
+        if (TextUtil.stringIsNull(company.getName())) {      //还没有登录
+            logout();
+        } else {
+            login();
+        }
+
+    }
+
+    private void logout() {
+        EbingoDialog dialog = new EbingoDialog(this);
+        dialog.setTitle(R.string.warn);
+        dialog.setMessage(R.string.logouted);
+        DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, 99);
+                }
+            }
+        };
+        dialog.setPositiveButton(R.string.login_, l);
+        dialog.setNegativeButton(R.string.cancel, l);
+        dialog.show();
+    }
+
+    private void login() {
+        EbingoDialog dialog = new EbingoDialog(this);
+        dialog.setTitle(R.string.warn);
+        dialog.setMessage(R.string.confirm_logout);
+        DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    Company.clearInstance();
+                    ContextUtil.cleanCurComany();
+                    FileUtil.deleteFile(SettingActivity.this, FileUtil.FILE_COMPANY);
+                    toActivity(LoginActivity.class);
+                    finish();
+                }
+            }
+        };
+        dialog.setPositiveButton(R.string.yes, l);
+        dialog.setNegativeButton(R.string.cancel, l);
+        dialog.show();
+    }
 }

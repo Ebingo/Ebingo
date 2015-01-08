@@ -4,13 +4,11 @@ package com.promote.ebingoo.publish;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
@@ -48,7 +46,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 
 import static com.promote.ebingoo.publish.PublishFragment.APPLY_3D;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_ALBUM;
@@ -140,7 +137,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
      * 拨打客服电话
      */
     private void callService() {
-        final String mNumber = getString(R.string.customer_service_number);
+        final String mNumber = getString(R.string.pickture_3d_call);
         DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -157,7 +154,7 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
         };
         EbingoDialog dialog = new EbingoDialog(getActivity());
         dialog.setTitle("拨打电话");
-        dialog.setMessage(getString(R.string.dial_number_notice, "客服"));
+        dialog.setMessage(getString(R.string.dial_update_pic));
         dialog.setPositiveButton("拨打", l);
         dialog.setNegativeButton(getString(R.string.cancel), l);
         dialog.show();
@@ -280,10 +277,9 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
                 tv_pick_region.setText(result);
                 break;
             case PICK_ALBUM: {
-                if (data == null || data.getData() == null) return;
-                Uri uri = data.getData();
-                LogCat.i("--->", uri.toString());
-                uploadImage(uri);
+                if (data == null) return;
+
+                uploadImage((Bitmap) data.getParcelableExtra("data"));
                 break;
             }
 
@@ -300,18 +296,15 @@ public class PublishSupply extends Fragment implements View.OnClickListener, Pub
 
     /**
      * 根据uri上传上传图片
-     *
-     * @param uri
      */
-    private void uploadImage(Uri uri) {
+    private void uploadImage(Bitmap bitmap) {
+        if (bitmap == null) return;
         final Dialog dialog = DialogUtil.waitingDialog(getActivity(), "正在上传图片...");
-        ContentResolver resolver = getActivity().getContentResolver();
-        Bitmap bitmap = null;
         try {
-            bitmap = MediaStore.Images.Media.getBitmap(resolver, uri);
+
             picked_image.setVisibility(View.VISIBLE);
             picked_image.setImageBitmap(bitmap);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         EbingoRequestParmater parmater = new EbingoRequestParmater(getActivity());

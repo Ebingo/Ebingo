@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:text="電子行業"></TextView>
 
-
     </LinearLayout>
 
     <View

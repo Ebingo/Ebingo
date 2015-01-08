@@ -43,4 +43,5 @@ public class ResponseBaseBean<T> {
 
         return code + data.toString();
     }
+
 }

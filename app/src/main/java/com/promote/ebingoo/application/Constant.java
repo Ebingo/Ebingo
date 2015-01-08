@@ -62,7 +62,7 @@ public class Constant {
     /**
      * 设置是否为release模式。 *
      */
-    public static boolean mReleaseAble = true;
+    public static boolean mReleaseAble = false;
 
     public static boolean isReleaseAble() {
         return mReleaseAble;

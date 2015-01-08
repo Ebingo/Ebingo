@@ -140,6 +140,10 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
             if (tempList == null) {
                 tempList = new LinkedList();
             }
+            File file=new File(url);
+            if ("".equals(file.getName())){
+                continue;
+            }
             tempList.add(url);
             totalList.add(url);
             dirSet.add(dir);
@@ -212,9 +216,7 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         if (position == 0) {
             //打开相机拍照
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (outPutUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutUri);
-            }
+            intent.putExtra("return-data", true);
             startActivityForResult(intent, OPEN_CAMERA);
         } else {//选择照片，返回照片Uri
             File selected = new File(curAlbumList.get(position - 1));
@@ -222,18 +224,18 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         }
     }
 
-    /**
-     * 返回图片uri
-     *
-     * @param uri
-     */
-    private void returnUri(Uri uri) {
-        LogCat.i(TAG, "return outPutUri:" + uri);
-        Intent data = new Intent();
-        data.setData(uri);
-        setResult(RESULT_OK, data);
-        finish();
-    }
+//    /**
+//     * 返回图片uri
+//     *
+//     * @param uri
+//     */
+//    private void returnUri(Intent uri) {
+//        LogCat.i(TAG, "return outPutUri:" + uri);
+//        Intent data = new Intent();
+//        data.setData(uri);
+//        setResult(RESULT_OK, data);
+//        finish();
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -241,9 +243,11 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
             ContextUtil.toast(R.string.cancel);
         } else if (requestCode == OPEN_CAMERA) {
             LogCat.i(TAG, "CROP_IMAGE output:" + outPutUri);
-            cropImage(outPutUri);
+            cropImage(data.getData());
         } else if (requestCode == CROP_IMAGE) {
-            returnUri(outPutUri);
+//            returnUri(data);
+            setResult(RESULT_OK,data);
+            finish();
         }
     }
 
@@ -257,9 +261,9 @@ public class PhotoAlbumActivity extends BaseActivity implements AdapterView.OnIt
         intent.putExtra("aspectY", outPut_height);
         intent.putExtra("outputX", outPut_width);
         intent.putExtra("outputY", outPut_height);
-        intent.putExtra("output", outPutUri);// 保存到原文件
+//        intent.putExtra("output", outPutUri);// 保存到原文件
         intent.putExtra("outputFormat", "JPEG");// 返回格式
-        intent.putExtra("return-data", false);
+        intent.putExtra("return-data", true);
         startActivityForResult(intent, CROP_IMAGE);
     }
 

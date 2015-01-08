@@ -36,8 +36,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         edit_phone = (EditText) findViewById(R.id.edit_phone);
         ((TextView) findViewById(R.id.commit_title_done)).setText(R.string.login_);
         initialize();
-        initialize();
-        initialize();
     }
 
     public void onClick(View v) {
@@ -91,7 +89,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         protocolcb.setOnCheckedChangeListener(this);
         protocoltv = (TextView) findViewById(R.id.protocol_tv);
 
-
         appendTvSpannable();
     }
 
@@ -101,6 +98,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void appendTvSpannable() {
+
+
         SpannableString ss = new SpannableString(getString(R.string.agreet));
         ss.setSpan(new ReadProtocolMethod(), 2, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         protocoltv.setText(ss);

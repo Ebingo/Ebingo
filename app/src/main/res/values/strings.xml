@@ -164,10 +164,11 @@
     <string name="enterprise_site">企业网址</string>
     <string name="enterprise_email">企业邮箱</string>
     <string name="title_activity_my_supply">MySupplyActivity</string>
-    <string name="about_name">南京普而摩网络技术有限公司</string>
+    <string name="about_name">南京普马克投资南京有限公司</string>
     <string name="about_contact">董小姐</string>
     <string name="about_email">kefu@chinapromo.cn</string>
     <string name="customer_service_number">025-68713202</string>
+    <string name="pickture_3d_call">4006975588</string>
     <string name="company">公司</string>
     <string name="qq_group">问题反馈QQ群：32111452</string>
     <string name="dear_somebody">尊敬的%s</string>
@@ -188,6 +189,7 @@
     <string name="clear_success">清除成功！</string>
     <string name="warn">温馨提示</string>
     <string name="dial_number_notice">拨打%s?</string>
+    <string name="dial_update_pic">上传全景图片</string>
 
     <array name="pick_picture">
         <item>相册</item>
@@ -225,7 +227,7 @@
     <string name="no_demand_supply_info">暂无供求信息</string>
     <string name="delete_apk_notice">%1$s(%2$.2fM)安装完毕，是否删除以节省空间？</string>
     <string name="deleted_apk_notice">%1$s已经删除，节省空间 %2$.2fM</string>
-    <string name="price_zero">面议</string>
+    <string name="price_zero">电议</string>
     <string name="continue_download">上次更新没有完成，已下载%d%%，是否继续？</string>
     <string name="share_subject">Ebingoo--指尖商机</string>
     <string name="share_text">"Ebingoo--指尖商机 用手指做生意.打造全新电商平台。网址：www.ebingoo.com"</string>
@@ -241,7 +243,14 @@
     <string name="search_hot_key">热门搜索</string>
     <string name="no_hot_key">暂无热门词汇</string>
     <string name="check_protocol">查看安全协议</string>
-    <string name="agreet">同意宜宾购用户协议</string>
+    <string name="agreet">同意易宾购用户协议</string>
     <string name="read_pro_warn">请阅读协议</string>
+
+    <string name="logouted">您已经登出</string>
+    <string name="no_access">你还没有开通此功能！</string>
+    <string name="tel_input">请输入正确的号码</string>
+    <string name="contacter_hint">请输入联系人</string>
+    <string name="other_publish">其他</string>
+    <string name="no_book_tags">暂无订阅的标签</string>
 
 </resources>

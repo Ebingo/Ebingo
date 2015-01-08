@@ -40,6 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -335,15 +336,16 @@ public class EnterpriseSettingActivity extends BaseActivity {
      *
      * @param uri
      */
-    private void uploadImage(Uri uri) {
+    private void uploadImage(Bitmap uri) {
         if (uri == null) return;
         final Dialog dialog = DialogUtil.waitingDialog(this, "正在上传图片...");
-        Bitmap bitmap = null;
+        Bitmap bitmap = uri;
         try {
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//
+            Uri avatar=ImageUtil.saveBitmap(bitmap,"company"+System.currentTimeMillis());
             image_enterprise.setImageBitmap(ImageUtil.roundBitmap(bitmap, (int) Dimension.dp(48)));
-            Company.getInstance().setImageUri(uri);
-        } catch (IOException e) {
+            Company.getInstance().setImageUri(avatar);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
@@ -370,6 +372,8 @@ public class EnterpriseSettingActivity extends BaseActivity {
         });
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogCat.i("--->", "onActivityResult " + " " + requestCode + " " + resultCode + " " + data);
@@ -378,7 +382,7 @@ public class EnterpriseSettingActivity extends BaseActivity {
         switch (requestCode) {
 
             case PICK_IMAGE:
-                uploadImage(data.getData());
+                uploadImage((Bitmap)data.getParcelableExtra("data"));
                 break;
 
         }

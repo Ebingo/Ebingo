@@ -30,7 +30,6 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         LogCat.v("test create table------");
         db.execSQL("CREATE TABLE if not exists " + SEARCH_HISTORY + "(" + "'id' INTEGER PRIMARY KEY, 'history' TEXT, 'search_type' INTEGER)");
-
     }
 
     @Override

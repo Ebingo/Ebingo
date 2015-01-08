@@ -163,6 +163,22 @@ public class DisplayUtil {
     }
 
     /**
+     * 根据屏幕宽度设置view的大小,(出去给定的widht)
+     *
+     * @param view
+     * @param baseWidth
+     * @param baseHeight
+     * @param exceptWidth
+     * @param activity
+     */
+    public static void resizeViewByScreenWidth(Point point, int baseWidth, int baseHeight, int exceptWidth, Activity activity) {
+        point.y = (int) DisplayUtil.sizeYByX(activity
+                .getWindowManager(), baseHeight, baseWidth, exceptWidth);
+        point.x = (int) getScaledWidth(activity
+                .getWindowManager(), baseHeight, baseWidth, exceptWidth);
+    }
+
+    /**
      * 根据屏幕宽度设置view的大小.
      *
      * @param view       要改變尺寸的view。

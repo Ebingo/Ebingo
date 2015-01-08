@@ -29,6 +29,8 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import static com.promote.ebingoo.publish.PublishFragment.PICK_CATEGORY;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_DESCRIPTION;
 import static com.promote.ebingoo.publish.PublishFragment.PICK_FOR_DEMAND;
@@ -236,6 +238,19 @@ public class PublishDemand extends Fragment implements View.OnClickListener, Pub
             edit_unit.setText(infoBean.getUnit());
             edit_contact.setText(infoBean.getContacts());
             edit_phone.setText(infoBean.getPhone_num());
+            ArrayList<DetailInfoBean.TagBean> tags=infoBean.tags;
+            StringBuilder tagsBuilder = new StringBuilder();
+
+            if (tags!=null&&tags.size()>0){
+                for(int i=0;i<tags.size();i++){
+                    tagsBuilder.append(tags.get(i).name);
+                    if (i<tags.size()-1){
+                        tagsBuilder.append(",");
+                    }
+                }
+                tv_tags.setText(tagsBuilder);
+
+            }
         }
     }
 }

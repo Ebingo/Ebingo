@@ -73,9 +73,15 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent data = new Intent();
-            CategoryBeen selectCategory = curSubList.get(position);
-            data.putExtra("categoryId", selectCategory.getId());
-            data.putExtra("result", selectCategory.getName());
+            if (position < curSubList.size()) {
+                CategoryBeen selectCategory = curSubList.get(position);
+                data.putExtra("categoryId", selectCategory.getId());
+                data.putExtra("result", selectCategory.getName());
+            } else {
+                CategoryBeen selectCategory = parentList.get(position);
+                data.putExtra("categoryId", selectCategory.getId());
+                data.putExtra("result", getResources().getString(R.string.other_publish));
+            }
             setResult(RESULT_OK, data);
             finish();
         }
@@ -282,12 +288,17 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
 
         @Override
         public int getCount() {
-            return curSubList.size();
+            return curSubList.size() + 1;
         }
 
         @Override
         public Object getItem(int position) {
-            return curSubList.get(position);
+            if (position == curSubList.size()) {
+                return getResources().getString(R.string.other_publish);
+            } else {
+                return curSubList.get(position);
+            }
+
         }
 
         @Override
@@ -309,7 +320,11 @@ public class PickCategoryActivity extends BaseActivity implements AdapterView.On
             } else {
                 holder = (ViewHolderSubCategory) convertView.getTag();
             }
-            holder.tv.setText(curSubList.get(position).getName());
+
+            if (position == curSubList.size())
+                holder.tv.setText(getResources().getString(R.string.other_publish));
+            else
+                holder.tv.setText(curSubList.get(position).getName());
             convertView.setTag(holder);
             return convertView;
         }

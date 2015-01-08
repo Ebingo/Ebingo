@@ -154,6 +154,7 @@
 
                 <EditText
                     android:id="@+id/edit_contact"
+                    android:hint="@string/contacter_hint"
                     style="@style/publish_edit" />
             </TableRow>
 
@@ -169,6 +170,7 @@
 
                 <EditText
                     android:id="@+id/edit_phone"
+                    android:hint="@string/tel_input"
                     style="@style/publish_edit"
                     android:inputType="phone" />
             </TableRow>

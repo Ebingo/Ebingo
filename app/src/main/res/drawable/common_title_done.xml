@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/common_title_done_unenble" android:state_enabled="false" />
     <item android:drawable="@drawable/common_title_done_pressed" android:state_pressed="true" />
     <item android:drawable="@drawable/common_title_done_normal" android:state_pressed="false" />
 </selector>

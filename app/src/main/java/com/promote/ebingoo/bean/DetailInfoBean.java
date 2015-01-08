@@ -1,6 +1,7 @@
 package com.promote.ebingoo.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by ACER on 2014/9/12.
@@ -104,6 +105,8 @@ public class DetailInfoBean implements Serializable {
     private int vip_type = -3;
 
     private String ios_wap_url;
+
+    public ArrayList<TagBean> tags;
 
     public String getIos_wap_url() {
         return ios_wap_url;
@@ -368,4 +371,8 @@ public class DetailInfoBean implements Serializable {
                 '}';
     }
 
+    public static class TagBean implements Serializable{
+    public    int id;
+        public String name;
+    }
 }

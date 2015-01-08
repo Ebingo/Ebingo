@@ -18,6 +18,7 @@
             android:layout_height="@dimen/login_input_height"
             android:background="@drawable/corner_frame"
             android:hint="找回密码的手机号"
+            android:inputType="phone"
             android:paddingLeft="4dp" />
 
         <Button

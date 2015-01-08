@@ -388,10 +388,9 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
         parmater.put("pagesize", PAGESIZE);       //每页显示20条。
-        parmater.put("father_category_id", parent_id);
 
         try {
-            parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(parent_id, category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -443,9 +442,8 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
         EbingoRequestParmater parmater = new EbingoRequestParmater(getApplicationContext());
         parmater.put("lastid", lastId);
         parmater.put("pagesize", PAGESIZE);       //每页显示10条。
-        parmater.put("father_category_id", parent_id);
         try {
-            parmater.put("condition", URLEncoder.encode(appendKeyworld(category_id, getRank()), "utf-8"));
+            parmater.put("condition", URLEncoder.encode(appendKeyworld(parent_id, category_id, getRank()), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -489,6 +487,22 @@ public class CategoryActivity extends Activity implements View.OnClickListener, 
 
         });
 
+    }
+
+    /**
+     * @param category_id
+     * @param rankType    time, hote.
+     * @return
+     */
+    private String appendKeyworld(int father_id, int category_id, String rankType) {
+        StringBuffer sb = new StringBuffer("{\"sort\":\"");
+        sb.append(rankType);
+        sb.append("\",\"category_id\":");
+        sb.append(category_id);
+        sb.append(",\"father_category_id\":");
+        sb.append(father_id);
+        sb.append("}");
+        return sb.toString();
     }
 
     /**

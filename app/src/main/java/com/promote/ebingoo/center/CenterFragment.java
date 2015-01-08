@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -151,7 +152,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         }
         String e_url = Company.getInstance().getE_url();
         if (TextUtils.isEmpty(e_url)) {
-            btn_ePlat.setVisibility(View.INVISIBLE);
+            btn_ePlat.setVisibility(View.GONE);
         } else {
             btn_ePlat.setVisibility(View.VISIBLE);
         }
@@ -237,6 +238,7 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.cent_msg_bar).setOnClickListener(this);
         btn_ePlat = view.findViewById(R.id.commit_title_done);
         btn_ePlat.setOnClickListener(this);
+        btn_ePlat.setVisibility(View.GONE);
     }
 
     @Override
@@ -312,7 +314,6 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             case R.id.cent_collet_tv: {
                 Intent intent = new Intent(getActivity(), MyCollectionActivity.class);
                 startActivity(intent);
-
                 break;
             }
             case R.id.cent_msg_bar:
@@ -352,9 +353,14 @@ public class CenterFragment extends Fragment implements View.OnClickListener {
             }
 
             case R.id.commit_title_done: {
-                Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
-                intent.putExtra(CodeScanOnlineActivity.URLSTR, Company.getInstance().getE_url());
-                startActivity(intent);
+
+                if (isLogined()) {
+                    Intent intent = new Intent(getActivity(), CodeScanOnlineActivity.class);
+                    intent.putExtra(CodeScanOnlineActivity.URLSTR, Company.getInstance().getE_url());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), R.string.no_access, Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
 

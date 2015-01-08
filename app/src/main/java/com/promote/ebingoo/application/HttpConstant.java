@@ -146,6 +146,11 @@ public class HttpConstant {
      */
     public static final String canPublishSupplyInfo = getRootUrl() + "canPublishSupplyInfo";
     /**
+     * 删除通话记录。
+     */
+    public static final String deleteCallRecord = getRootUrl() + "deleteCallRecord";
+
+    /**
      * 获取热门搜索关键词
      */
     public static final String getHotSearchKeywords = getRootUrl() + "getHotSearchKeywords";

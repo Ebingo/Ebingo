@@ -1,10 +1,12 @@
 package com.promote.ebingoo.impl;
 
+import android.util.Log;
+
 import com.jch.lib.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.promote.ebingoo.application.HttpConstant;
 import com.promote.ebingoo.bean.DetailInfoBean;
-import com.promote.ebingoo.util.JsonUtil;
+import com.promote.ebingoo.bean.DetailInfoBeanTools;
 import com.promote.ebingoo.util.LogCat;
 
 import org.apache.http.Header;
@@ -24,14 +26,15 @@ public class GetInfoDetail {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
+                Log.i("", "--->" + response + "");
                 DetailInfoBean detailInfo = null;
                 try {
-                    response = response.getJSONObject("response");
+                    JSONObject data = response.getJSONObject("response");
                     LogCat.i("--->", response + "");
-                    if (HttpConstant.CODE_OK.equals(response.getString("code"))) {
-                        LogCat.i("--->", response.getJSONObject("data").toString());
-                        detailInfo = JsonUtil.get(response.getJSONObject("data").toString(), DetailInfoBean.class);     //
+                    if (HttpConstant.CODE_OK.equals(data.getString("code"))) {
+
+                        detailInfo = DetailInfoBeanTools.getDetailInfo(data.toString());
+//                        detailInfo = JsonUtil.get(response.getJSONObject("data").toString(), DetailInfoBean.class);     //
                         if (detailInfo != null) {
                             callBack.onSuccess(detailInfo);
                         } else {

@@ -129,6 +129,7 @@
 
                 <EditText
                     android:id="@+id/edit_mobile"
+                    android:hint="@string/tel_input"
                     style="@style/publish_edit"
                     android:inputType="phone" />
             </TableRow>

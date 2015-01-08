@@ -124,10 +124,9 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
     @Override
     protected void onDelete(final int position) {
         EbingoRequestParmater parmater = new EbingoRequestParmater(this);
-        parmater.put("company_id", Company.getInstance().getCompanyId());
-        parmater.put("infoid", records.get(position).getInfoId());
+        parmater.put("call_id", records.get(position).getCall_id());
         final Dialog dialog = DialogUtil.waitingDialog(this, "操作中...");
-        HttpUtil.post(HttpConstant.deleteInfo, parmater, new JsonHttpResponseHandler("utf-8") {
+        HttpUtil.post(HttpConstant.deleteCallRecord, parmater, new JsonHttpResponseHandler("utf-8") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -276,10 +275,6 @@ public class CallRecordActivity extends BaseListActivity implements View.OnClick
                     CallRecord record = (CallRecord) v.getTag();
 
                     boolean canDial = true;
-//                    VipType vipType = VipType.parse(Company.getInstance().getVipType());
-//                    VipType.VipInfo info = vipType.getVipInfo();
-//                    String type = record.getType();
-//                    canDial=info.canDial(type);
                     if (canDial) {//这里加判断，为了防止会员过期后，此处还有通话记录
                         CallRecordManager.dialNumber(CallRecordActivity.this, record);
                     } else {

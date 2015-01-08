@@ -145,11 +145,18 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
                 ArrayList<BookBean> books = new ArrayList<BookBean>();
                 try {
                     JsonUtil.getArray(response.getJSONArray("data"), BookBean.class, books);
-                    for (int i = 0; i < books.size(); i++) {
-                        addTag(books.get(i));
+
+                    showTags(books.size()>0);
+
+                    if (books.size()>0){
+                        for (int i = 0; i < books.size(); i++) {
+                            addTag(books.get(i));
+                        }
                     }
+
                 } catch (JSONException e) {
                     LogCat.w(e.getLocalizedMessage());
+                    showTags(false);
                 }
             }
 
@@ -206,6 +213,16 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
         return sb.toString();
     }
 
+    void showTags(boolean show){
+        if (show){
+            findViewById(R.id.tv_no_book_tags).setVisibility(View.GONE);
+            tagContent.setVisibility(View.VISIBLE);
+        }else {
+            findViewById(R.id.tv_no_book_tags).setVisibility(View.VISIBLE);
+            tagContent.setVisibility(View.GONE);
+        }
+    }
+
     /**
      * 添加一个标签
      *
@@ -218,8 +235,10 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
             ContextUtil.toast("请输入标签！");
             return;
         }
+
         TagView tagView = (TagView) View.inflate(this, R.layout.sample_tag_view, null);
         tagContent.addView(tagView);
+        showTags(true);
         tagView.setText(bookBean.getName());
         tagView.setNumber(bookBean.getNo_read());
         tagView.setTag(bookBean);
@@ -276,6 +295,9 @@ public class MyBookActivity extends BaseActivity implements CompoundButton.OnChe
     public void onDelete(TagView v) {
         v.clearAnimation();
         tagContent.removeView(v);
+        if (tagContent.getChildCount()<=0){
+            showTags(false);
+        }
         tag_remain++;
     }
 
