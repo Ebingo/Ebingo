@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/light_gray" android:state_checked="true" />
-    <item android:drawable="@color/gray_bg" />
+    <item android:drawable="@color/ipr_gray_bg" android:state_checked="true" />
+    <item android:drawable="@color/white" />
 
 </selector>

@@ -222,7 +222,7 @@ public class MyCollectionActivity extends BaseListActivity implements View.OnCli
             CollectBean collectBean = mCollections.get(position);
             ImageManager.load(collectBean.getImg(), viewHolder.imgIv, mOptions);
             viewHolder.nameTv.setText(collectBean.getTitle());
-            viewHolder.priceTv.setText(Integer.parseInt(collectBean.getPrice()) == 0 ? getApplicationContext().getString(R.string.price_zero) : collectBean.getPrice());
+            viewHolder.priceTv.setText(Double.parseDouble(collectBean.getPrice()) == 0 ? getApplicationContext().getString(R.string.price_zero) : collectBean.getPrice());
             viewHolder.timesTv.setText(collectBean.getCollect_num() + "");
             viewHolder.timeTv.setText(collectBean.getCollectTimes());
 

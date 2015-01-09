@@ -6,7 +6,7 @@ import android.text.TextUtils;
  * Created by acer on 2014/10/24.
  */
 public class FormatUtil {
-    public static final String DEFAULT_PRICE = "面议";
+    public static final String DEFAULT_PRICE = "电议";
 
     public static String formatPrice(String price) {
         return formatPrice(price, null);
