@@ -1,5 +1,6 @@
 package com.promote.ebingoo.util;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -12,6 +13,7 @@ import com.promote.ebingoo.application.HttpConstant;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -177,6 +179,24 @@ public class DeviceInfo {
         }
         return typeCode;
     }
+
+    /**
+     * 获得堆栈顶部的activity.
+     *
+     * @param context
+     * @return
+     */
+    public static String getTopActivity(Context context) {
+        ActivityManager manager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
+
+        if (runningTaskInfos != null)
+            return runningTaskInfos.get(0).topActivity.getClassName();
+        else
+            return "";
+    }
+
 
     /**
      * get sys local language.

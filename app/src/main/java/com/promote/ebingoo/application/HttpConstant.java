@@ -156,7 +156,7 @@ public class HttpConstant {
     public static final String getHotSearchKeywords = getRootUrl() + "getHotSearchKeywords";
     public static final String atCompany = getRootUrl() + "atCompany";
     //    private static final String TEST_RHOST = "http://ebingoo.com"; //remote
-    private static final String TEST_RHOST = "http://ebingoo.bingoso.com";
+    private static final String TEST_RHOST = "http://www.ebingoo.com";
     private static final boolean LOCALHOST = false;
     private static final String TEST_HOST = "http://192.168.1.112";
     private static final String HOST = "";

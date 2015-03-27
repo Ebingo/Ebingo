@@ -52,10 +52,12 @@
                 <!-- 设置一个padding=5dp，防止抖动动画时，子view超出边界 -->
                 <com.promote.ebingoo.publish.AutoLineLayout
                     android:id="@+id/tag_content"
+                    android:animateLayoutChanges="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="5dp" />
+
                 <TextView
                     android:visibility="gone"
                     android:id="@+id/tv_no_book_tags"
@@ -63,6 +65,7 @@
                     style="@style/font_gray_14"
                     android:text="@string/no_book_tags"
                     android:layout_height="wrap_content" />
+
                 <TextView
                     style="@style/divider_horizontal"
                     android:layout_marginBottom="33dp"

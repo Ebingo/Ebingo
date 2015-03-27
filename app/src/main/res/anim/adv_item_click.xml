@@ -23,17 +23,4 @@
         android:toXScale="1.1"
         android:toYScale="1.1" />
 
-
-    <!-- <scale
-         android:interpolator="@android:anim/decelerate_interpolator"
-         android:duration="10"
-         android:startOffset="170"
-         android:pivotX="50%"
-         android:pivotY="50%"
-         android:fromXScale="1.1"
-         android:toXScale="1"
-         android:fromYScale="1.1"
-         android:toYScale="1" />-->
-
-
 </set>

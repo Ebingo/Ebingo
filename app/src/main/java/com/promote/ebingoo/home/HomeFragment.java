@@ -638,7 +638,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
 
             container.addView(imgView);
 
-
             return imgView;
         }
 
@@ -719,7 +718,6 @@ public class HomeFragment extends BaseFragment implements ViewPager.OnPageChange
      * 熱門需求監聽。
      */
     public class HotBuyOCL implements AdapterView.OnItemClickListener {
-
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

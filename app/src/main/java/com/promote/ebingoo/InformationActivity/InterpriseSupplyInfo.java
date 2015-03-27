@@ -239,7 +239,7 @@ public class InterpriseSupplyInfo extends CommonListFragment implements AdapterV
             ImageManager.load(supplyBean.getImage(), viewHolder.img, mOptions);
             viewHolder.nameTv.setText(supplyBean.getName());
             viewHolder.timeTv.setText(supplyBean.getDate());
-            viewHolder.priceTv.setText(Integer.parseInt(supplyBean.getPrice()) == 0 ? getString(R.string.price_zero) : supplyBean.getPrice());
+            viewHolder.priceTv.setText(Double.parseDouble(supplyBean.getPrice()) == 0 ? getString(R.string.price_zero) : supplyBean.getPrice());
             viewHolder.lookTimeTv.setText(String.valueOf(supplyBean.getRead_num()));
             viewHolder.startTv.setText(supplyBean.getMin_supply_num());
 

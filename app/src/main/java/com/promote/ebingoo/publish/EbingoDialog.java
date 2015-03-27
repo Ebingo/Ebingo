@@ -262,4 +262,6 @@ public class EbingoDialog extends AlertDialog {
             if (mListener != null) mListener.onClick(dialog, which);
         }
     }
+
+
 }
