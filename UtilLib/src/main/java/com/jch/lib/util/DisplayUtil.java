@@ -46,6 +46,8 @@ public class DisplayUtil {
     }
 
     /**
+     *
+     *
      * @param wm
      * @param baseY
      * @param baseX
@@ -144,7 +146,7 @@ public class DisplayUtil {
     }
 
     /**
-     * 根据屏幕宽度设置view的大小,(出去给定的widht)
+     * 根据屏幕宽度设置view的大小,(出去给定的width)
      *
      * @param view
      * @param baseWidth
@@ -163,9 +165,9 @@ public class DisplayUtil {
     }
 
     /**
-     * 根据屏幕宽度设置view的大小,(出去给定的widht)
+     * 根据屏幕宽度设置view的大小,(出去给定的width)
      *
-     * @param view
+     * @param point
      * @param baseWidth
      * @param baseHeight
      * @param exceptWidth
@@ -194,6 +196,26 @@ public class DisplayUtil {
                 .getWindowManager(), baseHeight, baseWidth);
         pagerParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         view.setLayoutParams(pagerParams);
+    }
+
+
+    /**
+     * 根据屏幕计算出放缩后的尺寸，px。
+     * @param outPoint 结果输出。
+     * @param scarePercent 尺寸缩放百分比
+     * @param marginHeight px. 除去的留白空间大小
+     * @param marginWidth px. 除去的留白空间大小
+     * @param windowManager
+     */
+    public static void getScareSizeByScreen(Point outPoint, int scarePercent, int marginWidth, int marginHeight, WindowManager windowManager){
+
+        final Display display = windowManager.getDefaultDisplay();
+        Point screenPoint = new Point();
+        getSize(display, screenPoint);
+
+        outPoint.x = (screenPoint.x - marginWidth)*scarePercent/100;
+        outPoint.y = (screenPoint.y - marginHeight)*scarePercent/100;
+
     }
 
     /**
